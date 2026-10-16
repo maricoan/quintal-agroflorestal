@@ -1120,24 +1120,42 @@ function plan(){
   let dropped=[];
   if(lines.length){
     const useN={};
-    const pick=(list0,nbrs)=>{const fresh=list0.filter(c=>!useN[c.id]);const list=fresh.length?fresh:list0;let best=list[0],bv=-1e9;
-      list.forEach(c=>{let v=-(useN[c.id]||0)*2;nbrs.forEach(n=>{if(n)v+=cs(c,n)*1.5;});if(v>bv){bv=v;best=c;}});
-      useN[best.id]=(useN[best.id]||0)+1;return best;};
-    // com mais de uma linha, cada árvore ganha a sua: as espécies se distribuem entre as linhas
-    // árvores que cooperam ficam na mesma linha; os grupos se distribuem entre as linhas
-    const clusters=[];trees.forEach(t=>{const c=clusters.find(cl=>cl.some(o=>cs(o,t)>0));if(c)c.push(t);else clusters.push([t]);});
-    const lineTrees=lines.map((ln,li)=>{
-      if(trees.length<2||lines.length<2)return trees;
-      if(clusters.length>=lines.length)return clusters.filter((c,k)=>k%lines.length===li).flat();
-      return clusters[li%clusters.length];
-    });
+    let useL={};
+    let useLS={};
+    const pick=(list0,nbrs,mix)=>{const fresh=list0.filter(c=>!useL[c.id]);const list=fresh.length?fresh:list0;let best=list[0],bv=-1e9;
+      list.forEach(c=>{let v=-(useN[c.id]||0)*2+(mix&&!useLS[c.e]?12:0)+(mix&&!useN[c.id]?14:0);nbrs.forEach(n=>{if(n)v+=cs(c,n)*1.5;});if(v>bv){bv=v;best=c;}});
+      useN[best.id]=(useN[best.id]||0)+1;useL[best.id]=1;if(mix)useLS[best.e]=1;return best;};
+    // várias linhas: cada linha mistura os estratos (emergente, alto, médio)
+    // - pares com cooperação documentada ficam juntos na mesma linha
+    // - altas e médias se repetem em todas as linhas; emergentes não se repetem e vão primeiro para o lado sul
+    //   (embaixo no desenho), para a sombra cair menos sobre os canteiros
+    let clusters=trees.map(t=>[t]);
+    for(let moved=true;moved;){moved=false;
+      for(let i=0;i<clusters.length&&!moved;i++)for(let j=i+1;j<clusters.length&&!moved;j++)
+        if(clusters[i].some(a=>clusters[j].some(b=>docCoop(a,b)))){clusters[i]=clusters[i].concat(clusters[j]);clusters.splice(j,1);moved=true;}}
+    // a emergente fica só no sul, mas as parceiras altas e médias dela também se repetem nas outras linhas
+    clusters=clusters.flatMap(cl=>{const ne=cl.filter(t=>t.e!=='E');return cl.some(t=>t.e==='E')&&ne.length?[cl,ne]:[cl];});
+    const RK={E:0,A:1,M:2,B:3,R:4};const top=cl=>Math.min(...cl.map(t=>RK[t.e]??2));
+    // do sul para o norte; no terreno circular, as linhas curtas (cordas pequenas) ficam por último
+    const lenOf=ln=>{const [a,b]=chord(ln.y+ln.h/2);return b-a;};
+    const southFirst=lines.map((ln,i)=>i).sort((a,b)=>Math.floor(lenOf(lines[b])/3)-Math.floor(lenOf(lines[a])/3)||lines[b].y-lines[a].y);
+    const lineTrees=lines.map(()=>[]);
+    if(trees.length<2||lines.length<2){lines.forEach((ln,i)=>{lineTrees[i]=trees.slice();});}
+    else{
+      [0,1,2,3,4].forEach(k=>{const us=clusters.filter(cl=>top(cl)===k).sort((a,b)=>b.length-a.length||Math.max(...b.map(t=>t.pt||0))-Math.max(...a.map(t=>t.pt||0)));
+        if(!us.length)return;
+        const n=lines.length,reps=k===0?us.length:Math.max(us.length,n);
+        for(let j=0;j<reps;j++){const li=southFirst[j%n];const u=us[j%us.length];u.forEach(t=>{if(!lineTrees[li].includes(t))lineTrees[li].push(t);});}});
+      // nenhuma linha fica sem árvore
+      lineTrees.forEach((lt,i)=>{if(!lt.length)lineTrees[i]=trees.filter(t=>RK[t.e]>0).length?trees.filter(t=>RK[t.e]>0):trees.slice();});
+    }
     lines.forEach((ln,li)=>{
-      const cy=ln.y+ln.h/2;let prev=null,prevT=null;
+      const cy=ln.y+ln.h/2;let prev=null,prevT=null;useL={};useLS={};
       if(trees.length){
         const [x0,x1]=chord(cy);
         let x=x0+(li%2&&x1-x0>2?.5:0);
         while(x<=x1){
-          const T=pick(lineTrees[li],[prev,prevT]);
+          const T=pick(lineTrees[li],[prev,prevT],true);
           add(T,x,cy,'tree');prev=T;prevT=T;
           const sp=Math.max(T.ep,1);
           if(meds.length)for(let k=1;k<sp-.01&&x+k<=x1;k++){const M=pick(meds,[prev,T]);add(M,x+k,cy,'med');prev=M;}
@@ -2135,7 +2153,7 @@ function update(fromInput){
       ${p.sel.length?`<div class="stats"><div class="stat"><b>${p.beds.length}</b><span>${p.beds.length===1?'canteiro':'canteiros'}</span></div><div class="stat"><b>${p.lines.length}</b><span>${p.lines.length===1?'linha de árvores':'linhas de árvores'}</span></div></div>`:''}
       ${p.sel.length?`<div class="zoom" role="group" aria-label="Tamanho do desenho"><button type="button" data-zoom="-1" aria-label="Diminuir desenho">−</button><span>${Math.round((S.zoom||1)*100)}%</span><button type="button" data-zoom="1" aria-label="Ampliar desenho">+</button></div><div class="drawing"${isMob()&&(S.zoom||1)>1?` style="--zw:${(S.zoom||1)*100}%"`:''}>${v3?draw3D(p):drawPlan(p)}</div>${!v3&&isMob()?stripList(p):''}`:emptyState("Escolha as plantas na lista ao lado: o app monta aqui o desenho do plantio, com as distâncias de cada uma.")}
       ${capAlert(p)}
-      ${p.sel.length?`<p class="hint">`:'<p class="hint" hidden>'}${v3?'Alturas aproximadas das plantas adultas, na mesma escala do terreno. Cada árvore aparece com o formato típico da copa adulta (arredondada, ovalada, em guarda-chuva, cônica, em taça, aberta, de palmeira) e, quando é o caso, com flores ou frutos. Adubo verde, hortaliças e aromáticas aparecem com a forma, a largura e as flores ou frutos típicos: cabeça da alface, folhagem da cenoura, tomate no tutor, touceira da cebolinha, espigas da lavanda, guarda-chuva da mandioca e tapete do amendoim-forrageiro. Passe o dedo ou o mouse sobre uma planta para ver nome, altura e largura.':'Cada quadrado = 1 m². Plantas que cooperam ficam intercaladas na mesma fileira, e as fileiras vizinhas ficam desencontradas. As cotas mostram, em um exemplo de cada planta, a distância ideal até a vizinha da mesma fileira (horizontal) e até a fileira seguinte (vertical). Canteiros de 1,2 m com corredores de 40 cm. Linhas de árvores (faixa escura) com palha grossa. Se puder, deixe as linhas no sentido norte–sul para os dois lados receberem sol.'}</p>
+      ${p.sel.length?`<p class="hint">`:'<p class="hint" hidden>'}${v3?'Alturas aproximadas das plantas adultas, na mesma escala do terreno. Cada árvore aparece com o formato típico da copa adulta (arredondada, ovalada, em guarda-chuva, cônica, em taça, aberta, de palmeira) e, quando é o caso, com flores ou frutos. Adubo verde, hortaliças e aromáticas aparecem com a forma, a largura e as flores ou frutos típicos: cabeça da alface, folhagem da cenoura, tomate no tutor, touceira da cebolinha, espigas da lavanda, guarda-chuva da mandioca e tapete do amendoim-forrageiro. Passe o dedo ou o mouse sobre uma planta para ver nome, altura e largura.':'Cada quadrado = 1 m². Plantas que cooperam ficam intercaladas na mesma fileira, e as fileiras vizinhas ficam desencontradas. As cotas mostram, em um exemplo de cada planta, a distância ideal até a vizinha da mesma fileira (horizontal) e até a fileira seguinte (vertical). Canteiros de 1,2 m com corredores de 40 cm. Linhas de árvores (faixa escura) com palha grossa. Se puder, deixe as linhas no sentido norte–sul para os dois lados receberem sol.'+(p.lines.length>1&&p.sel.filter(isTree).length>1?' Cada linha de árvores mistura os estratos (alto e médio se repetem em todas as linhas) e os pares com cooperação documentada ficam juntos. As emergentes vão primeiro para as linhas do lado sul, embaixo no desenho: com as linhas no sentido leste–oeste, a sombra delas cai menos sobre os canteiros.':'')+''}</p>
       ${legend(p)}</section>`;
     h+=coopPanel(p);
   }else{
