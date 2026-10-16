@@ -995,6 +995,8 @@ const GRUPO={
 const ORIG={N:'chanana gervao oficialsala perpetua vedelia arnicacampo ruelia falsairis salviavermelha salviaazul esponjinha jacobinia lixeira alamanda ciposaojoao cidreira pimenta taioba cara orapronobis carqueja macela alecrimcampo lantana mandioca canaindia heliconia begonia samambaia dyckia tuna assapeixe pitanga araca uvaia cereja gabiroba maracuja inga embauba aroeira jucara castanha dedaleira candeia sangra crindiuva patadevaca guariroba',
  Z:'margaridao capimsanto guandu maravilha mamao cafe',
  E:'dipladenia amendoim cambuci jabuticaba grumixama cabeludinha'};
+// plantas que aparecem também em um segundo grupo
+const GRUPO_EXTRA={p:['margaridao']};
 const ORIG_TXT={N:'Nativa',Z:'Naturalizada',E:'Endêmica',X:'Exótica cultivada'};
 const PORTE={P:'pequeno',M:'médio',G:'grande'};
 const SIG_N={R:1,B:2,M:3,A:4,E:5};
@@ -1095,7 +1097,7 @@ function renderCats(){
   const all=DATA.concat(S.custom);
   let h='';
   CATS.forEach(([k,lab])=>{
-    const items=all.filter(s=>s.c===k&&(!q||s.n.toLowerCase().includes(q)));
+    const items=all.filter(s=>(s.c===k||(GRUPO_EXTRA[k]||[]).includes(s.id))&&(!q||s.n.toLowerCase().includes(q)));
     if(!items.length)return;
     items.sort((a,b)=>a.n.localeCompare(b.n,'pt'));
     const nOn=items.filter(s=>S.sel.includes(s.id)).length;
