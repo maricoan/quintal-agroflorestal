@@ -55,7 +55,7 @@ header{display:flex;flex-direction:column;gap:4px;padding-block:8px 4px}
 .h-pseudo{fill:var(--lf2)}.h-leaf2{fill:var(--lf3)}.h-leaf3{fill:var(--lf1)}
 .h-stalk{fill:none;stroke:var(--lf1);stroke-width:1.6;stroke-linecap:round}
 .h-ban ellipse{fill:var(--yel)}.h-flor{fill:var(--fr-p)}
-.h-kale{fill:var(--lf2)}.h-kale2{fill:var(--st-a);opacity:.85}
+.h-kale{fill:var(--lf2)}.h-rib{fill:none;stroke:var(--surface);stroke-width:.5;opacity:.45}.h-cstem{fill:none;stroke:var(--lf1);stroke-width:1.8;stroke-linecap:round}.h-cfl{fill:var(--warn)}.h-kale2{fill:var(--st-a);opacity:.85}
 .h-vine{fill:none;stroke:var(--lf1);stroke-width:1.6}
 .h-pump{fill:var(--fr-o)}.h-fl{fill:var(--yel)}
 .h-lab text{font-family:var(--f-body);font-size:10.5px;font-weight:700;fill:var(--ci-fg);text-anchor:middle}
@@ -466,15 +466,11 @@ td.h{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:now
         <g class="h-ban"><ellipse cx="148" cy="100" rx="2" ry="4.5" transform="rotate(-20 148 100)"/><ellipse cx="152" cy="101" rx="2" ry="4.5" transform="rotate(10 152 101)"/><ellipse cx="150" cy="106" rx="2" ry="4.5"/></g>
         <path class="h-flor" d="M151 108 c-1 3 0 6 2 7 c1-3 0-5-2-7Z"/>
       </g>
-      <!-- baixo: couve e alface -->
+      <!-- baixo: touceira de folhas largas e eretas, como a cana-da-índia, com flores no alto -->
       <g class="h-pl d2">
-        <path class="h-stalk" d="M84 128 V104"/>
-        <ellipse cx="74" cy="104" rx="12" ry="6" transform="rotate(-28 74 104)" class="h-kale"/>
-        <ellipse cx="94" cy="103" rx="12" ry="6" transform="rotate(28 94 103)" class="h-kale"/>
-        <ellipse cx="84" cy="96" rx="7" ry="11" class="h-kale2"/>
-        <ellipse cx="76" cy="114" rx="10" ry="5" transform="rotate(-18 76 114)" class="h-kale"/>
-        <ellipse cx="93" cy="114" rx="10" ry="5" transform="rotate(18 93 114)" class="h-kale"/>
-        <ellipse cx="108" cy="123" rx="9" ry="5" class="h-c3"/><ellipse cx="104" cy="120" rx="5" ry="4" class="h-c2"/><ellipse cx="112" cy="120" rx="5" ry="4" class="h-c2"/>
+        <path class="h-cstem" d="M80 128 L80 112"/><path class="h-cstem" d="M86 128 L87 108"/><path class="h-cstem" d="M92 128 L94 113"/>
+        <path class="h-c3" d="M78.0 121.0 Q73.3 110.6 62.1 112.5 Q66.8 123.0 78.0 121.0Z"/><path class="h-rib" d="M78.0 121.0 L63.7 113.4"/><path class="h-c3" d="M95.0 121.0 Q105.5 124.3 110.8 114.6 Q100.3 111.3 95.0 121.0Z"/><path class="h-rib" d="M95.0 121.0 L109.2 115.3"/><path class="h-c1" d="M80.0 116.0 Q82.3 102.0 69.0 96.9 Q66.7 111.0 80.0 116.0Z"/><path class="h-rib" d="M80.0 116.0 L70.1 98.9"/><path class="h-c1" d="M94.0 117.0 Q107.1 117.5 109.8 104.7 Q96.6 104.1 94.0 117.0Z"/><path class="h-rib" d="M94.0 117.0 L108.2 105.9"/><path class="h-c2" d="M86.0 118.0 Q85.7 105.2 73.1 102.7 Q73.4 115.5 86.0 118.0Z"/><path class="h-rib" d="M86.0 118.0 L74.4 104.2"/><path class="h-c2" d="M90.0 118.0 Q102.2 115.9 102.2 103.4 Q90.0 105.6 90.0 118.0Z"/><path class="h-rib" d="M90.0 118.0 L101.0 104.9"/><path class="h-c3" d="M83.0 112.0 Q88.9 99.0 78.2 89.5 Q72.3 102.5 83.0 112.0Z"/><path class="h-rib" d="M83.0 112.0 L78.7 91.8"/><path class="h-c3" d="M91.0 113.0 Q102.7 105.6 98.5 92.3 Q86.8 99.8 91.0 113.0Z"/><path class="h-rib" d="M91.0 113.0 L97.8 94.4"/><path class="h-c1" d="M87.0 111.0 Q95.7 100.6 88.5 89.1 Q79.8 99.5 87.0 111.0Z"/><path class="h-rib" d="M87.0 111.0 L88.4 91.2"/>
+        <path class="h-cstem" d="M87 108 L88 82"/><ellipse cx="85.5" cy="85" rx="2.8" ry="1.6" transform="rotate(-40 85.5 85)" class="h-cfl"/><ellipse cx="90.5" cy="86" rx="2.8" ry="1.6" transform="rotate(40 90.5 86)" class="h-cfl"/><ellipse cx="86" cy="89" rx="2.8" ry="1.6" transform="rotate(-30 86 89)" class="h-cfl"/><ellipse cx="90" cy="90.5" rx="2.8" ry="1.6" transform="rotate(35 90 90.5)" class="h-cfl"/><ellipse cx="87.8" cy="82" rx="2.8" ry="1.6" transform="rotate(0 87.8 82)" class="h-cfl"/><ellipse cx="86.5" cy="93" rx="2.8" ry="1.6" transform="rotate(-20 86.5 93)" class="h-cfl"/><ellipse cx="89.5" cy="94" rx="2.8" ry="1.6" transform="rotate(25 89.5 94)" class="h-cfl"/>
       </g>
       <!-- rasteiro: forração de folhinhas se esparramando pelo chão -->
       <g class="h-pl d1">
