@@ -224,6 +224,12 @@ a.sm-i:hover{border-color:var(--leaf)}
 .und{font-weight:400;color:var(--leaf)}
 .und-lab{fill:var(--leaf)}
 .hb-lt{opacity:.78}
+.credit{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 0;border-top:1px solid var(--line);padding:20px 0 8px;font-size:14px;color:var(--muted)}
+.credit>*+*::before{content:"/";margin:0 10px;color:var(--line)}
+.credit b{color:var(--ink);font-weight:700}
+.credit a{color:var(--leaf);text-decoration:none;font-weight:700}
+.credit a:hover{text-decoration:underline}
+@media (max-width:640px){body[data-mtab="espaco"] .credit,body[data-mtab="plantas"] .credit{display:none}.credit{flex-direction:column;gap:4px}.credit>*+*::before{content:none}}
 .cv-stem{fill:none;stroke:var(--trunk);stroke-width:2.4;stroke-linecap:round}
 .cv-node{stroke:var(--side1);stroke-width:1.2}
 .cv-br{stroke:var(--trunk);stroke-width:1.5;stroke-linecap:round}
@@ -597,6 +603,11 @@ td.h{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:now
 
     <div class="col" id="out"></div>
   </div>
+  <footer class="credit">
+    <span>Criado por <b>Mariana Coan</b></span>
+    <a href="https://www.marianacoan.com" target="_blank" rel="noopener">www.marianacoan.com</a>
+    <a href="https://www.instagram.com/mariana_coan/" target="_blank" rel="noopener">@mariana_coan</a>
+  </footer>
 </div>
 
 <nav class="mtabs" id="mtabs" aria-label="Partes do app">
