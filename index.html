@@ -1073,6 +1073,10 @@ function showInfo(id){
 }
 $('cats').addEventListener('mouseover',e=>{const b=e.target.closest('.chip');if(b)showInfo(b.dataset.id);});
 $('cats').addEventListener('focusin',e=>{const b=e.target.closest('.chip');if(b)showInfo(b.dataset.id);});
+// ao tirar o mouse (ou o foco) de uma planta, o campo volta ao texto inicial
+function clearInfo(){const ci=$('chipinfo');ci.innerHTML='<span class="ci-d">Passe o mouse ou toque numa planta para ver o estrato, a luz e a origem.</span>';ci.title='';}
+$('cats').addEventListener('mouseout',e=>{const b=e.target.closest('.chip');if(b&&!(e.relatedTarget&&b.contains(e.relatedTarget)))clearInfo();});
+$('cats').addEventListener('focusout',e=>{if(e.target.closest('.chip'))clearInfo();});
 $('cats').addEventListener('toggle',e=>{const d=e.target;if(!d.matches||!d.matches('details.cat'))return;if($('busca').value.trim())return;S.openCats=S.openCats||{};S.openCats[d.dataset.k]=d.open;save();},true);
 $('cats').addEventListener('click',e=>{
   const ac=e.target.closest('[data-addcons]');if(ac){ac.dataset.addcons.split(',').forEach(i=>{if(BYID[i]&&!S.sel.includes(i))S.sel.push(i);});S.exemplo=false;update();return;}
@@ -2317,7 +2321,7 @@ function update(fromInput){
   save();
   if(!fromInput){$('inL').value=S.L;$('inW').value=S.W;$('inD').value=S.D||4;}
   syncSeg('modo',S.modo);syncSeg('sol',S.sol);syncSeg('agua',S.agua);syncSeg('solo',S.solo||'normal');
-  if(!S.sel.length){const ci=$('chipinfo');ci.innerHTML='<span class="ci-d">Passe o mouse ou toque numa planta para ver o estrato, a luz e a origem.</span>';ci.title='';}
+  if(!S.sel.length)clearInfo();
   syncSeg('forma',S.forma||'ret');
   syncSeg('potmode',S.potmode||'auto');syncSeg('pottipo',S.pottipo||'vaso');
   $('potF').hidden=S.modo!=='vaso';$('potMine').hidden=S.modo!=='vaso'||S.potmode!=='meu';
