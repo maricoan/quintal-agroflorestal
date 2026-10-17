@@ -1132,13 +1132,16 @@ function renderCats(){
       return `<button type="button" class="chip${off?' off':''}" data-id="${s.id}" aria-pressed="${on}">${sig(s.e)}${esc(s.n)}${s.o?` <span class="ico-w" role="img" aria-label="${ORIG_TXT[s.o]}">${ICON[s.o]}</span>`:''}${s.custom?` <span class="x" data-rm="${s.id}" role="button" aria-label="Remover ${esc(s.n)}">×</span>`:''}</button>`;
     }).join('')+`</div></details>`;
   });
+  // Parceiras fica no topo da lista
+  const hCats=h;h='';
   {const cons=consorcios().filter(c=>!q||c.sp.some(i=>BYID[i]&&BYID[i].n.toLowerCase().includes(q)));
     if(cons.length){const ids=new Set(S.sel);const nAll=cons.filter(c=>c.sp.every(i=>ids.has(i))).length;const open=!!q||!!(S.openCats||{}).parc;
       h+=`<details class="cat cat-parc" data-k="parc"${open?' open':''}><summary>${catIco('parc')}<span class="cat-t">Parceiras <span class="cat-sub">consórcios com estudo</span></span><span class="cat-n">${nAll?`${nAll} de ${cons.length}`:cons.length}</span></summary><ul class="pc-list">`+cons.map(c=>{
         const all=c.sp.every(i=>ids.has(i)),some=c.sp.some(i=>ids.has(i));const R=REFS[c.src];
         return `<li class="pc${all?' all':''}" title="${esc(c.t)}"><div class="pc-n">${c.sp.map(i=>BYID[i]?`<span class="${ids.has(i)?'on':''}">${esc(BYID[i].n)}</span>`:'').join('<i>+</i>')}</div><p class="pc-t">${esc(c.t)}${R&&R.n?` [${R.n}]`:''}</p><p class="pc-a">${esc(consArr(c.sp))}</p>${all?'<span class="cons-ok">✓ no seu plantio</span>':`<button type="button" class="btn cons-add" data-addcons="${c.sp.join(',')}">${some?'Completar consórcio':'Plantar consórcio'}</button>`}</li>`;}).join('')+
         COOP.filter(c=>c[2]<0).map(c=>`<li class="pc bad"><div class="pc-n"><span>${esc(BYID[c[0]].n)}</span><i>✕</i><span>${esc(BYID[c[1]].n)}</span></div><p class="pc-t">Não plantar juntas. ${esc(c[3])}${REFS[c[4]]?` [${REFS[c[4]].n}]`:''}</p></li>`).join('')+`</ul></details>`;}}
-  $('cats').innerHTML=h||'<p class="empty">Nenhuma planta com esse nome. Use “Adicionar uma planta” abaixo.</p>';
+  h+=hCats;
+  $('cats').innerHTML=h||'<p class="empty">Nenhuma planta com esse nome.</p>';
   $('nsel').textContent=S.sel.length+(S.sel.length===1?' escolhida':' escolhidas');
   $('tray').innerHTML=S.sel.length?`<span class="tray-t">Sua seleção</span><div class="tray-l">${S.sel.map(i=>BYID[i]).filter(Boolean).map(s=>`<button type="button" data-rmsel="${s.id}" title="Tirar ${esc(s.n)} da seleção">${sig(s.e)}${esc(s.n)}<span class="tray-x" aria-hidden="true">×</span></button>`).join('')}</div>`:`<span class="tray-t">Sua seleção</span><span class="hint">Nenhuma planta escolhida. Abra um grupo abaixo e toque nas plantas.</span>`;
 }
