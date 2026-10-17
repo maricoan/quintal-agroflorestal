@@ -2184,8 +2184,8 @@ function potCapacity(m){
   const fitsV=s=>s.v&&s.v<=m.V&&m.H>=depthNeed(s.v);const natF=(a,b)=>(b.nat||0)-(a.nat||0)||a.v-b.v;
   r.exT=treeOk?DATA.filter(s=>s.arv&&fitsV(s)&&s.e==='M').sort(natF).slice(0,4):[];
   r.exH=DATA.filter(s=>s.c==='h'&&(s.e==='B'||s.e==='R')&&fitsV(s)&&s.v<=5&&!NOUNDER.has((FORM[s.id]||[''])[0])).sort(natF).slice(0,4);
-  r.exA=DATA.filter(s=>s.c==='t'&&s.e==='B'&&fitsV(s)&&s.v<=8).sort(natF).slice(0,4);
-  r.exR=DATA.filter(s=>s.e==='R'&&fitsV(s)&&s.v<=5&&!s.espalha&&!NOUNDER.has((FORM[s.id]||[''])[0])).sort(natF).slice(0,4);
+  r.exA=DATA.filter(s=>s.c==='t'&&(s.e==='B'||s.e==='R')&&!s.arv&&!s.espalha&&fitsV(s)&&s.v<=8).sort(natF).slice(0,4);
+  r.exR=DATA.filter(s=>s.e==='R'&&fitsV(s)&&s.v<=5&&!s.espalha&&!NOUNDER.has((FORM[s.id]||[''])[0])&&!r.exH.includes(s)&&!r.exA.includes(s)).sort(natF).slice(0,4);
   return r;
 }
 function capacityBox(m){const c=potCapacity(m);const pl=(n,a,b)=>`${n} ${n===1?a:b}`;
