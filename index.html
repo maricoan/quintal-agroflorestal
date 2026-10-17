@@ -227,6 +227,8 @@ a.sm-i:hover{border-color:var(--leaf)}
 .need{fill:none;stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}
 .pot-top-w{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:12px;align-items:center}
 .pot-top-w svg{min-width:0!important;margin:0 auto}
+.pot-top-w.big{grid-template-columns:minmax(0,1fr)}
+.pot-top-w.big svg{max-width:520px!important;width:100%}
 @media (max-width:640px){.pot-top-w{grid-template-columns:minmax(0,1fr)}}
 .hb-lt{opacity:.78}
 .fl-pk{fill:var(--pink)}
@@ -2067,10 +2069,10 @@ function drawPotTop(m){
 }
 function myPotPanel(sel){
   const m=myPot(sel);const pct=Math.min(100,Math.round(m.uV/m.V*100));
-  let h=`<section class="panel card" aria-labelledby="t-mine"><h2 id="t-mine">${m.round?'Seu vaso':'Sua floreira'}</h2>
+  let h=`<section class="panel card" aria-labelledby="t-mine"><div class="head"><h2 id="t-mine">${m.round?'Seu vaso':'Sua floreira'}</h2><div class="seg" id="potvista"><button type="button" data-v="frente" aria-pressed="${S.potview!=='cima'}">Vista de frente</button><button type="button" data-v="cima" aria-pressed="${S.potview==='cima'}">Planta baixa</button></div></div>
   <div class="stats"><div class="stat"><b>${fmt(m.V,0)} L</b><span>volume de terra</span></div><div class="stat"><b>${m.fit.length}</b><span>${m.fit.length===1?'planta cabe':'plantas cabem'}</span></div><div class="stat"><b>${pct}%</b><span>do volume ocupado</span></div></div>
-  <div class="drawing plain">${drawMyPot(m)}</div>
-  ${m.placed&&m.placed.length?`<div class="pot-top-w"><div class="drawing plain">${drawPotTop(m)}</div><p class="hint"><b>Vista de cima.</b> Cada círculo tracejado é o espaço mínimo da planta, cerca de 80% do espaçamento usado no canteiro. Os círculos não se sobrepõem, e o centro de cada planta fica afastado da parede do vaso; só a folhagem pode passar da borda: ${m.placed.map(p=>`${esc(p.s.n.replace(/ \(.*\)$/,''))} ${Math.round(p.r*200)} cm`).join(' · ')}.${m.placed.some(p=>p.s.arv)?' Na frutífera, o círculo marca só a zona do tronco; as plantas de raiz rasa ficam em volta, a pelo menos '+Math.round((.07+Math.min(...m.placed.filter(p=>!p.s.arv).map(p=>p.r).concat([.06])))*100)+' cm do tronco.':''}</p></div>`:''}`;
+  ${S.potview==='cima'?'':`<div class="drawing plain">${drawMyPot(m)}</div>`}
+  ${m.placed&&m.placed.length?`<div class="pot-top-w${S.potview==='cima'?' big':''}"><div class="drawing plain">${drawPotTop(m)}</div><p class="hint"><b>Vista de cima.</b> Cada círculo tracejado é o espaço mínimo da planta, cerca de 80% do espaçamento usado no canteiro. Os círculos não se sobrepõem, e o centro de cada planta fica afastado da parede do vaso; só a folhagem pode passar da borda: ${m.placed.map(p=>`${esc(p.s.n.replace(/ \(.*\)$/,''))} ${Math.round(p.r*200)} cm`).join(' · ')}.${m.placed.some(p=>p.s.arv)?' Na frutífera, o círculo marca só a zona do tronco; as plantas de raiz rasa ficam em volta, a pelo menos '+Math.round((.07+Math.min(...m.placed.filter(p=>!p.s.arv).map(p=>p.r).concat([.06])))*100)+' cm do tronco.':''}</p></div>`:''}`;
   if(m.out.length)h+=`<div class="cap-alert" role="alert"><div class="cap-h"><span class="cap-ico" aria-hidden="true">!</span><b>${m.out.length===1?'1 planta não cabe':`${m.out.length} plantas não cabem`} ${m.round?'neste vaso':'nesta floreira'}</b></div><p>A primeira planta escolhida tem prioridade. Tire plantas da lista ou use um recipiente maior.</p><div class="cap-list">${m.out.map(([s,why])=>`<button type="button" data-rmsel="${s.id}" title="Tirar ${esc(s.n)} da lista">${sig(s.e)}${esc(s.n)} <span class="hint" style="font-weight:400">· ${esc(why)}</span><span class="cap-x" aria-hidden="true">×</span></button>`).join('')}</div>${otherList(m.fit,null)}</div>`;
   m.out.filter(([s])=>NOPOT[s.id]).forEach(([s])=>{h+=`<ul class="notes"><li class="note warn"><span class="tag">Atenção</span><div class="body"><span>${esc(NOPOT[s.id])}</span></div></li></ul>`;});
   if(m.fit.length){const comp=potCompanions(m);const first=m.fit[0];
@@ -2081,8 +2083,8 @@ function myPotPanel(sel){
 }
 function potItems(sel){
   const ok=sel.filter(s=>s.v>0),no=sel.filter(s=>!s.v);
-  const hosts=ok.filter(isHost).sort((a,b)=>b.v-a.v);
-  let rest=ok.filter(s=>!isHost(s));
+  const hosts=ok.filter(s=>s.arv).sort((a,b)=>b.v-a.v);
+  let rest=ok.filter(s=>!s.arv);
   // distribui as plantas de raiz rasa entre os vasos das frutíferas, uma por vez
   const HS=hosts.map(h=>({h,under:[],used:0,ring:ringA(h.v)}));
   let moved=true;
@@ -2091,7 +2093,12 @@ function potItems(sel){
       const c=rest.filter(s=>underOk(o.h,s)&&!o.under.some(u=>{const k=coop(u.id,s.id);return k&&k.v<0;})&&o.used+underFp(s)<=o.ring+1e-9)
         .sort((a,b)=>underPrio(o.h,a)-underPrio(o.h,b)||a.v-b.v)[0];
       if(c){o.under.push(c);o.used+=underFp(c);rest=rest.filter(s=>s!==c);moved=true;}}}
-  const items=HS.map(o=>({kind:'vaso',v:Math.ceil(o.h.v+.5*o.under.reduce((a,s)=>a+s.v,0)),sp:[o.h],under:o.under}));
+  // o vaso cresce até caberem todas com a distância mínima; se não der, a planta volta para outro recipiente
+  const potDimV=v=>{const d=Math.round(Math.cbrt(v/.6)*10);return {round:true,Wd:d,Dp:d};};
+  const fitsAll=(v,list)=>{const m=potDimV(v),pl=[];return list.every(s=>{const p=tryPlace(m,pl,s);if(p)pl.push(p);return !!p;});};
+  const items=HS.map(o=>{let v=Math.ceil(o.h.v+.5*o.under.reduce((a,s)=>a+s.v,0));
+    while(o.under.length){let vv=v;while(vv<=v*2.2&&!fitsAll(vv,[o.h,...o.under]))vv+=5;if(fitsAll(vv,[o.h,...o.under])){v=vv;break;}rest.push(o.under.pop());v=Math.ceil(o.h.v+.5*o.under.reduce((a,s)=>a+s.v,0));}
+    return {kind:'vaso',v,sp:[o.h],under:o.under};});
   rest.filter(s=>s.v>5).sort((a,b)=>b.v-a.v).forEach(s=>items.push({kind:'vaso',v:s.v,sp:[s],under:[]}));
   // jardineiras de 60 cm: cabem quantas a largura de cada planta permitir (até 4), juntando as que cooperam
   const wcm=s=>Math.max(15,Math.round((s.ep||.25)*90));
@@ -2220,6 +2227,32 @@ function potPlantSVG(s,cx,base,w,ph,room){
   if(opt.fr&&fz){const [cls,n]=opt.fr;const [x0,y0,rx,ry]=fz;
     for(let i=0;i<Math.max(n,3);i++){const a=i*2.4+.5,r=.3+.6*((i%3)/2);b+=`<circle class="${cls}" cx="${X(x0+Math.cos(a)*rx*r)}" cy="${X(y0+Math.sin(a)*ry*r)}" r="2.2"/>`;}}
   return `<g>${b}</g>`;
+}
+// planta baixa dos vasos sugeridos: cada vaso visto de cima, com o espaço de cada planta
+function drawPotsTop(items){
+  const X=n=>n.toFixed(1);
+  const rows=[{t:'Fundo · plantas altas',f:it=>rankOf(it)<=1},{t:'Meio · plantas médias',f:it=>rankOf(it)===2},{t:'Frente · plantas baixas, perto da luz',f:it=>rankOf(it)===3}]
+    .map(r=>({t:r.t,it:items.filter(r.f)})).filter(r=>r.it.length);
+  const dim=it=>it.kind==='jard'?{round:false,Wd:60,Dp:20}:(()=>{const d=Math.round(Math.cbrt(it.v/.6)*10);return {round:true,Wd:d,Dp:d};})();
+  const gap=.12;const rowW=r=>r.it.reduce((a,it)=>a+dim(it).Wd/100,0)+gap*(r.it.length-1);
+  const maxW=Math.max(.6,...rows.map(rowW));const K=Math.min(420,600/maxW);const VW=Math.max(360,maxW*K+60);
+  let y=8,b='';
+  rows.forEach(r=>{const hMax=Math.max(...r.it.map(it=>dim(it).Dp/100))*K;
+    b+=`<text class="s-band" x="0" y="${y+12}">${r.t}</text>`;const cy=y+30+hMax/2;let x=(VW-rowW(r)*K)/2;
+    r.it.forEach((it,ii)=>{const m=dim(it),w=m.Wd/100*K,h=m.Dp/100*K,cx=x+w/2;
+      b+=m.round?`<circle class="pot-top" cx="${X(cx)}" cy="${X(cy)}" r="${X(w/2)}"/>`:`<rect class="pot-top" x="${X(x)}" y="${X(cy-h/2)}" width="${X(w)}" height="${X(h)}" rx="3"/>`;
+      const placed=[];it.sp.concat(it.under||[]).forEach(s=>{const p=tryPlace(m,placed,s);if(p)placed.push(p);});
+      placed.forEach(p=>{const px=cx+p.x*K,py=cy+p.y*K;
+        if(placed.length>1)b+=`<circle class="need" cx="${X(px)}" cy="${X(py)}" r="${X(p.r*K)}"><title>${esc(p.s.n)}: ${Math.round(p.r*200)} cm de espaço</title></circle>`;
+        b+=`<circle class="p-${p.s.e}" cx="${X(px)}" cy="${X(py)}" r="${X(Math.max(6,Math.min(10,p.r*K*.5)))}"/><text class="lab ${darkLab(p.s.e)}" x="${X(px)}" y="${X(py)}">${esc(p.s.a)}</text>`;});
+      const lab=it.sp.concat(it.under||[]).map(s=>s.n.replace(/ \(.*\)$/,'')).join(' + ');const mx=Math.max(8,Math.floor((w+gap*K)/5.8));
+      b+=`<text class="nm-lab" x="${X(cx)}" y="${X(cy+hMax/2+16+(w+gap*K<95&&ii%2?13:0))}">${esc(lab.length>mx?lab.slice(0,mx-1)+'…':lab)}</text>`;
+      b+=`<text class="s-dim" x="${X(cx)}" y="${X(cy+hMax/2+30+(w+gap*K<95&&ii%2?13:0))}" text-anchor="middle">${it.kind==='jard'?'60 × 20 cm':'Ø '+m.Wd+' cm'} · ${it.v} L</text>`;
+      x+=w+gap*K;});
+    y+=hMax+30+58;});
+  b+=`<circle class="s-sun" cx="${VW-112}" cy="${y+8}" r="6"/><text class="s-dim" x="${VW-100}" y="${y+12}">luz ↓ frente</text>`;
+  const sb=.5*K;b+=`<line class="s-sunline" x1="10" y1="${y+8}" x2="${10+sb}" y2="${y+8}"/><line class="s-sunline" x1="10" y1="${y+3}" x2="10" y2="${y+13}"/><line class="s-sunline" x1="${10+sb}" y1="${y+3}" x2="${10+sb}" y2="${y+13}"/><text class="s-dim" x="${16+sb}" y="${y+12}">50 cm</text>`;
+  return `<svg viewBox="0 0 ${VW.toFixed(0)} ${(y+26).toFixed(0)}" role="img" aria-label="Planta baixa dos vasos sugeridos">${b}</svg>`;
 }
 function drawPots(items){
   const rows=[{t:'Fundo · plantas altas',f:it=>rankOf(it)<=1},{t:'Meio · plantas médias',f:it=>rankOf(it)===2},{t:'Frente · plantas baixas, perto da luz',f:it=>rankOf(it)===3}]
@@ -2396,9 +2429,9 @@ function update(fromInput){
   }else{
     if(S.potmode==='meu'){h+=myPotPanel(p.sel);}else{
     const pi=potItems(p.sel);
-    h+=`<section class="panel card" aria-labelledby="t-vas"><h2 id="t-vas">Vasos sugeridos</h2>`;
+    h+=`<section class="panel card" aria-labelledby="t-vas"><div class="head"><h2 id="t-vas">Vasos sugeridos</h2><div class="seg" id="potvista"><button type="button" data-v="frente" aria-pressed="${S.potview!=='cima'}">Vista de frente</button><button type="button" data-v="cima" aria-pressed="${S.potview==='cima'}">Planta baixa</button></div></div>`;
     if(pi.items.length){
-      h+=`<div class="drawing plain">${drawPots(pi.items)}</div><p class="hint">Vasos e plantas na mesma escala; cada planta aparece na altura máxima que costuma alcançar em vaso. A barrinha ao lado do vaso marca a faixa de altura, da mínima à máxima, também escrita acima da planta. São valores aproximados, que variam com a variedade, a poda e o tamanho do vaso. Os mais altos ficam no fundo para não fazer sombra nos baixos, que ficam na frente, perto da luz.</p>${pi.items.some(it=>it.under&&it.under.length)?`<p class="hint">Para aproveitar melhor o espaço, as hortaliças e aromáticas de raiz rasa vão na borda dos vasos das frutíferas, a 10–15 cm do tronco, na terra da superfície que a árvore pouco usa. O vaso cresce só metade do volume que elas pediriam sozinhas. É prática comum de cultivo em vaso; há pouco estudo publicado sobre esses consórcios em recipiente, por isso o app prefere as parceiras com cooperação documentada e as que aguentam meia-sombra. Pode a frutífera para a copa não fechar sobre elas.</p>`:''}`;
+      h+=S.potview==='cima'?`<div class="drawing plain">${drawPotsTop(pi.items)}</div><p class="hint"><b>Planta baixa.</b> Cada vaso visto de cima, na mesma escala. O círculo tracejado é o espaço mínimo de cada planta, cerca de 80% do espaçamento de canteiro, e os círculos não se sobrepõem. Nos vasos das frutíferas, as plantas de raiz rasa ficam em volta do tronco. Os vasos maiores ficam no fundo, longe da luz, e os menores na frente.</p>`:`<div class="drawing plain">${drawPots(pi.items)}</div><p class="hint">Vasos e plantas na mesma escala; cada planta aparece na altura máxima que costuma alcançar em vaso. A barrinha ao lado do vaso marca a faixa de altura, da mínima à máxima, também escrita acima da planta. São valores aproximados, que variam com a variedade, a poda e o tamanho do vaso. Os mais altos ficam no fundo para não fazer sombra nos baixos, que ficam na frente, perto da luz.</p>${pi.items.some(it=>it.under&&it.under.length)?`<p class="hint">Para aproveitar melhor o espaço, as hortaliças e aromáticas de raiz rasa vão na borda dos vasos das frutíferas, a 10–15 cm do tronco, na terra da superfície que a árvore pouco usa. O vaso cresce só metade do volume que elas pediriam sozinhas. É prática comum de cultivo em vaso; há pouco estudo publicado sobre esses consórcios em recipiente, por isso o app prefere as parceiras com cooperação documentada e as que aguentam meia-sombra. Pode a frutífera para a copa não fechar sobre elas.</p>`:''}`;
       h+=`<div class="pots">`+pi.items.map(it=>`<div class="potc"><b>${it.kind==='jard'?`Jardineira de 60 cm · mínimo ${it.v} L`:`Vaso mínimo de ${it.v} L`}</b><span class="who">${esc(it.sp.map(s=>s.n).join(' + '))}${it.under&&it.under.length?` <span class="und">+ ${esc(it.under.map(s=>s.n).join(', '))} na borda</span>`:''}</span><span class="hint">${potDims(it)}</span><span class="hint"><b>Altura no vaso:</b> ${it.sp.map(s=>`${it.sp.length>1?esc(s.n)+' ':''}${cmTxt(potRange(s))}`).join(' · ')}</span><span class="hint">${it.kind==='jard'?it.sp.map(s=>`${esc(s.n)}: mín. ${s.v} L`).join(' · '):`${EST[it.sp[0].e]} · colheita em ${esc(it.sp[0].col)}`}</span>${it.under&&it.under.length?`<span class="hint"><b>Na borda:</b> ${it.under.map(u=>`${esc(u.n)} (${underWhy(it.sp[0],u)}; altura ${cmTxt(potRange(u))})`).join(' · ')}</span>`:''}</div>`).join('')+`</div>`;
     }else h+=emptyState("Escolha as plantas na lista ao lado para ver o tamanho e a posição de cada vaso.");
     if(pi.no.length)h+=`<p class="hint">Não indicadas para vaso: ${esc(pi.no.map(s=>s.n).join(', '))}.</p>`;
@@ -2437,6 +2470,7 @@ $('out').addEventListener('click',e=>{
   const ac=e.target.closest('[data-addcons]');if(ac){ac.dataset.addcons.split(',').forEach(i=>{if(BYID[i]&&!S.sel.includes(i))S.sel.push(i);});S.exemplo=false;update();return;}
   const rs=e.target.closest('[data-rmsel]');if(rs){S.sel=S.sel.filter(i=>i!==rs.dataset.rmsel);S.exemplo=false;update();return;}
   const v=e.target.closest('#vista button');if(v){S.vista=v.dataset.v;update();return;}
+  const pv=e.target.closest('#potvista button');if(pv){S.potview=pv.dataset.v;update();return;}
   const b=e.target.closest('[data-addsp]');if(!b)return;const id=b.dataset.addsp;if(!S.sel.includes(id))S.sel.push(id);S.exemplo=false;update();
 });
 document.addEventListener('click',e=>{const b=e.target.closest('[data-mt]');if(!b)return;S.mtab=b.dataset.mt;save();mtabSync();window.scrollTo(0,0);update();});
