@@ -278,6 +278,11 @@ svg text{font-family:var(--f-mono);fill:var(--ink)}
 .ab-leg .ab{min-width:26px;height:22px;border-radius:11px;display:inline-flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-size:11.5px;padding:0 5px}
 .capbox{border:1px solid var(--line);border-left:4px solid var(--leaf);border-radius:10px;padding:12px 14px;background:var(--leaf-soft);display:flex;flex-direction:column;gap:8px}
 .capbox h3{margin:0;font-size:15px}
+.attn{align-self:flex-start;max-width:100%;cursor:default;outline:none}
+.attn-h{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+.attn-i{width:16px;height:16px;border-radius:50%;background:var(--red);color:#fff;font-weight:700;font-size:11px;line-height:16px;text-align:center}
+.attn-b{display:none;margin:6px 0 0;padding:8px 10px;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+.attn:hover .attn-b,.attn:focus .attn-b,.attn:focus-within .attn-b{display:block}
 .cap-ex-t{margin:4px 0 0;font-size:14px;font-weight:700}
 .capbox ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:14px}
 .cap-ex{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
@@ -2221,7 +2226,7 @@ function capacityBox(m){const c=potCapacity(m);const pl=(n,a,b)=>`${n} ${n===1?a
   opt.push(`<li><b>${c.treeOk?'Sem árvore':'Só plantas baixas'}:</b> ${pl(f.nh,'hortaliça baixa','hortaliças baixas')}${f.nrh?` + ${pl(f.nrh,'rasteira','rasteiras')}`:''}, ou ${pl(f.na,'aromática baixa','aromáticas baixas')}${f.nra?` + ${pl(f.nra,'rasteira','rasteiras')}`:''}.</li>`);
   if(!c.treeOk)opt.push(`<li class="hint">Para uma frutífera pequena (pitanga, acerola, limão) o recipiente precisa de pelo menos 50 L e 35 cm de fundo.</li>`);
   return `<div class="capbox"><h3>O que cabe ${m.round?'neste vaso':'nesta floreira'} (≈ ${fmt(m.V,0)} L)</h3><ul>${opt.join('')}</ul>
-    <p class="hint">Seguindo a agricultura sintrópica: combine estratos diferentes no mesmo recipiente, com a planta mais alta no centro (ou no lado oposto à luz), as baixas em volta e uma forração rasteira cobrindo a terra, que nunca deve ficar exposta. A poda da planta maior volta para a terra como cobertura. Contas feitas com valores típicos de cada estrato: frutífera pequena de 50 L no centro, hortaliças com 20 cm de espaço e 5 L, aromáticas com 24 cm e 5 L, rasteiras com 12 cm e 3 L. Plantas que pedem mais terra (como couve, cenoura ou limão) reduzem esses números.</p>
+    <div class="attn" tabindex="0"><span class="attn-h"><span class="attn-i" aria-hidden="true">!</span>Atenção</span><p class="hint attn-b">Seguindo a agricultura sintrópica: combine estratos diferentes no mesmo recipiente, com a planta mais alta no centro (ou no lado oposto à luz), as baixas em volta e uma forração rasteira cobrindo a terra, que nunca deve ficar exposta. A poda da planta maior volta para a terra como cobertura. Contas feitas com valores típicos de cada estrato: frutífera pequena de 50 L no centro, hortaliças com 20 cm de espaço e 5 L, aromáticas com 24 cm e 5 L, rasteiras com 12 cm e 3 L. Plantas que pedem mais terra (como couve, cenoura ou limão) reduzem esses números.</p></div>
     <h4 class="cap-ex-t">Exemplos:</h4><div class="cap-ex">${c.exT.length?`<div><span class="lbl">Médio (frutífera)</span><div class="acts">${chips(c.exT)}</div></div>`:''}<div><span class="lbl">Baixo · hortaliças</span><div class="acts">${chips(c.exH)}</div></div><div><span class="lbl">Baixo · aromáticas</span><div class="acts">${chips(c.exA)}</div></div><div><span class="lbl">Rasteiro · forração</span><div class="acts">${chips(c.exR)}</div></div></div></div>`;}
 function myPotPanel(sel){
   const m=myPot(sel);const pct=Math.min(100,Math.round(m.uV/m.V*100));
