@@ -680,7 +680,7 @@ const DATA=[
  {id:'pimenta',n:'Pimenta',a:'Pi',c:'h',e:'B',el:1.2,ep:.6,src:'E47',sol:'P',pl:r(8,12),col:'90–120 dias',d:100,v:10,h:.8},
  {id:'quiabo',n:'Quiabo',a:'Qu',c:'h',e:'B',el:1,ep:.4,src:'E47',sol:'P',pl:r(9,2),col:'70–80 dias',d:75,v:20,h:1.5},
  {id:'feijao',n:'Feijão (de vara)',a:'Fj',c:'h',e:'M',bed:1,el:.5,ep:.1,src:'E16',sol:'P',pl:r(9,11),col:'80–90 dias',d:85,v:0,adubo:1,h:1.8},
- {id:'abobora',n:'Abóbora',a:'Ab',c:'h',e:'R',el:2.5,ep:2.5,src:'E47',sol:'P',pl:r(9,1),col:'90–130 dias',d:120,v:0,h:.4},
+ {id:'abobora',n:'Abóbora',a:'Ab',c:'h',e:'R',el:2.5,ep:2.5,src:'E47',sol:'P',pl:r(9,1),col:'90–130 dias',d:120,v:60,h:.4},
  {id:'batatadoce',n:'Batata-doce',a:'Bd',c:'h',e:'R',el:.9,ep:.3,src:'E47',sol:'P',pl:r(9,3),col:'120–150 dias',d:130,v:30,h:.4},
  {id:'milho',n:'Milho',a:'Mi',c:'h',e:'M',bed:1,el:1,ep:.2,src:'E47',sol:'P',pl:r(9,1),col:'80–110 dias',d:100,v:0,h:2},
  {id:'taioba',n:'Taioba',a:'Ta',c:'h',e:'B',el:.6,ep:.6,src:'PR',sol:'MS',pl:r(9,12),col:'70–90 dias (folhas)',d:80,v:20,h:1.2},
@@ -861,7 +861,7 @@ const DATA=[
  {id:'physalis',n:"Physalis",sci:"Physalis pubescens",a:"Py",c:'h',o:'N',e:'B',el:1,ep:0.6,src:'PR',sol:'P',pl:r(8,12),col:"90–120 dias",d:100,v:20,h:0.8},
  {id:'jurubeba',n:"Jurubeba",sci:"Solanum paniculatum",a:"Jd",c:'h',o:'N',e:'M',el:1,ep:1,src:'PR',sol:'P',pl:r(9,3),col:"6–8 meses",d:210,v:40,h:2},
  {id:'amendoimgrao',n:"Amendoim",sci:"Arachis hypogaea",a:"Aw",c:'h',o:'N',e:'R',el:0.5,ep:0.15,src:'PR',sol:'P',pl:r(9,12),col:"90–120 dias",d:110,v:0,h:0.3,adubo:1},
- {id:'maxixe',n:"Maxixe",sci:"Cucumis anguria",a:"Mx",c:'h',o:'Z',e:'R',el:1,ep:1,src:'EPA',sol:'P',pl:r(9,2),col:"45–60 dias",d:55,v:0,h:0.4},
+ {id:'maxixe',n:"Maxixe",sci:"Cucumis anguria",a:"Mx",c:'h',o:'Z',e:'R',el:1,ep:1,src:'EPA',sol:'P',pl:r(9,2),col:"45–60 dias",d:55,v:40,h:0.4},
  {id:'caruru',n:"Caruru",sci:"Amaranthus spp.",a:null,c:'h',o:'Z',e:'B',el:0.3,ep:0.3,src:'PR',sol:'P',pl:r(9,3),col:"40–50 dias",d:45,v:10,h:0.8},
  {id:'baleeira',n:"Erva-baleeira",sci:"Varronia curassavica",a:"Er",c:'t',o:'N',e:'M',el:1.5,ep:1,src:'PR',sol:'P',pl:r(9,3),col:"folhas em 6 meses",d:180,v:40,h:1.8},
  {id:'guaco',n:"Guaco",sci:"Mikania glomerata",a:"Gg",c:'t',o:'N',e:'M',el:1.5,ep:1,src:'PR',sol:'PM',pl:r(9,3),col:"folhas em 6 meses",d:180,v:30,h:2.5},
@@ -2037,13 +2037,14 @@ function drawPotsIso(items){
 // ---------- vasos ----------
 const DRYP=new Set(['peixinho','limao','mexerica','alecrim','lavanda','alecrimcampo','macela','carqueja','dyckia','tuna','abacaxi','alecrimpimenta']);
 const WETP=new Set(['alface','rucula','couve','salsinha','coentropara','hortela','taioba','jambu','cebolinha','beterraba','cenoura']);
+const VINEPOT={abobora:'Abóbora em vaso: só variedades miniatura (como a abóbora-de-pescoço mini ou a moranga mini), uma por vaso de 60 L ou mais. As ramas passam de 2 m: conduza-as para o chão ou para uma treliça.',maxixe:'Maxixe em vaso: um pé por vaso de 40 L, com tutor ou treliça para as ramas subirem.',batatadoce:'Batata-doce em vaso: um pé por vaso de 30 L; as ramas cobrem a terra toda e podem cair pela borda.'};
 function potNotes(host,under){const o=[];if(!host||!under.length)return o;
   const wet=under.filter(s=>WETP.has(s.id));
   if(DRYP.has(host.id)&&wet.length)o.push(`Rega: ${host.n} gosta que a terra seque um pouco entre as regas, e ${wet.map(s=>s.n).join(', ')} ${wet.length>1?'pedem':'pede'} terra sempre úmida. Regue pouco e com mais frequência, só na borda, longe do tronco, e cubra a terra com palha.`);
   else if(!DRYP.has(host.id)&&under.some(s=>DRYP.has(s.id)))o.push(`Rega: ${under.filter(s=>DRYP.has(s.id)).map(s=>s.n).join(', ')} prefere terra mais seca que a ${host.n}; deixe-a no lado mais ensolarado e regue mais perto do tronco.`);
   o.push(`Com o tempo: as plantas da borda funcionam bem nos primeiros 1–2 anos. Quando a copa de ${host.n} fechar e as raízes tomarem o vaso, colha, reduza ou mude-as de vaso.`);
   return o;}
-const NOPOT={mandioca:'Mandioca não deve ser plantada em vaso. As raízes engrossam e se espalham por 40–60 cm de profundidade e de largura, a planta passa de 2 m e tomba com o vento, e num recipiente ela produz muito pouco. Plante no chão, num canteiro ou na linha de árvores, a cerca de 80 × 60 cm.'};
+const NOPOT={melancia:'Melancia não deve ser plantada em vaso: as ramas passam de 3 m e cada fruto pesa vários quilos. Plante no chão, com 2 × 2 m para cada planta.',mandioca:'Mandioca não deve ser plantada em vaso. As raízes engrossam e se espalham por 40–60 cm de profundidade e de largura, a planta passa de 2 m e tomba com o vento, e num recipiente ela produz muito pouco. Plante no chão, num canteiro ou na linha de árvores, a cerca de 80 × 60 cm.'};
 // frutíferas e plantas maiores recebem, na borda do vaso, hortaliças e aromáticas de raiz rasa
 const isHost=s=>!!(s&&s.v&&(s.arv||s.v>=20)&&!(FORM[s.id]&&FORM[s.id][0]==='groundvine'));
 const NOUNDER=new Set(['vine','trellis','climber','tripod','staked','cane','groundvine','tomato']);
@@ -2058,12 +2059,12 @@ const depthNeed=v=>v<=5?12:v<=15?18:v<=30?25:v<=60?35:45;
 const footA=s=>{const d=Math.cbrt(s.v/.6)/10;return d*d*.785;};
 // espaço que cada planta ocupa na superfície do vaso (raio, em m): 80% do espaçamento de canteiro;
 // a frutífera reserva só a zona do tronco, e as de raiz rasa ficam em volta dela
-const prad=s=>s.arv?.07:Math.min(.3,Math.max(.06,(s.ep||.3)*.4));
+const prad=s=>s.arv?.07:(FORM[s.id]&&FORM[s.id][0]==='groundvine')?.3:Math.min(.3,Math.max(.06,(s.ep||.3)*.4));
 function tryPlace(m,placed,s,tight){
   const r=prad(s),e=Math.max(.04,r*.5),hx=m.Wd/200,hy=m.Dp/200;
   const inside=(x,y)=>m.round?Math.hypot(x,y)<=hx-e+1e-9:(Math.abs(x)<=hx-e+1e-9&&Math.abs(y)<=hy-e+1e-9);
   const ok=(x,y)=>placed.every(p=>Math.hypot(p.x-x,p.y-y)>=p.r+r-1e-9);
-  if(!placed.length&&(s.arv||isHost(s)))return {s,x:0,y:0,r};
+  if(!placed.length&&(s.arv||(isHost(s)&&m.round)))return {s,x:0,y:0,r};
   let best=null,bs=1e9;
   // com frutífera no centro: as menores vão para a borda, espalhadas; as de sol pleno do lado da luz (esquerda), as de sombra à direita
   const host=placed.find(p=>p.s.arv&&Math.abs(p.x)<1e-6&&Math.abs(p.y)<1e-6);
@@ -2122,7 +2123,7 @@ function myPot(sel){
   const order=cand.filter(isHost).concat(cand.filter(s=>!isHost(s)).sort((a,b)=>sunN(b)-sunN(a)));
   // espécies baixas (estrato baixo ou rasteiro) enchem o recipiente: depois de uma muda de cada, o espaço que sobra
   // é dividido entre elas em rodízio, até não caber mais nenhuma
-  const fillable=s=>!s.arv&&(s.e==='B'||s.e==='R')&&!s.espalha;
+  const fillable=s=>!s.arv&&(s.e==='B'||s.e==='R')&&!s.espalha&&!(FORM[s.id]&&FORM[s.id][0]==='groundvine');
   const tight=order.some(fillable);
   const placed=[],under=[];let uV=0;
   const volOf=s=>{const h=!isHost(s)&&placed.find(p=>isHost(p.s)&&underOk(p.s,s));return [h?s.v*.5:s.v,h];};
@@ -2135,7 +2136,7 @@ function myPot(sel){
   const base=placed.slice();
   let queue=order.filter(s=>fillable(s)&&placed.some(p=>p.s===s));
   for(let guard=0;queue.length&&guard<200;guard++){const next=[];
-    queue.forEach(s=>{const [vv]=volOf(s);if(uV+vv>V+.01)return;const p=latticePlace(m,placed,s);if(!p)return;placed.push(p);uV+=vv;next.push(s);});
+    queue.forEach(s=>{const [v0]=volOf(s);const vv=Math.min(v0,Math.PI*prad(s)*prad(s)*(H/100)*1000*.85);if(uV+vv>V+.01)return;const p=latticePlace(m,placed,s);if(!p)return;placed.push(p);uV+=vv;next.push(s);});
     queue=next;}
   const fit=sel.filter(s=>placed.some(p=>p.s===s));
   const count={};placed.forEach(p=>{count[p.s.id]=(count[p.s.id]||0)+1;});
@@ -2250,6 +2251,7 @@ function myPotPanel(sel){
   ${m.placed&&m.placed.length?`<div class="pot-top-w${S.potview==='cima'?' big':''}"><div class="drawing plain">${drawPotTop(m)}</div>${abLegend(m.placed.map(p=>p.s))}<p class="hint"><b>Vista de cima.</b> Cada círculo tracejado é o espaço mínimo da planta, cerca de 80% do espaçamento usado no canteiro. Os círculos não se sobrepõem, e o centro de cada planta fica afastado da parede do vaso; só a folhagem pode passar da borda: ${m.fit.map(s=>`${esc(s.n.replace(/ \(.*\)$/,''))} ${Math.round(prad(s)*200)} cm${m.count[s.id]>1?` (${m.count[s.id]} mudas)`:''}`).join(' · ')}.${m.placed.some(p=>p.s.arv)?' Na frutífera, o círculo marca só a zona do tronco; as plantas de raiz rasa ficam em volta, a pelo menos '+Math.round(Math.min(...m.placed.filter(p=>!p.s.arv).map(p=>Math.hypot(p.x,p.y)).concat([9]))*100)+' cm do tronco; a terra em volta do tronco fica só com palha, para as raízes da árvore.':''}</p></div>`:''}`;
   if(m.out.length)h+=`<div class="cap-alert" role="alert"><div class="cap-h"><span class="cap-ico" aria-hidden="true">!</span><b>${m.out.length===1?'1 planta não cabe':`${m.out.length} plantas não cabem`} ${m.round?'neste vaso':'nesta floreira'}</b></div><p>A primeira planta escolhida tem prioridade. Tire plantas da lista ou use um recipiente maior.</p><div class="cap-list">${m.out.map(([s,why])=>`<button type="button" data-rmsel="${s.id}" title="Tirar ${esc(s.n)} da lista">${sig(s.e)}${esc(s.n)} <span class="hint" style="font-weight:400">· ${esc(why)}</span><span class="cap-x" aria-hidden="true">×</span></button>`).join('')}</div>${otherList(m.fit,null)}</div>`;
   {const hst=m.fit.find(s=>s.arv);const nts=potNotes(hst,m.fit.filter(s=>s!==hst));if(hst&&nts.length)h+=`<ul class="notes">${nts.map(t=>`<li class="note tip"><span class="tag">${t.startsWith('Rega')?'Rega':'Tempo'}</span><div class="body"><span>${esc((x=>x.charAt(0).toUpperCase()+x.slice(1))(t.replace(/^(Rega|Com o tempo): /,'')))}</span></div></li>`).join('')}</ul>`;}
+  m.fit.filter(s=>VINEPOT[s.id]).forEach(s=>{h+=`<ul class="notes"><li class="note tip"><span class="tag">Rama</span><div class="body"><span>${esc(VINEPOT[s.id])}</span></div></li></ul>`;});
   m.out.filter(([s])=>NOPOT[s.id]).forEach(([s])=>{h+=`<ul class="notes"><li class="note warn"><span class="tag">Atenção</span><div class="body"><span>${esc(NOPOT[s.id])}</span></div></li></ul>`;});
   if(m.fit.length){const comp=potCompanions(m);const first=m.fit[0];
     h+=comp.length?`<div class="coop-sec ok"><h3>Companheiras para ${esc(first.n)}</h3><p class="hint">${m.fit.some(isHost)?'Cooperam ou convivem':'Cooperam'} com ${esc(first.n)} e caberiam junto com ela. Ao acrescentar uma, o app tira algumas mudas das espécies baixas para abrir espaço.</p><ul class="notes"><li class="note tip"><span class="tag">Junte</span><div class="body"><div class="acts">${comp.map(([o,c])=>`<button type="button" data-addsp="${o.id}" title="${esc(c.t)}">+ ${esc(o.n)} <span style="opacity:.75">(${c.src==='P'?'na borda, ≈ '+fmt(o.v*.5,1)+' L':'mín. '+o.v+' L'}${c.src==='L'?', suas listas':''})</span></button>`).join('')}</div>${comp.filter(([o,c])=>c.src!=='L'&&c.src!=='P').slice(0,2).map(([o,c])=>`<span class="hint">${esc(o.n)}: ${esc(c.t)}</span>`).join('')}${comp.some(([o,c])=>c.src==='P')?`<span class="hint">"Na borda": hortaliças e aromáticas de raiz rasa plantadas a 15–25 cm do tronco da ${esc(first.n)}, na terra da superfície. Usam cerca de metade do volume que pediriam num vaso só delas. É prática comum de cultivo em vaso, com pouco estudo publicado.</span>`:''}</div></li></ul></div>`
