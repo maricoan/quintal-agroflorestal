@@ -602,16 +602,6 @@ td.h{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:now
         </div>
         <p class="chipinfo" id="chipinfo" aria-live="polite"><span class="ci-d">Passe o mouse ou toque numa planta para ver o estrato, a luz e a origem.</span></p>
         <div class="cats" id="cats"></div>
-        <details class="add">
-          <summary>Adicionar uma planta que não está na lista</summary>
-          <form class="addform" id="addform">
-            <div class="field"><label class="lbl" for="cNome">Nome</label><input id="cNome" type="text" required placeholder="Ex.: maracujá"></div>
-            <div class="field"><label class="lbl" for="cEst">Altura adulta</label>
-              <select id="cEst"><option value="R">Rasteira (até 30 cm)</option><option value="B" selected>Baixa (até 1,5 m)</option><option value="M">Média (1,5 a 4 m)</option><option value="A">Árvore (acima de 4 m)</option></select></div>
-            <p class="hint">O app sugere o espaçamento pela altura da planta.</p>
-            <button class="btn" type="submit">Adicionar</button>
-          </form>
-        </details>
         <button type="button" class="mt-next" data-mt="plano">Ver o plano →</button>
       </section>
     </div>
@@ -1098,13 +1088,7 @@ $('cats').addEventListener('click',e=>{
   if(i>=0)S.sel.splice(i,1);else S.sel.push(id);
   S.exemplo=false;update();
 });
-$('addform').addEventListener('submit',e=>{
-  e.preventDefault();
-  const n=$('cNome').value.trim();if(!n)return;
-  const id='c'+Date.now();const est=$('cEst').value;const d=DEF_SP[est];
-  const c={id,n,a:n.slice(0,2),c:'x',e:est,el:d.el,ep:d.ep,h:d.h,src:'PR',sol:'PM',pl:[],col:'—',d:0,v:est==='A'?0:(est==='M'?40:est==='B'?15:5),pt:est==='A'?6:undefined,arv:est==='A'?1:undefined,custom:1};
-  S.custom.push(c);BYID[id]=c;S.sel.push(id);$('cNome').value='';S.exemplo=false;update();
-});
+// a opção de acrescentar plantas fora da lista foi retirada; plantas próprias salvas antes continuam em "Minhas plantas"
 
 function renderCats(){
   const q=$('busca').value.trim().toLowerCase();
