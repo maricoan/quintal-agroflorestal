@@ -290,7 +290,7 @@ svg text{font-family:var(--f-mono);fill:var(--ink)}
 .cap-ex .lbl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 .cap-ex .acts{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
 .cap-ex button{font:inherit;font-size:12.5px;border:1px solid var(--leaf);color:var(--leaf);background:var(--surface);border-radius:999px;padding:3px 10px;cursor:pointer}
-.cap-ex button[disabled]{opacity:.6;cursor:default}
+.cap-ex button.on{background:var(--leaf);color:var(--surface)}
 .pot-rim-l{fill:none;stroke:var(--pot-dark);stroke-width:3;stroke-linejoin:round} .pot-rim{fill:var(--pot-dark)} .potlab{fill:#FFF;font-size:calc(10px * var(--fz,1));text-anchor:middle}
 .trunk{stroke:var(--trunk);stroke-width:2.5;stroke-linecap:round;fill:none}
 .stem-b{stroke:var(--st-m);stroke-width:5;stroke-linecap:round;fill:none}
@@ -2219,7 +2219,7 @@ function potCapacity(m){
   return r;
 }
 function capacityBox(m){const c=potCapacity(m);const pl=(n,a,b)=>`${n} ${n===1?a:b}`;
-  const chips=l=>l.map(s=>`<button type="button" data-addsp="${s.id}"${S.sel.includes(s.id)?' disabled':''}>${S.sel.includes(s.id)?'✓ ':'+ '}${esc(s.n)}</button>`).join('');
+  const chips=l=>l.map(s=>S.sel.includes(s.id)?`<button type="button" class="on" data-rmsel="${s.id}" aria-pressed="true" title="Tirar ${esc(s.n)} da seleção">✓ ${esc(s.n)}</button>`:`<button type="button" data-addsp="${s.id}" aria-pressed="false" title="Acrescentar ${esc(s.n)}">+ ${esc(s.n)}</button>`).join('');
   const opt=[];
   if(c.treeOk&&c.tree){const t=c.tree;
     opt.push(`<li><b>Com uma frutífera pequena:</b> 1 de estrato médio no centro + ${pl(t.nh,'hortaliça baixa','hortaliças baixas')}${t.nrh?` + ${pl(t.nrh,'rasteira','rasteiras')} de forração`:''}, ou 1 frutífera + ${pl(t.na,'aromática baixa','aromáticas baixas')}${t.nra?` + ${pl(t.nra,'rasteira','rasteiras')}`:''}.</li>`);}
