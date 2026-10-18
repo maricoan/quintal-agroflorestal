@@ -1222,12 +1222,6 @@ function plan(){
   const hasTreeStuff=trees.length+meds.length>0;
   const strips=[];let y=0;
   const BED=1.2,PATH=.4,LINE=.8;
-  // quando usar uma linha de árvores em cada borda: só com árvores pequenas e médias (nunca altas ou emergentes),
-  // terreno retangular entre 3,6 m e 5,2 m de largura e mais árvores do que cabem numa linha única no meio
-  const edgeLines=()=>{if(isCirc()||!trees.length||!trees.every(t=>t.e==='M'||t.e==='B'))return false;
-    if(W<2*LINE+2*PATH+BED-.001||W>=2*BED+3*PATH+2*LINE-.001)return false;
-    const sp=Math.max(...trees.map(t=>Math.max(t.ep,1))),slots=Math.floor((L-.8)/sp+1e-6)+1;return trees.length>slots;};
-  const EDGE=edgeLines();
   // trecho útil de uma linha horizontal (no círculo, a corda)
   const chord=cy=>{if(!isCirc())return [.5,L-.3];const R=L/2,h2=R*R-(cy-R)*(cy-R);if(h2<=.09)return [R,R-1];const hc=Math.sqrt(h2)-.35;return [R-hc,R+hc];};
   if(trees.length&&W>=LINE-.001&&W<BED+PATH+LINE-.001){
@@ -1237,14 +1231,6 @@ function plan(){
     else strips.push({t:'line',y:(W-LINE)/2,h:LINE});
   }
   else if(W<BED+.01){strips.push({t:'bed',y:0,h:W});}
-  else if(EDGE){
-    // árvores pequenas e médias que não cabem numa linha só: uma linha em cada borda e os canteiros no meio
-    strips.push({t:'line',y:0,h:LINE},{t:'path',y:LINE,h:PATH});
-    // o meio vira canteiros de até ~1,6 m (alcançáveis dos dois lados), divididos por ruas de 40 cm
-    const y0=LINE+PATH,yEnd=W-LINE-PATH,mid=yEnd-y0,nB=mid<=1.7?1:Math.ceil((mid+PATH)/(1.6+PATH)),bh=(mid-(nB-1)*PATH)/nB;
-    for(let i=0;i<nB;i++){const yy=y0+i*(bh+PATH);strips.push({t:'bed',y:yy,h:bh});if(i<nB-1)strips.push({t:'path',y:yy+bh,h:PATH});}
-    strips.push({t:'path',y:yEnd,h:PATH},{t:'line',y:W-LINE,h:LINE});
-  }
   else{
     let next='bed';
     while(true){
@@ -1261,6 +1247,26 @@ function plan(){
     }
   }
   const beds=strips.filter(s=>s.t==='bed'),lines=strips.filter(s=>s.t==='line');
+  // arranjo em triângulo: uma linha só de árvores e mais árvores pequenas/médias do que cabem nela.
+  // As da linha vão para as pontas; as menores sobram e vão para o meio dos canteiros, nos vãos entre elas
+  // (primeiro o canteiro do sul, que fica embaixo no desenho). Nunca com árvores altas ou emergentes.
+  let TRI=null;
+  if(!isCirc()&&lines.length===1&&beds.length&&trees.length>=3&&trees.every(t=>t.e==='M'||t.e==='B')){
+    const [x0,x1]=chord(lines[0].y+lines[0].h/2),sp=Math.max(...trees.map(t=>Math.max(t.ep,1)));
+    const slots=Math.floor((x1-x0)/sp+1e-6)+1;
+    if(slots>=2&&trees.length>slots){
+      const bySize=trees.slice().sort((a,b)=>(b.pt||0)-(a.pt||0));
+      const inLine=bySize.slice(0,slots),rest=bySize.slice(slots);
+      const xe=L-.5,gap=(xe-x0)/(slots-1);
+      const bedsS=beds.slice().sort((a,b)=>b.y-a.y);const spots=[];
+      for(let g=0;g<slots-1;g++)bedsS.forEach((bd,bi)=>spots.push({x:x0+gap*(g+.5),y:bd.y+bd.h/2,bi,g}));
+      spots.sort((a,b)=>a.bi-b.bi||a.g-b.g);
+      const ly=lines[0].y+lines[0].h/2;
+      const ok=spots.filter(q=>Math.hypot(gap/2,q.y-ly)>=1.8);
+      const inBed=rest.slice(0,ok.length).map((t,i)=>({t,x:ok[i].x,y:ok[i].y}));
+      TRI={inLine,inBed,x0,gap};
+    }
+  }
   const pts=[];const count={};
   const add=(s,x,yy,kind,cell)=>{pts.push({s,x,y:yy,kind,cell});count[s.id]=(count[s.id]||0)+1;};
   let dropped=[];
@@ -1297,12 +1303,15 @@ function plan(){
     }
     lines.forEach((ln,li)=>{
       const cy=ln.y+ln.h/2;let prev=null,prevT=null;useL={};useLS={};
-      if(trees.length){
+      if(TRI){
+        // pontas da linha: árvores espaçadas igualmente; adubadeiras a cada metro entre elas
+        TRI.inLine.forEach((T,i)=>{const x=TRI.x0+i*TRI.gap;add(T,x,cy,'tree');prev=T;
+          if(meds.length&&i<TRI.inLine.length-1)for(let k=1;k<TRI.gap-.5;k++){const M=pick(meds,[prev,T]);add(M,x+k,cy,'med');prev=M;}});
+      }
+      else if(trees.length){
         const [x0,x1]=chord(cy);
         let x=x0+(li%2&&x1-x0>2?.5:0);
         while(x<=x1){
-          // com uma linha em cada borda, cada árvore escolhida entra uma vez só: a linha não repete árvore
-          if(EDGE&&lineTrees[li].every(t=>useL[t.id]))break;
           const T=pick(lineTrees[li],[prev,prevT],true);
           add(T,x,cy,'tree');prev=T;prevT=T;
           const sp=Math.max(T.ep,1);
@@ -1379,6 +1388,10 @@ function plan(){
       s0=s1;
     });
   }
+  // árvores do triângulo dentro do canteiro: abre uma roda de 50 cm em volta do tronco
+  if(TRI)TRI.inBed.forEach(b=>{for(let i=pts.length-1;i>=0;i--){const q=pts[i];if(q.kind==='bed'&&Math.hypot(q.x-b.x,q.y-b.y)<.5){count[q.s.id]--;if(!count[q.s.id])delete count[q.s.id];pts.splice(i,1);}}
+    pts.forEach(q=>{if(q.kind==='bed'&&Math.hypot(q.x-b.x,q.y-b.y)<1)q.cell=Math.min(q.cell,Math.min(q.s.ep,q.s.el));});
+    add(b.t,b.x,b.y,'tree');});
   // vizinhanças reais no desenho
   if(isCirc()){const R=L/2;
     for(let i=pts.length-1;i>=0;i--){const q=pts[i];const m=q.kind==='tree'?.3:.12;
@@ -1404,7 +1417,7 @@ function plan(){
     for(let i=1;i<row.length;i++)note(row[i-1].s,row[i].s,'linha de árvores');});
   groups.forEach(g=>{for(let i=0;i<g.length;i++)for(let j=i+1;j<g.length;j++)note(g[i],g[j],'mesmo canteiro');});
   for(let i=1;i<groups.length;i++)groups[i-1].forEach(a=>groups[i].forEach(b=>note(a,b,'trechos vizinhos do canteiro')));
-  return {sel,strips,beds,lines,pts,count,dropped,trees,meds,bedSp,groups,interc,under,nearTree,lineFill:[...lineFill],naoCoube,removed,adj:[...adj.values()]};
+  return {sel,strips,beds,lines,pts,count,dropped,trees,meds,bedSp,groups,interc,under,nearTree,lineFill:[...lineFill],naoCoube,tri:TRI,removed,adj:[...adj.values()]};
 }
 
 // ---------- avisos ----------
@@ -1424,6 +1437,7 @@ function advice(p){
     if(grandes.length&&area<60)out.push({k:'',t:`${names(grandes)} ${grandes.length>1?'chegam':'chega'} a ${Math.max(...grandes.map(s=>s.pt))} m ou mais. Em ${fmt(area)} m², mantenha com poda anual ou troque por pitanga, araçá ou acerola, que ficam menores.`,add:['pitanga','araca','acerola'].filter(i=>!S.sel.includes(i))});
     if(p.lines.length&&!has(s=>s.adubo))out.push({k:'tip',t:'Inclua uma adubadeira. O feijão-guandu e a crotalária fixam nitrogênio no solo, e a poda deles vira adubo para os canteiros.',add:['guandu','crotalaria']});
     if(has(s=>s.nat&&isTree(s))&&!has(s=>s.bio))out.push({k:'tip',t:'Árvores nativas jovens crescem melhor com sombra provisória. Banana e mandioca fazem essa proteção nos primeiros anos e ainda dão comida e palha.',add:['banana','mandioca']});
+    if(p.tri&&p.tri.inBed.length){const nb=p.tri.inBed.map(b=>b.t.n);out.push({k:'tip',t:`Para caber ${nb.length>1?'mais árvores':'mais uma árvore'}, ${nb.join(' e ')} ${nb.length>1?'foram':'foi'} para o meio ${nb.length>1?'dos canteiros':'do canteiro'}, formando um triângulo com as árvores das pontas da linha, a cerca de 2 m de cada uma. Deixe uma roda de 50 cm sem hortaliças em volta do tronco e pode a copa toda vez que ela passar de 2 m de altura ou começar a sombrear demais as hortaliças.`});}
     if(p.lines.length&&!p.trees.length&&!p.meds.length)out.push({k:'tip',t:'As linhas de árvores estão vazias. Escolha frutíferas, nativas ou adubadeiras para ocupá-las.'});
     if(p.beds.length&&!p.bedSp.length&&sel.length)out.push({k:'tip',t:'Os canteiros estão sem plantas baixas. Escolha hortaliças ou temperos, ou semeie crotalária para cobrir e adubar o solo.',add:['crotalaria']});
     if(sel.some(s=>s.espalha))out.push({k:'',t:'A hortelã espalha pelas raízes e toma o canteiro. Plante dentro de um vaso enterrado.'});
