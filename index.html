@@ -234,6 +234,7 @@ a.sm-i:hover{border-color:var(--leaf)}
 .pot-top-w.big svg{max-width:520px!important;width:100%}
 @media (max-width:640px){.pot-top-w{grid-template-columns:minmax(0,1fr)}}
 .hb-lt{opacity:.78}
+.hb-vein{fill:none;stroke:var(--surface);stroke-width:.7;opacity:.5}
 .fl-pk{fill:var(--pink)}
 .kale-v{stroke:var(--surface);opacity:.45;fill:none}
 .credit{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 0;border-top:1px solid var(--line);padding:20px 0 8px;font-size:14px;color:var(--muted)}
@@ -1489,7 +1490,7 @@ function crownOf(s){
   return o;
 }
 // ---------- aromáticas: desenho em vista lateral, usado no 3D e nos vasos ----------
-const HERBF=new Set(['frond','basil','herb','mint','needle','parsley','lavender','cactus','fruitshrub','tomato','rosette','amaranth','groundvine','kale']);
+const HERBF=new Set(['elephant','frond','basil','herb','mint','needle','parsley','lavender','cactus','fruitshrub','tomato','rosette','amaranth','groundvine','kale']);
 function hseed(str){let h=2166136261>>>0;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}return ()=>{h=(Math.imul(h,1664525)+1013904223)>>>0;return h/4294967296;};}
 function herbSVG(f,s,cx,base,w,h,opt,key){
   const X=n=>n.toFixed(1),r=hseed(s.id+'|'+(key||''));const t=plTone(s),P=`pl-${t}`,PL=`pl-${t} hb-lt`,KS=`pk-${t}`;opt=opt||{};
@@ -1532,6 +1533,16 @@ function herbSVG(f,s,cx,base,w,h,opt,key){
     for(let i=0;i<n;i++){const u=i/(n-1)-.5,x1=cx+u*w*.86,y1=base-h*(.6+.4*(1-Math.abs(u)*1.6)*(.85+.15*r()));
       o+=ln(cx+u*w*.1,base,x1,y1,KS,sw*.8);
       [[0,0],[-1,.5],[1,.5],[-.6,-.7],[.6,-.7]].forEach(([dx,dy],k)=>{o+=`<circle class="${k%2?PL:P}" cx="${X(x1+dx*L*.95)}" cy="${X(y1+dy*L*.95)}" r="${X(L*(k?.62:.72))}"/>`;});}
+  }else if(f==='elephant'){
+    // taioba: pecíolos longos saindo da base e folhas enormes em forma de coração/seta, penduradas para fora
+    const leaf=(x,y,L,ang,cls)=>{const a=ang*Math.PI/180,ca=Math.cos(a),sa=Math.sin(a),P=(u,v)=>[x+u*ca-v*sa,y+u*sa+v*ca],f=q=>X(q[0])+','+X(q[1]);
+      const tip=P(L,0),c1=P(L*.55,L*.42),c2=P(L*.55,-L*.42),l1=P(-L*.12,L*.36),l2=P(-L*.12,-L*.36),n=P(L*.05,0);
+      return `<path class="${cls}" d="M${f(n)} Q${f(l1)} ${f(P(L*.18,L*.4))} Q${f(c1)} ${f(tip)} Q${f(c2)} ${f(P(L*.18,-L*.4))} Q${f(l2)} ${f(n)}Z"/><path class="hb-vein" d="M${f(n)} L${f(P(L*.92,0))}"/>`;};
+    const L=Math.max(5,Math.min(w*.62,h*.6));
+    const specs=[[-.55,.55,165,P],[.55,.58,15,P],[-.28,.8,128,PL],[.3,.84,52,PL],[0,.95,95,P]];
+    specs.forEach(([u,hh,ang,cls],i)=>{const tx=cx+u*w*.42,ty=base-h*hh*.92;
+      o+=`<path class="${KS}" fill="none" stroke-width="${(sw*1.3).toFixed(2)}" d="M${X(cx+u*w*.05)},${X(base)} Q${X(cx+u*w*.2)},${X(ty+h*.1)} ${X(tx)},${X(ty)}"/>`;
+      o+=leaf(tx,ty,L*(i<2?.9:i<4?1:.85),ang,cls);});
   }else if(f==='frond'){
     // samambaia: frondes arqueadas com folíolos dos dois lados
     const n=8;
@@ -1620,7 +1631,7 @@ function herbSVG(f,s,cx,base,w,h,opt,key){
 // forma e largura real (m) das plantas de adubo verde e biomassa
 const FORM={peixinho:['rosette',.3],tuna:['cactus',.8],gabiroba:['herb',.8,{fr:['fl-y',6,'top']}],chanana:['mint',.4,{fr:['fl-y',6,'top']}],gervao:['lavender',.6,{spike:'fr-p'}],oficialsala:['herb',.5,{fr:['fl-r',8,'top']}],perpetua:['herb',.4,{fr:['fr-p',8,'top']}],vedelia:['mint',.5,{fr:['fl-y',6,'top']}],arnicacampo:['herb',.4,{fr:['fr-p',3,'top']}],ruelia:['fruitshrub',.3,{fruit:['fl-r','chili',6]}],falsairis:['spiky',.5,{fr:['fr-p',3,'top']}],salviavermelha:['lavender',.4,{spike:'fl-r'}],salviaazul:['lavender',.6,{spike:'fr-p'}],esponjinha:['herb',1.5,{fr:['fl-r',8,'top']}],jacobinia:['herb',.8,{big:1,fr:['fl-pk',8,'top']}],alamanda:['herb',1.5,{big:1,fr:['fl-y',6,'top']}],ciposaojoao:['trellis',1.4,{fr:['fr-o',8,'top']}],dipladenia:['trellis',1,{fr:['fl-r',5,'top']}],guandu:['herb',1.1,{fr:['fl-y',6,'top']}],margaridao:['herb',1.5,{big:1,daisy:1,fr:['fl-y',6,'top']}],assapeixe:['herb',1.6,{big:1,fr:['fl-w',8,'top']}],maravilha:['herb',.8,{fr:['fl-pk',6,'top']}],feijaoporco:['fruitshrub',.7,{big:1,fruit:['pl-3','long',4]}],feijaocorda:['groundvine',.8,{fruit:'pl-3'}],begonia:['rosette',.35,{fl:'fl-pk'}],mandioca:['cassava',1.1],crotalaria:['herb',.35,{fr:['fl-y',5,'top']}],canaacucar:['cane',.6],canaindia:['leafy',.7],heliconia:['leafy',.9],amendoim:['mint',.5,{fr:['fl-y',6,'top']}],samambaia:['frond',.7],dyckia:['spiky',.45,{stalk:1}],
  // hortaliças
- alface:['lettuce',.28],rucula:['tuft',.18],cenoura:['feather',.12,{fr:['fr-o',1,'ground']}],beterraba:['tuft',.2,{fr:['fl-r',1,'ground']}],couve:['kale',.55],tomate:['tomato',.55],berinjela:['fruitshrub',.6,{big:1,fruit:['fr-p','long',3]}],pimenta:['fruitshrub',.5,{fruit:['fl-r','chili',8]}],quiabo:['stalkleaves',.5,{fr:['fl-y',2,'top']}],feijao:['tripod',.6],abobora:['groundvine',2,{big:1,flower:1,fruit:'fr-o'}],batatadoce:['groundvine',.7],milho:['cane',.35,{tassel:1}],taioba:['leafy',.8],cara:['trellis',.45,{nofl:1}],orapronobis:['trellis',1.1],
+ alface:['lettuce',.28],rucula:['tuft',.18],cenoura:['feather',.12,{fr:['fr-o',1,'ground']}],beterraba:['tuft',.2,{fr:['fl-r',1,'ground']}],couve:['kale',.55],tomate:['tomato',.55],berinjela:['fruitshrub',.6,{big:1,fruit:['fr-p','long',3]}],pimenta:['fruitshrub',.5,{fruit:['fl-r','chili',8]}],quiabo:['stalkleaves',.5,{fr:['fl-y',2,'top']}],feijao:['tripod',.6],abobora:['groundvine',2,{big:1,flower:1,fruit:'fr-o'}],batatadoce:['groundvine',.7],milho:['cane',.35,{tassel:1}],taioba:['elephant',.8],cara:['trellis',.45,{nofl:1}],orapronobis:['trellis',1.1],
  // aromáticas
  manjericao:['basil',.35,{fr:['fl-w',3,'top']}],cebolinha:['grass',.12,{straight:1}],salsinha:['parsley',.18],hortela:['mint',.45],alecrim:['needle',.5,{fr:['fr-p',3,'top']}],capimsanto:['grass',.8],carqueja:['clump',.35,{noflower:1}],macela:['needle',.4,{fr:['fl-y',6,'top']}],alecrimcampo:['needle',1.5,{fr:['fl-w',5,'top']}],lantana:['mound',.8,{fr:['fr-p',6,'top']}],boldo:['herb',.8,{big:1}],boldinho:['mint',.4,{fr:['fr-p',2,'top'],fleshy:1}],cidreira:['herb',.9,{fr:['fl-w',4,'top']}],hibisco:['stalkleaves',.6,{fr:['fl-r',4,'top']}],lavanda:['lavender',.5],maracuja:['trellis',1.4,{passion:1}],melancia:['vine',2,{fr:['p-A',2,'ground']}],abacaxi:['spiky',.7,{fr:['fr-o',1,'top']}],majorgomes:['rosette',.35,{panicle:1,fl:'fl-pk'}],cariru:['rosette',.3,{fl:'fl-pk'}],jambu:['mint',.25,{fr:['fl-y',0,'top']}],mangarito:['leafy',.4],araruta:['leafy',.5],coentropara:['tuft',.15],physalis:['fruitshrub',.6,{fruit:['fr-o','lantern',5]}],jurubeba:['fruitshrub',1.2,{fruit:['fl-y','round',8]}],amendoimgrao:['mound',.35,{fr:['fl-y',3,'top']}],maxixe:['groundvine',1,{fruit:'pl-3'}],caruru:['amaranth',.35],baleeira:['herb',1.3,{fr:['fl-w',5,'top']}],guaco:['climber',.5],pariparoba:['leafy',.8],alecrimpimenta:['herb',.9,{fr:['fl-w',4,'top']}],cipoalho:['climber',.5,{fr:['fr-p',3,'top']}],mastruz:['herb',.4],alfavacacravo:['basil',.7,{fr:['fl-w',4,'top']}]};
 function draw3D(p){
