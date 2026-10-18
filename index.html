@@ -1107,7 +1107,7 @@ $('cats').addEventListener('mouseout',e=>{const b=e.target.closest('.chip');if(b
 $('cats').addEventListener('focusout',e=>{if(e.target.closest('.chip'))clearInfo();});
 $('cats').addEventListener('toggle',e=>{const d=e.target;if(!d.matches||!d.matches('details.cat'))return;if($('busca').value.trim())return;S.openCats=S.openCats||{};S.openCats[d.dataset.k]=d.open;save();},true);
 $('cats').addEventListener('click',e=>{
-  const ac=e.target.closest('[data-addcons]');if(ac){ac.dataset.addcons.split(',').forEach(i=>{if(BYID[i]&&!S.sel.includes(i))S.sel.push(i);});S.exemplo=false;update();return;}
+  const ac=e.target.closest('[data-addcons]');if(ac){ac.dataset.addcons.split(',').forEach(i=>{if(BYID[i]&&!S.sel.includes(i))S.sel.push(i);});S.consSel=(S.consSel||[]).filter(k=>k!==ac.dataset.addcons).concat([ac.dataset.addcons]);S.exemplo=false;update();return;}
   {const c=e.target.closest('.chip');if(c){const id=c.dataset.id;setTimeout(()=>{if(S.sel.length)showInfo(id);},0);}}
   const x=e.target.closest('[data-rm]');
   if(x){e.stopPropagation();const id=x.dataset.rm;S.custom=S.custom.filter(c=>c.id!==id);S.sel=S.sel.filter(i=>i!==id);delete BYID[id];S.exemplo=false;update();return;}
@@ -2314,12 +2314,24 @@ function myPotPanel(sel){
 function potItems(sel0){
   // consórcios completos na seleção: todas as plantas juntas num só vaso ou floreira
   let sel=sel0.slice();const consIt=[],consNo=[];const ids=new Set(sel.map(s=>s.id));
-  consorcios().filter(c=>c.sp.every(i=>ids.has(i))).sort((a,b)=>b.sp.length-a.sp.length).forEach(c=>{
-    if(!c.sp.every(i=>sel.some(s=>s.id===i)))return;const r=consPot(c.sp),L=c.sp.map(i=>BYID[i]);
+  // cada consórcio completo ganha o seu recipiente, com todas as plantas dele, mesmo quando divide uma espécie
+  // com outro consórcio; consórcios que não acrescentam nenhuma espécie nova são ignorados
+  const covered=new Set();const used=new Set();
+  // 1º os consórcios que a pessoa plantou pelo botão; depois a menor combinação que cubra as demais espécies
+  const full=consorcios().filter(c=>c.sp.every(i=>ids.has(i)));const key=c=>c.sp.join(',');
+  const chosen=full.filter(c=>(S.consSel||[]).includes(key(c)));chosen.forEach(c=>c.sp.forEach(i=>covered.add(i)));
+  const restC=full.filter(c=>!chosen.includes(c)&&c.sp.some(i=>!covered.has(i)));
+  const need=new Set(restC.flatMap(c=>c.sp).filter(i=>!covered.has(i)));let best=null;
+  if(restC.length<=14){for(let mask=1;mask<(1<<restC.length);mask++){const pick=restC.filter((c,k)=>mask>>k&1);
+      const cov=new Set(pick.flatMap(c=>c.sp));if(![...need].every(i=>cov.has(i)))continue;
+      const sc=pick.length*100-pick.reduce((a,c)=>a+c.sp.length,0);if(!best||sc<best.sc)best={pick,sc};}}
+  const order=chosen.concat(best?best.pick:restC.sort((a,b)=>b.sp.length-a.sp.length));
+  order.forEach(c=>{const r=consPot(c.sp),L=c.sp.map(i=>BYID[i]);
     if(r.no){consNo.push({sp:L,no:r.no});return;}
     const m=r.pot&&(!r.fl||r.pot.V<=r.fl.V*1.4)?r.pot:r.fl;if(!m)return;
     consIt.push({kind:'cons',round:m.round,Wd:m.Wd,Dp:m.Dp,H:m.H,v:Math.round(m.V),sp:L,under:[],placed:m.pl,alt:m===r.pot?r.fl:r.pot});
-    sel=sel.filter(s=>!c.sp.includes(s.id));});
+    c.sp.forEach(i=>used.add(i));});
+  sel=sel.filter(s=>!used.has(s.id));
   const ok=sel.filter(s=>s.v>0),no=sel.filter(s=>!s.v);
   const hosts=ok.filter(s=>s.arv).sort((a,b)=>b.v-a.v);
   let rest=ok.filter(s=>!s.arv);
@@ -2719,7 +2731,7 @@ $('out').addEventListener('click',e=>{
   const go=e.target.closest('[data-go]');if(go){e.preventDefault();const id=go.dataset.go;const el=id==='cap'?document.querySelector('#out .cap-alert'):document.getElementById(id);
     if(el){const sec=el.closest('section')||el;const y=sec.getBoundingClientRect().top+window.scrollY-70;try{window.scrollTo({top:y,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}catch(_){window.scrollTo(0,y);}}return;}
   const tb=e.target.closest('[data-rtab]');if(tb){S.rtab=tb.dataset.rtab;save();update();return;}
-  const ac=e.target.closest('[data-addcons]');if(ac){ac.dataset.addcons.split(',').forEach(i=>{if(BYID[i]&&!S.sel.includes(i))S.sel.push(i);});S.exemplo=false;update();return;}
+  const ac=e.target.closest('[data-addcons]');if(ac){ac.dataset.addcons.split(',').forEach(i=>{if(BYID[i]&&!S.sel.includes(i))S.sel.push(i);});S.consSel=(S.consSel||[]).filter(k=>k!==ac.dataset.addcons).concat([ac.dataset.addcons]);S.exemplo=false;update();return;}
   const rs=e.target.closest('[data-rmsel]');if(rs){S.sel=S.sel.filter(i=>i!==rs.dataset.rmsel);S.exemplo=false;update();return;}
   const v=e.target.closest('#vista button');if(v){S.vista=v.dataset.v;update();return;}
   const pv=e.target.closest('#potvista button');if(pv){S.potview=pv.dataset.v;update();return;}
