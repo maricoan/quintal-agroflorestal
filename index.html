@@ -1109,7 +1109,7 @@ $('quick').addEventListener('click',e=>{
 function showInfo(id){
   const s=BYID[id];if(!s)return;
   const luz=s.sol.split('').map(x=>solTxt[x]).join(' ou ');
-  const det=`${s.sci?`<i>${esc(s.sci)}</i> · `:''}Estrato ${EST[s.e].toLowerCase()} · ${luz} · ${s.o?ORIG_TXT[s.o].toLowerCase():'origem não informada'}${s.msp?` · Manual de Arborização de SP, porte ${PORTE[s.msp]}`:''}${s.tox?' · tóxica se ingerida':''}`;
+  const det=`${s.sci?`<i>${esc(s.sci)}</i> · `:''}Estrato ${EST[s.e].toLowerCase()} · ${luz} · ${s.o?ORIG_TXT[s.o].toLowerCase():'origem não informada'}${s.msp?` · Manual de Arb. de SP, porte ${PORTE[s.msp]}`:''}${s.tox?' · tóxica se ingerida':''}`;
   $('chipinfo').innerHTML=`<span class="ci-top">${sig(s.e)}${s.o?`<span class="ico-w">${ICON[s.o]}</span>`:''}<b>${esc(s.n)}</b></span><span class="ci-d">${det}</span>`;
   $('chipinfo').title=det.replace(/<[^>]+>/g,'');
 }
