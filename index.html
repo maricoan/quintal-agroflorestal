@@ -305,7 +305,11 @@ svg text{font-family:var(--f-mono);fill:var(--ink)}
 .pot-rim-l{fill:none;stroke:var(--pot-dark);stroke-width:3;stroke-linejoin:round} .pot-rim{fill:var(--pot-dark)} .potlab{fill:#FFF;font-size:calc(10px * var(--fz,1));text-anchor:middle}
 .trunk{stroke:var(--trunk);stroke-width:2.5;stroke-linecap:round;fill:none}
 .stem-b{stroke:var(--st-m);stroke-width:5;stroke-linecap:round;fill:none}
-.crown{stroke:rgba(0,0,0,.2);stroke-width:.7}
+.crown{stroke:none}
+.tn1{fill:#2F6B3A}.tn1s{fill:#24552E}.tn2{fill:#6E8B34}.tn2s{fill:#58722A}.tn3{fill:#3F7A62}.tn3s{fill:#30614E}.tn4{fill:#4F9140}.tn4s{fill:#3D7533}
+.crown-hi{opacity:.45}.crown-hi.tn1{fill:#4C8B4E}.crown-hi.tn2{fill:#90AE4E}.crown-hi.tn3{fill:#5E9A80}.crown-hi.tn4{fill:#73B25A}
+.fr-rd{fill:#D33A2C}.fr-or{fill:#F08A1D}.fr-mg{fill:#F2A23A}.fr-av{fill:#5E7A2A;stroke:#2C3D12;stroke-width:.6}.fr-li{fill:#C9D64A}.fr-ye{fill:#F2C53D}.fr-bk{fill:#3A1F44}.fr-ban{fill:#9FC44B}.fr-wm{fill:#7BB34F}.fr-hi{fill:rgba(255,255,255,.45)}
+.stem-b2{fill:#8DAE5C}.ban-rib{fill:none;stroke:rgba(255,255,255,.35);stroke-width:.8}
 .trunk-thin{stroke:var(--trunk);stroke-width:1.4;stroke-linecap:round;fill:none}
 .k-E,.k-A,.k-M,.k-B,.k-R{fill:none;stroke-linecap:round}
 .k-E{stroke:var(--st-e)}.k-A{stroke:var(--st-a)}.k-M{stroke:var(--st-m)}.k-B{stroke:var(--st-b)}.k-R{stroke:var(--st-r)}
@@ -1514,6 +1518,9 @@ const CROWN_MAX={citrus:3.5,bush:3.5,psidium:4.5,dome:8,coffee:2,jabuti:5,round:
 const TREEFORM={lixeira:{f:'oval',fl:'fl-w'},banana:{f:'banana'},mamao:{f:'papaya'},jucara:{f:'palm',fr:'fr-p'},guariroba:{f:'palm'},embauba:{f:'candelabro'},jabuticaba:{f:'jabuti',trunkfr:1},pitanga:{f:'bush',fr:'fl-r'},araca:{f:'psidium',fr:'fl-y'},acerola:{f:'bush',fr:'fl-r'},limao:{f:'citrus',fr:'fl-y'},mexerica:{f:'citrus',fr:'fr-o'},nespera:{f:'round',fr:'fr-o'},cafe:{f:'coffee',fr:'fl-r'},cambuci:{f:'round',fr:'fl-y'},grumixama:{f:'oval',fr:'fr-p'},uvaia:{f:'oval',fr:'fl-y'},cereja:{f:'oval',fr:'fl-r'},cabeludinha:{f:'bush',fr:'fl-y'},castanha:{f:'oval'},dedaleira:{f:'oval'},candeia:{f:'open',fl:'fl-w'},sangra:{f:'round'},crindiuva:{f:'umbrella'},patadevaca:{f:'vase',fl:'fl-w'},aroeira:{f:'round',fr:'fl-r'},inga:{f:'umbrella'},abacate:{f:'round'},goiaba:{f:'psidium',fr:'fl-y'},manga:{f:'dome',fr:'fr-o'},caqui:{f:'oval',fr:'fr-o'},espinheira:{f:'round'},urucum:{f:'round',fr:'fl-r'}};
 const GENFORM=[[/^(Handroanthus|Tabebuia|Zeyheria|Cybistax)/,'open'],[/^(Inga|Poincianella|Libidibia|Peltophorum|Tipuana|Albizia|Samanea|Jacaranda|Machaerium|Dalbergia|Platypodium|Pterocarpus|Holocalyx|Myrocarpus|Myroxylon|Lonchocarpus|Bowdichia|Pterodon|Andira|Ormosia|Tachigali|Copaifera|Cariniana|Cassia|Poecilanthe)/,'umbrella'],[/^(Calophyllum|Lophanthera|Michelia)/,'conical'],[/^Pimenta/,'oval'],[/^(Lagerstroemia|Bauhinia|Dictyoloma)/,'vase'],[/^(Eugenia|Plinia|Psidium|Myrcia|Myrcianthes|Campomanesia|Pouteria|Tibouchina|Allophylus|Casearia|Erythroxylum|Licania|Sapindus|Koelreuteria)/,'round']];
 const GENFL=[[/^Handroanthus (chrysotrichus|umbellatus|albus|ochraceus|vellosoi)|^(Zeyheria|Poincianella|Peltophorum|Tipuana|Pterocarpus|Cassia|Vochysia|Lophanthera|Koelreuteria|Michelia|Libidibia)/,'fl','fl-y'],[/^Handroanthus (heptaphyllus|impetiginosus)|^(Jacaranda|Tibouchina|Bowdichia|Pterodon|Lagerstroemia|Bauhinia blakeana|Bauhinia purpurea)/,'fl','fr-p'],[/^(Physocalymma)/,'fl','fl-r'],[/^(Tabebuia roseoalba|Bauhinia variegata|Bauhinia longifolia|Citharexylum)/,'fl','fl-w'],[/^(Campomanesia|Myrcianthes|Plinia|Pouteria|Eugenia dysenterica)/,'fr','fl-y'],[/^(Pimenta)/,'fr','fr-p']];
+// tom natural da folhagem (1 verde-escuro brilhante, 2 oliva, 3 verde-azulado, 4 verde-vivo) e fruto de cada árvore [classe, tamanho]
+const FOLT={limao:1,mexerica:1,manga:1,abacate:1,jabuticaba:1,a_pimentadioica:1,grumixama:1,a_myrcianthespungens:3,goiaba:2,araca:2,caqui:2,cagaita:2,a_eugeniadysenterica:2,nespera:3,a_pouteriatorta:3,pitanga:4,acerola:4,cereja:4,uvaia:4,cambuci:4,cabeludinha:4,a_pliniaedulis:4,a_campomanesiaxanthocarpa:4};
+const FRUIT={pitanga:['fr-rd',1],acerola:['fr-rd',1.05],cereja:['fr-rd',1],limao:['fr-li',1.5],mexerica:['fr-or',1.5],manga:['fr-mg',2.2],abacate:['fr-av',2],caqui:['fr-or',1.6],nespera:['fr-ye',1.1],goiaba:['fr-li',1.5],araca:['fr-ye',1.05],uvaia:['fr-ye',1.1],cambuci:['fr-li',1.3],cabeludinha:['fr-ye',1],grumixama:['fr-bk',1],jabuticaba:['fr-bk',1.1],a_pliniaedulis:['fr-ye',1.4],a_eugeniadysenterica:['fr-ye',1.2],a_pouteriatorta:['fr-ye',1.4],a_myrcianthespungens:['fr-bk',1],a_campomanesiaxanthocarpa:['fr-ye',1],a_pimentadioica:['fr-bk',.8],urucum:['fr-rd',1.2],aroeira:['fr-rd',.6]};
 function crownOf(s){
   if(TREEFORM[s.id])return TREEFORM[s.id];
   const o={f:s.e==='M'?'round':'oval'};
@@ -1665,7 +1672,7 @@ const FORM={peixinho:['rosette',.3],tuna:['cactus',.8],gabiroba:['herb',.8,{fr:[
  // hortaliças
  alface:['lettuce',.28],rucula:['tuft',.18],cenoura:['feather',.12,{fr:['fr-o',1,'ground']}],beterraba:['tuft',.2,{fr:['fl-r',1,'ground']}],couve:['kale',.55],tomate:['tomato',.55],berinjela:['fruitshrub',.6,{big:1,fruit:['fr-p','long',3]}],pimenta:['fruitshrub',.5,{fruit:['fl-r','chili',8]}],quiabo:['stalkleaves',.5,{fr:['fl-y',2,'top']}],feijao:['tripod',.6],abobora:['groundvine',2,{big:1,flower:1,fruit:'fr-o'}],batatadoce:['groundvine',.7],milho:['cane',.35,{tassel:1}],taioba:['elephant',.8],cara:['trellis',.45,{nofl:1}],orapronobis:['trellis',1.1],
  // aromáticas
- manjericao:['basil',.35,{fr:['fl-w',3,'top']}],cebolinha:['grass',.12,{straight:1}],salsinha:['parsley',.18],hortela:['mint',.45],alecrim:['needle',.5,{fr:['fr-p',3,'top']}],capimsanto:['grass',.8],carqueja:['clump',.35,{noflower:1}],macela:['needle',.4,{fr:['fl-y',6,'top']}],alecrimcampo:['needle',1.5,{fr:['fl-w',5,'top']}],lantana:['mound',.8,{fr:['fr-p',6,'top']}],boldo:['herb',.8,{big:1}],boldinho:['mint',.4,{fr:['fr-p',2,'top'],fleshy:1}],cidreira:['herb',.9,{fr:['fl-w',4,'top']}],hibisco:['stalkleaves',.6,{fr:['fl-r',4,'top']}],lavanda:['lavender',.5],maracuja:['trellis',1.4,{passion:1}],melancia:['vine',2,{fr:['p-A',2,'ground']}],abacaxi:['spiky',.7,{fr:['fr-o',1,'top']}],majorgomes:['rosette',.35,{panicle:1,fl:'fl-pk'}],cariru:['rosette',.3,{fl:'fl-pk'}],jambu:['mint',.25,{fr:['fl-y',0,'top']}],mangarito:['leafy',.4],araruta:['leafy',.5],coentropara:['tuft',.15],physalis:['fruitshrub',.6,{fruit:['fr-o','lantern',5]}],jurubeba:['fruitshrub',1.2,{fruit:['fl-y','round',8]}],amendoimgrao:['mound',.35,{fr:['fl-y',3,'top']}],maxixe:['groundvine',1,{fruit:'pl-3'}],caruru:['amaranth',.35],baleeira:['herb',1.3,{fr:['fl-w',5,'top']}],guaco:['climber',.5],pariparoba:['leafy',.8],alecrimpimenta:['herb',.9,{fr:['fl-w',4,'top']}],cipoalho:['climber',.5,{fr:['fr-p',3,'top']}],mastruz:['herb',.4],alfavacacravo:['basil',.7,{fr:['fl-w',4,'top']}]};
+ manjericao:['basil',.35,{fr:['fl-w',3,'top']}],cebolinha:['grass',.12,{straight:1}],salsinha:['parsley',.18],hortela:['mint',.45],alecrim:['needle',.5,{fr:['fr-p',3,'top']}],capimsanto:['grass',.8],carqueja:['clump',.35,{noflower:1}],macela:['needle',.4,{fr:['fl-y',6,'top']}],alecrimcampo:['needle',1.5,{fr:['fl-w',5,'top']}],lantana:['mound',.8,{fr:['fr-p',6,'top']}],boldo:['herb',.8,{big:1}],boldinho:['mint',.4,{fr:['fr-p',2,'top'],fleshy:1}],cidreira:['herb',.9,{fr:['fl-w',4,'top']}],hibisco:['stalkleaves',.6,{fr:['fl-r',4,'top']}],lavanda:['lavender',.5],maracuja:['trellis',1.4,{passion:1}],melancia:['groundvine',2,{big:1,flower:1,fruit:'fr-wm'}],abacaxi:['spiky',.7,{fr:['fr-o',1,'top']}],majorgomes:['rosette',.35,{panicle:1,fl:'fl-pk'}],cariru:['rosette',.3,{fl:'fl-pk'}],jambu:['mint',.25,{fr:['fl-y',0,'top']}],mangarito:['leafy',.4],araruta:['leafy',.5],coentropara:['tuft',.15],physalis:['fruitshrub',.6,{fruit:['fr-o','lantern',5]}],jurubeba:['fruitshrub',1.2,{fruit:['fl-y','round',8]}],amendoimgrao:['mound',.35,{fr:['fl-y',3,'top']}],maxixe:['groundvine',1,{fruit:'pl-3'}],caruru:['amaranth',.35],baleeira:['herb',1.3,{fr:['fl-w',5,'top']}],guaco:['climber',.5],pariparoba:['leafy',.8],alecrimpimenta:['herb',.9,{fr:['fl-w',4,'top']}],cipoalho:['climber',.5,{fr:['fr-p',3,'top']}],mastruz:['herb',.4],alfavacacravo:['basil',.7,{fr:['fl-w',4,'top']}]};
 function draw3D(p){
   const [L,W]=LW();const circ=isCirc();const c=Math.cos(Math.PI/6),sn=.5,ZF=.85;
   const maxH=Math.max(1,...p.pts.map(q=>hOf(q.s)));
@@ -1703,14 +1710,18 @@ function draw3D(p){
     const top=by-U(h);
     let b=`<title>${esc(s.n)} · copa ${CROWN_TXT[cr.f]} · cerca de ${fmt(h)} m de altura e ${fmt(D)} m de copa</title>`;
     b+=`<ellipse class="shd" cx="${X(bx)}" cy="${X(by)}" rx="${X(Rs*.95)}" ry="${X(Rs*.48)}"/>`;
-    const cls=`p-${s.e} crown`;let cc=null;
+    const tn=FOLT[s.id]||({E:3,A:1,M:4,B:4,R:4})[s.e]||1,cls=`crown tn${tn}`,clsS=`crown tn${tn}s`;let cc=null;
     const hl=(x,y,rx,ry)=>`<ellipse class="lt-in" cx="${X(x)}" cy="${X(y)}" rx="${X(rx)}" ry="${X(ry)}"/>`;
-    const trunk=(x1,y1,x2,y2,w)=>`<line class="trunk" ${w?`stroke-width="${w}"`:''} x1="${X(x1)}" y1="${X(y1)}" x2="${X(x2)}" y2="${X(y2)}"/>`;
+    const tw=Math.max(2.2,Math.min(6,Rs*.09));
+    const trunk=(x1,y1,x2,y2,w)=>`<line class="trunk" stroke-width="${(w||tw).toFixed(1)}" x1="${X(x1)}" y1="${X(y1)}" x2="${X(x2)}" y2="${X(y2)}"/>`;
     // copa com contorno de folhagem (lóbulos em cima e nos lados)
-    const lobed=(cx,cy,rx,ry,k)=>{let o=`<ellipse class="${cls}" cx="${X(cx)}" cy="${X(cy)}" rx="${X(rx)}" ry="${X(ry)}"/>`;
+    // copa em volume: base sombreada, lóbulos de folhagem e tufos claros do lado da luz
+    const lobed=(cx,cy,rx,ry,k)=>{let o=`<ellipse class="${clsS}" cx="${X(cx)}" cy="${X(cy)}" rx="${X(rx)}" ry="${X(ry)}"/>`;
       const n=Math.max(5,Math.min(11,Math.round((rx+ry)/5)));const rl=Math.min(rx,ry)*(k||.4);
-      for(let i=0;i<n;i++){const a=Math.PI*(.82+i/(n-1)*1.36);o+=`<circle class="${cls}" cx="${X(cx+Math.cos(a)*(rx-rl*.55))}" cy="${X(cy+Math.sin(a)*(ry-rl*.55))}" r="${X(rl)}"/>`;}
-      return o+hl(cx-rx*.3,cy-ry*.38,rx*.38,ry*.3);};
+      for(let i=0;i<n;i++){const a=Math.PI*(.82+i/(n-1)*1.36);o+=`<circle class="${i<n*.35||i>n*.8?clsS:cls}" cx="${X(cx+Math.cos(a)*(rx-rl*.55))}" cy="${X(cy+Math.sin(a)*(ry-rl*.55))}" r="${X(rl)}"/>`;}
+      o+=`<ellipse class="${cls}" cx="${X(cx-rx*.08)}" cy="${X(cy-ry*.12)}" rx="${X(rx*.78)}" ry="${X(ry*.72)}"/>`;
+      [[-.35,-.35,.32],[.1,-.5,.26],[-.55,.0,.22],[.3,-.15,.22]].forEach(([dx,dy,kr])=>{o+=`<circle class="crown-hi tn${tn}" cx="${X(cx+dx*rx)}" cy="${X(cy+dy*ry)}" r="${X(Math.min(rx,ry)*kr)}"/>`;});
+      return o;};
     const Hh=U(h);
     switch(cr.f){
       case 'round':{const ch=Hh*.66,ry=ch/2,cy=top+ry;
@@ -1734,7 +1745,7 @@ function draw3D(p){
       case 'jabuti':{const ch=Hh*.72,ry=ch/2,cy=top+ry,fy=by-Hh*.3;
         [-.5,-.22,.05,.3,.55].forEach(k=>{b+=`<path class="trunk" stroke-width="2.2" fill="none" d="M${X(bx+k*Rs*.18)},${X(by)} Q${X(bx+k*Rs*.3)},${X(fy+Hh*.1)} ${X(bx+k*Rs*.75)},${X(fy-Hh*.08)}"/>`;});
         b+=lobed(bx,cy,Rs,ry,.3);cc=[bx,cy,Rs,ry];
-        for(let i=0;i<16;i++){const k=[-.5,-.22,.05,.3,.55][i%5],t=.15+.6*((i*7)%10)/10;b+=`<circle class="fr-p" cx="${X(bx+k*Rs*(.18+(.3-.18)*t)+(i%2?1.5:-1.5))}" cy="${X(by-Hh*.3*t)}" r="${X(Math.max(1.4,Math.min(2.6,K*.03)))}"/>`;}
+        for(let i=0;i<16;i++){const k=[-.5,-.22,.05,.3,.55][i%5],t=.15+.6*((i*7)%10)/10;b+=`<circle class="fr-bk" cx="${X(bx+k*Rs*(.18+(.3-.18)*t)+(i%2?1.5:-1.5))}" cy="${X(by-Hh*.3*t)}" r="${X(Math.max(1.8,Math.min(3.2,K*.038)))}"/><circle class="fr-hi" cx="${X(bx+k*Rs*(.18+(.3-.18)*t)+(i%2?1.5:-1.5)-.6)}" cy="${X(by-Hh*.3*t-.7)}" r="${X(Math.max(.5,Math.min(1,K*.012)))}"/>`;}
         break;}
       case 'coffee':{const n=6;b+=trunk(bx,by,bx,top+2,1.8);
         for(let k=0;k<n;k++){const y=by-Hh*(.14+k*.8/n),len=Rs*(1-k*.13);
@@ -1764,10 +1775,15 @@ function draw3D(p){
         for(let i=0;i<9;i++){const a=i/9*Math.PI*2,tx=bx+Math.cos(a)*Rs,tyy=ty+Math.sin(a)*Rs*.4+Rs*.35;
           b+=`<path class="k-${s.e}" stroke-width="2.4" d="M${X(bx)},${X(ty)} Q${X(bx+Math.cos(a)*Rs*.55)},${X(ty-Rs*.45+Math.sin(a)*Rs*.2)} ${X(tx)},${X(tyy)}"/>`;}
         if(cr.fr)for(let i=0;i<6;i++)b+=`<circle class="${cr.fr}" cx="${X(bx+(i%3-1)*3)}" cy="${X(ty+6+Math.floor(i/3)*3)}" r="1.8"/>`;break;}
-      case 'banana':{const ty=by-U(h)*.55;b+=`<line class="stem-b" x1="${X(bx)}" y1="${X(by)}" x2="${X(bx)}" y2="${X(ty)}"/>`;
-        for(let i=0;i<7;i++){const a=-160+i*(140/6),rad=a*Math.PI/180,cx=bx+Math.cos(rad)*Rs*.55,cy=ty+Math.sin(rad)*Rs*.55*.8;
-          b+=`<ellipse class="${cls}" cx="${X(cx)}" cy="${X(cy)}" rx="${X(Rs*.55)}" ry="${X(Math.max(2,Rs*.13))}" transform="rotate(${a.toFixed(0)} ${X(cx)} ${X(cy)})"/>`;}
-        b+=`<ellipse class="fl-y" cx="${X(bx+Rs*.12)}" cy="${X(ty+Rs*.25)}" rx="${X(Math.max(2,Rs*.09))}" ry="${X(Math.max(3,Rs*.18))}"/>`;break;}
+      case 'banana':{const ty=by-U(h)*.5,pw=Math.max(3,Rs*.12);
+        b+=`<path class="stem-b2" d="M${X(bx-pw)},${X(by)} L${X(bx-pw*.8)},${X(ty)} L${X(bx+pw*.8)},${X(ty)} L${X(bx+pw)},${X(by)}Z"/>`;
+        // folhas longas arqueadas, as de baixo pendentes
+        [[-150,1],[-125,.95],[-100,.9],[-80,.9],[-55,.95],[-30,1],[-170,.85],[-10,.85]].forEach(([a,k],i)=>{const rad=a*Math.PI/180,L=Rs*1.45*k,ex=bx+Math.cos(rad)*L,ey=ty+Math.sin(rad)*L*.7+(Math.abs(a+90)>50?L*.35:0),mx=bx+Math.cos(rad)*L*.5,my=ty+Math.sin(rad)*L*.7-L*.12;
+          const nx=-Math.sin(rad)*L*.13,ny=Math.cos(rad)*L*.13;
+          b+=`<path class="${i%2?cls:clsS}" d="M${X(bx)},${X(ty)} Q${X(mx+nx)},${X(my+ny)} ${X(ex)},${X(ey)} Q${X(mx-nx)},${X(my-ny)} ${X(bx)},${X(ty)}Z"/><path class="ban-rib" d="M${X(bx)},${X(ty)} Q${X(mx)},${X(my)} ${X(ex)},${X(ey)}"/>`;});
+        const cx2=bx+Rs*.18,cy2=ty+Rs*.1;b+=`<path class="cv-pet" fill="none" d="M${X(bx)},${X(ty)} Q${X(cx2)},${X(ty)} ${X(cx2)},${X(cy2)}"/>`;
+        for(let r_=0;r_<4;r_++)for(let k=0;k<3;k++)b+=`<ellipse class="fr-ban" cx="${X(cx2+(k-1)*Math.max(1.4,Rs*.05))}" cy="${X(cy2+r_*Math.max(2.4,Rs*.08))}" rx="${X(Math.max(1,Rs*.03))}" ry="${X(Math.max(2,Rs*.07))}" transform="rotate(${(k-1)*18} ${X(cx2+(k-1)*Math.max(1.4,Rs*.05))} ${X(cy2+r_*Math.max(2.4,Rs*.08))})"/>`;
+        b+=`<ellipse class="fr-mg" cx="${X(cx2)}" cy="${X(cy2+4*Math.max(2.4,Rs*.08)+2)}" rx="${X(Math.max(1.2,Rs*.04))}" ry="${X(Math.max(2,Rs*.08))}"/>`;break;}
       case 'papaya':{const ty=top+Rs*.45;b+=trunk(bx,by,bx,ty,2.6);
         for(let k=1;k<7;k++){const yy=by-(by-ty)*k/7;b+=`<line class="cv-node" x1="${X(bx-2)}" y1="${X(yy)}" x2="${X(bx+2)}" y2="${X(yy)}"/>`;}
         // folhas palmadas grandes em pecíolos longos, as de baixo pendentes
@@ -1777,10 +1793,14 @@ function draw3D(p){
         for(let i=0;i<6;i++)b+=`<ellipse class="fr-o" cx="${X(bx+(i%2?3.2:-3.2))}" cy="${X(ty+6+Math.floor(i/2)*6.5)}" rx="2.5" ry="3.8"/>`;break;}
     }
     if(cc){const [x0,y0,rx,ry]=cc;
-      if(cr.fr)for(let i=0;i<7;i++){const a=i*2.4+.4,r=.25+.6*((i%3)/2);b+=`<circle class="${cr.fr}" cx="${X(x0+Math.cos(a)*rx*r)}" cy="${X(y0+Math.sin(a)*ry*r+ry*.15)}" r="${X(Math.max(1.4,Math.min(2.8,K*.035)))}"/>`;}
+      const FR=FRUIT[s.id]||(cr.fr?[cr.fr,1]:null);
+      if(FR){const rr=Math.max(2.2,Math.min(4.2,K*.055))*Math.min(FR[1],1.6)*(FR[1]>1.8?1.2:1),n=FR[1]>1.8?6:FR[1]>1.3?8:11;
+        for(let i=0;i<n;i++){const a=i*2.4+.4,r=.3+.55*((i%3)/2),fx=x0+Math.cos(a)*rx*r,fy=y0+Math.sin(a)*ry*r+ry*.2;
+          b+=FR[1]>1.8?`<ellipse class="${FR[0]}" cx="${X(fx)}" cy="${X(fy)}" rx="${X(rr*.75)}" ry="${X(rr)}"/>`:`<circle class="${FR[0]}" cx="${X(fx)}" cy="${X(fy)}" r="${X(rr)}"/>`;
+          b+=`<circle class="fr-hi" cx="${X(fx-rr*.3)}" cy="${X(fy-rr*.35)}" r="${X(rr*.3)}"/>`;}}
       if(cr.fl)for(let i=0;i<12;i++){const a=i*2.4,r=.3+.6*((i%4)/3);b+=`<circle class="${cr.fl}" cx="${X(x0+Math.cos(a)*rx*r)}" cy="${X(y0+Math.sin(a)*ry*r-ry*.2)}" r="${X(Math.max(1.2,Math.min(2.4,K*.03)))}"/>`;}
     }
-    if(cr.trunkfr)for(let i=0;i<6;i++)b+=`<circle class="fr-p" cx="${X(bx+(i%3-1)*Rs*.18)}" cy="${X(by-U(h)*(.12+.07*Math.floor(i/2)))}" r="1.8"/>`;
+
     return `<g>${b}</g>`;
   };
   const pts=p.pts.slice().sort((a,b)=>(a.x+a.y)-(b.x+b.y));
@@ -2048,7 +2068,7 @@ function isoPots(pots,aria){
       g+=`<polygon class="pot-rim-l" points="${P([C(-hx,-hy,H),C(hx,-hy,H),C(hx,hy,H),C(-hx,hy,H)])}"/>`;}
     p.placed.slice().sort((a,b)=>(a.x+a.y)-(b.x+b.y)).forEach(q=>{const [bx,by]=iso(p.X0+q.x,p.Y0+q.y,H),ph=potPlantH(q.s)*K*ZF,pw=Math.max(10,2*q.r*K*.95);
       g+=`<ellipse class="shd" cx="${X(bx)}" cy="${X(by)}" rx="${X(pw*.45)}" ry="${X(pw*.22)}"/>`;
-      g+=q.s.arv?crownSVG(q.s,bx,by,ph,pw,Math.max(pw*3,120)):potPlantSVG(q.s,bx,by,pw*.95,ph,pw);});
+      g+=q.s.arv?crownSVG(q.s,bx,by,ph,Math.max(pw,ph*.2),Math.max(pw*3,ph*.55)):potPlantSVG(q.s,bx,by,pw*.95,ph,pw);});
   });
   // nomes por último, por cima de tudo
   pots.forEach(p=>{const hx=p.Wd/2,hy=p.Dp/2;const [,ly]=iso(p.X0+hx,p.Y0+hy,0);const [mx]=iso(p.X0,p.Y0,0);
@@ -2213,10 +2233,15 @@ function potCompanions(m){
   return res.slice(0,6);
 }
 function crownSVG(s,cx,base,ph,w,room){
-  const cr=Math.min(Math.max(w*.8,ph*.24),ph*.34,room/2),cyc=base-ph+cr*.95;
-  let o=`<line class="trunk" x1="${cx.toFixed(1)}" y1="${base.toFixed(1)}" x2="${cx.toFixed(1)}" y2="${(cyc+cr*.5).toFixed(1)}"/><g><title>${esc(s.n)}</title>`;
-  [[0,0,1,.95],[-.45,.25,.62,.55],[.45,.25,.62,.55],[-.25,-.35,.6,.5],[.3,-.3,.6,.5]].forEach(([dx,dy,rx,ry])=>{o+=`<ellipse class="pl-1 iso-c" cx="${(cx+dx*cr).toFixed(1)}" cy="${(cyc+dy*cr).toFixed(1)}" rx="${(cr*rx).toFixed(1)}" ry="${(cr*ry).toFixed(1)}"/>`;});
-  const c2=crownOf(s);if(c2.fr)for(let i=0;i<7;i++){const a=i*2.4+.4,rr=.3+.5*((i%3)/2);o+=`<circle class="${c2.fr}" cx="${(cx+Math.cos(a)*cr*rr).toFixed(1)}" cy="${(cyc+Math.sin(a)*cr*rr*.8).toFixed(1)}" r="2.6"/>`;}
+  const X=n=>n.toFixed(1),cr=Math.min(Math.max(w*.9,ph*.34),ph*.42,room/2),cyc=base-ph+cr*.95,tn=FOLT[s.id]||({E:3,A:1,M:4})[s.e]||1;
+  let o=`<line class="trunk" stroke-width="${Math.max(2.4,Math.min(6,cr*.1)).toFixed(1)}" x1="${X(cx)}" y1="${X(base)}" x2="${X(cx)}" y2="${X(cyc+cr*.5)}"/><g><title>${esc(s.n)}</title>`;
+  o+=`<ellipse class="crown tn${tn}s" cx="${X(cx)}" cy="${X(cyc)}" rx="${X(cr)}" ry="${X(cr*.95)}"/>`;
+  [[-.45,.25,.62,.55,1],[.45,.25,.62,.55,1],[0,-.05,.82,.75,0],[-.25,-.35,.6,.5,0],[.3,-.3,.6,.5,0]].forEach(([dx,dy,rx,ry,sh])=>{o+=`<ellipse class="crown tn${tn}${sh?'s':''}" cx="${X(cx+dx*cr)}" cy="${X(cyc+dy*cr)}" rx="${X(cr*rx)}" ry="${X(cr*ry)}"/>`;});
+  [[-.35,-.35,.3],[.1,-.55,.22],[-.55,0,.2]].forEach(([dx,dy,k])=>{o+=`<circle class="crown-hi tn${tn}" cx="${X(cx+dx*cr)}" cy="${X(cyc+dy*cr)}" r="${X(cr*k)}"/>`;});
+  const c2=crownOf(s),FR=FRUIT[s.id]||(c2.fr?[c2.fr,1]:null);
+  if(FR){const rr=Math.max(2.4,Math.min(5,cr*.07))*Math.min(FR[1],1.6),n=FR[1]>1.8?5:8;
+    for(let i=0;i<n;i++){const a=i*2.4+.4,r_=.3+.5*((i%3)/2),fx=cx+Math.cos(a)*cr*r_,fy=cyc+Math.sin(a)*cr*r_*.8+cr*.15;
+      o+=`<circle class="${FR[0]}" cx="${X(fx)}" cy="${X(fy)}" r="${X(rr)}"/><circle class="fr-hi" cx="${X(fx-rr*.3)}" cy="${X(fy-rr*.35)}" r="${X(rr*.3)}"/>`;}}
   return o+`</g>`;}
 function drawMyPot(m){
   const X=n=>n.toFixed(1),n=m.fit.length;
