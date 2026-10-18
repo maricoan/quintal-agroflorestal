@@ -259,6 +259,7 @@ a.sm-i:hover{border-color:var(--leaf)}
 .credit a:hover{text-decoration:underline}
 .credit>.credit-note{flex-basis:100%;text-align:center;margin:12px 0 0;font-size:16px;color:var(--ink)}
 .credit-note>span{display:inline-block;padding:7px 16px;border:1px solid var(--line);border-radius:10px;background:var(--leaf-soft)}
+.hero-free{margin:2px 0 0;color:var(--ink)}.hero-free strong{color:var(--leaf);font-weight:700}
 .credit-note strong{color:var(--leaf);font-weight:700}
 .credit>.credit-note::before{content:none}
 @media (max-width:640px){body[data-mtab="espaco"] .credit,body[data-mtab="plantas"] .credit{display:none}.credit{flex-direction:column;gap:4px}.credit>*+*::before{content:none}}
@@ -419,7 +420,7 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
 @media (max-width:640px){
   body{font-size:16px;padding-bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
   .hero{padding-block:4px 12px;gap:10px}
-  .hero-t p:not(.hero-short){display:none}
+  .hero-t p:not(.hero-short):not(.hero-free){display:none}
   .hero-short{display:block}
   .hero-ill{flex-basis:auto;width:78%;margin:0 auto}
   body[data-mtab="espaco"] #sec-plantas,body[data-mtab="espaco"] #out{display:none}
@@ -477,6 +478,7 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
       <span class="eyebrow">Planejador de agrofloresta e horta</span>
       <h1>Quintal Agroflorestal</h1>
       <p>Informe as medidas, luz, rega e tipo de solo e escolha o que quer plantar. O app sugere espaçamento necessário entre plantas com base na agricultura sintrópica e monta o desenho, calendário para plantio e cuidados para cada fase do crescimento das espécies.</p>
+      <p class="hero-free">Aplicativo de uso <strong>público</strong> e <strong>gratuito</strong>.</p>
       <p class="hero-short">Monte seu plantio com espaçamentos de base técnica.</p>
     </div>
     <svg class="hero-ill" viewBox="0 0 360 172" role="img" aria-label="Corte de uma agrofloresta com os cinco estratos: abóbora no rasteiro, couve e alface no baixo, bananeira no médio, frutífera no alto e uma árvore de copa larga no emergente">
