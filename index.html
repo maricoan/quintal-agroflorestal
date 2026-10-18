@@ -1119,7 +1119,7 @@ $('cats').addEventListener('click',e=>{
 // a opção de acrescentar plantas fora da lista foi retirada; plantas próprias salvas antes continuam em "Minhas plantas"
 
 // menor vaso redondo e menor floreira em que cabem todas as plantas de um consórcio (uma muda de cada)
-const _cpCache={};
+const _cpCache={};// v2
 function consPot(sp){const k=sp.join('|');if(_cpCache[k])return _cpCache[k];
   const L=sp.map(i=>BYID[i]).filter(Boolean);let res;
   const no=L.filter(s=>!s.v);
@@ -1127,12 +1127,12 @@ function consPot(sp){const k=sp.join('|');if(_cpCache[k])return _cpCache[k];
   else{const dep=Math.max(...L.map(s=>depthNeed(s.v))),nT=L.filter(s=>s.arv).length;
     const fits=(m)=>{const pl=[];m.pl=pl;let v=0;const ord=L.filter(s=>s.arv).concat(L.filter(s=>!s.arv));
       for(const s of ord){const h=!s.arv&&pl.find(p=>p.s.arv&&underOk(p.s,s));const vv=h?s.v*.5:s.v;if(v+vv>m.V+.01)return false;
-        let p;if(!s.arv&&!pl.length&&m.round){const r=prad(s);p={s,x:-(m.Wd/200-Math.max(.04,r*.5)),y:0,r};}else if(s.arv&&!m.round&&nT>1){const kk=pl.filter(q=>q.s.arv).length;p={s,x:(kk?1:-1)*(m.Wd/200-TEND),y:0,r:prad(s)};}else p=tryPlace(m,pl,s);
+        let p;if(!s.arv&&!pl.length&&m.round){const r=prad(s);if(m.Wd/200<r*.85+.02)return false;p={s,x:-(m.Wd/200-Math.max(.04,r*.85)),y:0,r};}else if(s.arv&&!m.round&&nT>1){const kk=pl.filter(q=>q.s.arv).length;p={s,x:(kk?1:-1)*(m.Wd/200-TEND),y:0,r:prad(s)};}else p=tryPlace(m,pl,s);
         if(!p)return false;pl.push(p);v+=vv;}return true;};
     let pot=null,fl=null;
-    if(nT<=1)for(let d=20;d<=120&&!pot;d+=5){const H=Math.max(dep,Math.min(60,Math.round(d*.8)));const m={round:true,Wd:d,Dp:d,H,V:Math.PI*Math.pow(d/2,2)*H/1000*.85};if(fits(m))pot=m;}
+    if(nT<=1)for(let d=20;d<=120&&!pot;d+=5){const H=Math.max(dep,Math.min(60,Math.round(d*.8)));const m={round:true,strict:1,Wd:d,Dp:d,H,V:Math.PI*Math.pow(d/2,2)*H/1000*.85};if(fits(m))pot=m;}
     for(const w of [20,25,30,40,50,60])for(let c=40;c<=300;c+=10){const H=Math.max(dep,nT>1?50:25);if(c<w)continue;
-      const m={round:false,Wd:c,Dp:w,H,V:c*w*H/1000*.92};if(nT>maxTrees(m))continue;if(fits(m)&&(!fl||m.V<fl.V-1e-9))fl=m;if(fl&&fl.Dp===w)break;}
+      const m={round:false,strict:1,Wd:c,Dp:w,H,V:c*w*H/1000*.92};if(nT>maxTrees(m))continue;if(fits(m)&&(!fl||m.V<fl.V-1e-9))fl=m;if(fl&&fl.Dp===w)break;}
     res={pot,fl};}
   return _cpCache[k]=res;}
 function consPotTxt(sp){const r=consPot(sp);
@@ -2095,10 +2095,10 @@ const footA=s=>{const d=Math.cbrt(s.v/.6)/10;return d*d*.785;};
 // a frutífera reserva só a zona do tronco, e as de raiz rasa ficam em volta dela
 const prad=s=>s.arv?.07:(FORM[s.id]&&FORM[s.id][0]==='groundvine')?.3:Math.min(.3,Math.max(.06,(s.ep||.3)*.4));
 function tryPlace(m,placed,s,tight){
-  const r=prad(s),e=Math.max(.04,r*.5),hx=m.Wd/200,hy=m.Dp/200;
+  const r=prad(s),e=Math.max(.04,r*(m.strict?.85:.5)),hx=m.Wd/200,hy=m.Dp/200;
   const inside=(x,y)=>m.round?Math.hypot(x,y)<=hx-e+1e-9:(Math.abs(x)<=hx-e+1e-9&&Math.abs(y)<=hy-e+1e-9);
   const ok=(x,y)=>placed.every(p=>Math.hypot(p.x-x,p.y-y)>=p.r+r-1e-9);
-  if(!placed.length&&(s.arv||(isHost(s)&&m.round)))return {s,x:0,y:0,r};
+  if(!placed.length&&(s.arv||(isHost(s)&&m.round)))return (m.strict&&!s.arv&&!inside(0,0))?null:{s,x:0,y:0,r};
   let best=null,bs=1e9;
   // com frutífera no centro: as menores vão para a borda, espalhadas; as de sol pleno do lado da luz (esquerda), as de sombra à direita
   const trees=placed.filter(p=>p.s.arv),host=trees[0];
@@ -2121,7 +2121,7 @@ function tryPlace(m,placed,s,tight){
     else{let g=1e9;placed.forEach(p=>{g=Math.min(g,Math.hypot(p.x-x,p.y-y)-(p.r+r));});
       sc=tight?g+(m.round?-.15*Math.hypot(x,y):(x+hx)*.02+Math.abs(y)*.005)+side*.04:g+side*.25+Math.abs(y)*.01;}
     if(sc<bs){bs=sc;best={s,x,y,r};}}
-  if(!best&&!placed.length)best={s,x:0,y:0,r};
+  if(!best&&!placed.length&&!m.strict)best={s,x:0,y:0,r};
   return best;
 }
 // floreira de 200 cm ou mais, com 50 cm de largura e de fundo: cabe uma frutífera em cada ponta
