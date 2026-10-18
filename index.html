@@ -346,6 +346,7 @@ svg text{font-family:var(--f-mono);fill:var(--ink)}
 .c-E{fill:var(--st-e);stroke:var(--st-e)}.c-A{fill:var(--st-a);stroke:var(--st-a)}.c-M{fill:var(--st-m);stroke:var(--st-m)}
 .canopy{fill-opacity:.22;stroke-width:1.2;stroke-dasharray:4 3}
 .iso-c{stroke:rgba(0,0,0,.18);stroke-width:.6}
+.r-pl{stroke:var(--surface);stroke-width:1}.r-tree{fill:none;stroke:var(--st-a);stroke-width:1.2;stroke-dasharray:4 3;opacity:.8}
 .lab{font-size:calc(9.5px * var(--fz,1));text-anchor:middle;dominant-baseline:central;pointer-events:none}
 .lab.dk{fill:var(--st-ink)} .lab.lt{fill:var(--st-ink-light)}
 .hlab{font-size:calc(10px * var(--fz,1));text-anchor:middle;fill:var(--ink);font-family:var(--f-mono);paint-order:stroke;stroke:var(--bg);stroke-width:3px;stroke-linejoin:round}
@@ -1735,16 +1736,16 @@ const FORM={peixinho:['rosette',.3],tuna:['cactus',.8],gabiroba:['herb',.8,{fr:[
  alface:['lettuce',.28],rucula:['tuft',.18],cenoura:['feather',.12,{fr:['fr-o',1,'ground']}],beterraba:['tuft',.2,{fr:['fl-r',1,'ground']}],couve:['kale',.55],tomate:['tomato',.55],berinjela:['fruitshrub',.6,{big:1,fruit:['fr-p','long',3]}],pimenta:['fruitshrub',.5,{fruit:['fl-r','chili',8]}],quiabo:['stalkleaves',.5,{fr:['fl-y',2,'top']}],feijao:['tripod',.6],abobora:['groundvine',2,{big:1,flower:1,fruit:'fr-o'}],batatadoce:['groundvine',.7],milho:['cane',.35,{tassel:1}],taioba:['elephant',.8],cara:['trellis',.45,{nofl:1}],orapronobis:['trellis',1.1],
  // aromáticas
  manjericao:['basil',.35,{fr:['fl-w',3,'top']}],cebolinha:['grass',.12,{straight:1}],salsinha:['parsley',.18],hortela:['mint',.45],alecrim:['needle',.5,{fr:['fr-p',3,'top']}],capimsanto:['grass',.8],carqueja:['clump',.35,{noflower:1}],macela:['needle',.4,{fr:['fl-y',6,'top']}],alecrimcampo:['needle',1.5,{fr:['fl-w',5,'top']}],lantana:['mound',.8,{fr:['fr-p',6,'top']}],boldo:['herb',.8,{big:1}],boldinho:['mint',.4,{fr:['fr-p',2,'top'],fleshy:1}],cidreira:['herb',.9,{fr:['fl-w',4,'top']}],hibisco:['stalkleaves',.6,{fr:['fl-r',4,'top']}],lavanda:['lavender',.5],maracuja:['trellis',1.4,{passion:1}],melancia:['groundvine',2,{big:1,flower:1,fruit:'fr-wm'}],abacaxi:['spiky',.7,{fr:['fr-o',1,'top']}],majorgomes:['rosette',.35,{panicle:1,fl:'fl-pk'}],cariru:['rosette',.3,{fl:'fl-pk'}],jambu:['mint',.25,{fr:['fl-y',0,'top']}],mangarito:['leafy',.4],araruta:['leafy',.5],coentropara:['tuft',.15],physalis:['fruitshrub',.6,{fruit:['fr-o','lantern',5]}],jurubeba:['fruitshrub',1.2,{fruit:['fl-y','round',8]}],amendoimgrao:['mound',.35,{fr:['fl-y',3,'top']}],maxixe:['groundvine',1,{fruit:'pl-3'}],caruru:['amaranth',.35],baleeira:['herb',1.3,{fr:['fl-w',5,'top']}],guaco:['climber',.5],pariparoba:['leafy',.8],alecrimpimenta:['herb',.9,{fr:['fl-w',4,'top']}],cipoalho:['climber',.5,{fr:['fr-p',3,'top']}],mastruz:['herb',.4],alfavacacravo:['basil',.7,{fr:['fl-w',4,'top']}]};
-function draw3D(p){
+function draw3D(p,raio){
   const [L,W]=LW();const circ=isCirc();const c=Math.cos(Math.PI/6),sn=.5,ZF=.85;
-  const maxH=Math.max(1,...p.pts.map(q=>hOf(q.s)));
+  const maxH=raio?.4:Math.max(1,...p.pts.map(q=>hOf(q.s)));
   const K=Math.max(8,Math.min(70,660/((L+W)*c)));
   const pad=24,base=.3;
   const ox=W*c*K+pad,oy=pad+maxH*K*ZF+12;
   const iso=(x,y,z)=>[(x-y)*c*K+ox,(x+y)*sn*K-z*K*ZF+oy];
   const P=a=>a.map(q=>q.map(n=>n.toFixed(1)).join(',')).join(' ');
   const vw=(L+W)*c*K+pad*2,vh=(L+W)*sn*K+maxH*K*ZF+base*K*ZF+pad*2+12;
-  let g=`<svg viewBox="0 0 ${vw.toFixed(1)} ${vh.toFixed(1)}" role="img" aria-label="Vista em 3D do plantio"><defs>${TEX}</defs>`;
+  let g=`<svg viewBox="0 0 ${vw.toFixed(1)} ${vh.toFixed(1)}" role="img" aria-label="${raio?'Vista em 3D com o raio de cada planta':'Vista em 3D do plantio'}"><defs>${TEX}</defs>`;
   // bloco de terra
   if(circ){const R=L/2,ring=z=>{const a=[];for(let i=0;i<72;i++){const t=i/72*Math.PI*2;a.push(iso(R+Math.cos(t)*R,R+Math.sin(t)*R,z));}return a;};
     g+=`<polygon class="s-side1" points="${P(ring(-base))}"/>`;
@@ -1882,6 +1883,26 @@ function draw3D(p){
     return `<g>${b}</g>`;
   };
   const pts=p.pts.slice().sort((a,b)=>(a.x+a.y)-(b.x+b.y));
+  if(raio){
+    // raio de cada planta no chão (o mesmo círculo da planta baixa, visto em perspectiva), com a sigla no centro
+    const nn=q=>p.pts.reduce((m,o)=>o===q?m:Math.min(m,Math.hypot(o.x-q.x,o.y-q.y)),9);
+    // anéis tracejados das árvores ficam recortados no limite do terreno
+    const gp=circ?Array.from({length:72},(_,i)=>{const t=i/72*Math.PI*2;return iso(L/2+Math.cos(t)*L/2,L/2+Math.sin(t)*L/2,.03);}):[iso(0,0,.03),iso(L,0,.03),iso(L,W,.03),iso(0,W,.03)];
+    let rings='';
+    pts.forEach(q=>{const s=q.s,gz=q.kind==='bed'?.08:.03;
+      let r=q.kind==='tree'?.34:q.kind==='med'?.28:Math.min(q.cell*.45,.5);
+      r=Math.max(.04,Math.min(r,nn(q)*.46,circ?9:Math.min(q.x,L-q.x,q.y,W-q.y)*.95));
+      const [bx,by]=iso(q.x,q.y,gz),rx=r*K*c*Math.SQRT2,ry=r*K*sn*Math.SQRT2;
+      g+=`<g><title>${esc(s.n)} · raio de ${cm_(r)} no desenho</title>`;
+      if(q.kind==='tree'){const rt=Math.max(s.ep,1)/2;rings+=`<ellipse class="r-tree" cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" rx="${(rt*K*c*Math.SQRT2).toFixed(1)}" ry="${(rt*K*sn*Math.SQRT2).toFixed(1)}"/>`;}
+      g+=`<ellipse class="p-${s.e} r-pl" cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}"/>`;
+      // sigla sempre visível: nas plantas pequenas, a letra diminui até 6,5 px
+      const fs=Math.max(6.5,Math.min(9.5,rx*.62));
+      g+=`<text class="lab ${darkLab(s.e)}" style="font-size:${fs.toFixed(1)}px" x="${bx.toFixed(1)}" y="${by.toFixed(1)}">${esc(s.a)}</text>`;
+      g+=`</g>`;});
+    g+=`<clipPath id="rclip"><polygon points="${P(gp)}"/></clipPath><g clip-path="url(#rclip)">${rings}</g>`;
+    pts.length=0;
+  }
   pts.forEach(q=>{
     const s=q.s,h=hOf(s),gz=q.kind==='bed'?.08:.03;
     const [bx,by]=iso(q.x,q.y,gz);
@@ -2792,13 +2813,13 @@ function update(fromInput){
   if(S.exemplo)h+=`<div class="banner">Exemplo: quintal de 6 × 3 m com sol pleno. Troque pelas medidas e plantas do seu espaço.</div>`;
   if(S.modo==='chao'){
     const total=Object.values(p.count).reduce((a,b)=>a+b,0);
-    const v3=S.vista==='3d';
+    const v3=S.vista==='3d',vr=S.vista==='raio';
     h+=`<section class="panel card" aria-labelledby="t-des"><div class="head"><h2 id="t-des">Desenho do plantio</h2>
-      <div class="seg" id="vista"><button type="button" data-v="planta" aria-pressed="${!v3}">Planta baixa</button><button type="button" data-v="3d" aria-pressed="${v3}">Vista 3D</button></div></div>
+      <div class="seg" id="vista"><button type="button" data-v="planta" aria-pressed="${!v3&&!vr}">Planta baixa</button><button type="button" data-v="3d" aria-pressed="${v3}">Vista 3D</button><button type="button" data-v="raio" aria-pressed="${vr}">3D com raios</button></div></div>
       ${p.sel.length?`<div class="stats"><div class="stat"><b>${p.beds.length}</b><span>${p.beds.length===1?'canteiro':'canteiros'}</span></div><div class="stat"><b>${p.lines.length}</b><span>${p.lines.length===1?'linha de árvores':'linhas de árvores'}</span></div></div>`:''}
-      ${p.sel.length?`<div class="zoom" role="group" aria-label="Tamanho do desenho"><button type="button" data-zoom="-1" aria-label="Diminuir desenho">−</button><span>${Math.round((S.zoom||1)*100)}%</span><button type="button" data-zoom="1" aria-label="Ampliar desenho">+</button></div><div class="drawing"${isMob()&&(S.zoom||1)>1?` style="--zw:${(S.zoom||1)*100}%"`:''}>${v3?draw3D(p):drawPlan(p)}</div>${!v3&&isMob()?stripList(p):''}`:emptyState("Escolha as plantas na lista ao lado: o app monta aqui o desenho do plantio, com as distâncias de cada uma.")}
+      ${p.sel.length?`<div class="zoom" role="group" aria-label="Tamanho do desenho"><button type="button" data-zoom="-1" aria-label="Diminuir desenho">−</button><span>${Math.round((S.zoom||1)*100)}%</span><button type="button" data-zoom="1" aria-label="Ampliar desenho">+</button></div><div class="drawing"${isMob()&&(S.zoom||1)>1?` style="--zw:${(S.zoom||1)*100}%"`:''}>${v3?draw3D(p):vr?draw3D(p,true):drawPlan(p)}</div>${!v3&&isMob()?stripList(p):''}`:emptyState("Escolha as plantas na lista ao lado: o app monta aqui o desenho do plantio, com as distâncias de cada uma.")}
       ${capAlert(p)}
-      ${p.sel.length?`<p class="hint">`:'<p class="hint" hidden>'}${v3?'Alturas aproximadas das plantas adultas, na mesma escala do terreno. Cada árvore aparece com o formato típico da copa adulta (arredondada, ovalada, em guarda-chuva, cônica, em taça, aberta, de palmeira) e, quando é o caso, com flores ou frutos. Adubo verde, hortaliças e aromáticas aparecem com a forma, a largura e as flores ou frutos típicos: cabeça da alface, folhagem da cenoura, tomate no tutor, touceira da cebolinha, espigas da lavanda, guarda-chuva da mandioca e tapete do amendoim-forrageiro. Passe o dedo ou o mouse sobre uma planta para ver nome, altura e largura.':'Cada quadrado = 1 m². Plantas que cooperam ficam intercaladas na mesma fileira, e as fileiras vizinhas ficam desencontradas. As cotas mostram, em um exemplo de cada planta, a distância ideal até a vizinha da mesma fileira (horizontal) e até a fileira seguinte (vertical). Canteiros de 1,2 m com corredores de 40 cm. Linhas de árvores (faixa escura) com palha grossa. Se puder, deixe as linhas no sentido norte–sul para os dois lados receberem sol.'+(p.lines.length>1&&p.sel.filter(isTree).length>1?' Cada linha de árvores mistura os estratos (alto e médio se repetem em todas as linhas) e os pares com cooperação documentada ficam juntos. As emergentes vão primeiro para as linhas do lado sul, embaixo no desenho: com as linhas no sentido leste–oeste, a sombra delas cai menos sobre os canteiros.':'')+''}</p>
+      ${p.sel.length?`<p class="hint">`:'<p class="hint" hidden>'}${vr?'Mesma posição da vista 3D, mas no lugar de cada planta aparece o círculo que ela ocupa no chão, com a sigla no centro (veja a legenda abaixo). Nas árvores, a linha tracejada mostra a área de cada uma na linha, metade da distância até a próxima árvore.':v3?'Alturas aproximadas das plantas adultas, na mesma escala do terreno. Cada árvore aparece com o formato típico da copa adulta (arredondada, ovalada, em guarda-chuva, cônica, em taça, aberta, de palmeira) e, quando é o caso, com flores ou frutos. Adubo verde, hortaliças e aromáticas aparecem com a forma, a largura e as flores ou frutos típicos: cabeça da alface, folhagem da cenoura, tomate no tutor, touceira da cebolinha, espigas da lavanda, guarda-chuva da mandioca e tapete do amendoim-forrageiro. Passe o dedo ou o mouse sobre uma planta para ver nome, altura e largura.':'Cada quadrado = 1 m². Plantas que cooperam ficam intercaladas na mesma fileira, e as fileiras vizinhas ficam desencontradas. As cotas mostram, em um exemplo de cada planta, a distância ideal até a vizinha da mesma fileira (horizontal) e até a fileira seguinte (vertical). Canteiros de 1,2 m com corredores de 40 cm. Linhas de árvores (faixa escura) com palha grossa. Se puder, deixe as linhas no sentido norte–sul para os dois lados receberem sol.'+(p.lines.length>1&&p.sel.filter(isTree).length>1?' Cada linha de árvores mistura os estratos (alto e médio se repetem em todas as linhas) e os pares com cooperação documentada ficam juntos. As emergentes vão primeiro para as linhas do lado sul, embaixo no desenho: com as linhas no sentido leste–oeste, a sombra delas cai menos sobre os canteiros.':'')+''}</p>
       ${legend(p)}</section>`;
     h+=coopPanel(p);
   }else{
