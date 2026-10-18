@@ -309,6 +309,7 @@ svg text{font-family:var(--f-mono);fill:var(--ink)}
 .tn1{fill:#2F6B3A}.tn1s{fill:#24552E}.tn2{fill:#6E8B34}.tn2s{fill:#58722A}.tn3{fill:#3F7A62}.tn3s{fill:#30614E}.tn4{fill:#4F9140}.tn4s{fill:#3D7533}
 .crown-hi{opacity:.45}.crown-hi.tn1{fill:#4C8B4E}.crown-hi.tn2{fill:#90AE4E}.crown-hi.tn3{fill:#5E9A80}.crown-hi.tn4{fill:#73B25A}
 .fr-rd{fill:#D33A2C}.fr-or{fill:#F08A1D}.fr-mg{fill:#F2A23A}.fr-av{fill:#5E7A2A;stroke:#2C3D12;stroke-width:.6}.fr-li{fill:#C9D64A}.fr-ye{fill:#F2C53D}.fr-bk{fill:#3A1F44}.fr-ban{fill:#9FC44B}.fr-wm{fill:#7BB34F}.fr-hi{fill:rgba(255,255,255,.45)}
+.trunk-pale{stroke:#B8ADA0;stroke-linecap:round;fill:none}.trunk-peel{stroke:#E4DCD0;stroke-width:1.2;stroke-linecap:round}.fr-ap{fill:#6B4A2F}.lf-gl{fill:#5E9A5A;opacity:.55}
 .stem-b2{fill:#8DAE5C}.ban-rib{fill:none;stroke:rgba(255,255,255,.35);stroke-width:.8}
 .trunk-thin{stroke:var(--trunk);stroke-width:1.4;stroke-linecap:round;fill:none}
 .k-E,.k-A,.k-M,.k-B,.k-R{fill:none;stroke-linecap:round}
@@ -1512,15 +1513,15 @@ function dims(p,K){
 
 // ---------- vista 3D (isométrica) ----------
 // formato de copa das árvores
-const CROWN_TXT={round:'arredondada',oval:'ovalada',umbrella:'em guarda-chuva',conical:'cônica',vase:'em taça',open:'aberta e irregular',candelabro:'em candelabro',palm:'de palmeira',banana:'de bananeira',papaya:'em tufo no alto',citrus:'arredondada e densa',bush:'densa, ramificada desde a base',psidium:'aberta e irregular',dome:'em domo largo',coffee:'em andares',jabuti:'densa, com vários troncos'};
-const CROWN_D={round:.8,oval:.55,umbrella:1.1,conical:.5,vase:.8,open:.75,candelabro:.65,palm:.55,banana:.6,papaya:.4,citrus:.9,bush:.95,psidium:.9,dome:1,coffee:.7,jabuti:.9};
-const CROWN_MAX={citrus:3.5,bush:3.5,psidium:4.5,dome:8,coffee:2,jabuti:5,round:6,oval:5,umbrella:6,conical:3,vase:4,open:5,candelabro:4,palm:3.5,banana:2.6,papaya:1.8};
-const TREEFORM={lixeira:{f:'oval',fl:'fl-w'},banana:{f:'banana'},mamao:{f:'papaya'},jucara:{f:'palm',fr:'fr-p'},guariroba:{f:'palm'},embauba:{f:'candelabro'},jabuticaba:{f:'jabuti',trunkfr:1},pitanga:{f:'bush',fr:'fl-r'},araca:{f:'psidium',fr:'fl-y'},acerola:{f:'bush',fr:'fl-r'},limao:{f:'citrus',fr:'fl-y'},mexerica:{f:'citrus',fr:'fr-o'},nespera:{f:'round',fr:'fr-o'},cafe:{f:'coffee',fr:'fl-r'},cambuci:{f:'round',fr:'fl-y'},grumixama:{f:'oval',fr:'fr-p'},uvaia:{f:'oval',fr:'fl-y'},cereja:{f:'oval',fr:'fl-r'},cabeludinha:{f:'bush',fr:'fl-y'},castanha:{f:'oval'},dedaleira:{f:'oval'},candeia:{f:'open',fl:'fl-w'},sangra:{f:'round'},crindiuva:{f:'umbrella'},patadevaca:{f:'vase',fl:'fl-w'},aroeira:{f:'round',fr:'fl-r'},inga:{f:'umbrella'},abacate:{f:'round'},goiaba:{f:'psidium',fr:'fl-y'},manga:{f:'dome',fr:'fr-o'},caqui:{f:'oval',fr:'fr-o'},espinheira:{f:'round'},urucum:{f:'round',fr:'fl-r'}};
+const CROWN_TXT={round:'arredondada',oval:'ovalada',umbrella:'em guarda-chuva',conical:'cônica',vase:'em taça',open:'aberta e irregular',candelabro:'em candelabro',palm:'de palmeira',banana:'de bananeira',papaya:'em tufo no alto',allspice:'densa e arredondada-alongada',citrus:'arredondada e densa',bush:'densa, ramificada desde a base',psidium:'aberta e irregular',dome:'em domo largo',coffee:'em andares',jabuti:'densa, com vários troncos'};
+const CROWN_D={round:.8,oval:.55,umbrella:1.1,conical:.5,vase:.8,open:.75,candelabro:.65,palm:.55,banana:.6,papaya:.4,allspice:.75,citrus:.9,bush:.95,psidium:.9,dome:1,coffee:.7,jabuti:.9};
+const CROWN_MAX={allspice:4.5,citrus:3.5,bush:3.5,psidium:4.5,dome:8,coffee:2,jabuti:5,round:6,oval:5,umbrella:6,conical:3,vase:4,open:5,candelabro:4,palm:3.5,banana:2.6,papaya:1.8};
+const TREEFORM={a_pimentadioica:{f:'allspice'},lixeira:{f:'oval',fl:'fl-w'},banana:{f:'banana'},mamao:{f:'papaya'},jucara:{f:'palm',fr:'fr-p'},guariroba:{f:'palm'},embauba:{f:'candelabro'},jabuticaba:{f:'jabuti',trunkfr:1},pitanga:{f:'bush',fr:'fl-r'},araca:{f:'psidium',fr:'fl-y'},acerola:{f:'bush',fr:'fl-r'},limao:{f:'citrus',fr:'fl-y'},mexerica:{f:'citrus',fr:'fr-o'},nespera:{f:'round',fr:'fr-o'},cafe:{f:'coffee',fr:'fl-r'},cambuci:{f:'round',fr:'fl-y'},grumixama:{f:'oval',fr:'fr-p'},uvaia:{f:'oval',fr:'fl-y'},cereja:{f:'oval',fr:'fl-r'},cabeludinha:{f:'bush',fr:'fl-y'},castanha:{f:'oval'},dedaleira:{f:'oval'},candeia:{f:'open',fl:'fl-w'},sangra:{f:'round'},crindiuva:{f:'umbrella'},patadevaca:{f:'vase',fl:'fl-w'},aroeira:{f:'round',fr:'fl-r'},inga:{f:'umbrella'},abacate:{f:'round'},goiaba:{f:'psidium',fr:'fl-y'},manga:{f:'dome',fr:'fr-o'},caqui:{f:'oval',fr:'fr-o'},espinheira:{f:'round'},urucum:{f:'round',fr:'fl-r'}};
 const GENFORM=[[/^(Handroanthus|Tabebuia|Zeyheria|Cybistax)/,'open'],[/^(Inga|Poincianella|Libidibia|Peltophorum|Tipuana|Albizia|Samanea|Jacaranda|Machaerium|Dalbergia|Platypodium|Pterocarpus|Holocalyx|Myrocarpus|Myroxylon|Lonchocarpus|Bowdichia|Pterodon|Andira|Ormosia|Tachigali|Copaifera|Cariniana|Cassia|Poecilanthe)/,'umbrella'],[/^(Calophyllum|Lophanthera|Michelia)/,'conical'],[/^Pimenta/,'oval'],[/^(Lagerstroemia|Bauhinia|Dictyoloma)/,'vase'],[/^(Eugenia|Plinia|Psidium|Myrcia|Myrcianthes|Campomanesia|Pouteria|Tibouchina|Allophylus|Casearia|Erythroxylum|Licania|Sapindus|Koelreuteria)/,'round']];
 const GENFL=[[/^Handroanthus (chrysotrichus|umbellatus|albus|ochraceus|vellosoi)|^(Zeyheria|Poincianella|Peltophorum|Tipuana|Pterocarpus|Cassia|Vochysia|Lophanthera|Koelreuteria|Michelia|Libidibia)/,'fl','fl-y'],[/^Handroanthus (heptaphyllus|impetiginosus)|^(Jacaranda|Tibouchina|Bowdichia|Pterodon|Lagerstroemia|Bauhinia blakeana|Bauhinia purpurea)/,'fl','fr-p'],[/^(Physocalymma)/,'fl','fl-r'],[/^(Tabebuia roseoalba|Bauhinia variegata|Bauhinia longifolia|Citharexylum)/,'fl','fl-w'],[/^(Campomanesia|Myrcianthes|Plinia|Pouteria|Eugenia dysenterica)/,'fr','fl-y'],[/^(Pimenta)/,'fr','fr-p']];
 // tom natural da folhagem (1 verde-escuro brilhante, 2 oliva, 3 verde-azulado, 4 verde-vivo) e fruto de cada árvore [classe, tamanho]
 const FOLT={limao:1,mexerica:1,manga:1,abacate:1,jabuticaba:1,a_pimentadioica:1,grumixama:1,a_myrcianthespungens:3,goiaba:2,araca:2,caqui:2,cagaita:2,a_eugeniadysenterica:2,nespera:3,a_pouteriatorta:3,pitanga:4,acerola:4,cereja:4,uvaia:4,cambuci:4,cabeludinha:4,a_pliniaedulis:4,a_campomanesiaxanthocarpa:4};
-const FRUIT={pitanga:['fr-rd',1],acerola:['fr-rd',1.05],cereja:['fr-rd',1],limao:['fr-li',1.5],mexerica:['fr-or',1.5],manga:['fr-mg',2.2],abacate:['fr-av',2],caqui:['fr-or',1.6],nespera:['fr-ye',1.1],goiaba:['fr-li',1.5],araca:['fr-ye',1.05],uvaia:['fr-ye',1.1],cambuci:['fr-li',1.3],cabeludinha:['fr-ye',1],grumixama:['fr-bk',1],jabuticaba:['fr-bk',1.1],a_pliniaedulis:['fr-ye',1.4],a_eugeniadysenterica:['fr-ye',1.2],a_pouteriatorta:['fr-ye',1.4],a_myrcianthespungens:['fr-bk',1],a_campomanesiaxanthocarpa:['fr-ye',1],a_pimentadioica:['fr-bk',.8],urucum:['fr-rd',1.2],aroeira:['fr-rd',.6]};
+const FRUIT={pitanga:['fr-rd',1],acerola:['fr-rd',1.05],cereja:['fr-rd',1],limao:['fr-li',1.5],mexerica:['fr-or',1.5],manga:['fr-mg',2.2],abacate:['fr-av',2],caqui:['fr-or',1.6],nespera:['fr-ye',1.1],goiaba:['fr-li',1.5],araca:['fr-ye',1.05],uvaia:['fr-ye',1.1],cambuci:['fr-li',1.3],cabeludinha:['fr-ye',1],grumixama:['fr-bk',1],jabuticaba:['fr-bk',1.1],a_pliniaedulis:['fr-ye',1.4],a_eugeniadysenterica:['fr-ye',1.2],a_pouteriatorta:['fr-ye',1.4],a_myrcianthespungens:['fr-bk',1],a_campomanesiaxanthocarpa:['fr-ye',1],urucum:['fr-rd',1.2],aroeira:['fr-rd',.6]};
 function crownOf(s){
   if(TREEFORM[s.id])return TREEFORM[s.id];
   const o={f:s.e==='M'?'round':'oval'};
@@ -1728,6 +1729,22 @@ function draw3D(p){
         b+=trunk(bx,by,bx,cy+ry*.4);b+=lobed(bx,cy,Rs,ry);cc=[bx,cy,Rs,ry];break;}
       case 'oval':{const ch=Hh*.76,ry=ch/2,cy=top+ry;
         b+=trunk(bx,by,bx,cy+ry*.5);b+=lobed(bx,cy,Rs,ry,.34);cc=[bx,cy,Rs,ry];break;}
+      case 'allspice':{// pimenta-da-jamaica: tronco claro e liso que descasca, bifurcado baixo, ramos ascendentes,
+        // copa densa e arredondada de folhas coriáceas brilhantes, panículas de flores brancas e frutinhos que passam de verdes a marrom-escuros
+        const ch=Hh*.7,ry=ch/2,cy=top+ry,fy=by-Hh*.17;
+        b+=`<path class="trunk-pale" stroke-width="${tw.toFixed(1)}" d="M${X(bx)},${X(by)} L${X(bx)},${X(fy)}"/>`;
+        [[-.62,.35],[-.3,.1],[0,-.05],[.3,.1],[.62,.35]].forEach(([k,t])=>{b+=`<path class="trunk-pale" stroke-width="${(tw*.55).toFixed(1)}" fill="none" d="M${X(bx)},${X(fy)} Q${X(bx+k*Rs*.25)},${X(fy-Hh*.08)} ${X(bx+k*Rs*.6)},${X(cy+ry*t)}"/>`;});
+        b+=`<path class="trunk-peel" d="M${X(bx-tw*.25)},${X(by-Hh*.05)} v${X(-Hh*.06)} M${X(bx+tw*.2)},${X(by-Hh*.15)} v${X(-Hh*.05)} M${X(bx-tw*.1)},${X(by-Hh*.24)} v${X(-Hh*.03)}"/>`;
+        b+=lobed(bx,cy,Rs,ry,.22);
+        // folhas brilhantes (reflexo) espalhadas na copa
+        for(let i=0;i<14;i++){const a=i*2.4,rr=.3+.6*((i*7%10)/10),x=bx+Math.cos(a)*Rs*rr,y=cy+Math.sin(a)*ry*rr*.85;
+          b+=`<ellipse class="lf-gl" cx="${X(x)}" cy="${X(y)}" rx="${X(Math.max(1.6,Rs*.06))}" ry="${X(Math.max(.8,Rs*.028))}" transform="rotate(${(i*37%70)-35} ${X(x)} ${X(y)})"/>`;}
+        // panículas terminais espalhadas pela copa: flores brancas e frutinhos (verdes→marrom-escuros)
+        const pr=Math.max(1.2,Math.min(2.2,Rs*.045));
+        for(let i=0;i<11;i++){const a=i*2.39996+.5,rr=.45+.42*(((i*5)%7)/6),x=bx+Math.cos(a)*Rs*rr,y=cy-ry*.12+Math.sin(a)*ry*rr*.8,fl=i%3===0;
+          for(let k=0;k<6;k++){const dx=(k%3-1)*pr*1.5,dy=Math.floor(k/3)*pr*1.4-(k%3===1?pr*.6:0);
+            b+=`<circle class="${fl?'fl-w':(k%3===1?'fr-ap':'fr-bk')}" cx="${X(x+dx)}" cy="${X(y+dy)}" r="${X(fl?pr*.85:pr)}"/>`;}}
+        break;}
       case 'dome':{const ch=Hh*.68,ry=ch/2,cy=top+ry;
         b+=trunk(bx,by,bx,cy+ry*.3,3.4);[-1,1].forEach(k=>{b+=trunk(bx,cy+ry*.55,bx+k*Rs*.45,cy+ry*.1,2);});
         b+=lobed(bx,cy,Rs,ry,.32);cc=[bx,cy,Rs,ry];break;}
