@@ -152,6 +152,8 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .cap-alert.lim .cap-h{color:var(--ink)}
 .cap-ico{width:24px;height:24px;border-radius:50%;background:var(--warn);color:var(--surface);display:inline-flex;align-items:center;justify-content:center;font-weight:700;flex:none}
 .cap-alert.lim .cap-ico{background:var(--sun)}
+.nopot{display:flex;gap:12px;align-items:flex-start;border:2px solid var(--warn);background:var(--warn-soft);border-radius:10px;padding:12px 14px;font-size:15px}
+.nopot b{display:block;color:var(--warn);margin-bottom:2px}
 .cap-list{display:flex;flex-wrap:wrap;gap:6px}
 .cap-list button{font:inherit;font-size:13.5px;font-weight:700;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--warn);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 10px 5px 8px;cursor:pointer}
 .cap-list button:hover{background:var(--warn-soft)}
@@ -2705,7 +2707,7 @@ function update(fromInput){
       h+=`<div class="pots">`+pi.items.map(it=>`<div class="potc"><b>${it.kind==='cons'?`Consórcio · ${it.round?'vaso redondo':'floreira'} de ${it.v} L`:it.kind==='jard'?`Jardineira de 60 cm · mínimo ${it.v} L`:`Vaso mínimo de ${it.v} L`}</b><span class="who">${esc(it.sp.map(s=>s.n).join(' + '))}${it.under&&it.under.length?` <span class="und">+ ${esc(it.under.map(s=>s.n).join(', '))} na borda</span>`:''}</span><span class="hint">${potDims(it)}</span><span class="hint"><b>Altura no vaso:</b> ${it.sp.map(s=>`${it.sp.length>1?esc(s.n)+' ':''}${cmTxt(potRange(s))}`).join(' · ')}</span><span class="hint">${it.kind==='jard'?it.sp.map(s=>`${esc(s.n)}: mín. ${s.v} L`).join(' · '):`${EST[it.sp[0].e]} · colheita em ${esc(it.sp[0].col)}`}</span>${it.under&&it.under.length?`<span class="hint"><b>Na borda:</b> ${it.under.map(u=>`${esc(u.n)} (${underWhy(it.sp[0],u)}; altura ${cmTxt(potRange(u))})`).join(' · ')}</span>`+potNotes(it.sp[0],it.under).map(t=>`<span class="hint">${esc(t)}</span>`).join(''):''}</div>`).join('')+`</div>`;
     }else h+=emptyState("Escolha as plantas na lista ao lado para ver o tamanho e a posição de cada vaso.");
     (pi.consNo||[]).forEach(c=>{h+=`<ul class="notes"><li class="note warn"><span class="tag">Atenção</span><div class="body"><span><b>${esc(c.sp.map(s=>s.n).join(' + '))}</b> não é apropriado para vaso: ${esc(c.no.map(s=>s.n).join(' e '))} ${c.no.length>1?'precisam':'precisa'} de chão. Plante esse consórcio no modo "No chão".</span></div></li></ul>`;});
-    if(pi.no.length)h+=`<p class="hint">Não indicadas para vaso: ${esc(pi.no.map(s=>s.n).join(', '))}.</p>`;
+    if(pi.no.length)h+=`<div class="nopot" role="note"><span class="cap-ico" aria-hidden="true">!</span><div><b>Atenção: não indicadas para vaso</b><span>${esc(pi.no.map(s=>s.n).join(', '))}. Essas plantas precisam ser plantadas direto no chão.</span></div></div>`;
     pi.no.filter(s=>NOPOT[s.id]).forEach(s=>{h+=`<ul class="notes"><li class="note warn"><span class="tag">Atenção</span><div class="body"><span>${esc(NOPOT[s.id])}</span><div class="acts"><button type="button" data-rmsel="${s.id}">Tirar ${esc(s.n)} da lista</button></div></div></li></ul>`;});
     h+=`</section>`;}
   }
