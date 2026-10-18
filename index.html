@@ -77,6 +77,14 @@ h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute
 a{color:var(--leaf)}
 .grid{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:20px;align-items:start}
 @media (max-width:880px){.grid{grid-template-columns:minmax(0,1fr)}}
+#espacoTop:empty{display:none}
+@media (min-width:881px){
+  #espacoTop #sec-espaco{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-flow:row dense;gap:16px 32px;padding:16px 22px 20px}
+  #espacoTop #sec-espaco>.head{grid-column:1/-1;margin-bottom:-6px}
+  #espacoTop #sec-espaco>#potF{grid-column:span 2}
+  #espacoTop #sec-espaco>#potF .sub{margin-top:0}
+  #espacoTop #sec-espaco>.field,#espacoTop #sec-espaco>.row2{align-self:start}
+}
 @media (min-width:881px){.grid>.col:first-child{position:sticky;top:8px;max-height:calc(100vh - 16px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--line) transparent;padding-right:4px;margin-right:-4px;border-radius:14px}}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:16px;min-width:0}
 .col{display:flex;flex-direction:column;gap:20px;min-width:0}
@@ -555,6 +563,7 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
     </svg>
   </header>
 
+  <div id="espacoTop"></div>
   <div class="grid">
     <div class="col">
       <section class="panel" id="sec-espaco" aria-labelledby="t-terreno">
@@ -1112,6 +1121,9 @@ $('busca').addEventListener('input',renderCats);
 $('tray').addEventListener('click',e=>{const b=e.target.closest('[data-rmsel]');if(!b)return;S.sel=S.sel.filter(i=>i!==b.dataset.rmsel);S.exemplo=false;update();});
 try{$('legbox').open=!!(S.legOpen);}catch(e){}
 $('legbox').addEventListener('toggle',()=>{S.legOpen=$('legbox').open;save();});
+{const mq=matchMedia('(min-width:881px)'),sec=$('sec-espaco'),home=sec.parentNode;
+  const place=()=>{if(mq.matches){if(sec.parentNode!==$('espacoTop'))$('espacoTop').appendChild(sec);}else if(sec.parentNode!==home)home.insertBefore(sec,home.firstChild);};
+  place();try{mq.addEventListener('change',place);}catch(e){mq.addListener(place);}}
 $('limpar').addEventListener('click',()=>{if(!S.sel.length)return;const prev={sel:S.sel.slice(),consSel:(S.consSel||[]).slice(),exemplo:S.exemplo};
   S.sel=[];S.consSel=[];S.exemplo=false;update();
   let t=document.getElementById('toast');if(t)t.remove();t=document.createElement('div');t.id='toast';t.className='toast';t.setAttribute('role','status');
