@@ -173,6 +173,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .pc-n{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-weight:700;font-size:14px}
 .pc-n .on{color:var(--leaf)}
 .pc-n i{font-style:normal;color:var(--muted);font-weight:400}
+.pc-v{margin:2px 0 0;font-size:12.5px;color:var(--soil)}
 .pc-t,.pc-a{margin:0;font-size:12.5px;line-height:1.4}
 .pc-a{color:var(--muted);font-size:12px}
 .pc .cons-add{padding:5px 11px;font-size:12.5px}
@@ -1117,6 +1118,28 @@ $('cats').addEventListener('click',e=>{
 });
 // a opção de acrescentar plantas fora da lista foi retirada; plantas próprias salvas antes continuam em "Minhas plantas"
 
+// menor vaso redondo e menor floreira em que cabem todas as plantas de um consórcio (uma muda de cada)
+const _cpCache={};
+function consPot(sp){const k=sp.join('|');if(_cpCache[k])return _cpCache[k];
+  const L=sp.map(i=>BYID[i]).filter(Boolean);let res;
+  const no=L.filter(s=>!s.v);
+  if(no.length)res={no};
+  else{const dep=Math.max(...L.map(s=>depthNeed(s.v))),nT=L.filter(s=>s.arv).length;
+    const fits=(m)=>{const pl=[];let v=0;const ord=L.filter(s=>s.arv).concat(L.filter(s=>!s.arv));
+      for(const s of ord){const h=!s.arv&&pl.find(p=>p.s.arv&&underOk(p.s,s));const vv=h?s.v*.5:s.v;if(v+vv>m.V+.01)return false;
+        let p;if(!s.arv&&!pl.length&&m.round){const r=prad(s);p={s,x:-(m.Wd/200-Math.max(.04,r*.5)),y:0,r};}else if(s.arv&&!m.round&&nT>1){const kk=pl.filter(q=>q.s.arv).length;p={s,x:(kk?1:-1)*(m.Wd/200-TEND),y:0,r:prad(s)};}else p=tryPlace(m,pl,s);
+        if(!p)return false;pl.push(p);v+=vv;}return true;};
+    let pot=null,fl=null;
+    if(nT<=1)for(let d=20;d<=120&&!pot;d+=5){const H=Math.max(dep,Math.min(60,Math.round(d*.8)));const m={round:true,Wd:d,Dp:d,H,V:Math.PI*Math.pow(d/2,2)*H/1000*.85};if(fits(m))pot=m;}
+    for(const w of [20,25,30,40,50,60])for(let c=40;c<=300;c+=10){const H=Math.max(dep,nT>1?50:25);if(c<w)continue;
+      const m={round:false,Wd:c,Dp:w,H,V:c*w*H/1000*.92};if(nT>maxTrees(m))continue;if(fits(m)&&(!fl||m.V<fl.V-1e-9))fl=m;if(fl&&fl.Dp===w)break;}
+    res={pot,fl};}
+  return _cpCache[k]=res;}
+function consPotTxt(sp){const r=consPot(sp);
+  if(r.no)return `Não vai para vaso: ${r.no.map(s=>esc(s.n)).join(', ')} precisa${r.no.length>1?'m':''} de chão.`;
+  const a=[];if(r.pot)a.push(`vaso redondo de Ø ${r.pot.Wd} cm e ${r.pot.H} cm de fundo (≈ ${fmt(r.pot.V,0)} L)`);
+  if(r.fl)a.push(`floreira de ${r.fl.Wd} × ${r.fl.Dp} cm e ${r.fl.H} cm de fundo (≈ ${fmt(r.fl.V,0)} L)`);
+  return a.length?`<b>Em vaso:</b> ${a.join(' ou ')}.`:'Não cabe num vaso comum: plante no chão.';}
 function renderCats(){
   const q=$('busca').value.trim().toLowerCase();
   const all=DATA.concat(S.custom);
@@ -1139,7 +1162,7 @@ function renderCats(){
     if(cons.length){const ids=new Set(S.sel);const nAll=cons.filter(c=>c.sp.every(i=>ids.has(i))).length;const open=!!q||!!(S.openCats||{}).parc;
       h+=`<details class="cat cat-parc" data-k="parc"${open?' open':''}><summary>${catIco('parc')}<span class="cat-t">Parceiras <span class="cat-sub">consórcios com estudo</span></span><span class="cat-n">${nAll?`${nAll} de ${cons.length}`:cons.length}</span></summary><ul class="pc-list">`+cons.map(c=>{
         const all=c.sp.every(i=>ids.has(i)),some=c.sp.some(i=>ids.has(i));const R=REFS[c.src];
-        return `<li class="pc${all?' all':''}" title="${esc(c.t)}"><div class="pc-n">${c.sp.map(i=>BYID[i]?`<span class="${ids.has(i)?'on':''}">${esc(BYID[i].n)}</span>`:'').join('<i>+</i>')}</div><p class="pc-t">${esc(c.t)}${R&&R.n?` [${R.n}]`:''}</p><p class="pc-a">${esc(consArr(c.sp))}</p>${all?'<span class="cons-ok">✓ no seu plantio</span>':`<button type="button" class="btn cons-add" data-addcons="${c.sp.join(',')}">${some?'Completar consórcio':'Plantar consórcio'}</button>`}</li>`;}).join('')+
+        return `<li class="pc${all?' all':''}" title="${esc(c.t)}"><div class="pc-n">${c.sp.map(i=>BYID[i]?`<span class="${ids.has(i)?'on':''}">${esc(BYID[i].n)}</span>`:'').join('<i>+</i>')}</div><p class="pc-t">${esc(c.t)}${R&&R.n?` [${R.n}]`:''}</p><p class="pc-a">${esc(consArr(c.sp))}</p>${S.modo==='vaso'?`<p class="pc-v">${consPotTxt(c.sp)}</p>`:''}${all?'<span class="cons-ok">✓ no seu plantio</span>':`<button type="button" class="btn cons-add" data-addcons="${c.sp.join(',')}">${some?'Completar consórcio':'Plantar consórcio'}</button>`}</li>`;}).join('')+
         COOP.filter(c=>c[2]<0).map(c=>`<li class="pc bad"><div class="pc-n"><span>${esc(BYID[c[0]].n)}</span><i>✕</i><span>${esc(BYID[c[1]].n)}</span></div><p class="pc-t">Não plantar juntas. ${esc(c[3])}${REFS[c[4]]?` [${REFS[c[4]].n}]`:''}</p></li>`).join('')+`</ul></details>`;}}
   h+=hCats;
   $('cats').innerHTML=h||'<p class="empty">Nenhuma planta com esse nome.</p>';
