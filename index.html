@@ -77,6 +77,7 @@ h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute
 a{color:var(--leaf)}
 .grid{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:20px;align-items:start}
 @media (max-width:880px){.grid{grid-template-columns:minmax(0,1fr)}}
+@media (min-width:881px){.grid>.col:first-child{position:sticky;top:8px;max-height:calc(100vh - 16px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--line) transparent;padding-right:4px;margin-right:-4px;border-radius:14px}}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:16px;min-width:0}
 .col{display:flex;flex-direction:column;gap:20px;min-width:0}
 .head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
@@ -97,7 +98,7 @@ label.lbl,.lbl{font-size:13px;font-weight:700}
 input[type=number],input[type=text],select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;width:100%;min-width:0}
 input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}
 .unit{position:relative}
-.unit input{padding-right:30px;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.unit input{padding-right:30px;font-family:var(--f-body);font-variant-numeric:tabular-nums}
 .unit span{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none}
 .seg{display:flex;flex-wrap:wrap;gap:6px}
 .seg button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer}
@@ -113,7 +114,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .cat .cat-t{flex:1}
 .cat-ico{width:20px;height:20px;flex:none;fill:none;stroke:var(--leaf);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .cat-parc .cat-ico{stroke:var(--sun)}
-.cat .cat-n{font-family:var(--f-mono);font-size:12px;font-weight:400;color:var(--muted)}
+.cat .cat-n{font-family:var(--f-body);font-size:12px;font-weight:400;color:var(--muted)}
 .cat .chips{padding:0 12px 12px}
 .cats{gap:8px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -188,7 +189,9 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .pc .cons-add{padding:5px 11px;font-size:12.5px}
 .tray{display:flex;flex-direction:column;gap:6px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px}
 .tray-t{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
-.tray-l{display:flex;flex-wrap:wrap;gap:5px;max-height:132px;overflow:auto}
+.tray-l{display:flex;flex-wrap:wrap;gap:5px}
+.tdot{width:10px;height:10px;border-radius:50%;flex:none;box-shadow:0 0 0 1.5px var(--surface)}
+.tdot.d-E{background:var(--st-e)}.tdot.d-A{background:var(--st-a)}.tdot.d-M{background:var(--st-m)}.tdot.d-B{background:var(--st-b)}.tdot.d-R{background:var(--st-r)}
 .tray-l button{font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:5px;border:1px solid var(--leaf);background:var(--leaf-soft);color:var(--ink);border-radius:999px;padding:3px 8px 3px 6px;cursor:pointer}
 .tray-l button:hover{border-color:var(--warn)}
 .tray-x{color:var(--warn);font-size:14px;line-height:1}
@@ -204,13 +207,15 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .sm-i b{font-family:var(--f-display);font-weight:400;font-size:30px;line-height:1.1;font-variant-numeric:tabular-nums}
 .sm-i span{font-size:12px;color:var(--muted)}
 a.sm-i:hover{border-color:var(--leaf)}
-.sm-warn{border-color:var(--sun)}
+.sm-warn{border:2px solid var(--warn);background:var(--warn-soft)}.sm-warn b,.sm-warn span{color:var(--warn)}.sm-warn span::after{content:' → ver'}
+.sm-ok b{color:var(--muted)}
 .sm-bad{border:2px solid var(--warn);background:var(--warn-soft)}
 .sm-bad b,.sm-bad span{color:var(--warn)}
 .secnav{display:flex;gap:4px;overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;position:sticky;top:calc(env(safe-area-inset-top, 0px) + 8px);z-index:6;box-shadow:0 4px 12px rgba(20,40,25,.08);scrollbar-width:none}
 .secnav::-webkit-scrollbar{display:none}
 .secnav a{flex:none;font-size:13px;font-weight:700;color:var(--muted);text-decoration:none;border-radius:999px;padding:6px 12px}
 .secnav a:hover,.secnav a:focus-visible{background:var(--leaf-soft);color:var(--leaf)}
+.secnav a[aria-current="true"]{background:var(--leaf);color:var(--surface)}
 .rtabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;align-self:flex-start;position:sticky;top:calc(env(safe-area-inset-top, 0px) + 8px);z-index:6;box-shadow:0 4px 12px rgba(20,40,25,.08)}
 .rtabs button{font:inherit;font-weight:700;font-size:14px;border:none;background:transparent;color:var(--muted);border-radius:999px;padding:7px 18px;cursor:pointer}
 .rtabs button[aria-selected="true"]{background:var(--leaf);color:var(--surface)}
@@ -261,8 +266,12 @@ a.sm-i:hover{border-color:var(--leaf)}
 .cap-other{display:flex;flex-direction:column;gap:6px;border-top:1px dashed var(--warn);padding-top:10px;margin-top:2px;font-size:13.5px}
 .cap-list.other button{border-color:var(--line);font-weight:400}
 .cap-x{color:var(--warn);font-size:15px;line-height:1}
-.btn-clear{font:inherit;font-weight:700;font-size:13.5px;border:none;background:var(--warn);color:var(--surface);border-radius:999px;padding:7px 14px;cursor:pointer}
-.btn-clear:hover{filter:brightness(1.08)}
+.btn-clear{font:inherit;font-weight:600;font-size:13px;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:6px 12px;cursor:pointer}
+.btn-clear:hover{border-color:var(--warn);color:var(--warn)}
+.btn-clear:disabled{opacity:.45;cursor:default;border-color:var(--line);color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;display:flex;align-items:center;gap:14px;background:var(--ink);color:var(--bg);border-radius:12px;padding:10px 12px 10px 16px;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.toast button{font:inherit;font-weight:700;border:none;background:transparent;color:var(--sun);cursor:pointer;padding:6px 8px;border-radius:8px}
+@media (max-width:640px){.toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}}
 .quick .clear{border-color:var(--warn);color:var(--warn)}
 .quick button{font:inherit;font-size:12.5px;border:1px solid var(--leaf);color:var(--leaf);background:var(--surface);border-radius:999px;padding:3px 10px;cursor:pointer}
 .d-E{background:var(--st-e)}.d-A{background:var(--st-a)}.d-M{background:var(--st-m)}.d-B{background:var(--st-b)}.d-R{background:var(--st-r)}
@@ -272,7 +281,7 @@ details.add summary{cursor:pointer;font-size:13.5px;font-weight:700;color:var(--
 .banner{background:var(--soil-soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:13.5px}
 .stats{display:flex;flex-wrap:wrap;gap:8px 22px}
 .stat{display:flex;flex-direction:column}
-.stat b{font-family:var(--f-mono);font-weight:500;font-size:20px;font-variant-numeric:tabular-nums}
+.stat b{font-family:var(--f-body);font-weight:500;font-size:20px;font-variant-numeric:tabular-nums}
 .stat span{font-size:12px;color:var(--muted)}
 .drawing{background:var(--ground);border-radius:8px;overflow-x:auto;padding:8px}
 .drawing.plain{background:var(--bg)}
@@ -342,10 +351,10 @@ svg text{font-family:var(--f-mono);fill:var(--ink)}
 .lg .ab{font-family:var(--f-mono);font-size:11px;min-width:26px;height:22px;border-radius:11px;display:inline-flex;align-items:center;justify-content:center;flex:none;padding:0 4px}
 .ab.dk{color:var(--st-ink)} .ab.lt{color:var(--st-ink-light)}
 .lg .nm{flex:1;min-width:0;display:flex;flex-direction:column}
-.lg .sp{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.lg .sp{font-family:var(--f-body);font-size:11px;color:var(--muted)}
 .sp-sum{display:flex;flex-direction:column;gap:4px;font-size:13px;border-top:1px solid var(--line);padding-top:10px}
 .sp-sum p{margin:0}
-.lg .q{font-family:var(--f-mono);font-variant-numeric:tabular-nums;color:var(--muted)}
+.lg .q{font-family:var(--f-body);font-variant-numeric:tabular-nums;color:var(--muted)}
 .coop-sec{display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--line)}
 .coop-sec h3{display:flex;align-items:center;gap:8px}
 .coop-sec h3::before{content:"";width:10px;height:10px;border-radius:50%;flex:none;background:var(--muted)}
@@ -370,14 +379,20 @@ table{border-collapse:collapse;width:100%;font-size:13px;min-width:560px}
 th,td{padding:6px 6px;text-align:center;border-bottom:1px solid var(--line)}
 th:first-child,td:first-child{text-align:left;padding-left:0;white-space:nowrap;padding-right:10px}
 th{font-weight:700;color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em}
-td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+td.num{font-family:var(--f-body);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
 th.num{text-align:right}
 td.src{text-align:left;font-size:12.5px;color:var(--muted)}
 td.mo{padding:5px 2px}
 td.mo i{display:block;height:14px;border-radius:3px}
 td.mo i.on{background:var(--leaf)}
 .curm{background:var(--soil-soft)}
-td.h{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:nowrap;text-align:right}
+td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:nowrap;text-align:right}
+.refs-d summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);list-style:none;display:inline-flex;align-items:center;gap:6px}
+.refs-d summary::-webkit-details-marker{display:none}
+.refs-d summary::before{content:'›';display:inline-block;transition:transform .15s;font-size:16px}
+.refs-d[open] summary::before{transform:rotate(90deg)}
+.refs-d[open] summary{margin-bottom:6px}
+.refs-d summary:hover{color:var(--leaf)}
 .refs{margin:0;padding-left:20px;font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:3px}
 .phases{display:flex;flex-direction:column;gap:0;margin:0;padding:0;list-style:none}
 .phase{display:grid;grid-template-columns:130px minmax(0,1fr);gap:14px;padding:12px 0;border-top:1px solid var(--line)}
@@ -387,7 +402,7 @@ td.h{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:now
 @media (max-width:520px){.phase{grid-template-columns:minmax(0,1fr);gap:6px}}
 .pots{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
 .potc{border:1px solid var(--line);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:4px;background:var(--bg)}
-.potc b{font-family:var(--f-mono);font-weight:500;font-size:13px;color:var(--soil)}
+.potc b{font-family:var(--f-body);font-weight:500;font-size:13px;color:var(--soil)}
 .potc .who{font-size:14px;font-weight:700}
 .empty{color:var(--muted);font-size:14px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
@@ -406,7 +421,7 @@ td.h{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:now
   body[data-mtab="espaco"] #sec-plantas,body[data-mtab="espaco"] #out{display:none}
   body[data-mtab="plantas"] #sec-espaco,body[data-mtab="plantas"] #out,body[data-mtab="plantas"] .hero{display:none}
   body[data-mtab="plano"] .grid>.col:first-child,body[data-mtab="plano"] .hero{display:none}
-  .mt-next{display:flex;align-items:center;justify-content:center;font:inherit;font-weight:700;font-size:16px;min-height:48px;border:none;border-radius:12px;background:var(--leaf);color:var(--surface);cursor:pointer;margin-top:4px}
+  .mt-next{display:flex;align-items:center;justify-content:center;font:inherit;font-weight:700;font-size:16px;min-height:48px;border:none;border-radius:12px;background:var(--leaf);color:var(--surface);cursor:pointer;margin-top:4px;position:sticky;bottom:calc(80px + env(safe-area-inset-bottom, 0px));z-index:4;box-shadow:0 6px 18px rgba(20,40,25,.22)}
   .mtabs{display:grid;grid-template-columns:repeat(3,1fr);position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -6px 18px rgba(20,40,25,.10);padding:6px max(8px,env(safe-area-inset-left,0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px,env(safe-area-inset-right,0px))}
   .mtabs button{position:relative;font:inherit;font-size:13px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:56px;border:none;background:transparent;color:var(--muted);border-radius:12px;cursor:pointer}
   .mtabs svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -416,13 +431,13 @@ td.h{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:now
   .mt-bad{background:var(--warn)}
   .zoom{display:flex;align-items:center;gap:6px;align-self:flex-end}
   .zoom button{font:inherit;font-size:22px;line-height:1;width:44px;height:44px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;cursor:pointer}
-  .zoom span{font-family:var(--f-mono);font-size:13px;color:var(--muted);min-width:44px;text-align:center}
+  .zoom span{font-family:var(--f-body);font-size:13px;color:var(--muted);min-width:44px;text-align:center}
   .drawing{padding:4px;-webkit-overflow-scrolling:touch}
   .strips{display:flex;flex-direction:column;gap:6px}
   .strips-t{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
   .strips ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px}
   .strips li{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:8px;font-size:15px}
-  .strips b{font-family:var(--f-mono);font-weight:500}
+  .strips b{font-family:var(--f-body);font-weight:500}
   .strips .st-bed{background:var(--bed)} .strips .st-path{background:var(--surface);border:1px dashed var(--line)} .strips .st-line{background:var(--mulch)}
   /* letras: mínimo de 13 px */
   .hint,.ci-d,.oleg,.cc-on,.cc-add,.cc-t,.pc-t,.pc-a,.pc .cons-add,.tray-l button,.cons-a,.cons-t,.quick button,.pairs span,.note .acts button,td.src,.refs,.sp-sum{font-size:14px}
@@ -446,7 +461,7 @@ td.h{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:now
   /* áreas de toque de pelo menos 44 px */
   button,.btn,.secnav a,summary,input,select{min-height:44px}
   .seg button,.tray-l button,.secnav a,.quick button,.note .acts button,.cons-add{display:inline-flex;align-items:center;justify-content:center}
-  .tray-l{max-height:220px;gap:8px}
+  .tray-l{gap:8px}
   .refs a{display:inline-block;padding:10px 6px;margin:-10px 0}
   .secnav a{padding:0 14px}
 }
@@ -657,6 +672,7 @@ td.h{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:now
 </nav>
 <script>
 (function(){
+const MESES_L=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 const MESES=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
 function r(a,b){const o=[];let m=a;for(;;){o.push(m);if(m===b)break;m=m%12+1;}return o;}
 const ALL=r(1,12);
@@ -1096,7 +1112,12 @@ $('busca').addEventListener('input',renderCats);
 $('tray').addEventListener('click',e=>{const b=e.target.closest('[data-rmsel]');if(!b)return;S.sel=S.sel.filter(i=>i!==b.dataset.rmsel);S.exemplo=false;update();});
 try{$('legbox').open=!!(S.legOpen);}catch(e){}
 $('legbox').addEventListener('toggle',()=>{S.legOpen=$('legbox').open;save();});
-$('limpar').addEventListener('click',()=>{S.sel=[];S.exemplo=false;update();});
+$('limpar').addEventListener('click',()=>{if(!S.sel.length)return;const prev={sel:S.sel.slice(),consSel:(S.consSel||[]).slice(),exemplo:S.exemplo};
+  S.sel=[];S.consSel=[];S.exemplo=false;update();
+  let t=document.getElementById('toast');if(t)t.remove();t=document.createElement('div');t.id='toast';t.className='toast';t.setAttribute('role','status');
+  t.innerHTML=`<span>Seleção limpa (${prev.sel.length} ${prev.sel.length===1?'planta':'plantas'}).</span><button type="button">Desfazer</button>`;document.body.appendChild(t);
+  const tm=setTimeout(()=>t.remove(),7000);
+  t.querySelector('button').addEventListener('click',()=>{clearTimeout(tm);t.remove();S.sel=prev.sel;S.consSel=prev.consSel;S.exemplo=prev.exemplo;update();});});
 $('quick').addEventListener('click',e=>{
   const b=e.target.closest('[data-q]');if(!b)return;
   const q=b.dataset.q;
@@ -1180,8 +1201,9 @@ function renderCats(){
         COOP.filter(c=>c[2]<0).map(c=>`<li class="pc bad"><div class="pc-n"><span>${esc(BYID[c[0]].n)}</span><i>✕</i><span>${esc(BYID[c[1]].n)}</span></div><p class="pc-t">Não plantar juntas. ${esc(c[3])}${REFS[c[4]]?` [${REFS[c[4]].n}]`:''}</p></li>`).join('')+`</ul></details>`;}}
   h+=hCats;
   $('cats').innerHTML=h||'<p class="empty">Nenhuma planta com esse nome.</p>';
+  $('limpar').disabled=!S.sel.length;
   $('nsel').textContent=S.sel.length+(S.sel.length===1?' escolhida':' escolhidas');
-  $('tray').innerHTML=S.sel.length?`<span class="tray-t">Sua seleção</span><div class="tray-l">${S.sel.map(i=>BYID[i]).filter(Boolean).map(s=>`<button type="button" data-rmsel="${s.id}" title="Tirar ${esc(s.n)} da seleção">${sig(s.e)}${esc(s.n)}<span class="tray-x" aria-hidden="true">×</span></button>`).join('')}</div>`:`<span class="tray-t">Sua seleção</span><span class="hint">Nenhuma planta escolhida. Abra um grupo abaixo e toque nas plantas.</span>`;
+  $('tray').innerHTML=S.sel.length?`<span class="tray-t">Sua seleção</span><div class="tray-l">${S.sel.map(i=>BYID[i]).filter(Boolean).map(s=>`<button type="button" data-rmsel="${s.id}" title="Tirar ${esc(s.n)} da seleção"><span class="tdot d-${s.e}" aria-hidden="true"></span>${esc(s.n)}<span class="tray-x" aria-hidden="true">×</span></button>`).join('')}</div>`:`<span class="tray-t">Sua seleção</span><span class="hint">Nenhuma planta escolhida. Abra um grupo abaixo e toque nas plantas.</span>`;
 }
 
 // ---------- plano ----------
@@ -1984,7 +2006,7 @@ function coopCatalog(){
   <p class="hint">Cada item é um consórcio testado. "Plantar consórcio" acrescenta todas as plantas dele ao seu plantio; as que já estão na sua seleção aparecem em verde.</p>
   <ul class="cons-list">${cardsHTML}</ul>
   ${bad.length?`<div class="coop-sec bad"><h3>Não plantar juntas</h3><ul class="notes">${bad.map(c=>`<li class="note warn"><span class="tag">Não junte</span><div class="body"><span><b>${esc(BYID[c[0]].n)}</b> e <b>${esc(BYID[c[1]].n)}</b></span><span class="hint">${esc(c[3])} [${REFS[c[4]].n}]</span></div></li>`).join('')}</ul></div>`:''}
-  ${rl?`<ol class="refs">${rl}</ol>`:''}</section>`;
+  ${rl?`<details class="refs-d"><summary>Ver fontes (${(rl.match(/<li/g)||[]).length})</summary><ol class="refs">${rl}</ol></details>`:''}</section>`;
 }
 function coopPanel(p){
   const sel=p.sel,ids=new Set(S.sel),used=new Set();
@@ -2039,7 +2061,7 @@ function coopPanel(p){
   ${sec('bad','Não podem ser plantadas juntas','Há estudo mostrando que uma prejudica a outra.',badR)}
   ${sec('none','Sem cooperação conhecida','Não há estudo nem indicação nas suas listas de que se ajudem ou se prejudiquem. Podem ficar lado a lado, mas o ideal é intercalar uma planta que coopere com as duas.',noneR)}
   ${sec('sug','Para aproveitar melhor o espaço','',sugR)}
-  ${refs?`<ol class="refs">${refs}</ol>`:''}</section>`;
+  ${refs?`<details class="refs-d"><summary>Ver fontes (${(refs.match(/<li/g)||[]).length})</summary><ol class="refs">${refs}</ol></details>`:''}</section>`;
 }
 function legend(p){
   const ids=Object.keys(p.count);
@@ -2651,7 +2673,7 @@ function spacing(sel){
     .map(([k,v])=>`<li value="${v.n}">${esc(v.t)} <a href="${v.u}" target="_blank" rel="noopener">Abrir</a></li>`).join('');
   return `<div class="tbl"><table class="cards"><thead><tr><th>Planta</th><th class="num">Entre linhas</th><th class="num">Entre plantas</th><th class="num">Plantas/m²</th><th style="text-align:left">Fonte</th></tr></thead><tbody>${rows}</tbody></table></div>
   <p class="hint">Nos canteiros, as hortaliças seguem o espaçamento das publicações. Nas linhas de árvores, frutíferas e nativas ficam a 2 m uma da outra e as adubadeiras ocupam os espaços entre elas, como nos sistemas agroflorestais testados. Onde não encontrei estudo específico, o app usa a prática comum de horta, marcada como “prática”.</p>
-  ${refs?`<ol class="refs">${refs}</ol>`:''}`;
+  ${refs?`<details class="refs-d"><summary>Ver fontes (${(refs.match(/<li/g)||[]).length})</summary><ol class="refs">${refs}</ol></details>`:''}`;
 }
 
 function calendar(sel){
@@ -2726,7 +2748,7 @@ function update(fromInput){
       <div class="sm-i"><b>${vaso?(S.potmode==='meu'?fmt(myPot(p.sel).V,0)+' L':'—'):fmt(areaM2())+' m²'}</b><span>${vaso?(S.potmode==='meu'?'no seu vaso':'em vasos'):(isCirc()?'terreno circular':'de terreno')}</span></div>
       <div class="sm-i"><b>${p.sel.length}</b><span>${p.sel.length===1?'espécie':'espécies'}${vaso?'':` · ${nPl} mudas`}</span></div>
       <div class="sm-i"><b>${vaso?'—':nCons}</b><span>${nCons===1?'consórcio formado':'consórcios formados'}</span></div>
-      ${nc&&!vaso?`<a class="sm-i sm-bad" href="#" data-go="cap"><b>${nc}</b><span>${nc===1?'planta não cabe':'plantas não cabem'}</span></a>`:`<a class="sm-i${nWarn?' sm-warn':''}" href="#" data-go="t-av"><b>${nWarn}</b><span>${nWarn===1?'aviso':'avisos'}</span></a>`}
+      ${nc&&!vaso?`<a class="sm-i sm-bad" href="#" data-go="cap"><b>${nc}</b><span>${nc===1?'planta não cabe':'plantas não cabem'}</span></a>`:`<a class="sm-i${nWarn?' sm-warn':' sm-ok'}" href="#" data-go="t-av"><b>${nWarn}</b><span>${nWarn===1?'aviso':'avisos'}</span></a>`}
     </section>`;}
   if(S.exemplo)h+=`<div class="banner">Exemplo: quintal de 6 × 3 m com sol pleno. Troque pelas medidas e plantas do seu espaço.</div>`;
   if(S.modo==='chao'){
@@ -2755,7 +2777,7 @@ function update(fromInput){
   }
   if(adv.length||agora.length){
     h+=`<section class="panel" aria-labelledby="t-av"><h2 id="t-av">Ajustes e sugestões</h2>`;
-    if(agora.length)h+=`<div class="field"><h3>Bom para plantar em ${MESES[cm-1]}</h3><div class="now">${agora.map(s=>`<span>${esc(s.n)}</span>`).join('')}</div></div>`;
+    if(agora.length)h+=`<div class="field"><h3>Bom para plantar em ${MESES_L[cm-1]}</h3><div class="now">${agora.map(s=>`<span>${esc(s.n)}</span>`).join('')}</div></div>`;
     if(adv.length)h+=`<ul class="notes">`+adv.map(a=>`<li class="note ${a.k}"><span class="tag">${a.k==='warn'?'Atenção':a.k==='tip'?'Sugestão':'Observe'}</span><div class="body"><span>${esc(a.t)}</span>${a.add&&a.add.length?`<div class="acts">${a.add.map(i=>`<button type="button" data-addsp="${i}">+ ${esc(BYID[i].n)}</button>`).join('')}</div>`:''}</div></li>`).join('')+`</ul>`;
     h+=`</section>`;
   }
@@ -2775,8 +2797,13 @@ function update(fromInput){
   const secs=[['t-des','Desenho'],['t-vas','Vasos'],['t-mine','Seu vaso'],['t-coop','Consórcios'],['t-av','Ajustes'],['t-esp','Espaçamento'],['t-comp','Companhias'],['t-cal','Calendário'],['t-man','Cuidados']].filter(([id])=>h.includes(`id="${id}"`));
   const nav=`<nav class="secnav" aria-label="Seções do plano">${secs.map(([id,l])=>`<a href="#" data-go="${id}">${l}</a>`).join('')}</nav>`;
   $('out').innerHTML=nav+h;
+  spy();
   mtabSync();try{fitText();}catch(e){}
 }
+function spy(){const nav=document.querySelector('#out .secnav');if(!nav)return;const ls=[...nav.querySelectorAll('a[data-go]')];let cur=ls[0];
+  ls.forEach(a=>{const el=document.getElementById(a.dataset.go);if(!el)return;const sec=el.closest('section')||el;if(sec.offsetParent!==null&&sec.getBoundingClientRect().top<110)cur=a;});
+  ls.forEach(a=>{if(a===cur){if(a.getAttribute('aria-current')!=='true'){a.setAttribute('aria-current','true');const nl=nav.getBoundingClientRect(),al=a.getBoundingClientRect();if(al.left<nl.left||al.right>nl.right-36)nav.scrollBy({left:al.left-nl.left-40,behavior:'smooth'});}}else a.removeAttribute('aria-current');});}
+{let rq=0;window.addEventListener('scroll',()=>{if(rq)return;rq=requestAnimationFrame(()=>{rq=0;spy();});},{passive:true});}
 $('out').addEventListener('click',e=>{
   const zb=e.target.closest('[data-zoom]');if(zb){const Z=[1,1.5,2,3];let i=Z.indexOf(S.zoom||1);if(i<0)i=0;i=Math.max(0,Math.min(Z.length-1,i+(+zb.dataset.zoom)));S.zoom=Z[i];update();return;}
   const go=e.target.closest('[data-go]');if(go){e.preventDefault();const id=go.dataset.go;const el=id==='cap'?document.querySelector('#out .cap-alert'):document.getElementById(id);
