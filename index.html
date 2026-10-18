@@ -1125,7 +1125,7 @@ function consPot(sp){const k=sp.join('|');if(_cpCache[k])return _cpCache[k];
   const no=L.filter(s=>!s.v);
   if(no.length)res={no};
   else{const dep=Math.max(...L.map(s=>depthNeed(s.v))),nT=L.filter(s=>s.arv).length;
-    const fits=(m)=>{const pl=[];let v=0;const ord=L.filter(s=>s.arv).concat(L.filter(s=>!s.arv));
+    const fits=(m)=>{const pl=[];m.pl=pl;let v=0;const ord=L.filter(s=>s.arv).concat(L.filter(s=>!s.arv));
       for(const s of ord){const h=!s.arv&&pl.find(p=>p.s.arv&&underOk(p.s,s));const vv=h?s.v*.5:s.v;if(v+vv>m.V+.01)return false;
         let p;if(!s.arv&&!pl.length&&m.round){const r=prad(s);p={s,x:-(m.Wd/200-Math.max(.04,r*.5)),y:0,r};}else if(s.arv&&!m.round&&nT>1){const kk=pl.filter(q=>q.s.arv).length;p={s,x:(kk?1:-1)*(m.Wd/200-TEND),y:0,r:prad(s)};}else p=tryPlace(m,pl,s);
         if(!p)return false;pl.push(p);v+=vv;}return true;};
@@ -1162,7 +1162,7 @@ function renderCats(){
     if(cons.length){const ids=new Set(S.sel);const nAll=cons.filter(c=>c.sp.every(i=>ids.has(i))).length;const open=!!q||!!(S.openCats||{}).parc;
       h+=`<details class="cat cat-parc" data-k="parc"${open?' open':''}><summary>${catIco('parc')}<span class="cat-t">Parceiras <span class="cat-sub">consórcios com estudo</span></span><span class="cat-n">${nAll?`${nAll} de ${cons.length}`:cons.length}</span></summary><ul class="pc-list">`+cons.map(c=>{
         const all=c.sp.every(i=>ids.has(i)),some=c.sp.some(i=>ids.has(i));const R=REFS[c.src];
-        return `<li class="pc${all?' all':''}" title="${esc(c.t)}"><div class="pc-n">${c.sp.map(i=>BYID[i]?`<span class="${ids.has(i)?'on':''}">${esc(BYID[i].n)}</span>`:'').join('<i>+</i>')}</div><p class="pc-t">${esc(c.t)}${R&&R.n?` [${R.n}]`:''}</p><p class="pc-a">${esc(consArr(c.sp))}</p>${S.modo==='vaso'?`<p class="pc-v">${consPotTxt(c.sp)}</p>`:''}${all?'<span class="cons-ok">✓ no seu plantio</span>':`<button type="button" class="btn cons-add" data-addcons="${c.sp.join(',')}">${some?'Completar consórcio':'Plantar consórcio'}</button>`}</li>`;}).join('')+
+        return `<li class="pc${all?' all':''}" title="${esc(c.t)}"><div class="pc-n">${c.sp.map(i=>BYID[i]?`<span class="${ids.has(i)?'on':''}">${esc(BYID[i].n)}</span>`:'').join('<i>+</i>')}</div><p class="pc-t">${esc(c.t)}${R&&R.n?` [${R.n}]`:''}</p><p class="pc-a">${esc(consArr(c.sp))}</p>${all?'<span class="cons-ok">✓ no seu plantio</span>':`<button type="button" class="btn cons-add" data-addcons="${c.sp.join(',')}">${some?'Completar consórcio':'Plantar consórcio'}</button>`}</li>`;}).join('')+
         COOP.filter(c=>c[2]<0).map(c=>`<li class="pc bad"><div class="pc-n"><span>${esc(BYID[c[0]].n)}</span><i>✕</i><span>${esc(BYID[c[1]].n)}</span></div><p class="pc-t">Não plantar juntas. ${esc(c[3])}${REFS[c[4]]?` [${REFS[c[4]].n}]`:''}</p></li>`).join('')+`</ul></details>`;}}
   h+=hCats;
   $('cats').innerHTML=h||'<p class="empty">Nenhuma planta com esse nome.</p>';
@@ -2058,10 +2058,10 @@ function drawPotsIso(items){
   const rows=[it=>rankOf(it)<=1,it=>rankOf(it)===2,it=>rankOf(it)===3].map(f=>items.filter(f).sort((a,b)=>potSun(b)-potSun(a))).filter(r=>r.length);
   const pots=[];let Y=0;const sN=s=>(s.sol||'P')==='P'?1:(s.sol||'').includes('P')?0:-1;
   rows.forEach(r=>{let X=0,rowD=0;
-    r.forEach(it=>{const m=it.kind==='jard'?{round:false,Wd:.6,Dp:.2}:(()=>{const d=Math.round(Math.cbrt(it.v/.6)*10)/100;return {round:true,Wd:d,Dp:d};})();
-      const H=it.kind==='jard'?Math.max(.1,it.v/1000/(.6*.2)):m.Wd*.95;
-      const mm={round:m.round,Wd:m.Wd*100,Dp:m.Dp*100};const placed=[];
-      it.sp.concat((it.under||[]).slice().sort((a,b)=>sN(b)-sN(a))).forEach(s=>{const q=tryPlace(mm,placed,s);if(q)placed.push(q);});
+    r.forEach(it=>{const m=it.kind==='cons'?{round:it.round,Wd:it.Wd/100,Dp:it.Dp/100}:it.kind==='jard'?{round:false,Wd:.6,Dp:.2}:(()=>{const d=Math.round(Math.cbrt(it.v/.6)*10)/100;return {round:true,Wd:d,Dp:d};})();
+      const H=it.kind==='cons'?it.H/100:it.kind==='jard'?Math.max(.1,it.v/1000/(.6*.2)):m.Wd*.95;
+      const mm={round:m.round,Wd:m.Wd*100,Dp:m.Dp*100};const placed=it.kind==='cons'?it.placed.slice():[];
+      if(it.kind!=='cons')it.sp.concat((it.under||[]).slice().sort((a,b)=>sN(b)-sN(a))).forEach(s=>{const q=tryPlace(mm,placed,s);if(q)placed.push(q);});
       const lab=it.sp.concat(it.under||[]).map(s=>s.n.replace(/ \(.*\)$/,'')).join(' + ');
       pots.push({round:m.round,Wd:m.Wd,Dp:m.Dp,H,X0:X+m.Wd/2,Y0:Y+m.Dp/2,placed,label:lab,sep:' + ',wrap:24,sub:`${it.v} L`});
       X+=m.Wd+.35;rowD=Math.max(rowD,m.Dp);});
@@ -2311,7 +2311,15 @@ function myPotPanel(sel){
   h+=`<p class="hint">Volume calculado pelas medidas internas. Cada planta precisa do volume mínimo de terra e da profundidade indicados para ela; as alturas são aproximadas.</p></section>`;
   return h;
 }
-function potItems(sel){
+function potItems(sel0){
+  // consórcios completos na seleção: todas as plantas juntas num só vaso ou floreira
+  let sel=sel0.slice();const consIt=[],consNo=[];const ids=new Set(sel.map(s=>s.id));
+  consorcios().filter(c=>c.sp.every(i=>ids.has(i))).sort((a,b)=>b.sp.length-a.sp.length).forEach(c=>{
+    if(!c.sp.every(i=>sel.some(s=>s.id===i)))return;const r=consPot(c.sp),L=c.sp.map(i=>BYID[i]);
+    if(r.no){consNo.push({sp:L,no:r.no});return;}
+    const m=r.pot&&(!r.fl||r.pot.V<=r.fl.V*1.4)?r.pot:r.fl;if(!m)return;
+    consIt.push({kind:'cons',round:m.round,Wd:m.Wd,Dp:m.Dp,H:m.H,v:Math.round(m.V),sp:L,under:[],placed:m.pl,alt:m===r.pot?r.fl:r.pot});
+    sel=sel.filter(s=>!c.sp.includes(s.id));});
   const ok=sel.filter(s=>s.v>0),no=sel.filter(s=>!s.v);
   const hosts=ok.filter(s=>s.arv).sort((a,b)=>b.v-a.v);
   let rest=ok.filter(s=>!s.arv);
@@ -2339,9 +2347,10 @@ function potItems(sel){
       const co=s=>g.some(u=>{const k=coop(u.id,s.id);return k&&k.v>0;})?0:1;
       const c=fits.sort((a,b)=>co(a)-co(b))[0];g.push(c);ws+=wcm(c);pool=pool.filter(s=>s!==c);}
     items.push({kind:'jard',v:Math.max(10,g.reduce((a,s)=>a+s.v,0)),sp:g,under:[]});}
-  return {items,no};
+  return {items:consIt.concat(items),no,consNo};
 }
 function potDims(it){
+  if(it.kind==='cons')return it.round?`Ø ${it.Wd} cm × ${it.H} cm de fundo`:`${it.Wd} × ${it.Dp} cm × ${it.H} cm de fundo`;
   if(it.kind==='jard'){const hc=Math.max(10,Math.round(it.v/(60*20)*1000));return `≈ 60 × 20 cm, com ${hc} cm de altura`;}
   const d=Math.cbrt(it.v/.6)*10;return `≈ ${Math.round(d)} cm de diâmetro × ${Math.round(d*.95)} cm de altura`;
 }
@@ -2476,7 +2485,7 @@ function drawPotsTop(items){
   const X=n=>n.toFixed(1);
   const rows=[{t:'Plantas altas',f:it=>rankOf(it)<=1},{t:'Plantas médias',f:it=>rankOf(it)===2},{t:'Plantas baixas',f:it=>rankOf(it)===3}]
     .map(r=>({t:r.t,it:items.filter(r.f).sort((a,b)=>potSun(b)-potSun(a))})).filter(r=>r.it.length);
-  const dim=it=>it.kind==='jard'?{round:false,Wd:60,Dp:20}:(()=>{const d=Math.round(Math.cbrt(it.v/.6)*10);return {round:true,Wd:d,Dp:d};})();
+  const dim=it=>it.kind==='cons'?{round:it.round,Wd:it.Wd,Dp:it.Dp}:it.kind==='jard'?{round:false,Wd:60,Dp:20}:(()=>{const d=Math.round(Math.cbrt(it.v/.6)*10);return {round:true,Wd:d,Dp:d};})();
   const gap=.12;const rowW=r=>r.it.reduce((a,it)=>a+dim(it).Wd/100,0)+gap*(r.it.length-1);
   const maxW=Math.max(.6,...rows.map(rowW));const K=Math.min(420,600/maxW);const VW=Math.max(360,maxW*K+60);
   let y=8,b='';
@@ -2484,14 +2493,14 @@ function drawPotsTop(items){
     b+=`<text class="s-band" x="0" y="${y+12}">${r.t}</text>`;const cy=y+30+hMax/2;let x=(VW-rowW(r)*K)/2;
     r.it.forEach((it,ii)=>{const m=dim(it),w=m.Wd/100*K,h=m.Dp/100*K,cx=x+w/2;
       b+=m.round?`<circle class="pot-top" cx="${X(cx)}" cy="${X(cy)}" r="${X(w/2)}"/>`:`<rect class="pot-top" x="${X(x)}" y="${X(cy-h/2)}" width="${X(w)}" height="${X(h)}" rx="3"/>`;
-      const placed=[];const sN=s=>(s.sol||'P')==='P'?1:(s.sol||'').includes('P')?0:-1;it.sp.concat((it.under||[]).slice().sort((a,b)=>sN(b)-sN(a))).forEach(s=>{const p=tryPlace(m,placed,s);if(p)placed.push(p);});
+      const placed=it.kind==='cons'?it.placed.slice():[];const sN=s=>(s.sol||'P')==='P'?1:(s.sol||'').includes('P')?0:-1;if(it.kind!=='cons')it.sp.concat((it.under||[]).slice().sort((a,b)=>sN(b)-sN(a))).forEach(s=>{const p=tryPlace(m,placed,s);if(p)placed.push(p);});
       placed.forEach(p=>{const px=cx+p.x*K,py=cy+p.y*K;
         if(placed.length>1)b+=`<circle class="need" cx="${X(px)}" cy="${X(py)}" r="${X(p.r*K)}"><title>${esc(p.s.n)}: ${Math.round(p.r*200)} cm de espaço</title></circle>`;
         b+=`<circle class="p-${p.s.e}" cx="${X(px)}" cy="${X(py)}" r="${X(Math.max(6,Math.min(10,p.r*K*.5)))}"/><text class="lab ${darkLab(p.s.e)}" x="${X(px)}" y="${X(py)}">${esc(p.s.a)}</text>`;});
       const nms=it.sp.concat(it.under||[]).map(s=>s.n.replace(/ \(.*\)$/,''));const mx=Math.max(10,Math.floor((w+gap*K)/6.2));const ls=[];let cur='';
       nms.forEach(t=>{const nx=cur?cur+' + '+t:t;if(nx.length>mx&&cur){ls.push(cur);cur=t;}else cur=nx;});if(cur)ls.push(cur);
       ls.forEach((t,k)=>{b+=`<text class="nm-lab" x="${X(cx)}" y="${X(cy+hMax/2+16+k*13)}">${esc(t)}</text>`;});
-      b+=`<text class="s-dim" x="${X(cx)}" y="${X(cy+hMax/2+16+ls.length*13+2)}" text-anchor="middle">${it.kind==='jard'?'60 × 20 cm':'Ø '+m.Wd+' cm'} · ${it.v} L</text>`;
+      b+=`<text class="s-dim" x="${X(cx)}" y="${X(cy+hMax/2+16+ls.length*13+2)}" text-anchor="middle">${it.kind==='jard'?'60 × 20 cm':m.round?'Ø '+m.Wd+' cm':m.Wd+' × '+m.Dp+' cm'} · ${it.v} L</text>`;
       x+=w+gap*K;});
     y+=hMax+30+58+Math.max(0,...r.it.map(it=>Math.ceil(it.sp.concat(it.under||[]).map(s=>s.n).join(' + ').length/Math.max(10,(dim(it).Wd/100*K+gap*K)/6.2))-1))*13;});
   const sb=.5*K;b+=`<line class="s-sunline" x1="10" y1="${y+8}" x2="${10+sb}" y2="${y+8}"/><line class="s-sunline" x1="10" y1="${y+3}" x2="10" y2="${y+13}"/><line class="s-sunline" x1="${10+sb}" y1="${y+3}" x2="${10+sb}" y2="${y+13}"/><text class="s-dim" x="${16+sb}" y="${y+12}">50 cm</text>`;
@@ -2674,8 +2683,9 @@ function update(fromInput){
     h+=`<section class="panel card" aria-labelledby="t-vas"><div class="head"><h2 id="t-vas">Vasos sugeridos</h2><div class="seg" id="potvista"><button type="button" data-v="frente" aria-pressed="${S.potview!=='cima'}">Vista 3D</button><button type="button" data-v="cima" aria-pressed="${S.potview==='cima'}">Planta baixa</button></div></div>`;
     if(pi.items.length){
       h+=S.potview==='cima'?`<div class="drawing plain">${drawPotsTop(pi.items)}</div>${abLegend(pi.items.flatMap(it=>it.sp.concat(it.under||[])))}<p class="hint"><b>Planta baixa.</b> Cada vaso visto de cima, na mesma escala. O círculo tracejado é o espaço mínimo de cada planta, cerca de 80% do espaçamento de canteiro, e os círculos não se sobrepõem. Nos vasos das frutíferas, a árvore fica no centro e as plantas de raiz rasa ficam em volta: as de sol pleno do lado da luz (à esquerda) e as que aguentam sombra à direita. A luz vem da esquerda: em cada fileira, os vasos que pedem mais sol ficam à esquerda.</p>`:`<div class="drawing plain">${drawPotsIso(pi.items)}</div><p class="hint">Vasos e plantas em 3D, na mesma escala; cada planta aparece no lugar calculado e na altura máxima que costuma alcançar em vaso (a faixa de altura está em cada cartão abaixo). São valores aproximados, que variam com a variedade, a poda e o tamanho do vaso. As plantas altas ficam atrás e as baixas na frente. Supondo a luz vindo da esquerda, em cada fileira os vasos que pedem mais sol ficam à esquerda e os que aguentam sombra à direita. Ao arrumar a varanda, deixe as plantas altas do lado oposto à luz, para não sombrear as baixas.</p>${pi.items.some(it=>it.under&&it.under.length)?`<p class="hint">Para aproveitar melhor o espaço, as hortaliças e aromáticas de raiz rasa vão na borda dos vasos das frutíferas, a 10–15 cm do tronco, na terra da superfície que a árvore pouco usa. O vaso cresce só metade do volume que elas pediriam sozinhas. É prática comum de cultivo em vaso; há pouco estudo publicado sobre esses consórcios em recipiente, por isso o app prefere as parceiras com cooperação documentada e as que aguentam meia-sombra. Pode a frutífera para a copa não fechar sobre elas.</p>`:''}`;
-      h+=`<div class="pots">`+pi.items.map(it=>`<div class="potc"><b>${it.kind==='jard'?`Jardineira de 60 cm · mínimo ${it.v} L`:`Vaso mínimo de ${it.v} L`}</b><span class="who">${esc(it.sp.map(s=>s.n).join(' + '))}${it.under&&it.under.length?` <span class="und">+ ${esc(it.under.map(s=>s.n).join(', '))} na borda</span>`:''}</span><span class="hint">${potDims(it)}</span><span class="hint"><b>Altura no vaso:</b> ${it.sp.map(s=>`${it.sp.length>1?esc(s.n)+' ':''}${cmTxt(potRange(s))}`).join(' · ')}</span><span class="hint">${it.kind==='jard'?it.sp.map(s=>`${esc(s.n)}: mín. ${s.v} L`).join(' · '):`${EST[it.sp[0].e]} · colheita em ${esc(it.sp[0].col)}`}</span>${it.under&&it.under.length?`<span class="hint"><b>Na borda:</b> ${it.under.map(u=>`${esc(u.n)} (${underWhy(it.sp[0],u)}; altura ${cmTxt(potRange(u))})`).join(' · ')}</span>`+potNotes(it.sp[0],it.under).map(t=>`<span class="hint">${esc(t)}</span>`).join(''):''}</div>`).join('')+`</div>`;
+      h+=`<div class="pots">`+pi.items.map(it=>`<div class="potc"><b>${it.kind==='cons'?`Consórcio · ${it.round?'vaso redondo':'floreira'} de ${it.v} L`:it.kind==='jard'?`Jardineira de 60 cm · mínimo ${it.v} L`:`Vaso mínimo de ${it.v} L`}</b><span class="who">${esc(it.sp.map(s=>s.n).join(' + '))}${it.under&&it.under.length?` <span class="und">+ ${esc(it.under.map(s=>s.n).join(', '))} na borda</span>`:''}</span><span class="hint">${potDims(it)}</span><span class="hint"><b>Altura no vaso:</b> ${it.sp.map(s=>`${it.sp.length>1?esc(s.n)+' ':''}${cmTxt(potRange(s))}`).join(' · ')}</span><span class="hint">${it.kind==='jard'?it.sp.map(s=>`${esc(s.n)}: mín. ${s.v} L`).join(' · '):`${EST[it.sp[0].e]} · colheita em ${esc(it.sp[0].col)}`}</span>${it.under&&it.under.length?`<span class="hint"><b>Na borda:</b> ${it.under.map(u=>`${esc(u.n)} (${underWhy(it.sp[0],u)}; altura ${cmTxt(potRange(u))})`).join(' · ')}</span>`+potNotes(it.sp[0],it.under).map(t=>`<span class="hint">${esc(t)}</span>`).join(''):''}</div>`).join('')+`</div>`;
     }else h+=emptyState("Escolha as plantas na lista ao lado para ver o tamanho e a posição de cada vaso.");
+    (pi.consNo||[]).forEach(c=>{h+=`<ul class="notes"><li class="note warn"><span class="tag">Atenção</span><div class="body"><span><b>${esc(c.sp.map(s=>s.n).join(' + '))}</b> não é apropriado para vaso: ${esc(c.no.map(s=>s.n).join(' e '))} ${c.no.length>1?'precisam':'precisa'} de chão. Plante esse consórcio no modo "No chão".</span></div></li></ul>`;});
     if(pi.no.length)h+=`<p class="hint">Não indicadas para vaso: ${esc(pi.no.map(s=>s.n).join(', '))}.</p>`;
     pi.no.filter(s=>NOPOT[s.id]).forEach(s=>{h+=`<ul class="notes"><li class="note warn"><span class="tag">Atenção</span><div class="body"><span>${esc(NOPOT[s.id])}</span><div class="acts"><button type="button" data-rmsel="${s.id}">Tirar ${esc(s.n)} da lista</button></div></div></li></ul>`;});
     h+=`</section>`;}
