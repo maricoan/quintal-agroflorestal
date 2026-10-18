@@ -6,10 +6,10 @@
 <style>
 /* Layout: formulário à esquerda (terreno + escolha de plantas), resultado à direita (desenho, espaçamento, avisos, calendário, manejo). Empilha no celular. */
 :root{
-  --bg:#F1F4EC; --surface:#FFFFFF; --ink:#1D2A1F; --muted:#586858; --line:#D3DCCB;
-  --leaf:#2F6B3A; --leaf-soft:#E1ECD9; --red:#B42318; --ci-bg:#E7D7C0; --ci-fg:#1D2A1F; --ci-off:rgba(60,40,20,.18); --ci-e:#123A26; --pc-bg:#FFF4CF; --pc-bd:#D9A520; --yel:#E8B400; --yel-ink:#2A2200; --pink:#D94C84; --pink-ink:#FFFFFF; --soil:#8A5A3A; --soil-soft:#F1E6DA;
-  --sun:#B07A0C; --warn:#A4471F; --warn-soft:#F8E7DD;
-  --ground:#E6EDDC; --bed:#E7D7C0; --mulch:#CDB394; --grid:rgba(40,60,40,.08);
+  --bg:#F3F2E5; --surface:#FFFEF7; --ink:#23251A; --muted:#62644F; --line:#DFDDC6;
+  --leaf:#55621F; --leaf-soft:#E8EBD0; --red:#B42318; --ci-bg:#F1DE97; --ci-fg:#23251A; --ci-off:rgba(60,40,20,.18); --ci-e:#123A26; --pc-bg:#FFF4CF; --pc-bd:#D9A520; --yel:#E8B400; --yel-ink:#2A2200; --pink:#D94C84; --pink-ink:#FFFFFF; --soil:#7B5A2C; --soil-soft:#F2EAD5;
+  --sun:#B88A00; --warn:#A4471F; --warn-soft:#F8E7DD;
+  --ground:#ECEBD5; --bed:#E6D3AE; --mulch:#CBB38A; --grid:rgba(40,60,40,.08);
   --side1:#B8916B; --side2:#9C7552; --pot:#B9673F; --pot-dark:#94502F; --trunk:#6E4B32; --lf1:#4E8A3E; --lf2:#7E9B7A; --lf3:#7DB548; --ico-arrow:#C99700; --ico-wood:#B98552; --ico-metal:#6F7680; --fr-p:#6B3FA0; --fr-o:#E07A1F; --fl-w:#FFFFFF;
   --st-e:#123A26; --st-a:#2E8540; --st-m:#9CB83A; --st-b:#E3A72F; --st-r:#A8521C;
   --st-ink:#FFFFFF; --st-ink-light:#1D2A1F;
@@ -18,18 +18,18 @@
   --f-mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#131915; --surface:#1B231D; --ink:#E3EBDD; --muted:#9AAB99; --line:#2D3A2F;
-  --leaf:#86C792; --leaf-soft:#22332A; --soil:#D7A47E; --soil-soft:#2E251D; --red:#F08A7E; --ci-bg:#3B3024; --ci-fg:#F2EBDF; --ci-off:rgba(255,255,255,.3); --ci-e:#FFFFFF; --pc-bg:#4A3D12; --pc-bd:#D4A72C; --yel:#F2C94C; --yel-ink:#1E1800; --pink:#F28AB3; --pink-ink:#2A0F1B;
+  --bg:#16170F; --surface:#1F2117; --ink:#E9E8D6; --muted:#A6A68C; --line:#34362A;
+  --leaf:#BCC86E; --leaf-soft:#2B3019; --soil:#D7A47E; --soil-soft:#2E2A1D; --red:#F08A7E; --ci-bg:#3F3517; --ci-fg:#F3EBCF; --ci-off:rgba(255,255,255,.3); --ci-e:#FFFFFF; --pc-bg:#4A3D12; --pc-bd:#D4A72C; --yel:#F2C94C; --yel-ink:#1E1800; --pink:#F28AB3; --pink-ink:#2A0F1B;
   --sun:#E5B54C; --warn:#F2A077; --warn-soft:#3A2419;
-  --ground:#1E2A20; --bed:#3B3024; --mulch:#5A4632; --grid:rgba(220,235,215,.06);
+  --ground:#22241A; --bed:#3B3221; --mulch:#5A4B30; --grid:rgba(220,235,215,.06);
   --side1:#4A3828; --side2:#3A2B1F; --pot:#A65A36; --pot-dark:#7E4126; --trunk:#9A7556; --lf1:#6FAE5C; --lf2:#A3BBA0; --lf3:#9CD068; --ico-arrow:#F2C94C; --ico-wood:#D2A57A; --ico-metal:#B4BAC2; --fr-p:#B48AE0; --fr-o:#F0A050; --fl-w:#EDEDED;
   --st-e:#2C7A52; --st-a:#3F9E4F; --st-m:#B5D35A; --st-b:#F2C14E; --st-r:#D27A3E;
   --st-ink:#FFFFFF; --st-ink-light:#131915; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#131915; --surface:#1B231D; --ink:#E3EBDD; --muted:#9AAB99; --line:#2D3A2F;
-  --leaf:#86C792; --leaf-soft:#22332A; --soil:#D7A47E; --soil-soft:#2E251D; --red:#F08A7E; --ci-bg:#3B3024; --ci-fg:#F2EBDF; --ci-off:rgba(255,255,255,.3); --ci-e:#FFFFFF; --pc-bg:#4A3D12; --pc-bd:#D4A72C; --yel:#F2C94C; --yel-ink:#1E1800; --pink:#F28AB3; --pink-ink:#2A0F1B;
+  --bg:#16170F; --surface:#1F2117; --ink:#E9E8D6; --muted:#A6A68C; --line:#34362A;
+  --leaf:#BCC86E; --leaf-soft:#2B3019; --soil:#D7A47E; --soil-soft:#2E2A1D; --red:#F08A7E; --ci-bg:#3F3517; --ci-fg:#F3EBCF; --ci-off:rgba(255,255,255,.3); --ci-e:#FFFFFF; --pc-bg:#4A3D12; --pc-bd:#D4A72C; --yel:#F2C94C; --yel-ink:#1E1800; --pink:#F28AB3; --pink-ink:#2A0F1B;
   --sun:#E5B54C; --warn:#F2A077; --warn-soft:#3A2419;
-  --ground:#1E2A20; --bed:#3B3024; --mulch:#5A4632; --grid:rgba(220,235,215,.06);
+  --ground:#22241A; --bed:#3B3221; --mulch:#5A4B30; --grid:rgba(220,235,215,.06);
   --side1:#4A3828; --side2:#3A2B1F; --pot:#A65A36; --pot-dark:#7E4126; --trunk:#9A7556; --lf1:#6FAE5C; --lf2:#A3BBA0; --lf3:#9CD068; --ico-arrow:#F2C94C; --ico-wood:#D2A57A; --ico-metal:#B4BAC2; --fr-p:#B48AE0; --fr-o:#F0A050; --fl-w:#EDEDED;
   --st-e:#2C7A52; --st-a:#3F9E4F; --st-m:#B5D35A; --st-b:#F2C14E; --st-r:#D27A3E;
   --st-ink:#FFFFFF; --st-ink-light:#131915; color-scheme:dark}
