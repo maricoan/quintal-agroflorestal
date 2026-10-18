@@ -346,6 +346,7 @@ svg text{font-family:var(--f-mono);fill:var(--ink)}
 .c-E{fill:var(--st-e);stroke:var(--st-e)}.c-A{fill:var(--st-a);stroke:var(--st-a)}.c-M{fill:var(--st-m);stroke:var(--st-m)}
 .canopy{fill-opacity:.22;stroke-width:1.2;stroke-dasharray:4 3}
 .iso-c{stroke:rgba(0,0,0,.18);stroke-width:.6}
+.dm-ln{stroke:var(--muted);stroke-width:1.1}.dm-ext{stroke:var(--muted);stroke-width:.8;opacity:.6}.dm-hd{fill:var(--muted)}.dm-t{dominant-baseline:central}
 .r-pl{stroke:var(--surface);stroke-width:1}.r-tree{fill:none;stroke:var(--st-a);stroke-width:1.2;stroke-dasharray:4 3;opacity:.8}
 .lab{font-size:calc(9.5px * var(--fz,1));text-anchor:middle;dominant-baseline:central;pointer-events:none}
 .lab.dk{fill:var(--st-ink)} .lab.lt{fill:var(--st-ink-light)}
@@ -1744,7 +1745,8 @@ function draw3D(p,raio){
   const ox=W*c*K+pad,oy=pad+maxH*K*ZF+12;
   const iso=(x,y,z)=>[(x-y)*c*K+ox,(x+y)*sn*K-z*K*ZF+oy];
   const P=a=>a.map(q=>q.map(n=>n.toFixed(1)).join(',')).join(' ');
-  const vw=(L+W)*c*K+pad*2,vh=(L+W)*sn*K+maxH*K*ZF+base*K*ZF+pad*2+12;
+  const DM=raio&&!circ?.75:0;// régua das faixas no lado direito (só na vista com raios)
+  const vw=(L+W)*c*K+pad*2+(DM?DM*c*K+120:0),vh=(L+W)*sn*K+maxH*K*ZF+base*K*ZF+pad*2+12+(DM?DM*sn*K:0);
   let g=`<svg viewBox="0 0 ${vw.toFixed(1)} ${vh.toFixed(1)}" role="img" aria-label="${raio?'Vista em 3D com o raio de cada planta':'Vista em 3D do plantio'}"><defs>${TEX}</defs>`;
   // bloco de terra
   if(circ){const R=L/2,ring=z=>{const a=[];for(let i=0;i<72;i++){const t=i/72*Math.PI*2;a.push(iso(R+Math.cos(t)*R,R+Math.sin(t)*R,z));}return a;};
@@ -1900,6 +1902,18 @@ function draw3D(p,raio){
       const fs=Math.max(6.5,Math.min(9.5,rx*.62));
       g+=`<text class="lab ${darkLab(s.e)}" style="font-size:${fs.toFixed(1)}px" x="${bx.toFixed(1)}" y="${by.toFixed(1)}">${esc(s.a)}</text>`;
       g+=`</g>`;});
+    if(DM){
+      // largura de cada faixa (canteiro, rua, linha de árvores), com setas, ao longo da borda direita do terreno
+      const nm={bed:'canteiro',path:'rua',line:'árvores'};const X=n=>n.toFixed(1);
+      g+=`<defs><marker id="dm-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9Z" class="dm-hd"/></marker></defs>`;
+      const [ex0,ey0]=iso(L,0,0),[ex1,ey1]=iso(L+DM+.12,0,0);g+=`<line class="dm-ext" x1="${X(ex0)}" y1="${X(ey0)}" x2="${X(ex1)}" y2="${X(ey1)}"/>`;
+      p.strips.forEach(st=>{const y0=st.y,y1=st.y+st.h;
+        const [a,b]=iso(L+DM,y0,0),[c2,d]=iso(L+DM,y1,0),[t1,t2]=iso(L,y1,0),[t3,t4]=iso(L+DM+.12,y1,0);
+        g+=`<line class="dm-ext" x1="${X(t1)}" y1="${X(t2)}" x2="${X(t3)}" y2="${X(t4)}"/>`;
+        g+=`<line class="dm-ln" marker-start="url(#dm-ar)" marker-end="url(#dm-ar)" x1="${X(a)}" y1="${X(b)}" x2="${X(c2)}" y2="${X(d)}"/>`;
+        const [mx,my]=iso(L+DM+.18,(y0+y1)/2,0);
+        g+=`<text class="s-dim dm-t" x="${X(mx)}" y="${X(my)}">${nm[st.t]||''} ${cm_(st.h)}</text>`;});
+    }
     g+=`<clipPath id="rclip"><polygon points="${P(gp)}"/></clipPath><g clip-path="url(#rclip)">${rings}</g>`;
     pts.length=0;
   }
@@ -2010,7 +2024,7 @@ function draw3D(p,raio){
   if(circ){const [dx,dy]=iso(L,W,-base);g+=`<text class="s-dim" x="${dx.toFixed(1)}" y="${(dy+18).toFixed(1)}" text-anchor="middle">Ø ${fmt(L)} m</text>`;}
   else{
   g+=`<text class="s-dim" x="${(lx-14).toFixed(1)}" y="${(ly+16).toFixed(1)}" text-anchor="end">${fmt(L)} m</text>`;
-  g+=`<text class="s-dim" x="${(wx+14).toFixed(1)}" y="${(wy+16).toFixed(1)}">${fmt(W)} m</text>`;}
+  if(!DM)g+=`<text class="s-dim" x="${(wx+14).toFixed(1)}" y="${(wy+16).toFixed(1)}">${fmt(W)} m</text>`;}
   g+=`</svg>`;
   return g;
 }
