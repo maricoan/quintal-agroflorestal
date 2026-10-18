@@ -1222,6 +1222,12 @@ function plan(){
   const hasTreeStuff=trees.length+meds.length>0;
   const strips=[];let y=0;
   const BED=1.2,PATH=.4,LINE=.8;
+  // quando usar uma linha de árvores em cada borda: só com árvores pequenas e médias (nunca altas ou emergentes),
+  // terreno retangular entre 3,6 m e 5,2 m de largura e mais árvores do que cabem numa linha única no meio
+  const edgeLines=()=>{if(isCirc()||!trees.length||!trees.every(t=>t.e==='M'||t.e==='B'))return false;
+    if(W<2*LINE+2*PATH+BED-.001||W>=2*BED+3*PATH+2*LINE-.001)return false;
+    const sp=Math.max(...trees.map(t=>Math.max(t.ep,1))),slots=Math.floor((L-.8)/sp+1e-6)+1;return trees.length>slots;};
+  const EDGE=edgeLines();
   // trecho útil de uma linha horizontal (no círculo, a corda)
   const chord=cy=>{if(!isCirc())return [.5,L-.3];const R=L/2,h2=R*R-(cy-R)*(cy-R);if(h2<=.09)return [R,R-1];const hc=Math.sqrt(h2)-.35;return [R-hc,R+hc];};
   if(trees.length&&W>=LINE-.001&&W<BED+PATH+LINE-.001){
@@ -1231,6 +1237,14 @@ function plan(){
     else strips.push({t:'line',y:(W-LINE)/2,h:LINE});
   }
   else if(W<BED+.01){strips.push({t:'bed',y:0,h:W});}
+  else if(EDGE){
+    // árvores pequenas e médias que não cabem numa linha só: uma linha em cada borda e os canteiros no meio
+    strips.push({t:'line',y:0,h:LINE},{t:'path',y:LINE,h:PATH});
+    // o meio vira canteiros de até ~1,6 m (alcançáveis dos dois lados), divididos por ruas de 40 cm
+    const y0=LINE+PATH,yEnd=W-LINE-PATH,mid=yEnd-y0,nB=mid<=1.7?1:Math.ceil((mid+PATH)/(1.6+PATH)),bh=(mid-(nB-1)*PATH)/nB;
+    for(let i=0;i<nB;i++){const yy=y0+i*(bh+PATH);strips.push({t:'bed',y:yy,h:bh});if(i<nB-1)strips.push({t:'path',y:yy+bh,h:PATH});}
+    strips.push({t:'path',y:yEnd,h:PATH},{t:'line',y:W-LINE,h:LINE});
+  }
   else{
     let next='bed';
     while(true){
@@ -1287,6 +1301,8 @@ function plan(){
         const [x0,x1]=chord(cy);
         let x=x0+(li%2&&x1-x0>2?.5:0);
         while(x<=x1){
+          // com uma linha em cada borda, cada árvore escolhida entra uma vez só: a linha não repete árvore
+          if(EDGE&&lineTrees[li].every(t=>useL[t.id]))break;
           const T=pick(lineTrees[li],[prev,prevT],true);
           add(T,x,cy,'tree');prev=T;prevT=T;
           const sp=Math.max(T.ep,1);
@@ -1533,8 +1549,9 @@ function dims(p,K){
     const t0=trees[0];
     const t1=trees.find(q=>Math.abs(q.y-t0.y)<1e-6&&q.x>t0.x+1e-6);
     const m1=p.pts.find(q=>q.kind==='med'&&Math.abs(q.y-t0.y)<1e-6&&q.x>t0.x);
-    if(t1)o+=H(t0.x,t1.x,t0.y-.55,`${cm_(t1.x-t0.x)} entre árvores`);
-    if(m1&&(!t1||m1.x<t1.x))o+=H(t0.x,m1.x,t0.y+.5,cm_(m1.x-t0.x));
+    const edgeT=t0.y<.7;// linha encostada na borda de cima: cotas por baixo, para não cobrir a medida do terreno
+    if(t1)o+=H(t0.x,t1.x,edgeT?t0.y+.6:t0.y-.55,`${cm_(t1.x-t0.x)} entre árvores`);
+    if(m1&&(!t1||m1.x<t1.x))o+=H(t0.x,m1.x,edgeT?t0.y+.95:t0.y+.5,cm_(m1.x-t0.x));
     const t2=trees.find(q=>q.y>t0.y+.5);
     if(t2)o+=V(t0.y,t2.y,Math.max(.15,t0.x-.35),`${cm_(t2.y-t0.y)} entre linhas`);
   }
