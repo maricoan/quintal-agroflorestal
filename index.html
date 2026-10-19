@@ -43,8 +43,9 @@ header{display:flex;flex-direction:column;gap:4px;padding-block:8px 4px}
 .hero{flex-direction:row;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-block:12px 18px;border-bottom:2px solid var(--line)}
 .hero-t{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1 1 360px}
 .brand{display:flex;align-items:center;gap:14px}.brand-t{display:flex;flex-direction:column;gap:6px;min-width:0}
-.hero-logo{width:86px;height:86px;flex:none}
-@media (max-width:640px){.hero-logo{width:58px;height:58px}.brand{gap:10px}}
+.hero-logo{width:132px;height:132px;flex:none}
+.brand{gap:20px;margin-bottom:6px}
+@media (max-width:640px){.hero-logo{width:78px;height:78px}.brand{gap:12px;margin-bottom:2px}}
 .eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--leaf)}
 .hero-ill{width:min(380px,100%);height:auto;flex:0 1 380px}
 .h-sun{fill:var(--sun)}.h-soil{fill:var(--bed)}.h-ray{stroke:var(--sun);stroke-width:2.2;stroke-linecap:round;fill:none}
@@ -70,6 +71,7 @@ header{display:flex;flex-direction:column;gap:4px;padding-block:8px 4px}
 @keyframes spin{to{transform:rotate(360deg)}}}
 h1{font-family:var(--f-display);font-weight:400;color:var(--leaf);font-size:clamp(28px,4vw,38px);line-height:1.1;margin:0;text-wrap:balance}
 header p{margin:0;color:var(--muted);max-width:62ch}
+.hero-t{flex-basis:100%}.hero-t>p{max-width:none}
 h2{font-family:var(--f-display);font-weight:400;font-size:22px;margin:0;text-wrap:balance}
 #out .panel{background:transparent;border:none;border-top:1px solid var(--line);border-radius:0;padding:22px 0 4px}
 #out .panel>h2,#out .panel>.head>h2{font-size:25px}
