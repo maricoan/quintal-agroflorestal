@@ -72,6 +72,17 @@ header{display:flex;flex-direction:column;gap:4px;padding-block:8px 4px}
 h1{font-family:var(--f-display);font-weight:400;color:var(--leaf);font-size:clamp(28px,4vw,38px);line-height:1.1;margin:0;text-wrap:balance}
 header p{margin:0;color:var(--muted);max-width:62ch}
 .hero-t{flex-basis:100%}.hero-t>p{max-width:none}
+/* computador: logo e nome na coluna da esquerda (mesma largura do formulário), apresentação na coluna do desenho */
+@media (min-width:881px){
+  .hero{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);column-gap:20px;row-gap:8px;align-items:center}
+  .hero-t{display:contents}
+  .hero .brand{grid-column:1;grid-row:1/3;margin:0;gap:16px}
+  .hero .hero-logo{width:168px;height:168px}
+  .hero h1{font-size:34px}
+  .hero .eyebrow{font-size:11px}
+  .hero-t>p:not(.hero-short):not(.hero-free){grid-column:2;grid-row:1;align-self:end}
+  .hero-t>p.hero-free{grid-column:2;grid-row:2;align-self:start}
+}
 h2{font-family:var(--f-display);font-weight:400;font-size:22px;margin:0;text-wrap:balance}
 #out .panel{background:transparent;border:none;border-top:1px solid var(--line);border-radius:0;padding:22px 0 4px}
 #out .panel>h2,#out .panel>.head>h2{font-size:25px}
