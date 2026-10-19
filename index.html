@@ -42,6 +42,9 @@ body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1
 header{display:flex;flex-direction:column;gap:4px;padding-block:8px 4px}
 .hero{flex-direction:row;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-block:12px 18px;border-bottom:2px solid var(--line)}
 .hero-t{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1 1 360px}
+.brand{display:flex;align-items:center;gap:14px}.brand-t{display:flex;flex-direction:column;gap:6px;min-width:0}
+.hero-logo{width:86px;height:86px;flex:none}
+@media (max-width:640px){.hero-logo{width:58px;height:58px}.brand{gap:10px}}
 .eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--leaf)}
 .hero-ill{width:min(380px,100%);height:auto;flex:0 1 380px}
 .h-sun{fill:var(--sun)}.h-soil{fill:var(--bed)}.h-ray{stroke:var(--sun);stroke-width:2.2;stroke-linecap:round;fill:none}
@@ -478,8 +481,33 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
 <div class="wrap">
   <header class="hero">
     <div class="hero-t">
+      <div class="brand"><svg class="hero-logo" viewBox="0 0 200 200" aria-hidden="true">
+<circle cx="100" cy="100" r="96" fill="#55621F"></circle>
+<path d="M12.7 140 H187.3 A96 96 0 0 1 12.7 140 Z" fill="#A4471F"></path>
+<path d="M18 140 q5 -7 10 0 q5 -7 10 0" fill="none" stroke="#F1DE97" stroke-width="4" stroke-linecap="round"></path>
+<circle cx="23" cy="134" r="2.6" fill="#F1DE97"></circle>
+<circle cx="33" cy="134" r="2.6" fill="#F1DE97"></circle>
+<path d="M60 140 V116" stroke="#F1DE97" stroke-width="4" stroke-linecap="round"></path>
+<path d="M60 128 C53 128 49 123 48 116 C55 116 59 121 60 128 Z" fill="#F1DE97"></path>
+<path d="M60 123 C61 116 65 111 72 111 C71 118 67 123 60 123 Z" fill="#F1DE97"></path>
+<path d="M94 140 V98" stroke="#F1DE97" stroke-width="6" stroke-linecap="round"></path>
+<path d="M94 101 C89 89 81 84 76 87 C83 89 89 94 94 101 Z" fill="#F1DE97"></path>
+<path d="M94 101 C99 89 107 84 112 87 C105 89 99 94 94 101 Z" fill="#F1DE97"></path>
+<path d="M94 99 C92 88 93 79 97 72 C98 82 97 91 94 99 Z" fill="#F1DE97"></path>
+<path d="M132 140 V98" stroke="#F1DE97" stroke-width="5" stroke-linecap="round"></path>
+<circle cx="132" cy="86" r="14" fill="#F1DE97"></circle>
+<circle cx="128" cy="84" r="2.4" fill="#A4471F"></circle>
+<circle cx="136" cy="90" r="2.4" fill="#A4471F"></circle>
+<circle cx="135" cy="80" r="2.4" fill="#A4471F"></circle>
+<path d="M166 140 V64" stroke="#F1DE97" stroke-width="4.5" stroke-linecap="round"></path>
+<path d="M166 80 L158 70 M166 75 L174 66" stroke="#F1DE97" stroke-width="3" stroke-linecap="round"></path>
+<ellipse cx="166" cy="60" rx="15" ry="6.5" fill="#F1DE97"></ellipse>
+<ellipse cx="166" cy="54" rx="9" ry="4" fill="#F1DE97"></ellipse>
+<circle cx="30" cy="30" r="13.2" fill="#E3B23C" stroke="none" stroke-width="3"></circle>
+<path d="M30 8.4 V2.4 M30 51.6 V57.6 M8.4 30 H2.4 M51.6 30 H57.6 M14.7 14.7 L10.5 10.5 M45.3 14.7 L49.5 10.5 M14.7 45.3 L10.5 49.5 M45.3 45.3 L49.5 49.5" stroke="#E3B23C" stroke-width="3.6" stroke-linecap="round"></path>
+</svg><div class="brand-t">
       <span class="eyebrow">Planejador de agrofloresta e horta</span>
-      <h1>Quintal Agroflorestal</h1>
+      <h1>Quintal Agroflorestal</h1></div></div>
       <p>Informe as medidas, luz, rega e tipo de solo e escolha o que quer plantar. O app sugere espaçamento necessário entre plantas com base na agricultura sintrópica e monta o desenho, calendário para plantio e cuidados para cada fase do crescimento das espécies.</p>
       <p class="hero-short">Monte seu plantio com espaçamentos de base técnica.</p>
       <p class="hero-free">Aplicativo de uso <strong>público</strong> e <strong>gratuito</strong>.<span class="cn-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect class="cn-f" x="8.2" y="15" width="7.6" height="8" rx="1.2"/><rect class="cn-f" x="4.8" y="5" width="14.4" height="11.2" rx="3"/><path class="cn-l" d="M8.4 5.4V9.6M12 5.4V9.6M15.6 5.4V9.6M4.8 10.6H13.2Q14.6 10.6 14.6 12"/></svg><svg viewBox="0 0 24 24"><path class="cn-s" d="M12 22V11"/><path class="cn-f" d="M12 15C7 15 4 12 4 7.5C9 7.5 12 10.5 12 15Z"/><path class="cn-f" d="M12 12C12 7 15 3.5 20.5 3.5C20.5 9 17 12 12 12Z"/><path class="cn-s" d="M6.5 22H17.5"/></svg></span></p>
