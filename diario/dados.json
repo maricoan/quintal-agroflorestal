@@ -1,10 +1,10 @@
 {
- "atualizado": "19/10/2026",
+ "atualizado": "20/10/2026",
  "entradas": [
   {
    "area": "a1",
    "criado": 1792462800001,
-   "data": "2026-10-19",
+   "data": "2026-10-15",
    "especies": [
     "taioba",
     "singônio"
@@ -20,7 +20,7 @@
   {
    "area": "a2",
    "criado": 1792462800002,
-   "data": "2026-10-19",
+   "data": "2026-10-15",
    "especies": [],
    "fotos": [
     "c347d6f174f904ba7d4ee896e5874c89"
@@ -33,7 +33,7 @@
   {
    "area": "a3",
    "criado": 1792462800003,
-   "data": "2026-10-19",
+   "data": "2026-10-15",
    "especies": [
     "mangueira"
    ],
@@ -48,7 +48,7 @@
   {
    "area": "a4",
    "criado": 1792462800004,
-   "data": "2026-10-19",
+   "data": "2026-10-15",
    "especies": [
     "bananeira"
    ],
@@ -63,7 +63,7 @@
   {
    "area": "a6",
    "criado": 1792462800005,
-   "data": "2026-10-19",
+   "data": "2026-10-15",
    "especies": [],
    "fotos": [
     "4c9c51da4008cc7ac0e43415398e1981"
@@ -76,7 +76,7 @@
   {
    "area": "a7",
    "criado": 1792462800006,
-   "data": "2026-10-19",
+   "data": "2026-10-15",
    "especies": [],
    "fotos": [
     "50bc557b696cece4e64b48ee7160b562"
@@ -89,7 +89,7 @@
   {
    "area": "a5",
    "criado": 1792463100000,
-   "data": "2026-10-19",
+   "data": "2026-10-18",
    "especies": [
     "boldo",
     "manjericão",
@@ -104,7 +104,7 @@
   {
    "area": "a6",
    "criado": 1792463000000,
-   "data": "2026-10-19",
+   "data": "2026-10-18",
    "especies": [
     "pitanga",
     "amendoim-forrageiro",
@@ -120,7 +120,7 @@
   {
    "area": "a7",
    "criado": 1792463200000,
-   "data": "2026-10-19",
+   "data": "2026-10-18",
    "especies": [
     "dedaleira",
     "pitanga",
@@ -213,6 +213,15 @@
    "qtd": 1,
    "status": "plantada",
    "_id": "dedaleira"
+  },
+  {
+   "area": "a5",
+   "criado": 1792464407328,
+   "nome": "taioba",
+   "qtd": 2,
+   "status": "plantada",
+   "unidade": "mudas",
+   "_id": "ij17sxc42twiniqa2pyn"
   },
   {
    "area": "a5",
@@ -310,5 +319,63 @@
   "a4": "f55f6a19b657c702c23328cc66282b17",
   "a6": "4c9c51da4008cc7ac0e43415398e1981",
   "a7": "50bc557b696cece4e64b48ee7160b562"
+ },
+ "planta": {
+  "a6": {
+   "amendoim-forrageiro-a6~s": {
+    "x": 0.51,
+    "y": 1.96
+   },
+   "cana-da-india-a6~s": {
+    "x": 1.51,
+    "y": 2.66
+   },
+   "maravilha-a6~s": {
+    "x": 2.43,
+    "y": 2.07
+   },
+   "pitanga-a6~1": {
+    "x": 1.5,
+    "y": 1.56
+   }
+  },
+  "a7": {
+   "amendoim-forrageiro-a7~s": {
+    "x": 2.71,
+    "y": 2.36
+   },
+   "cana-da-india-a7~s": {
+    "x": 1.14,
+    "y": 2.32
+   },
+   "cereja-do-rio-grande-a7~1": {
+    "x": 3.65,
+    "y": 1.27
+   },
+   "dedaleira~1": {
+    "x": 1.97,
+    "y": 0.4
+   },
+   "maravilha-a7~s": {
+    "x": 4.17,
+    "y": 2.36
+   },
+   "ora-pro-nobis-a7~1": {
+    "x": 4.34,
+    "y": 0.29
+   },
+   "ora-pro-nobis-a7~2": {
+    "x": 3.25,
+    "y": 0.31
+   },
+   "ora-pro-nobis-a7~3": {
+    "x": 1.38,
+    "y": 1.4
+   },
+   "pitanga~1": {
+    "x": 2.47,
+    "y": 1.55
+   }
+  }
  }
 }

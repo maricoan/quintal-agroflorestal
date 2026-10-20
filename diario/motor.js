@@ -1,0 +1,2291 @@
+window.QUINTAL_CSS="\n/* Layout: formulário à esquerda (terreno + escolha de plantas), resultado à direita (desenho, espaçamento, avisos, calendário, manejo). Empilha no celular. */\n:host{\n  --bg:#F3F2E5; --surface:#FFFEF7; --ink:#23251A; --muted:#62644F; --line:#DFDDC6;\n  --leaf:#55621F; --leaf-soft:#E8EBD0; --red:#B42318; --ci-bg:#F1DE97; --ci-fg:#23251A; --ci-off:rgba(60,40,20,.18); --ci-e:#123A26; --pc-bg:#FFF4CF; --pc-bd:#D9A520; --yel:#E8B400; --yel-ink:#2A2200; --pink:#D94C84; --pink-ink:#FFFFFF; --soil:#7B5A2C; --soil-soft:#F2EAD5;\n  --sun:#B88A00; --warn:#A4471F; --warn-soft:#F8E7DD;\n  --ground:#ECEBD5; --bed:#E6D3AE; --mulch:#CBB38A; --grid:rgba(40,60,40,.08);\n  --side1:#B8916B; --side2:#9C7552; --pot:#B9673F; --pot-dark:#94502F; --trunk:#6E4B32; --lf1:#4E8A3E; --lf2:#7E9B7A; --lf3:#7DB548; --ico-arrow:#C99700; --ico-wood:#B98552; --ico-metal:#6F7680; --fr-p:#6B3FA0; --fr-o:#E07A1F; --fl-w:#FFFFFF;\n  --st-e:#123A26; --st-a:#2E8540; --st-m:#9CB83A; --st-b:#E3A72F; --st-r:#A8521C;\n  --st-ink:#FFFFFF; --st-ink-light:#1D2A1F;\n  --f-display:\"Young Serif\", Georgia, \"Times New Roman\", serif;\n  --f-body:\"Atkinson Hyperlegible\", system-ui, -apple-system, \"Segoe UI\", sans-serif;\n  --f-mono:\"IBM Plex Mono\", ui-monospace, Menlo, Consolas, monospace;\n}\n@media (prefers-color-scheme: dark){:host(:not([data-theme=\"light\"])){\n  --bg:#16170F; --surface:#1F2117; --ink:#E9E8D6; --muted:#A6A68C; --line:#34362A;\n  --leaf:#BCC86E; --leaf-soft:#2B3019; --soil:#D7A47E; --soil-soft:#2E2A1D; --red:#F08A7E; --ci-bg:#3F3517; --ci-fg:#F3EBCF; --ci-off:rgba(255,255,255,.3); --ci-e:#FFFFFF; --pc-bg:#4A3D12; --pc-bd:#D4A72C; --yel:#F2C94C; --yel-ink:#1E1800; --pink:#F28AB3; --pink-ink:#2A0F1B;\n  --sun:#E5B54C; --warn:#F2A077; --warn-soft:#3A2419;\n  --ground:#22241A; --bed:#3B3221; --mulch:#5A4B30; --grid:rgba(220,235,215,.06);\n  --side1:#4A3828; --side2:#3A2B1F; --pot:#A65A36; --pot-dark:#7E4126; --trunk:#9A7556; --lf1:#6FAE5C; --lf2:#A3BBA0; --lf3:#9CD068; --ico-arrow:#F2C94C; --ico-wood:#D2A57A; --ico-metal:#B4BAC2; --fr-p:#B48AE0; --fr-o:#F0A050; --fl-w:#EDEDED;\n  --st-e:#2C7A52; --st-a:#3F9E4F; --st-m:#B5D35A; --st-b:#F2C14E; --st-r:#D27A3E;\n  --st-ink:#FFFFFF; --st-ink-light:#131915; color-scheme:dark}}\n:host([data-theme=\"dark\"]){\n  --bg:#16170F; --surface:#1F2117; --ink:#E9E8D6; --muted:#A6A68C; --line:#34362A;\n  --leaf:#BCC86E; --leaf-soft:#2B3019; --soil:#D7A47E; --soil-soft:#2E2A1D; --red:#F08A7E; --ci-bg:#3F3517; --ci-fg:#F3EBCF; --ci-off:rgba(255,255,255,.3); --ci-e:#FFFFFF; --pc-bg:#4A3D12; --pc-bd:#D4A72C; --yel:#F2C94C; --yel-ink:#1E1800; --pink:#F28AB3; --pink-ink:#2A0F1B;\n  --sun:#E5B54C; --warn:#F2A077; --warn-soft:#3A2419;\n  --ground:#22241A; --bed:#3B3221; --mulch:#5A4B30; --grid:rgba(220,235,215,.06);\n  --side1:#4A3828; --side2:#3A2B1F; --pot:#A65A36; --pot-dark:#7E4126; --trunk:#9A7556; --lf1:#6FAE5C; --lf2:#A3BBA0; --lf3:#9CD068; --ico-arrow:#F2C94C; --ico-wood:#D2A57A; --ico-metal:#B4BAC2; --fr-p:#B48AE0; --fr-o:#F0A050; --fl-w:#EDEDED;\n  --st-e:#2C7A52; --st-a:#3F9E4F; --st-m:#B5D35A; --st-b:#F2C14E; --st-r:#D27A3E;\n  --st-ink:#FFFFFF; --st-ink-light:#131915; color-scheme:dark}\n\n*{box-sizing:border-box}\n[hidden]{display:none!important}\nbody{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;\n  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:20px 48px}\n.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:20px}\nheader{display:flex;flex-direction:column;gap:4px;padding-block:8px 4px}\n.hero{flex-direction:row;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-block:12px 18px;border-bottom:2px solid var(--line)}\n.hero-t{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1 1 360px}\n.brand{display:flex;align-items:center;gap:14px}.brand-t{display:flex;flex-direction:column;gap:6px;min-width:0}\n.hero-logo{width:132px;height:132px;flex:none}\n.brand{gap:20px;margin-bottom:6px}\n@media (max-width:640px){.hero-logo{width:78px;height:78px}.brand{gap:12px;margin-bottom:2px}}\n.eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--leaf)}\n.hero-ill{width:min(380px,100%);height:auto;flex:0 1 380px}\n.h-sun{fill:var(--sun)}.h-soil{fill:var(--bed)}.h-ray{stroke:var(--sun);stroke-width:2.2;stroke-linecap:round;fill:none}\n.h-beam{stroke:var(--sun);stroke-width:1;stroke-dasharray:2 5;opacity:.45;fill:none}\n.h-root{fill:none;stroke:var(--soil);stroke-width:1.2;stroke-linecap:round;opacity:.55}\n.h-mulch{fill:none;stroke:var(--mulch);stroke-width:1.6;stroke-linecap:round}\n.h-trunk{fill:none;stroke:var(--trunk);stroke-width:4;stroke-linecap:round}\n.h-br{fill:none;stroke:var(--trunk);stroke-width:2;stroke-linecap:round}\n.h-c1{fill:var(--lf1)}.h-c2{fill:var(--st-a)}.h-c3{fill:var(--lf3)}\n.h-fr{fill:var(--fr-o)}\n.h-pseudo{fill:var(--lf2)}.h-leaf2{fill:var(--lf3)}.h-leaf3{fill:var(--lf1)}\n.h-stalk{fill:none;stroke:var(--lf1);stroke-width:1.6;stroke-linecap:round}\n.h-ban ellipse{fill:var(--yel)}.h-flor{fill:var(--fr-p)}\n.h-kale{fill:var(--lf2)}.h-rib{fill:none;stroke:var(--surface);stroke-width:.5;opacity:.45}.h-cstem{fill:none;stroke:var(--lf1);stroke-width:1.8;stroke-linecap:round}.h-cfl{fill:var(--warn)}.h-kale2{fill:var(--st-a);opacity:.85}\n.h-vine{fill:none;stroke:var(--lf1);stroke-width:1.6}\n.h-pump{fill:var(--fr-o)}.h-fl{fill:var(--yel)}\n.h-lab text{font-family:var(--f-body);font-size:10.5px;font-weight:700;fill:var(--ci-fg);text-anchor:middle}\n@media (prefers-reduced-motion:no-preference){\n.h-pl{transform-origin:bottom;transform-box:fill-box;animation:grow .8s cubic-bezier(.2,.8,.3,1) both}\n.h-pl.d2{animation-delay:.1s}.h-pl.d3{animation-delay:.2s}.h-pl.d4{animation-delay:.3s}.h-pl.d5{animation-delay:.4s}\n.h-sung{transform-origin:30px 26px;animation:spin 60s linear infinite}\n@keyframes grow{from{transform:scaleY(.4);opacity:0}to{transform:none;opacity:1}}\n@keyframes spin{to{transform:rotate(360deg)}}}\nh1{font-family:var(--f-display);font-weight:400;color:var(--leaf);font-size:clamp(28px,4vw,38px);line-height:1.1;margin:0;text-wrap:balance}\nheader p{margin:0;color:var(--muted);max-width:62ch}\n.hero-t{flex-basis:100%}.hero-t>p{max-width:none}\n/* computador: logo e nome na coluna da esquerda (mesma largura do formulário), apresentação na coluna do desenho */\n@media (min-width:881px){\n  .hero{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);column-gap:20px;row-gap:8px;align-items:center}\n  .hero-t{display:contents}\n  .hero .brand{grid-column:1;grid-row:1/3;margin:0;gap:14px;min-width:0;width:100%;box-sizing:border-box}\n  .hero-t .brand{container-type:inline-size}\n  .hero .brand-t{min-width:0;flex:1 1 0}\n  .hero .hero-logo{width:40cqi;height:40cqi}\n  .hero h1{font-size:clamp(20px,8.2cqi,34px);overflow-wrap:anywhere}\n  .hero .eyebrow{font-size:clamp(9px,2.8cqi,11px)}\n  .hero-t>p:not(.hero-short):not(.hero-free){grid-column:2;grid-row:1;align-self:end}\n  .hero-t>p.hero-free{grid-column:2;grid-row:2;align-self:start}\n}\nh2{font-family:var(--f-display);font-weight:400;font-size:22px;margin:0;text-wrap:balance}\n#out .panel{background:transparent;border:none;border-top:1px solid var(--line);border-radius:0;padding:22px 0 4px}\n#out .panel>h2,#out .panel>.head>h2{font-size:25px}\n#out .panel.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 1px 0 rgba(40,50,30,.04),0 10px 24px -18px rgba(40,50,30,.35)}\n#out .panel .note{background:transparent;border-radius:0;padding:8px 0 8px 12px}\n#out .panel .note.warn{background:var(--warn-soft);border-radius:0 8px 8px 0;padding:10px 12px}\nh3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0;font-weight:700}\na{color:var(--leaf)}\n.grid{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:20px;align-items:start}\n@media (max-width:880px){.grid{grid-template-columns:minmax(0,1fr)}}\n@media (min-width:881px){.grid>.col:first-child{position:sticky;top:8px;max-height:calc(100vh - 16px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--line) transparent;padding-right:4px;margin-right:-4px;border-radius:14px}}\n.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:16px;min-width:0}\n.col{display:flex;flex-direction:column;gap:20px;min-width:0}\n.head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}\n.field{display:flex;flex-direction:column;gap:6px}\n.sub{display:flex;flex-direction:column;gap:6px;margin:-6px 0 0 0;padding:10px 0 2px 12px;border-left:2px solid var(--leaf)}\n.sub .row3{grid-template-columns:repeat(auto-fill,minmax(92px,118px));gap:8px;margin-top:6px}\n.sub .lbl{font-size:12px}\n.sub .unit input{padding:5px 26px 5px 8px;font-size:13.5px}\n.sub .unit span{right:8px;font-size:12px}\n.seg button.two-line{display:inline-flex;flex-direction:column;align-items:center;line-height:1.2;padding-block:5px}\n.seg button.two-line small{font-size:10.5px;opacity:.8;font-weight:400}\n#potmode{align-items:stretch}\n#pottipo button{border-color:var(--soil);color:var(--soil);background:var(--soil-soft)}\n#pottipo button[aria-pressed=\"true\"]{background:var(--soil);border-color:var(--soil);color:var(--surface)}\n.row3{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-top:10px}\n.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}\nlabel.lbl,.lbl{font-size:13px;font-weight:700}\ninput[type=number],input[type=text],select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;width:100%;min-width:0}\ninput:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}\n.unit{position:relative}\n.unit input{padding-right:30px;font-family:var(--f-body);font-variant-numeric:tabular-nums}\n.unit span{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none}\n.seg{display:flex;flex-wrap:wrap;gap:6px}\n.seg button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer}\n.seg button[aria-pressed=\"true\"]{background:var(--leaf);border-color:var(--leaf);color:var(--surface)}\n.hint{font-size:12.5px;color:var(--muted);margin:0}\n.cats{display:flex;flex-direction:column;gap:14px;max-height:520px;overflow:auto;padding-right:4px}\n@media (max-width:880px){.cats{max-height:none}}\n.cat{border:1px solid var(--line);border-radius:8px;background:var(--bg)}\n.cat summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 12px;font-weight:700;font-size:14px}\n.cat summary::-webkit-details-marker{display:none}\n.cat summary::before{content:\"\";width:7px;height:7px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-45deg);transition:transform .15s;flex:none}\n.cat[open] summary::before{transform:rotate(45deg)}\n.cat .cat-t{flex:1}\n.cat-ico{width:20px;height:20px;flex:none;fill:none;stroke:var(--leaf);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}\n.cat-parc .cat-ico{stroke:var(--sun)}\n.cat .cat-n{font-family:var(--f-body);font-size:12px;font-weight:400;color:var(--muted)}\n.cat .chips{padding:0 12px 12px}\n.cats{gap:8px}\n.chips{display:flex;flex-wrap:wrap;gap:6px}\n.chip{font:inherit;font-size:13.5px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:5px 11px 5px 8px;cursor:pointer}\n.chipinfo{margin:0;font-size:13.5px;background:var(--ci-bg);color:var(--ci-fg);border-radius:10px;padding:8px 14px;height:76px;box-sizing:border-box;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:3px;position:sticky;top:calc(env(safe-area-inset-top, 0px) + 8px);z-index:5;box-shadow:0 6px 16px rgba(60,40,20,.14)}\n.chipinfo b{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}\n.ci-top{display:flex;align-items:center;gap:8px;min-width:0}\n.ci-d{display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12.5px;line-height:1.35}\n.chipinfo i{font-style:italic;opacity:.9}\n.chipinfo .sig i:not([class]){background:var(--ci-off)}\n.chipinfo .sig i{opacity:1}\n.chipinfo .sig i.d-E{background:var(--ci-e)}\n.chipinfo .ico-bg{fill:var(--ci-bg)}\n.sig{display:inline-flex;align-items:flex-end;gap:1.5px;height:15px;flex:none}\n.sig i{display:block;width:3px;border-radius:1px}\n.sig i:not([class]){background:var(--line)}\n.sig i:nth-child(1){height:4px}.sig i:nth-child(2){height:6.75px}.sig i:nth-child(3){height:9.5px}.sig i:nth-child(4){height:12.25px}.sig i:nth-child(5){height:15px}\n.chip[aria-pressed=\"true\"]{background:var(--leaf-soft);border-color:var(--leaf);font-weight:700}\n.chip .x{color:var(--muted);font-weight:400;margin-left:2px}\n.chip.off{opacity:.62}\n.og{font-family:var(--f-mono);font-size:10.5px;font-weight:500;border-radius:4px;padding:0 4px;line-height:16px;color:var(--surface);flex:none}\n.og-N,.og-E{background:var(--leaf)} .og-Z{background:var(--yel);color:var(--yel-ink)} .og-X{background:var(--pink);color:var(--pink-ink)}\n.ico{width:31px;height:22px;display:block}\n.cats .ico{width:21px;height:15px}\n.ico-w{display:inline-flex;flex:none;align-items:center}\n.ico-bg{fill:var(--surface)} .ico-map{fill:var(--leaf);stroke:var(--st-e);stroke-width:.5;stroke-linejoin:round} .ico-halo{stroke:var(--surface);fill:none} .ico-arrow{stroke:var(--ico-arrow);fill:none}\n.ico-pin{fill:var(--red);stroke:var(--surface);stroke-width:1.1;stroke-linejoin:round} .ico-rib{fill:var(--leaf)} .ico-rib2{fill:var(--st-a)} .ico-ring{stroke:var(--surface)}\n.ico-soil{fill:var(--soil)} .ico-wood{stroke:var(--ico-wood)} .ico-metal{fill:var(--ico-metal)}\n.oleg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);margin:0;padding:0;list-style:none}\n.oleg li{display:flex;align-items:center;gap:6px}\n.quick{display:flex;flex-wrap:wrap;gap:6px;align-items:center}\n.cap-alert{border:2px solid var(--warn);background:var(--warn-soft);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}\n.cap-alert.lim{border-color:var(--sun);background:var(--soil-soft)}\n.cap-alert p{margin:0;font-size:14px}\n.cap-h{display:flex;align-items:center;gap:10px;font-size:16px;color:var(--warn)}\n.cap-alert.lim .cap-h{color:var(--ink)}\n.cap-ico{width:24px;height:24px;border-radius:50%;background:var(--warn);color:var(--surface);display:inline-flex;align-items:center;justify-content:center;font-weight:700;flex:none}\n.cap-alert.lim .cap-ico{background:var(--sun)}\n.nopot{display:flex;gap:12px;align-items:flex-start;border:2px solid var(--warn);background:var(--warn-soft);border-radius:10px;padding:12px 14px;font-size:15px}\n.nopot b{display:block;color:var(--warn);margin-bottom:2px}\n.cap-list{display:flex;flex-wrap:wrap;gap:6px}\n.cap-list button{font:inherit;font-size:13.5px;font-weight:700;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--warn);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 10px 5px 8px;cursor:pointer}\n.cap-list button:hover{background:var(--warn-soft)}\n.cc td{vertical-align:top}\n.cc-pair{display:flex;flex-wrap:wrap;align-items:center;gap:4px;min-width:200px}\n.cc-on,.cc-add{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:12.5px;border-radius:999px;padding:3px 9px 3px 6px;white-space:nowrap}\n.cc-on{background:var(--leaf-soft);border:1px solid var(--leaf);font-weight:700}\n.cc-add{background:var(--surface);border:1px solid var(--line);color:var(--ink);cursor:pointer}\n.cc-add:hover{border-color:var(--leaf)}\n.cc-x{color:var(--muted);font-weight:700}\n.cc-t{text-align:left;font-size:12.5px;line-height:1.4;min-width:220px}\n.cc-both td{background:var(--leaf-soft)}\n.cat-parc{border-color:var(--pc-bd);background:var(--pc-bg)}\n.cat-sub{font-weight:400;font-size:12px;color:var(--muted);margin-left:4px}\n.pc-list{list-style:none;margin:0;padding:0 12px 12px;display:flex;flex-direction:column;gap:8px}\n.pc{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 10px;display:flex;flex-direction:column;gap:5px;align-items:flex-start}\n.pc.all{border-color:var(--leaf)}\n.pc.bad{border-color:var(--warn);background:var(--warn-soft)}\n.pc-n{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-weight:700;font-size:14px}\n.pc-n .on{color:var(--leaf)}\n.pc-n i{font-style:normal;color:var(--muted);font-weight:400}\n.pc-act{display:flex;flex-wrap:nowrap;align-items:center;gap:10px}\n.pc-act .cons-add{flex:none}\n.pc-chao{display:inline-flex;align-items:center;gap:6px;font-size:12px;line-height:1.25;color:var(--soil);font-weight:700;min-width:0}\n.pc-chao svg{width:22px;height:22px;flex:none}\n.pc-chao .g-soil{fill:var(--bed)}.pc-chao .g-line{stroke:var(--soil);stroke-width:1.6}\n.pc-chao .g-stem,.pc-chao .g-root{stroke:var(--leaf);stroke-width:1.6;fill:none;stroke-linecap:round}\n.pc-chao .g-root{stroke:var(--soil)}.pc-chao .g-leaf{fill:var(--leaf)}\n.pc-v{margin:2px 0 0;font-size:12.5px;color:var(--soil)}\n.pc-t,.pc-a{margin:0;font-size:12.5px;line-height:1.4}\n.pc-a{color:var(--muted);font-size:12px}\n.pc .cons-add{padding:5px 11px;font-size:12.5px}\n.tray{display:flex;flex-direction:column;gap:6px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px}\n.tray-t{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}\n.tray-l{display:flex;flex-wrap:wrap;gap:5px}\n.tdot{width:10px;height:10px;border-radius:50%;flex:none;box-shadow:0 0 0 1.5px var(--surface)}\n.tdot.d-E{background:var(--st-e)}.tdot.d-A{background:var(--st-a)}.tdot.d-M{background:var(--st-m)}.tdot.d-B{background:var(--st-b)}.tdot.d-R{background:var(--st-r)}\n.tray-l button{font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:5px;border:1px solid var(--leaf);background:var(--leaf-soft);color:var(--ink);border-radius:999px;padding:3px 8px 3px 6px;cursor:pointer}\n.tray-l button:hover{border-color:var(--warn)}\n.tray-x{color:var(--warn);font-size:14px;line-height:1}\n.legend-box{border:1px solid var(--line);border-radius:8px;padding:0 10px}\n.legend-box summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--leaf);padding:8px 0;list-style:none}\n.legend-box summary::-webkit-details-marker{display:none}\n.legend-box summary::before{content:\"ⓘ \";font-weight:400}\n.legend-box[open]{padding-bottom:10px}\n.legend-box .oleg{margin-bottom:8px}\n.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}\n@media (max-width:560px){.summary{grid-template-columns:repeat(2,minmax(0,1fr))}}\n.sm-i{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--ink);min-width:0}\n.sm-i b{font-family:var(--f-display);font-weight:400;font-size:30px;line-height:1.1;font-variant-numeric:tabular-nums}\n.sm-i span{font-size:12px;color:var(--muted)}\na.sm-i:hover{border-color:var(--leaf)}\n.sm-warn{border:2px solid var(--warn);background:var(--warn-soft)}.sm-warn b,.sm-warn span{color:var(--warn)}.sm-warn span::after{content:' → ver'}\n.sm-ok b{color:var(--muted)}\n.sm-bad{border:2px solid var(--warn);background:var(--warn-soft)}\n.sm-bad b,.sm-bad span{color:var(--warn)}\n.secnav{display:flex;gap:4px;overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;position:sticky;top:calc(env(safe-area-inset-top, 0px) + 8px);z-index:6;box-shadow:0 4px 12px rgba(20,40,25,.08);scrollbar-width:none}\n.secnav::-webkit-scrollbar{display:none}\n.secnav a{flex:none;font-size:13px;font-weight:700;color:var(--muted);text-decoration:none;border-radius:999px;padding:6px 12px}\n.secnav a:hover,.secnav a:focus-visible{background:var(--leaf-soft);color:var(--leaf)}\n.secnav a[aria-current=\"true\"]{background:var(--leaf);color:var(--surface)}\n.rtabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;align-self:flex-start;position:sticky;top:calc(env(safe-area-inset-top, 0px) + 8px);z-index:6;box-shadow:0 4px 12px rgba(20,40,25,.08)}\n.rtabs button{font:inherit;font-weight:700;font-size:14px;border:none;background:transparent;color:var(--muted);border-radius:999px;padding:7px 18px;cursor:pointer}\n.rtabs button[aria-selected=\"true\"]{background:var(--leaf);color:var(--surface)}\n.cons-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}\n.cons{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--bg);display:flex;flex-direction:column;gap:6px}\n.cons.all{border-color:var(--leaf);background:var(--leaf-soft)}\n.cons-h{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}\n.cons-n{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-weight:700;font-size:15px}\n.cs-p{display:inline-flex;align-items:center;gap:6px}\n.cs-p.on{color:var(--leaf)}\n.cons-add{padding:6px 12px;font-size:13px}\n.cons-ok{font-size:13px;font-weight:700;color:var(--leaf)}\n.cons-t,.cons-a{margin:0;font-size:13.5px}\n.cons-a{color:var(--muted);font-size:12.5px}\n.empty-state{display:flex;flex-direction:column;align-items:center;gap:8px;padding:26px 16px;background:var(--ground);border-radius:12px;text-align:center}\n.empty-state p{margin:0;max-width:44ch;color:var(--muted);font-size:14px}\n.empty-ill{width:min(260px,100%);height:auto}\n.empty-hero{width:min(420px,100%);height:auto}\n.e-sprout path{fill:none;stroke:var(--leaf);stroke-width:2;stroke-linecap:round}\n.e-can{fill:none;stroke:var(--soil);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}\n.e-drop circle{fill:var(--leaf);opacity:.6}\n.und{font-weight:400;color:var(--leaf)}\n.und-lab{fill:var(--leaf)}\n.sun-ico circle{fill:var(--sun)}.sun-ico line{stroke:var(--sun);stroke-width:2;stroke-linecap:round}\n.sun-ray{fill:none;stroke:var(--sun);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}\n.pot-top{fill:var(--bed);stroke:var(--pot);stroke-width:3}\n.need{fill:none;stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}\n.pot-top-w{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:12px;align-items:center}\n.pot-top-w svg{min-width:0!important;margin:0 auto}\n.pot-top-w.big{grid-template-columns:minmax(0,1fr)}\n.pot-top-w>p.hint{grid-column:1/-1;max-width:none;width:100%}\n.pot-top-w.big svg{max-width:520px!important;width:100%}\n@media (max-width:640px){.pot-top-w{grid-template-columns:minmax(0,1fr)}}\n.hb-lt{opacity:.78}\n.hb-vein{fill:none;stroke:var(--surface);stroke-width:.7;opacity:.5}\n.fl-pk{fill:var(--pink)}\n.kale-v{stroke:var(--surface);opacity:.45;fill:none}\n.credit{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 0;border-top:1px solid var(--line);padding:20px 0 8px;font-size:14px;color:var(--muted)}\n.credit>*+*::before{content:\"/\";margin:0 10px;color:var(--line)}\n.credit b{color:var(--ink);font-weight:700}\n.credit a{color:var(--leaf);text-decoration:none;font-weight:700}\n.credit a:hover{text-decoration:underline}\n.credit>.credit-note{flex-basis:100%;text-align:center;margin:12px 0 0;font-size:16px;color:var(--ink)}\n.credit-note>span{display:inline-block;padding:7px 16px;border:1px solid var(--line);border-radius:10px;background:var(--leaf-soft)}\n.hero-free{margin:2px 0 0;color:var(--ink)}.hero-free strong{color:var(--leaf);font-weight:700}\n.cn-ic{display:inline-flex;gap:3px;margin-left:8px;vertical-align:-4px}.cn-ic svg{width:20px;height:20px}.cn-f{fill:var(--leaf)}.cn-l{fill:none;stroke:var(--bg);stroke-width:1.3;stroke-linecap:round}.cn-s{fill:none;stroke:var(--leaf);stroke-width:2;stroke-linecap:round}\n.credit-note strong{color:var(--leaf);font-weight:700}\n.credit>.credit-note::before{content:none}\n@media (max-width:640px){body[data-mtab=\"espaco\"] .credit,body[data-mtab=\"plantas\"] .credit{display:none}.credit{flex-direction:column;gap:4px}.credit>*+*::before{content:none}}\n.trunk-l{stroke:var(--side1);stroke-width:2.6;stroke-linecap:round;fill:none}\n.cv-stem{fill:none;stroke:var(--trunk);stroke-width:2.4;stroke-linecap:round}\n.cv-node{stroke:var(--side1);stroke-width:1.2}\n.cv-br{stroke:var(--trunk);stroke-width:1.5;stroke-linecap:round}\n.cv-pet{stroke:var(--st-r);stroke-width:1.2;stroke-linecap:round}\n.cap-other{display:flex;flex-direction:column;gap:6px;border-top:1px dashed var(--warn);padding-top:10px;margin-top:2px;font-size:13.5px}\n.cap-list.other button{border-color:var(--line);font-weight:400}\n.cap-x{color:var(--warn);font-size:15px;line-height:1}\n.btn-clear{font:inherit;font-weight:600;font-size:13px;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:6px 12px;cursor:pointer}\n.btn-clear:hover{border-color:var(--warn);color:var(--warn)}\n.btn-clear:disabled{opacity:.45;cursor:default;border-color:var(--line);color:var(--muted)}\n.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;display:flex;align-items:center;gap:14px;background:var(--ink);color:var(--bg);border-radius:12px;padding:10px 12px 10px 16px;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.25)}\n.toast button{font:inherit;font-weight:700;border:none;background:transparent;color:var(--sun);cursor:pointer;padding:6px 8px;border-radius:8px}\n@media (max-width:640px){.toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}}\n.quick .clear{border-color:var(--warn);color:var(--warn)}\n.quick button{font:inherit;font-size:12.5px;border:1px solid var(--leaf);color:var(--leaf);background:var(--surface);border-radius:999px;padding:3px 10px;cursor:pointer}\n.d-E{background:var(--st-e)}.d-A{background:var(--st-a)}.d-M{background:var(--st-m)}.d-B{background:var(--st-b)}.d-R{background:var(--st-r)}\ndetails.add summary{cursor:pointer;font-size:13.5px;font-weight:700;color:var(--leaf)}\n.addform{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}\n.btn{font:inherit;font-weight:700;font-size:13.5px;border:1px solid var(--leaf);background:var(--leaf);color:var(--surface);border-radius:6px;padding:8px 12px;cursor:pointer;justify-self:start}\n.banner{background:var(--soil-soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:13.5px}\n.stats{display:flex;flex-wrap:wrap;gap:8px 22px}\n.stat{display:flex;flex-direction:column}\n.stat b{font-family:var(--f-body);font-weight:500;font-size:20px;font-variant-numeric:tabular-nums}\n.stat span{font-size:12px;color:var(--muted)}\n.drawing{background:var(--ground);border-radius:8px;overflow-x:auto;padding:8px}\n.drawing.plain{background:var(--bg)}\n.drawing svg{display:block;width:var(--zw,100%);max-width:none;height:auto;min-width:300px}\nsvg text{font-family:var(--f-mono);fill:var(--ink)}\n.s-ground{fill:var(--ground)} .s-bed{fill:var(--bed)} .s-line{fill:var(--mulch)} .s-grid{stroke:var(--grid)} .s-edge{fill:none;stroke:var(--muted);stroke-width:1.2}\n.s-side1{fill:var(--side1)} .s-side2{fill:var(--side2)}\n.s-dim{fill:var(--muted);font-size:calc(11px * var(--fz,1))}\n.s-band{fill:var(--muted);font-size:calc(10.5px * var(--fz,1));font-family:var(--f-body);letter-spacing:.06em;text-transform:uppercase}\n.s-floor{stroke:var(--line);stroke-width:1.5}\n.s-sun{fill:var(--sun)} .s-sunline{stroke:var(--sun);stroke-width:1.5;fill:none}\n.pot{fill:var(--pot)} .pot-dark-f{fill:var(--pot-dark)} .iso-lab{paint-order:stroke;stroke:var(--bg);stroke-width:3px;stroke-linejoin:round}\n.ab-leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13.5px;margin-top:8px}\n.ab-i{display:inline-flex;align-items:center;gap:6px}\n.ab-leg .ab{min-width:26px;height:22px;border-radius:11px;display:inline-flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-size:11.5px;padding:0 5px}\n.capbox{border:1px solid var(--line);border-left:4px solid var(--leaf);border-radius:10px;padding:12px 14px;background:var(--leaf-soft);display:flex;flex-direction:column;gap:8px}\n.capbox h3{margin:0;font-size:15px}\n.attn{align-self:flex-start;max-width:100%;cursor:default;outline:none}\n.attn-h{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}\n.attn-i{width:16px;height:16px;border-radius:50%;background:var(--red);color:#fff;font-weight:700;font-size:11px;line-height:16px;text-align:center}\n.attn-b{display:none;margin:6px 0 0;padding:8px 10px;background:var(--surface);border:1px solid var(--line);border-radius:8px}\n.attn:hover .attn-b,.attn:focus .attn-b,.attn:focus-within .attn-b{display:block}\n.cap-ex-t{margin:4px 0 0;font-size:14px;font-weight:700}\n.capbox ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:14px}\n.cap-ex{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}\n.cap-ex .lbl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}\n.cap-ex .acts{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}\n.cap-ex button{font:inherit;font-size:12.5px;border:1px solid var(--leaf);color:var(--leaf);background:var(--surface);border-radius:999px;padding:3px 10px;cursor:pointer}\n.cap-ex button.on{background:var(--leaf);color:var(--surface)}\n.pot-rim-l{fill:none;stroke:var(--pot-dark);stroke-width:3;stroke-linejoin:round} .pot-rim{fill:var(--pot-dark)} .potlab{fill:#FFF;font-size:calc(10px * var(--fz,1));text-anchor:middle}\n.trunk{stroke:var(--trunk);stroke-width:2.5;stroke-linecap:round;fill:none}\n.stem-b{stroke:var(--st-m);stroke-width:5;stroke-linecap:round;fill:none}\n.crown{stroke:none}\n.tn1{fill:#2F6B3A}.tn1s{fill:#24552E}.tn2{fill:#6E8B34}.tn2s{fill:#58722A}.tn3{fill:#3F7A62}.tn3s{fill:#30614E}.tn4{fill:#4F9140}.tn4s{fill:#3D7533}\n.crown-hi{opacity:.45}.crown-hi.tn1{fill:#4C8B4E}.crown-hi.tn2{fill:#90AE4E}.crown-hi.tn3{fill:#5E9A80}.crown-hi.tn4{fill:#73B25A}\n.fr-rd{fill:#D33A2C}.fr-or{fill:#F08A1D}.fr-mg{fill:#F2A23A}.fr-av{fill:#5E7A2A;stroke:#2C3D12;stroke-width:.6}.fr-li{fill:#C9D64A}.fr-ye{fill:#F2C53D}.fr-bk{fill:#3A1F44}.fr-ban{fill:#9FC44B}.fr-wm{fill:#7BB34F}.fr-hi{fill:rgba(255,255,255,.45)}\n.trunk-pale{stroke:#B8ADA0;stroke-linecap:round;fill:none}.trunk-peel{stroke:#E4DCD0;stroke-width:1.2;stroke-linecap:round}.fr-ap{fill:#6B4A2F}.lf-gl{fill:#5E9A5A;opacity:.55}\n.stem-b2{fill:#8DAE5C}.ban-rib{fill:none;stroke:rgba(255,255,255,.35);stroke-width:.8}\n.trunk-thin{stroke:var(--trunk);stroke-width:1.4;stroke-linecap:round;fill:none}\n.k-E,.k-A,.k-M,.k-B,.k-R{fill:none;stroke-linecap:round}\n.k-E{stroke:var(--st-e)}.k-A{stroke:var(--st-a)}.k-M{stroke:var(--st-m)}.k-B{stroke:var(--st-b)}.k-R{stroke:var(--st-r)}\n.pl-1{fill:var(--lf1)}.pl-2{fill:var(--lf2)}.pl-3{fill:var(--lf3)}\n.pk-1,.pk-2,.pk-3{fill:none;stroke-linecap:round}.pk-1{stroke:var(--lf1)}.pk-2{stroke:var(--lf2)}.pk-3{stroke:var(--lf3)}\n.wire{stroke:var(--muted);stroke-width:.8;opacity:.75}\n.stem-w{stroke:var(--trunk);fill:none;stroke-linecap:round}\n.spine{stroke:var(--ink);stroke-width:.7;opacity:.6}\n.tx-g{fill:var(--soil);opacity:.28}.tx-m{stroke:var(--trunk);stroke-width:1.1;stroke-linecap:round;opacity:.35;fill:none}\n.rose-c{fill:var(--surface);stroke:var(--line)}.rose-s{fill:var(--muted);opacity:.35}.rose-n{fill:var(--warn)}.rose text{font-size:calc(9px * var(--fz,1));fill:var(--muted);font-family:var(--f-body)}\n.fl-y{fill:var(--sun)} .fl-r{fill:var(--warn)} .fr-p{fill:var(--fr-p)} .fr-o{fill:var(--fr-o)} .fl-w{fill:var(--fl-w)} .shd{fill:var(--grid)}\n.lt-in{fill:rgba(255,255,255,.28)}\n.dim{stroke:var(--ink);stroke-width:1;fill:none}\n.dim-rua{fill:var(--soil);font-weight:500}\n.dimt{font-size:calc(10px * var(--fz,1));fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}\n.stem{stroke:var(--st-a);stroke-width:1.2;fill:none}\n.p-E{fill:var(--st-e)}.p-A{fill:var(--st-a)}.p-M{fill:var(--st-m)}.p-B{fill:var(--st-b)}.p-R{fill:var(--st-r)}\n.c-E{fill:var(--st-e);stroke:var(--st-e)}.c-A{fill:var(--st-a);stroke:var(--st-a)}.c-M{fill:var(--st-m);stroke:var(--st-m)}\n.canopy{fill-opacity:.22;stroke-width:1.2;stroke-dasharray:4 3}\n.iso-c{stroke:rgba(0,0,0,.18);stroke-width:.6}\n.dm-ln{stroke:var(--muted);stroke-width:1.1}.dm-ext{stroke:var(--muted);stroke-width:.8;opacity:.6}.dm-hd{fill:var(--muted)}.dm-t{dominant-baseline:central}\n.r-pl{stroke:var(--surface);stroke-width:1}.r-tree{fill:none;stroke:var(--st-a);stroke-width:1.2;stroke-dasharray:4 3;opacity:.8}\n.lab{font-size:calc(9.5px * var(--fz,1));text-anchor:middle;dominant-baseline:central;pointer-events:none}\n.lab.dk{fill:var(--st-ink)} .lab.lt{fill:var(--st-ink-light)}\n.hlab{font-size:calc(10px * var(--fz,1));text-anchor:middle;fill:var(--ink);font-family:var(--f-mono);paint-order:stroke;stroke:var(--bg);stroke-width:3px;stroke-linejoin:round}\n.hb-base{stroke:var(--line);stroke-width:1.2;stroke-dasharray:2 2}\n.hb-rng{stroke:var(--leaf);stroke-width:2.2;stroke-linecap:round}\n.nm-lab{font-size:calc(10px * var(--fz,1));text-anchor:middle;fill:var(--ink);font-family:var(--f-body)}\n.legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:6px 16px}\n.lg{display:flex;align-items:center;gap:8px;font-size:13.5px;min-width:0}\n.lg .ab{font-family:var(--f-mono);font-size:11px;min-width:26px;height:22px;border-radius:11px;display:inline-flex;align-items:center;justify-content:center;flex:none;padding:0 4px}\n.ab.dk{color:var(--st-ink)} .ab.lt{color:var(--st-ink-light)}\n.lg .nm{flex:1;min-width:0;display:flex;flex-direction:column}\n.lg .sp{font-family:var(--f-body);font-size:11px;color:var(--muted)}\n.sp-sum{display:flex;flex-direction:column;gap:4px;font-size:13px;border-top:1px solid var(--line);padding-top:10px}\n.sp-sum p{margin:0}\n.lg .q{font-family:var(--f-body);font-variant-numeric:tabular-nums;color:var(--muted)}\n.coop-sec{display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--line)}\n.coop-sec h3{display:flex;align-items:center;gap:8px}\n.coop-sec h3::before{content:\"\";width:10px;height:10px;border-radius:50%;flex:none;background:var(--muted)}\n.coop-sec.ok h3::before{background:var(--leaf)} .coop-sec.bad h3::before{background:var(--warn)} .coop-sec.none h3::before{background:var(--sun)} .coop-sec.sug h3::before{background:var(--leaf)}\n.coop-sec.bad h3{color:var(--warn)}\n.pairs{display:flex;flex-wrap:wrap;gap:6px}\n.pairs span{font-size:12.5px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:2px 9px}\n.pairs i{font-style:normal;color:var(--muted)}\n.notes{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}\n.note{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px;font-size:14px;border-left:3px solid var(--sun);background:var(--bg)}\n.note.warn{border-left-color:var(--warn);background:var(--warn-soft)}\n.note.tip{border-left-color:var(--leaf);background:var(--leaf-soft)}\n.note .tag{font-size:11px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;flex:none;width:62px;padding-top:2px;color:var(--sun)}\n.note.warn .tag{color:var(--warn)} .note.tip .tag{color:var(--leaf)}\n.note .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}\n.note .acts{display:flex;flex-wrap:wrap;gap:6px}\n.note .acts button{font:inherit;font-size:12.5px;border:1px solid var(--leaf);color:var(--leaf);background:var(--surface);border-radius:999px;padding:3px 10px;cursor:pointer}\n.now{display:flex;flex-wrap:wrap;gap:6px}\n.now span{background:var(--leaf-soft);color:var(--ink);border-radius:999px;padding:3px 10px;font-size:13px}\n.tbl{overflow-x:auto}\ntable{border-collapse:collapse;width:100%;font-size:13px;min-width:560px}\nth,td{padding:6px 6px;text-align:center;border-bottom:1px solid var(--line)}\nth:first-child,td:first-child{text-align:left;padding-left:0;white-space:nowrap;padding-right:10px}\nth{font-weight:700;color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em}\ntd.num{font-family:var(--f-body);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}\nth.num{text-align:right}\ntd.src{text-align:left;font-size:12.5px;color:var(--muted)}\ntd.mo{padding:5px 2px}\ntd.mo i{display:block;height:14px;border-radius:3px}\ntd.mo i.on{background:var(--leaf)}\n.curm{background:var(--soil-soft)}\ntd.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:nowrap;text-align:right}\n.refs-d summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);list-style:none;display:inline-flex;align-items:center;gap:6px}\n.refs-d summary::-webkit-details-marker{display:none}\n.refs-d summary::before{content:'›';display:inline-block;transition:transform .15s;font-size:16px}\n.refs-d[open] summary::before{transform:rotate(90deg)}\n.refs-d[open] summary{margin-bottom:6px}\n.refs-d summary:hover{color:var(--leaf)}\n.refs{margin:0;padding-left:20px;font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:3px}\n.phases{display:flex;flex-direction:column;gap:0;margin:0;padding:0;list-style:none}\n.phase{display:grid;grid-template-columns:130px minmax(0,1fr);gap:14px;padding:12px 0;border-top:1px solid var(--line)}\n.phase:first-child{border-top:0}\n.phase h4{margin:0;font-family:var(--f-display);font-weight:400;font-size:15.5px;color:var(--soil)}\n.phase ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:14px}\n@media (max-width:520px){.phase{grid-template-columns:minmax(0,1fr);gap:6px}}\n.pots{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}\n.potc{border:1px solid var(--line);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:4px;background:var(--bg)}\n.potc b{font-family:var(--f-body);font-weight:500;font-size:13px;color:var(--soil)}\n.potc .who{font-size:14px;font-weight:700}\n.empty{color:var(--muted);font-size:14px}\n.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}\n@media (prefers-reduced-motion:no-preference){.chip,.seg button{transition:background .15s,border-color .15s}}\n\n/* ---------- celular ---------- */\n.hero-short{display:none}\n.mt-next,.mtabs,.zoom,.strips{display:none}\n.secnav{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);padding-right:36px}\n@media (max-width:640px){\n  body{font-size:16px;padding-bottom:calc(84px + env(safe-area-inset-bottom, 0px))}\n  .hero{padding-block:4px 12px;gap:10px}\n  .hero-t p:not(.hero-short):not(.hero-free){display:none}\n  .hero-short{display:block}\n  .hero-ill{flex-basis:auto;width:78%;margin:0 auto}\n  body[data-mtab=\"espaco\"] #sec-plantas,body[data-mtab=\"espaco\"] #out{display:none}\n  body[data-mtab=\"plantas\"] #sec-espaco,body[data-mtab=\"plantas\"] #out,body[data-mtab=\"plantas\"] .hero{display:none}\n  body[data-mtab=\"plano\"] .grid>.col:first-child,body[data-mtab=\"plano\"] .hero{display:none}\n  .mt-next{display:flex;align-items:center;justify-content:center;font:inherit;font-weight:700;font-size:16px;min-height:48px;border:none;border-radius:12px;background:var(--leaf);color:var(--surface);cursor:pointer;margin-top:4px;position:sticky;bottom:calc(80px + env(safe-area-inset-bottom, 0px));z-index:4;box-shadow:0 6px 18px rgba(20,40,25,.22)}\n  .mtabs{display:grid;grid-template-columns:repeat(3,1fr);position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -6px 18px rgba(20,40,25,.10);padding:6px max(8px,env(safe-area-inset-left,0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px,env(safe-area-inset-right,0px))}\n  .mtabs button{position:relative;font:inherit;font-size:13px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:56px;border:none;background:transparent;color:var(--muted);border-radius:12px;cursor:pointer}\n  .mtabs svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}\n  .mtabs button[aria-current=\"page\"]{color:var(--leaf);background:var(--leaf-soft)}\n  .mt-b{position:absolute;top:4px;left:calc(50% + 8px);min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:var(--leaf);color:var(--surface);font-size:12px;line-height:20px;text-align:center}\n  .mt-b:empty{display:none}\n  .mt-bad{background:var(--warn)}\n  .zoom{display:flex;align-items:center;gap:6px;align-self:flex-end}\n  .zoom button{font:inherit;font-size:22px;line-height:1;width:44px;height:44px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;cursor:pointer}\n  .zoom span{font-family:var(--f-body);font-size:13px;color:var(--muted);min-width:44px;text-align:center}\n  .drawing{padding:4px;-webkit-overflow-scrolling:touch}\n  .strips{display:flex;flex-direction:column;gap:6px}\n  .strips-t{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}\n  .strips ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px}\n  .strips li{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:8px;font-size:15px}\n  .strips b{font-family:var(--f-body);font-weight:500}\n  .strips .st-bed{background:var(--bed)} .strips .st-path{background:var(--surface);border:1px dashed var(--line)} .strips .st-line{background:var(--mulch)}\n  /* letras: mínimo de 13 px */\n  .hint,.ci-d,.oleg,.cc-on,.cc-add,.cc-t,.pc-t,.pc-a,.pc .cons-add,.tray-l button,.cons-a,.cons-t,.quick button,.pairs span,.note .acts button,td.src,.refs,.sp-sum{font-size:14px}\n  .sub .lbl,.sub .unit span,.cat .cat-n,.cat-sub,.tray-t,.sm-i span,.stat span,td.h,th,.eyebrow,.note .tag,.lg .sp,.lg .ab,.seg button.two-line small{font-size:13px}\n  .note{font-size:15px}\n  /* consórcios: etiqueta em cima do texto */\n  .note{flex-direction:column;gap:4px}\n  .note .tag{width:auto;padding-top:0}\n  /* tabelas viram cartões */\n  table.cards{min-width:0}\n  table.cards thead{display:none}\n  table.cards,table.cards tbody,table.cards tr,table.cards td{display:block;width:100%}\n  table.cards tr{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:var(--surface)}\n  table.cards td{border:none;padding:3px 0;display:flex;justify-content:space-between;gap:12px;text-align:right;white-space:normal;font-size:14px}\n  table.cards td::before{content:attr(data-l);color:var(--muted);text-align:left;font-family:var(--f-body)}\n  table.cards td:first-child{font-weight:700;font-size:16px;padding-bottom:4px}\n  table.cards td:first-child::before{content:none}\n  table.cards td.blk{display:block;text-align:left}\n  table.cards td.blk::before{display:block}\n  table.cal th:first-child,table.cal td:first-child{position:sticky;left:0;z-index:1;background:var(--bg);box-shadow:4px 0 6px -4px rgba(0,0,0,.15)}\n  /* áreas de toque de pelo menos 44 px */\n  button,.btn,.secnav a,summary,input,select{min-height:44px}\n  .seg button,.tray-l button,.secnav a,.quick button,.note .acts button,.cons-add{display:inline-flex;align-items:center;justify-content:center}\n  .tray-l{gap:8px}\n  .refs a{display:inline-block;padding:10px 6px;margin:-10px 0}\n  .secnav a{padding:0 14px}\n}\n";
+
+(function(){
+const MESES_L=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+const MESES=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+function r(a,b){const o=[];let m=a;for(;;){o.push(m);if(m===b)break;m=m%12+1;}return o;}
+const ALL=r(1,12);
+const EST={E:'Emergente',A:'Alto',M:'Médio',B:'Baixo',R:'Rasteiro'};
+const CAT_ICO={p:'<circle cx="9" cy="9" r="1.8"/><circle cx="9" cy="4.6" r="2.6"/><circle cx="13.2" cy="7.6" r="2.6"/><circle cx="11.6" cy="12.8" r="2.6"/><circle cx="6.4" cy="12.8" r="2.6"/><circle cx="4.8" cy="7.6" r="2.6"/>',f:'<circle cx="9" cy="11" r="5"/><path d="M9 6 q2 -4 6 -3 q-1 4 -6 3"/>',a:'<path d="M9 16 V9 M9 11 q-5 0 -6 -5 q5 0 6 5 M9 9 q4 -1 5 -5 q-4 0 -5 5"/>',t:'<path d="M5 16 L13 3 M7.4 12.2 l-3 -.8 M9.2 9.3 l-3 -.8 M11 6.4 l-3 -.8 M8.3 13.8 l3 .8 M10.1 10.9 l3 .8 M11.9 8 l3 .8"/>',h:'<path d="M4 14 Q4 4 14 4 Q14 14 4 14 Z M4 14 L11 7"/>',g:'<circle cx="9" cy="7" r="5"/><path d="M9 12 V17 M6 17 h6"/>',x:'<path d="M9 4 v10 M4 9 h10"/>',parc:'<path d="M3 14 Q3 6 9 6 Q9 14 3 14Z M15 14 Q15 6 9 6 Q9 14 15 14Z"/>'};
+const catIco=k=>`<svg class="cat-ico" viewBox="0 0 18 18" aria-hidden="true">${CAT_ICO[k]||''}</svg>`;
+const CATS=[['f','Frutíferas'],['a','Adubo verde e biomassa'],['t','Aromáticas'],['h','Hortaliças'],['p','Flores para polinizadores'],['g','Grandes árvores'],['x','Minhas plantas']];
+const REFS={
+ E47:{n:1,t:'Embrapa Hortaliças. Recomendações técnicas para o cultivo de hortaliças em agricultura familiar. Circular Técnica 47, 2007.',u:'https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/781607/1/ct47.pdf'},
+ EPA:{n:2,t:'Souza, M. B.; Martins, V. C. Hortas: recomendações para cultivo no estado do Pará. Embrapa Amazônia Oriental, 2024.',u:'https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1168224/1/CartilhaHortas.pdf'},
+ E16:{n:3,t:'Armando, M. S. et al. Agrofloresta para agricultura familiar. Embrapa, Circular Técnica 16, 2002.',u:'https://www.infoteca.cnptia.embrapa.br/bitstream/doc/184803/1/ct016.pdf'},
+ E249:{n:4,t:'Bevilaqua, G. A. P. et al. Guandu e labe-labe em sistemas biodiversos e agroecológicos. Embrapa Clima Temperado, Circular Técnica 249, 2024.',u:'https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1166199/1/CIRCULAR-249-1-Guandu-Cajanus-cajan-e-labe-labe.pdf'},
+ IPE:{n:5,t:'IPÊ – Instituto de Pesquisas Ecológicas. Café com Floresta: implantação de sistemas agroflorestais.',u:'https://ipe.org.br/images/implantacao-pdf.pdf'},
+ PR:{n:0,t:'Prática comum de horticultura (não encontrei estudo específico).'},
+ C1:{n:6,t:'Salgado, A. S. et al. Consórcios alface-cenoura e alface-rabanete sob manejo orgânico. Pesquisa Agropecuária Brasileira 41(7), 2006.',u:'https://apct.sede.embrapa.br/pab/article/download/7257/4302/22735'},
+ C2:{n:7,t:'Maia, J. T. L. S. et al. Viabilidade econômica do cultivo de alface e cenoura em sistemas consorciados. Revista Brasileira de Agroecologia 3(1), 2008.',u:'https://periodicos.unb.br/index.php/rbagroecologia/article/download/48910/37140/157843'},
+ C3:{n:8,t:'Cardoso, M. O. et al. Consorciação da couve-de-folhas com alface e/ou cebolinha. Embrapa Amazônia Ocidental, Boletim de Pesquisa 21, 2017.',u:'https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1075671/1/BolPes21.pdf'},
+ C4:{n:9,t:'Fonseca, J. R. O. Cultivos consorciados entre alface, cenoura, manjericão e melissa. Dissertação, UFMG, 2009.',u:'https://repositorio.ufmg.br/items/c0900e3f-13c6-4dd5-8d67-cd8bcddf04da'},
+ C5:{n:10,t:'Carvalho, L. M. et al. Produção orgânica consorciada de tomate e plantas aromáticas ou repelentes. Embrapa, 2005.',u:'https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/889639/1/f05.pdf'},
+ C6:{n:11,t:'Pereira, J. R. et al. Renda e eficiência de uso da terra no cultivo orgânico do gergelim com culturas alimentares. Embrapa, 2015.',u:'https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/1020165/1/sbrns3.pdf'},
+ L:{n:0,t:'Suas listas de boas companhias.'},
+ C7:{n:12,t:'Anjos, J. L. et al. Adubação verde e produtividade de citrus em Sergipe. Embrapa Tabuleiros Costeiros, Comunicado Técnico 59, 2006.',u:'https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/372655/1/cot59.pdf'},
+ C8:{n:13,t:'Miranda, E. M.; Pereira, R. C. A.; Bergo, C. L. Comportamento de seis linhagens de café em condições de sombreamento e a pleno sol no Acre. Ciência e Agrotecnologia 23(1), 1999.',u:'https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/492536/1/1249.pdf'},
+ C9:{n:14,t:'Ushimaru, T. Influência do sombreamento sobre a fisiologia, crescimento e qualidade das mudas de juçara. Dissertação, UFV, 2021.',u:'https://locus.ufv.br//handle/123456789/29143'}
+};
+// el = entre linhas (m); ep = entre plantas (m); src = referência; sol = luz tolerada (P pleno, M meia-sombra, S sombra)
+// pl = meses de plantio (Sudeste); d = dias até 1ª colheita; v = vaso mínimo (L, 0 = não indicado); pt = porte adulto (m); h = altura típica (m)
+const DATA=[
+ {id:'alface',n:'Alface',a:'Al',c:'h',e:'R',el:.25,ep:.25,src:'E47',sol:'PM',pl:ALL,col:'50–70 dias',d:60,v:5,h:.25},
+ {id:'rucula',n:'Rúcula',a:'Rú',c:'h',e:'R',el:.2,ep:.1,src:'EPA',sol:'PM',pl:r(3,10),col:'40–60 dias',d:45,v:4,h:.3},
+ {id:'peixinho',n:'Peixinho',sci:'Stachys byzantina',a:'Px',c:'h',e:'R',el:.3,ep:.3,src:'PR',sol:'PM',pl:r(3,10),col:'folhas em 2–3 meses; colha as maiores',d:75,v:5,h:.3},
+ {id:'cenoura',n:'Cenoura',a:'Ce',c:'h',e:'R',el:.2,ep:.05,src:'E47',sol:'P',pl:ALL,col:'85–110 dias',d:100,v:10,h:.3},
+ {id:'beterraba',n:'Beterraba',a:'Be',c:'h',e:'R',el:.2,ep:.1,src:'E47',sol:'P',pl:r(2,9),col:'60–70 dias',d:65,v:10,h:.35},
+ {id:'couve',n:'Couve',a:'Co',c:'h',e:'B',el:.9,ep:.5,src:'E47',sol:'PM',pl:ALL,col:'80–90 dias',d:85,v:15,h:.8},
+ {id:'tomate',n:'Tomate-cereja',a:'Tc',c:'h',e:'B',el:1,ep:.5,src:'E47',sol:'P',pl:r(8,2),col:'80–100 dias',d:90,v:20,h:1.5},
+ {id:'berinjela',n:'Berinjela',a:'Bj',c:'h',e:'B',el:.8,ep:.8,src:'EPA',sol:'P',pl:r(8,1),col:'100–120 dias',d:110,v:20,h:1},
+ {id:'pimenta',n:'Pimenta',a:'Pi',c:'h',e:'B',el:1.2,ep:.6,src:'E47',sol:'P',pl:r(8,12),col:'90–120 dias',d:100,v:10,h:.8},
+ {id:'quiabo',n:'Quiabo',a:'Qu',c:'h',e:'B',el:1,ep:.4,src:'E47',sol:'P',pl:r(9,2),col:'70–80 dias',d:75,v:20,h:1.5},
+ {id:'feijao',n:'Feijão (de vara)',a:'Fj',c:'h',e:'M',bed:1,el:.5,ep:.1,src:'E16',sol:'P',pl:r(9,11),col:'80–90 dias',d:85,v:0,adubo:1,h:1.8},
+ {id:'abobora',n:'Abóbora',a:'Ab',c:'h',e:'R',el:2.5,ep:2.5,src:'E47',sol:'P',pl:r(9,1),col:'90–130 dias',d:120,v:60,h:.4},
+ {id:'batatadoce',n:'Batata-doce',a:'Bd',c:'h',e:'R',el:.9,ep:.3,src:'E47',sol:'P',pl:r(9,3),col:'120–150 dias',d:130,v:30,h:.4},
+ {id:'milho',n:'Milho',a:'Mi',c:'h',e:'M',bed:1,el:1,ep:.2,src:'E47',sol:'P',pl:r(9,1),col:'80–110 dias',d:100,v:0,h:2},
+ {id:'taioba',n:'Taioba',a:'Ta',c:'h',e:'B',el:.6,ep:.6,src:'PR',sol:'MS',pl:r(9,12),col:'70–90 dias (folhas)',d:80,v:20,h:1.2},
+ {id:'orapronobis',n:'Ora-pro-nóbis',a:'Op',c:'h',e:'M',el:1,ep:1,src:'PR',sol:'PM',pl:ALL,col:'3–4 meses',d:100,v:30,nat:1,h:2},
+ {id:'manjericao',n:'Manjericão',a:'Mj',c:'t',e:'B',el:.4,ep:.3,src:'PR',sol:'P',pl:r(8,3),col:'50–60 dias',d:55,v:5,h:.6},
+ {id:'cebolinha',n:'Cebolinha',a:'Cb',c:'t',e:'R',el:.25,ep:.15,src:'E47',sol:'PM',pl:ALL,col:'80–100 dias',d:85,v:3,h:.3},
+ {id:'salsinha',n:'Salsinha',a:'Sa',c:'t',e:'R',el:.25,ep:.1,src:'E47',sol:'PM',pl:ALL,col:'60–70 dias',d:65,v:3,h:.3},
+ {id:'hortela',n:'Hortelã',a:'Ht',c:'t',e:'R',el:.4,ep:.4,src:'PR',sol:'PM',pl:ALL,col:'60 dias',d:60,v:5,espalha:1,h:.3},
+ {id:'alecrim',n:'Alecrim',a:'Ac',c:'t',e:'B',el:.6,ep:.5,src:'PR',sol:'P',pl:ALL,col:'4 meses',d:120,v:10,h:.8},
+ {id:'capimsanto',n:'Capim-santo',a:'Cs',c:'t',e:'B',el:.8,ep:.6,src:'PR',sol:'PM',pl:ALL,col:'4 meses',d:120,v:20,h:1},
+ {id:'guandu',n:'Feijão-guandu',a:'Gu',c:'a',e:'M',el:1,ep:.15,src:'E249',sol:'P',pl:r(9,1),col:'poda a cada 3–6 meses',d:0,v:0,adubo:1,h:2.2},
+ {id:'crotalaria',n:'Crotalária',a:'Cr',c:'a',e:'B',el:.5,ep:.05,src:'E16',sol:'P',pl:r(9,2),col:'corte na floração (≈90 dias)',d:0,v:0,adubo:1,h:1.3},
+ {id:'mandioca',n:'Mandioca',a:'Md',c:'a',e:'M',el:.8,ep:.6,src:'E16',sol:'PM',pl:r(9,12),col:'8–12 meses',d:300,v:0,bio:1,h:2},
+ {id:'banana',n:'Banana',a:'Bn',c:'a',e:'A',arv:1,el:3,ep:3,src:'E16',sol:'PM',pl:r(9,3),col:'12–15 meses',d:400,v:0,pt:5,bio:1},
+ {id:'mamao',n:'Mamão',a:'Mm',c:'a',e:'A',arv:1,el:3,ep:2,src:'E16',sol:'P',pl:r(9,2),col:'8–10 meses',d:280,v:0,pt:5,bio:1},
+ {id:'acerola',n:'Acerola',a:'Ae',c:'f',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'2 anos',d:730,v:50,pt:3},
+ {id:'limao',n:'Limão',a:'Li',c:'f',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'2–3 anos',d:900,v:60,pt:4},
+ {id:'cafe',n:'Café',a:'Cf',c:'f',e:'M',arv:1,el:2,ep:2,src:'E16',sol:'PM',pl:r(10,1),col:'2–3 anos',d:900,v:30,pt:2.5},
+ {id:'pitanga',msp:'M',sci:'Eugenia uniflora',n:'Pitanga',a:'Pt',c:'n',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:'2–3 anos',d:900,v:50,pt:5,nat:1},
+ {id:'araca',msp:'P',sci:'Psidium cattleyanum',n:'Araçá',a:'Ar',c:'n',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'2 anos',d:730,v:50,pt:4,nat:1},
+ {id:'cambuci',n:'Cambuci',a:'Cm',c:'n',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:'3–4 anos',d:1200,v:0,pt:6,nat:1},
+ {id:'jabuticaba',n:'Jabuticaba',a:'Jb',c:'n',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:'3–8 anos (enxertada: 2–3)',d:1500,v:100,pt:8,nat:1},
+ {id:'grumixama',msp:'G',sci:'Eugenia brasiliensis',n:'Grumixama',a:'Gr',c:'n',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:'3–4 anos',d:1200,v:0,pt:8,nat:1},
+ {id:'uvaia',msp:'M',sci:'Eugenia pyriformis',n:'Uvaia',a:'Uv',c:'n',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:'3–4 anos',d:1200,v:0,pt:10,nat:1},
+ {id:'jucara',n:'Juçara',a:'Ju',c:'n',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'MS',pl:r(10,3),col:'frutos em 6–8 anos',d:2500,v:0,pt:10,nat:1},
+ {id:'aroeira',n:'Aroeira-pimenteira',a:'Ao',c:'n',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'2 anos',d:730,v:0,pt:7,nat:1},
+ {id:'inga',n:'Ingá',a:'In',c:'n',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,2),col:'3 anos',d:1100,v:0,pt:12,nat:1,adubo:1},
+ {id:'embauba',n:'Embaúba',a:'Em',c:'n',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'sem colheita; atrai aves e fauna',d:0,v:0,pt:15,nat:1},
+ {id:'cereja',msp:'P',sci:'Eugenia involucrata',n:'Cereja-do-rio-grande',a:'Cg',c:'v',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:'3–4 anos',d:1200,v:60,pt:6,nat:1},
+ {id:'cabeludinha',n:'Cabeludinha',a:'Cd',c:'v',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:'3–4 anos',d:1200,v:60,pt:4,nat:1},
+ {id:'castanha',n:'Castanha-do-maranhão',a:'Ct',c:'v',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:'3–5 anos',d:1500,v:80,pt:8,nat:1},
+ {id:'dedaleira',msp:'G',sci:'Lafoensia pacari',n:'Dedaleiro',a:'Dd',c:'v',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'sem colheita; flores e sombra',d:0,v:0,pt:8,nat:1},
+ {id:'candeia',n:'Candeia',a:'Ca',c:'v',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'sem colheita; pioneira e melífera',d:0,v:0,pt:7,nat:1},
+ {id:'assapeixe',n:'Assa-peixe',a:'Ap',c:'v',e:'M',el:1,ep:1,src:'PR',sol:'P',pl:r(9,3),col:'flores em 1 ano; melífera',d:0,v:40,nat:1,h:2.5,bio:1},
+ {id:'lantana',n:'Lantana-roxa',a:'Lr',c:'v',e:'B',el:.8,ep:.6,src:'PR',sol:'P',pl:r(9,3),col:'flores em 3–4 meses',d:0,v:20,nat:1,h:.8},
+ {id:'canaindia',n:'Biri (cana-da-índia)',a:'Ci',c:'v',e:'B',el:.8,ep:.5,src:'PR',sol:'PM',pl:r(9,3),col:'flores em 4–6 meses; rizomas comestíveis',d:0,v:20,nat:1,h:1.5,bio:1},
+ {id:'maravilha',n:'Maravilha',a:'Mv',c:'v',e:'B',el:.6,ep:.5,src:'PR',sol:'PM',pl:r(9,3),col:'flores em 2–3 meses',d:0,v:10,h:.8},
+ {id:'amendoim',n:'Amendoim-forrageiro',a:'Af',c:'v',e:'R',el:.5,ep:.5,src:'PR',sol:'PM',pl:r(10,2),col:'cobre o solo em 3–6 meses',d:0,v:5,adubo:1,h:.2}
+,
+ {id:'cara',n:'Cará',a:'Ck',c:'u',e:'M',el:.8,ep:.3,src:'E47',sol:'PM',pl:r(9,12),col:'8–10 meses',d:270,v:40,h:2},
+ {id:'sangra',n:'Sangra-d’água',a:'Sd',c:'u',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'sem colheita; pioneira',d:0,v:0,pt:8,nat:1,bio:1},
+ {id:'crindiuva',n:'Crindiúva',a:'Cv',c:'u',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'sem colheita; pioneira',d:0,v:0,pt:8,nat:1,bio:1},
+ {id:'heliconia',n:'Helicônia nativa',a:'He',c:'u',e:'B',el:1,ep:1,src:'PR',sol:'PMS',pl:r(9,3),col:'flores em 1 ano',d:0,v:30,nat:1,h:1.5},
+ {id:'begonia',n:'Begônias nativas',a:'Bg',c:'u',e:'R',el:.3,ep:.3,src:'PR',sol:'MS',pl:r(9,3),col:'flores em 4–6 meses',d:0,v:5,nat:1,h:.4},
+ {id:'samambaia',n:'Samambaias nativas',a:'Sm',c:'u',e:'B',el:.5,ep:.5,src:'PR',sol:'MS',pl:r(9,3),col:'folhagem perene',d:0,v:10,nat:1,h:.6},
+ {id:'feijaoporco',n:'Feijão-de-porco',a:'Fp',c:'s',e:'B',el:.5,ep:.2,src:'E16',sol:'P',pl:r(9,1),col:'corte em 4–8 meses (adubo verde)',d:0,v:0,adubo:1,h:.8},
+ {id:'feijaocorda',n:'Feijão-de-corda',a:'Fc',c:'s',e:'B',el:.5,ep:.1,src:'E16',sol:'P',pl:r(9,2),col:'≈ 3 meses',d:90,v:0,adubo:1,h:.6},
+ {id:'gabiroba',n:'Gabiroba-do-campo',a:'Gb',c:'s',e:'B',el:1,ep:1,src:'PR',sol:'P',pl:r(10,3),col:'2–3 anos',d:900,v:30,nat:1,h:1.2},
+ {id:'patadevaca',n:'Pata-de-vaca',a:'Pv',c:'s',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'folhas para chá em 1–2 anos',d:0,v:0,pt:7,nat:1,adubo:1},
+ {id:'guariroba',n:'Guariroba',a:'Gw',c:'s',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'palmito em 5–7 anos',d:2000,v:0,pt:10,nat:1},
+ {id:'alecrimcampo',n:'Alecrim-do-campo',a:'Ak',c:'s',e:'M',el:1,ep:1,src:'PR',sol:'P',pl:r(9,3),col:'pioneira; melífera',d:0,v:30,nat:1,h:2},
+ {id:'carqueja',n:'Carqueja',a:'Cq',c:'s',e:'B',el:.5,ep:.4,src:'PR',sol:'P',pl:r(9,3),col:'ramos para chá em 4–6 meses',d:150,v:10,nat:1,h:.6},
+ {id:'macela',n:'Macela',a:'Ml',c:'s',e:'B',el:.5,ep:.4,src:'PR',sol:'P',pl:r(9,3),col:'flores no outono',d:0,v:10,nat:1,h:.6},
+ {id:'tuna',n:'Cacto-tuna',a:'Tu',c:'s',e:'B',el:1,ep:1,src:'PR',sol:'P',pl:r(9,3),col:'frutos em 2–3 anos',d:900,v:20,nat:1,h:1.5},
+ {id:'maracuja',n:'Maracujá',a:'Mc',c:'s',e:'M',el:3,ep:3,src:'PR',sol:'P',pl:r(9,12),col:'6–9 meses',d:240,v:50,nat:1,h:2.5},
+ {id:'dyckia',n:'Bromélias (Dyckia)',a:'Dy',c:'s',e:'R',el:.3,ep:.3,src:'PR',sol:'P',pl:r(9,3),col:'flores na primavera',d:0,v:3,nat:1,h:.3},
+ {id:'margaridao',n:'Margaridão',a:'Mg',c:'a',e:'M',el:1,ep:1,src:'PR',sol:'P',pl:r(9,3),col:'poda a cada 2–3 meses (biomassa)',d:0,v:0,h:2.5,bio:1,adubo:1},
+ {id:'canaacucar',n:'Cana-de-açúcar',a:'Cn',c:'a',e:'M',el:1.4,ep:.5,src:'PR',sol:'P',pl:r(9,3),col:'12–18 meses',d:450,v:0,h:3,bio:1},
+ {id:'boldo',n:'Boldo',a:'Bo',c:'t',e:'B',el:.8,ep:.6,src:'PR',sol:'PM',pl:r(9,3),col:'folhas em 3–4 meses',d:100,v:20,h:1.2},
+ {id:'boldinho',n:'Boldinho',a:'Bi',c:'t',e:'R',el:.4,ep:.3,src:'PR',sol:'PM',pl:r(9,3),col:'folhas em 2–3 meses',d:75,v:5,h:.4},
+ {id:'cidreira',n:'Cidreira (Lippia alba)',a:'Ec',c:'t',e:'B',el:.8,ep:.6,src:'PR',sol:'PM',pl:r(9,3),col:'folhas em 3–4 meses',d:100,v:20,h:1.3},
+ {id:'hibisco',n:'Hibisco (vinagreira)',a:'Hb',c:'t',e:'M',bed:1,el:1,ep:.6,src:'PR',sol:'P',pl:r(9,12),col:'cálices em 5–6 meses',d:160,v:30,h:1.8},
+ {id:'lavanda',n:'Lavanda',a:'Lv',c:'t',e:'B',el:.6,ep:.5,src:'PR',sol:'P',pl:r(3,10),col:'flores em 6–8 meses',d:200,v:15,h:.6},
+ {id:"a_bauhiniablakeana",n:"Pata-de-vaca-de-hong-kong",sci:"Bauhinia blakeana",a:"Pa",c:'g',o:'X',msp:'P',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:5},
+ {id:"a_bauhiniapurpurea",n:"Pata-de-vaca-roxa",sci:"Bauhinia purpurea",a:"Pd",c:'g',o:'X',msp:'P',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:5},
+ {id:"a_dictyolomavandellianum",n:"Tingui-preto",sci:"Dictyoloma vandellianum",a:"Ti",c:'g',o:'N',msp:'P',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:5},
+ {id:"a_handroanthusheptaphyllusvarpaulensis",n:"Ipê-rosa-anão",sci:"Handroanthus heptaphyllus var. paulensis",a:"Ip",c:'g',o:'N',msp:'P',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:5},
+ {id:"a_lagerstroemiaindica",n:"Resedá",sci:"Lagerstroemia indica",a:"Re",c:'g',o:'X',msp:'P',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:5},
+ {id:"a_bauhiniavariegata",n:"Pata-de-vaca (B. variegata)",sci:"Bauhinia variegata",a:"Pe",c:'g',o:'X',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_cassialeptophylla",n:"Falso-barbatimão",sci:"Cassia leptophylla",a:"Fa",c:'g',o:'E',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_cordiasuperba",n:"Babosa-branca",sci:"Cordia superba",a:"Ba",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_handroanthuschrysotrichus",n:"Ipê-amarelo",sci:"Handroanthus chrysotrichus",a:"Ie",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_koelreuteriabipinnata",n:"Árvore-da-china",sci:"Koelreuteria bipinnata",a:"Av",c:'g',o:'X',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_lagerstroemiaspeciosa",n:"Resedá-flor-de-rainha",sci:"Lagerstroemia speciosa",a:"Rs",c:'g',o:'X',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_licaniatomentosa",n:"Oiti",sci:"Licania tomentosa",a:"Oi",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_micheliachampaca",n:"Magnólia-amarela",sci:"Michelia champaca",a:"Ma",c:'g',o:'X',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_pachiraaquatica",n:"Monguba",sci:"Pachira aquatica",a:"Mo",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_pterocarpusviolaceus",n:"Aldrago",sci:"Pterocarpus violaceus",a:"Ad",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_sapindussaponaria",n:"Sabão-de-soldado",sci:"Sapindus saponaria",a:"Sb",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_tabebuiaroseoalba",n:"Ipê-branco",sci:"Tabebuia roseoalba",a:"Ib",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_tibouchinagranulosa",n:"Quaresmeira",sci:"Tibouchina granulosa",a:"Qa",c:'g',o:'E',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_libidibiaferrea",n:"Pau-ferro",sci:"Libidibia ferrea",a:"Pu",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_cordiatrichotoma",n:"Louro-pardo",sci:"Cordia trichotoma",a:"Lo",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_handroanthusheptaphyllus",n:"Ipê-roxo-de-sete-folhas",sci:"Handroanthus heptaphyllus",a:"Ir",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_handroanthusimpetiginosus",n:"Ipê-roxo-de-bola",sci:"Handroanthus impetiginosus",a:"Io",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_handroanthusumbellatus",n:"Ipê-amarelo-do-brejo",sci:"Handroanthus umbellatus",a:"Ia",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_holocalyxbalansae",n:"Alecrim-de-campinas",sci:"Holocalyx balansae",a:"Ai",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_jacarandamimosifolia",n:"Jacarandá-mimoso",sci:"Jacaranda mimosifolia",a:"Ja",c:'g',o:'X',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_lafoensiaglyptocarpa",n:"Mirindiba",sci:"Lafoensia glyptocarpa",a:"Mr",c:'g',o:'E',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_nectandramegapotamica",n:"Canelinha",sci:"Nectandra megapotamica",a:"Cl",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_peltophorumdubium",n:"Canafístula",sci:"Peltophorum dubium",a:"Cu",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_poincianellapluviosavarpeltophoroides",n:"Sibipiruna",sci:"Poincianella pluviosa var. peltophoroides",a:"Si",c:'g',o:'E',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_handroanthusvellosoi",n:"Ipê-cascudo",sci:"Handroanthus vellosoi",a:"Ic",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_tipuanatipu",n:"Tipuana",sci:"Tipuana tipu",a:"Tp",c:'g',o:'X',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_aspidospermariedelii",n:"Guatambuzinho",sci:"Aspidosperma riedelii",a:"Ga",c:'g',o:'N',msp:'P',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:5},
+ {id:"a_bauhinialongifolia",n:"Unha-de-vaca",sci:"Bauhinia longifolia",a:"Un",c:'g',o:'N',msp:'P',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:5},
+ {id:"a_caseariasylvestris",n:"Guaçatonga",sci:"Casearia sylvestris",a:"Gc",c:'g',o:'N',msp:'P',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:5},
+ {id:"a_erythroxylumdeciduum",n:"Cocão",sci:"Erythroxylum deciduum",a:"Cc",c:'g',o:'N',msp:'P',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:5},
+ {id:"a_eugeniadysenterica",n:"Cagaita",sci:"Eugenia dysenterica",a:"Ch",c:'f',o:'N',msp:'P',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"3–4 anos",d:1200,v:0,pt:5},
+ {id:"a_jacarandapuberula",n:"Carobinha",sci:"Jacaranda puberula",a:"Cj",c:'g',o:'N',msp:'P',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:5},
+ {id:"a_myrciarostrata",n:"Guamirim-de-folha-fina",sci:"Myrcia rostrata",a:"Gm",c:'g',o:'N',msp:'P',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:5},
+ {id:"a_nectandranitidula",n:"Canela-amarela",sci:"Nectandra nitidula",a:"Cp",c:'g',o:'N',msp:'P',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:5},
+ {id:"a_allophylusedulis",n:"Chal-chal",sci:"Allophylus edulis",a:"Cw",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_andiraanthelmia",n:"Angelim-amargoso",sci:"Andira anthelmia",a:"An",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_andirafraxinifolia",n:"Angelim-doce",sci:"Andira fraxinifolia",a:"Ag",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_aspidospermacylindrocarpon",n:"Peroba-poca",sci:"Aspidosperma cylindrocarpon",a:"Pr",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_aspidospermaparvifolium",n:"Guatambu-oliva",sci:"Aspidosperma parvifolium",a:"Gt",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_astroniumfraxinifolium",n:"Aroeira-vermelha",sci:"Astronium fraxinifolium",a:"Aa",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_bowdichiavirgilioides",n:"Sucupira-preta",sci:"Bowdichia virgilioides",a:"Su",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_cybistaxantisyphilitica",n:"Ipê-verde",sci:"Cybistax antisyphilitica",a:"Iv",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_handroanthusochraceus",n:"Ipê-do-cerrado",sci:"Handroanthus ochraceus",a:"Id",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_lueheacandicans",n:"Açoita-cavalo (L. candicans)",sci:"Luehea candicans",a:"At",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_lueheagrandiflora",n:"Açoita-cavalo (L. grandiflora)",sci:"Luehea grandiflora",a:"Ah",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_physocalymmascaberrimum",n:"Pau-de-rosas",sci:"Physocalymma scaberrimum",a:"Po",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_pimentadioica",n:"Pimenta-da-jamaica",sci:"Pimenta dioica",a:"Pm",c:'f',o:'X',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"5 anos (frutos aromáticos)",d:1800,v:0,pt:9},
+ {id:"a_platypodiumelegans",n:"Amendoim-do-campo",sci:"Platypodium elegans",a:"Am",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_pliniaedulis",n:"Cambucá",sci:"Plinia edulis",a:"Cx",c:'f',o:'E',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"6–8 anos",d:2500,v:0,pt:9},
+ {id:"a_pouteriatorta",n:"Abiu-do-cerrado",sci:"Pouteria torta",a:"Au",c:'f',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"4–5 anos",d:1600,v:0,pt:9},
+ {id:"a_pterodonemarginatus",n:"Sucupira",sci:"Pterodon emarginatus",a:"Sc",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_swartzialangsdorffii",n:"Pacová-de-macaco",sci:"Swartzia langsdorffii",a:"Pc",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_jacarandacuspidifolia",n:"Caroba",sci:"Jacaranda cuspidifolia",a:"Cy",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_vitexpolygama",n:"Tarumã",sci:"Vitex polygama",a:"Tr",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_vochysiatucanorum",n:"Pau-de-tucano (V. tucanorum)",sci:"Vochysia tucanorum",a:"Pn",c:'g',o:'N',msp:'M',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:9},
+ {id:"a_albizianiopoides",n:"Farinha-seca",sci:"Albizia niopoides",a:"Fr",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_aspidospermapolyneuron",n:"Peroba-rosa",sci:"Aspidosperma polyneuron",a:"Pb",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_aspidospermaramiflorum",n:"Guatambu-amarelo",sci:"Aspidosperma ramiflorum",a:"Ge",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_astroniumgraveolens",n:"Guaritá",sci:"Astronium graveolens",a:"Gi",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_balfourodendronriedelianum",n:"Pau-marfim",sci:"Balfourodendron riedelianum",a:"Pf",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_cabraleacanjerana",n:"Canjarana",sci:"Cabralea canjerana",a:"Cz",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_calophyllumbrasiliense",n:"Guanandi",sci:"Calophyllum brasiliense",a:"Gn",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_calycophyllumspruceanum",n:"Pau-mulato",sci:"Calycophyllum spruceanum",a:"Pl",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_campomanesiaxanthocarpa",n:"Guabiroba",sci:"Campomanesia xanthocarpa",a:"Go",c:'f',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"3–4 anos",d:1200,v:0,pt:18},
+ {id:"a_carinianaestrellensis",n:"Jequitibá-branco",sci:"Cariniana estrellensis",a:"Je",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_carinianalegalis",n:"Jequitibá-rosa",sci:"Cariniana legalis",a:"Jq",c:'g',o:'E',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_cedrelafissilis",n:"Cedro",sci:"Cedrela fissilis",a:null,c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_citharexylummyrianthum",n:"Pau-viola",sci:"Citharexylum myrianthum",a:"Pg",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_copaiferalangsdorffii",n:"Copaíba",sci:"Copaifera langsdorffii",a:null,c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_cordiaamericana",n:"Guajuvira",sci:"Cordia americana",a:"Gj",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_cupaniavernalis",n:"Camboatã",sci:"Cupania vernalis",a:null,c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_dalbergianigra",n:"Jacarandá-da-bahia",sci:"Dalbergia nigra",a:"Jc",c:'g',o:'E',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_diatenopteryxsorbifolia",n:"Correieira",sci:"Diatenopteryx sorbifolia",a:null,c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_esenbeckialeiocarpa",n:"Guarantã",sci:"Esenbeckia leiocarpa",a:"Gd",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_fraxinusamericana",n:"Freixo",sci:"Fraxinus americana",a:"Fe",c:'g',o:'X',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_guareaguidonia",n:"Marinheiro",sci:"Guarea guidonia",a:"Mn",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_handroanthusalbus",n:"Ipê-amarelo-da-serra",sci:"Handroanthus albus",a:"Im",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_hymenaeacourbaril",n:"Jatobá",sci:"Hymenaea courbaril",a:"Jt",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_lonchocarpuscultratus",n:"Ingá-bravo",sci:"Lonchocarpus cultratus",a:"Ig",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_lophantheralactescens",n:"Lofântera-da-amazônia",sci:"Lophanthera lactescens",a:"Lf",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_lueheadivaricata",n:"Açoita-cavalo (L. divaricata)",sci:"Luehea divaricata",a:"Aj",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_machaeriumstipitatum",n:"Sapuva",sci:"Machaerium stipitatum",a:"Sp",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_machaeriumvillosum",n:"Jacarandá-paulista",sci:"Machaerium villosum",a:"Jr",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_myrcianthespungens",n:"Guabiju",sci:"Myrcianthes pungens",a:"Gf",c:'f',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"4–5 anos",d:1600,v:0,pt:18},
+ {id:"a_myrocarpusfrondosus",n:"Óleo-pardo",sci:"Myrocarpus frondosus",a:"Ol",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_myroxylonperuiferum",n:"Cabreúva",sci:"Myroxylon peruiferum",a:null,c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_nectandraoppositifolia",n:"Canela-ferrugem",sci:"Nectandra oppositifolia",a:null,c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_ocoteaodorifera",n:"Canela-sassafrás",sci:"Ocotea odorifera",a:null,c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_ormosiaarborea",n:"Olho-de-cabra",sci:"Ormosia arborea",a:"Oh",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_poecilantheparviflora",n:"Coração-de-negro",sci:"Poecilanthe parviflora",a:null,c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_samaneatubulosa",n:"Sete-cascas",sci:"Samanea tubulosa",a:"Se",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_tachigalidenudata",n:"Tapassuaré",sci:"Tachigali denudata",a:"Ts",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_terminaliakuhlmannii",n:"Araçá-d'água",sci:"Terminalia kuhlmannii",a:"Aq",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_vochysiamagnifica",n:"Pau-de-tucano (V. magnifica)",sci:"Vochysia magnifica",a:"Ph",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:"a_zeyheriatuberculosa",n:"Ipê-tabaco",sci:"Zeyheria tuberculosa",a:"It",c:'g',o:'N',msp:'G',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; sombra, flores e fauna",d:0,v:0,pt:18},
+ {id:'mexerica',n:'Mexerica',sci:'Citrus reticulata',a:"Me",c:'f',o:'X',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'3 anos',d:1000,v:60,pt:4},
+ {id:'nespera',n:'Nêspera',sci:'Eriobotrya japonica',a:'Nê',c:'f',o:'Z',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:'3–4 anos',d:1200,v:60,pt:6},
+ {id:'abacate',n:'Abacate',sci:'Persea americana',a:'Ax',c:'f',o:'X',e:'A',arv:1,el:10,ep:5,src:'PR',sol:'P',pl:r(10,3),col:'4–5 anos (enxertado: 3)',d:1500,v:0,pt:12},
+ {id:'goiaba',n:'Goiaba',sci:'Psidium guajava',a:'Gy',c:'f',o:'Z',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'2–3 anos',d:800,v:60,pt:5},
+ {id:'manga',n:'Manga',sci:'Mangifera indica',a:'Mq',c:'f',o:'Z',e:'A',arv:1,el:10,ep:8,src:'PR',sol:'P',pl:r(10,3),col:'4–5 anos (enxertada: 3)',d:1500,v:0,pt:15},
+ {id:'caqui',n:'Caqui',sci:'Diospyros kaki',a:'Kq',c:'f',o:'X',e:'M',arv:1,el:6,ep:4,src:'PR',sol:'P',pl:r(6,8),col:'3–4 anos',d:1200,v:80,pt:6},
+ {id:'melancia',n:'Melancia',sci:'Citrullus lanatus',a:'Mt',c:'f',o:'X',e:'R',el:2,ep:2,src:'E47',sol:'P',pl:r(8,1),col:'80–90 dias',d:85,v:0,h:.35},
+ {id:'abacaxi',n:'Abacaxi',sci:'Ananas comosus',a:'Az',c:'f',o:'N',e:'B',el:.4,ep:.3,src:'E16',sol:'P',pl:r(9,3),col:'18–24 meses',d:600,v:20,h:.9},
+ {id:'majorgomes',n:"Major-gomes",sci:"Talinum paniculatum",a:"Ms",c:'h',o:'N',e:'B',el:0.4,ep:0.3,src:'PR',sol:'PM',pl:r(9,3),col:"50–60 dias (folhas)",d:55,v:10,h:0.6},
+ {id:'cariru',n:"Cariru",sci:"Talinum fruticosum",a:null,c:'h',o:'N',e:'B',el:0.25,ep:0.25,src:'EPA',sol:'PM',pl:r(9,3),col:"6–8 semanas",d:50,v:5,h:0.5},
+ {id:'jambu',n:"Jambu",sci:"Acmella oleracea",a:"Jm",c:'h',o:'N',e:'R',el:0.1,ep:0.1,src:'EPA',sol:'PM',pl:r(9,3),col:"30–40 dias",d:35,v:5,h:0.3},
+ {id:'mangarito',n:"Mangarito",sci:"Xanthosoma riedelianum",a:"Mb",c:'h',o:'N',e:'B',el:0.6,ep:0.3,src:'PR',sol:'PM',pl:r(9,11),col:"8–10 meses",d:270,v:20,h:0.5},
+ {id:'araruta',n:"Araruta",sci:"Maranta arundinacea",a:"As",c:'h',o:'N',e:'B',el:0.8,ep:0.3,src:'PR',sol:'PMS',pl:r(9,11),col:"9–12 meses",d:300,v:20,h:1},
+ {id:'coentropara',n:"Coentro-do-pará",sci:"Eryngium foetidum",a:null,c:'h',o:'N',e:'R',el:0.15,ep:0.15,src:'EPA',sol:'PM',pl:ALL,col:"≈ 60 dias",d:60,v:3,h:0.25},
+ {id:'physalis',n:"Physalis",sci:"Physalis pubescens",a:"Py",c:'h',o:'N',e:'B',el:1,ep:0.6,src:'PR',sol:'P',pl:r(8,12),col:"90–120 dias",d:100,v:20,h:0.8},
+ {id:'jurubeba',n:"Jurubeba",sci:"Solanum paniculatum",a:"Jd",c:'h',o:'N',e:'M',el:1,ep:1,src:'PR',sol:'P',pl:r(9,3),col:"6–8 meses",d:210,v:40,h:2},
+ {id:'amendoimgrao',n:"Amendoim",sci:"Arachis hypogaea",a:"Aw",c:'h',o:'N',e:'R',el:0.5,ep:0.15,src:'PR',sol:'P',pl:r(9,12),col:"90–120 dias",d:110,v:0,h:0.3,adubo:1},
+ {id:'maxixe',n:"Maxixe",sci:"Cucumis anguria",a:"Mx",c:'h',o:'Z',e:'R',el:1,ep:1,src:'EPA',sol:'P',pl:r(9,2),col:"45–60 dias",d:55,v:40,h:0.4},
+ {id:'caruru',n:"Caruru",sci:"Amaranthus spp.",a:null,c:'h',o:'Z',e:'B',el:0.3,ep:0.3,src:'PR',sol:'P',pl:r(9,3),col:"40–50 dias",d:45,v:10,h:0.8},
+ {id:'baleeira',n:"Erva-baleeira",sci:"Varronia curassavica",a:"Er",c:'t',o:'N',e:'M',el:1.5,ep:1,src:'PR',sol:'P',pl:r(9,3),col:"folhas em 6 meses",d:180,v:40,h:1.8},
+ {id:'guaco',n:"Guaco",sci:"Mikania glomerata",a:"Gg",c:'t',o:'N',e:'M',el:1.5,ep:1,src:'PR',sol:'PM',pl:r(9,3),col:"folhas em 6 meses",d:180,v:30,h:2.5},
+ {id:'pariparoba',n:"Pariparoba",sci:"Piper umbellatum",a:"Pp",c:'t',o:'N',e:'B',el:1,ep:0.8,src:'PR',sol:'MS',pl:r(9,3),col:"folhas em 4–6 meses",d:150,v:30,h:1.5},
+ {id:'alecrimpimenta',n:"Alecrim-pimenta",sci:"Lippia sidoides",a:"Ay",c:'t',o:'N',e:'B',el:1,ep:0.8,src:'PR',sol:'P',pl:r(9,3),col:"folhas em 4–6 meses",d:150,v:30,h:1.5},
+ {id:'cipoalho',n:"Cipó-alho",sci:"Mansoa alliacea",a:null,c:'t',o:'N',e:'M',el:1.5,ep:1,src:'PR',sol:'PM',pl:r(9,3),col:"folhas em 6 meses",d:180,v:40,h:2.5},
+ {id:'mastruz',n:"Mastruz (erva-de-santa-maria)",sci:"Dysphania ambrosioides",a:"Mu",c:'t',o:'N',e:'B',el:0.5,ep:0.4,src:'PR',sol:'P',pl:ALL,col:"60–90 dias",d:75,v:10,h:0.8},
+ {id:'alfavacacravo',n:"Alfavaca-cravo",sci:"Ocimum gratissimum",a:null,c:'t',o:'Z',e:'B',el:0.8,ep:0.6,src:'PR',sol:'P',pl:r(8,3),col:"3–4 meses",d:100,v:20,h:1.3},
+ {id:'espinheira',n:"Espinheira-santa",sci:"Monteverdia ilicifolia",a:"Es",c:'t',o:'N',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"folhas em 2 anos",d:700,v:60,pt:4},
+ {id:'urucum',n:"Urucum",sci:"Bixa orellana",a:"Ur",c:'t',o:'N',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"2 anos",d:700,v:60,pt:4},
+ {id:'chanana',n:'Chanana (flor-do-guarujá)',sci:'Turnera subulata',a:'Tn',c:'p',e:'B',el:.4,ep:.4,src:'PR',sol:'P',pl:r(9,3),col:'flores em 2–3 meses; abre de manhã; abelhas nativas',d:0,v:5,h:.6},
+ {id:'gervao',n:'Gervão-roxo',sci:'Stachytarpheta cayennensis',a:'Gv',c:'p',e:'B',el:.6,ep:.6,src:'PR',sol:'P',pl:r(9,3),col:'flores em 3 meses; borboletas',d:0,v:10,h:1},
+ {id:'oficialsala',n:'Oficial-de-sala',sci:'Asclepias curassavica',a:'Of',c:'p',e:'B',el:.5,ep:.5,src:'PR',sol:'P',pl:r(9,3),col:'flores em 3–4 meses; abriga lagartas da borboleta-monarca',d:0,v:10,h:.9,tox:1},
+ {id:'perpetua',n:'Perpétua-roxa (balainho)',sci:'Centratherum punctatum',a:'Pq',c:'p',e:'B',el:.4,ep:.4,src:'PR',sol:'P',pl:r(9,3),col:'flores em 2–3 meses; borboletas e abelhas',d:0,v:5,h:.6},
+ {id:'vedelia',n:'Margaridinha-amarela (vedélia)',sci:'Sphagneticola trilobata',a:'Ve',c:'p',e:'R',el:.5,ep:.5,src:'PR',sol:'P',pl:ALL,col:'flores o ano todo; forração para abelhas; se espalha',d:0,v:5,h:.3,espalha:1},
+ {id:'arnicacampo',n:'Arnica-do-campo (couve-cravinho)',sci:'Porophyllum ruderale',a:'Rn',c:'p',e:'B',el:.4,ep:.4,src:'PR',sol:'P',pl:r(9,3),col:'flores em 3 meses; borboletas; folhas comestíveis',d:0,v:5,h:1},
+ {id:'ruelia',n:'Ruélia-vermelha',sci:'Ruellia brevifolia',a:'Ru',c:'p',e:'B',el:.3,ep:.3,src:'PR',sol:'PM',pl:r(9,3),col:'flores em 3 meses; beija-flores',d:0,v:3,h:.5},
+ {id:'falsairis',n:'Falsa-íris',sci:'Neomarica caerulea',a:'Fs',c:'p',e:'B',el:.5,ep:.5,src:'PR',sol:'PM',pl:r(9,3),col:'flores na primavera e no verão; abelhas',d:0,v:10,h:.8},
+ {id:'salviavermelha',n:'Sálvia-vermelha',sci:'Salvia splendens',a:'Sr',c:'p',e:'B',el:.4,ep:.4,src:'PR',sol:'PM',pl:r(9,3),col:'flores em 3 meses; beija-flores e abelhas',d:0,v:5,h:.8},
+ {id:'salviaazul',n:'Sálvia-azul',sci:'Salvia guaranitica',a:'Sz',c:'p',e:'M',el:.6,ep:.6,src:'PR',sol:'PM',pl:r(9,3),col:'flores em 4 meses; abelhas grandes e beija-flores',d:0,v:15,h:1.5},
+ {id:'esponjinha',n:'Esponjinha',sci:'Calliandra brevipes',a:'Ep',c:'p',e:'M',el:1.5,ep:1.5,src:'PR',sol:'P',pl:r(9,3),col:'flores em 1 ano; beija-flores e abelhas',d:0,v:40,h:2},
+ {id:'jacobinia',n:'Jacobínia',sci:'Justicia carnea',a:'Jo',c:'p',e:'M',el:.8,ep:.8,src:'PR',sol:'MS',pl:r(9,3),col:'flores em 4–6 meses; beija-flores',d:0,v:20,h:1.5},
+ {id:'lixeira',n:'Lixeira',sci:'Aloysia virgata',a:'Lx',c:'p',e:'M',arv:1,el:4,ep:3,src:'PR',sol:'P',pl:r(10,3),col:'flores perfumadas em 1–2 anos; muito procurada por abelhas',d:0,v:60,pt:5},
+ {id:'alamanda',n:'Alamanda',sci:'Allamanda cathartica',a:'Ld',c:'p',e:'M',el:1.5,ep:1.5,src:'PR',sol:'P',pl:r(9,3),col:'flores em 6 meses; abelhas',d:0,v:30,h:2.5,tox:1},
+ {id:'ciposaojoao',n:'Cipó-de-são-joão',sci:'Pyrostegia venusta',a:'Sj',c:'p',e:'M',el:3,ep:3,src:'PR',sol:'P',pl:r(9,3),col:'floração laranja no inverno; beija-flores e abelhas; precisa de suporte',d:0,v:40,h:4},
+ {id:'dipladenia',n:'Dipladênia',sci:'Mandevilla sanderi',a:'Dp',c:'p',e:'M',el:1,ep:1,src:'PR',sol:'P',pl:r(9,3),col:'flores em 4–6 meses; beija-flores e borboletas; precisa de suporte',d:0,v:15,h:2.5,tox:1}
+];
+const VIELA=['pitanga','grumixama','orapronobis','cereja','cabeludinha','castanha','dedaleira','candeia','assapeixe','lantana','canaindia','maravilha','amendoim'];
+// Solos mais úmidos: ciclo e boas companhias
+const UMIDO={
+ banana:['Temporária (sai conforme o sistema fecha)',['jucara','taioba','cambuci','heliconia','jabuticaba']],
+ cara:['Temporária (8–10 meses)',['banana','inga','taioba','jabuticaba']],
+ sangra:['Pioneira de vida curta',['jucara','inga','taioba','canaindia']],
+ crindiuva:['Pioneira de vida curta',['jucara','grumixama','banana','heliconia']],
+ jucara:['Perene',['banana','inga','jabuticaba','taioba','samambaia']],
+ inga:['Perene',['jucara','cambuci','grumixama','taioba']],
+ jabuticaba:['Perene',['jucara','banana','begonia','amendoim']],
+ cambuci:['Perene',['inga','jucara','grumixama','heliconia']],
+ grumixama:['Perene',['cambuci','inga','pitanga','taioba']],
+ pitanga:['Perene',['grumixama','inga','amendoim','canaindia']],
+ araca:['Perene',['grumixama','inga','amendoim','canaindia']],
+ heliconia:['Perene',['banana','taioba','canaindia','jucara']],
+ taioba:['Perene (colhida como hortaliça)',['banana','jucara','heliconia','inga']],
+ canaindia:['Perene',['heliconia','taioba','sangra','amendoim']],
+ amendoim:['Perene rasteira',['jabuticaba','pitanga','cambuci','canaindia']],
+ begonia:['Perene de sombra',['jucara','jabuticaba','heliconia','taioba']],
+ samambaia:['Perene de sombra',['jucara','jabuticaba','heliconia','taioba']]
+};
+// Solos secos e pobres: ciclo e boas companhias
+const SECO={
+ feijaoporco:['Temporária (4–8 meses)',['guandu','mandioca','pitanga','assapeixe']],
+ guandu:['Temporária (2–3 anos)',['mandioca','feijaocorda','araca','candeia','gabiroba']],
+ feijaocorda:['Temporária (3 meses)',['mandioca','guandu','carqueja','lantana']],
+ mandioca:['Temporária (1–2 anos)',['feijaocorda','guandu','pitanga','maravilha']],
+ crindiuva:['Pioneira de vida curta',['guariroba','patadevaca','pitanga','orapronobis']],
+ maravilha:['Ressemeia sozinha',['lantana','carqueja','macela','mandioca']],
+ pitanga:['Perene',['araca','guandu','lantana','orapronobis']],
+ araca:['Perene',['pitanga','assapeixe','feijaoporco','macela']],
+ gabiroba:['Perene',['carqueja','macela','candeia','alecrimcampo']],
+ assapeixe:['Perene',['candeia','pitanga','feijaoporco','lantana']],
+ candeia:['Perene',['assapeixe','alecrimcampo','gabiroba','carqueja']],
+ patadevaca:['Perene',['guariroba','araca','mandioca','maravilha']],
+ guariroba:['Perene',['patadevaca','crindiuva','pitanga','orapronobis']],
+ alecrimcampo:['Perene',['candeia','carqueja','macela','lantana']],
+ carqueja:['Perene',['gabiroba','alecrimcampo','lantana','tuna']],
+ macela:['Perene',['gabiroba','alecrimcampo','lantana','tuna']],
+ lantana:['Perene',['carqueja','maravilha','pitanga','assapeixe']],
+ orapronobis:['Perene',['maracuja','tuna','pitanga','guariroba']],
+ tuna:['Perene',['dyckia','orapronobis','carqueja','macela']]
+};
+// cooperação documentada entre plantas (v=1 coopera, v=-1 evitar lado a lado)
+const COOP=[
+ ['alface','cenoura',1,'Fileiras alternadas produziram de 1,6 a 2,95 vezes mais que as duas em canteiros separados (UET).','C1'],
+ ['couve','alface',1,'Consórcio com UET 1,42: rende 42% a mais que as duas separadas.','C3'],
+ ['couve','cebolinha',1,'Parte do consórcio triplo couve + alface + cebolinha, com UET 2,04.','C3'],
+ ['alface','cebolinha',1,'Parte do consórcio triplo couve + alface + cebolinha, com UET 2,04.','C3'],
+ ['alface','manjericao',1,'O manjericão produz mais biomassa ao lado da alface.','C4'],
+ ['alface','hortela',1,'Consórcio viável e mais eficiente que o cultivo solteiro.','C2'],
+ ['cenoura','hortela',1,'A cenoura teve o maior rendimento entre os consórcios testados.','C2'],
+ ['tomate','manjericao',1,'Menos frutos perdidos por pragas e menos mosca-branca. Dê mais espaço ao tomate.','C5'],
+ ['milho','feijaocorda',1,'UET de 1,9 a 2,6; o melhor arranjo foi 2 fileiras de milho para 2 de feijão.','C6'],
+ ['cenoura','manjericao',-1,'Foi o pior consórcio para o manjericão. Evite os dois lado a lado.','C4'],
+ ['banana','mandioca',1,'No arranjo agroflorestal da Embrapa, a mandioca é plantada ao longo das linhas de bananeira.','E16'],
+ ['banana','jucara',1,'No arranjo da Embrapa, palmeiras como o açaí, parente da juçara, ficam entre as bananeiras, que sombreiam a palmeira jovem.','E16'],
+ ['cafe','mamao',1,'No arranjo da Embrapa, café e mamão são plantados juntos entre as linhas de árvores.','E16'],
+ ['milho','feijao',1,'No arranjo da Embrapa, milho e feijão são plantados juntos ao longo das linhas.','E16'],
+ ['limao','feijaoporco',1,'Nas entrelinhas de citros, o feijão-de-porco permitiu usar metade do adubo nitrogenado sem perder produção.','C7'],
+ ['limao','crotalaria',1,'Nas entrelinhas de citros, a crotalária igualou ou superou a adubação convencional com metade do nitrogênio.','C7'],
+ ['mexerica','feijaoporco',1,'Nas entrelinhas de citros, o feijão-de-porco permitiu usar metade do adubo nitrogenado sem perder produção.','C7'],
+ ['mexerica','crotalaria',1,'Nas entrelinhas de citros, a crotalária igualou ou superou a adubação convencional com metade do nitrogênio.','C7'],
+ ['inga','cafe',1,'Café sombreado por ingá: a sombra moderada protege o café, mas o ingá precisa de poda. Sem poda, a sombra excessiva derrubou a produção; depois da poda, ela cresceu 353%.','C8'],
+ ['banana','cafe',1,'A bananeira serve de sombra temporária para o café enquanto as árvores definitivas crescem; o desbaste das bananeiras evita sombra demais.','C8'],
+ ['inga','jucara',1,'Mudas de juçara crescem mais e com melhor qualidade sob sombra branda, como a de um ingá podado.','C9'],
+ ['embauba','jucara',1,'Mudas de juçara crescem mais e com melhor qualidade sob sombra branda, como a da copa rala da embaúba.','C9']
+];
+function coop(a,b){
+  for(const c of COOP)if((c[0]===a&&c[1]===b)||(c[0]===b&&c[1]===a))return {v:c[2],t:c[3],src:c[4],a:c[0],b:c[1]};
+  const ca=compOf(a),cb=compOf(b);
+  if((ca&&ca[1].includes(b))||(cb&&cb[1].includes(a)))return {v:1,t:'Indicadas como boas companhias nas suas listas.',src:'L'};
+  return null;
+}
+const docCoop=(a,b)=>{const c=coop(a.id,b.id);return c&&c.v>0&&c.src!=='L'?c:null;};
+const TREEARR={'cafe|inga':'No estudo: ingá a 12 × 12 m como sombra definitiva, bananeira a 6 × 2 m como sombra temporária e café a 3 × 2 m entre elas.',
+ 'banana|cafe':'No estudo: bananeira a 6 × 2 m como sombra temporária e café a 3 × 2 m entre as linhas de árvores.',
+ 'banana|jucara':'No arranjo da Embrapa: linhas de árvores a cada 3 m, bananeiras a 3 m na linha e as palmeiras entre elas.',
+ 'inga|jucara':'Deixe a juçara dentro da sombra da copa do ingá, a 2–4 m do tronco, e pode o ingá para a sombra ficar branda.',
+ 'embauba|jucara':'Deixe a juçara a 2–4 m da embaúba; a copa rala dá a sombra branda que a muda prefere.',
+ 'cafe|mamao':'No arranjo da Embrapa: café e mamão a 2 × 2 m entre as linhas de árvores.'};
+function cs(a,b){const c=coop(a.id,b.id);return c?(c.v<0?-9:(c.src==='L'?1:2)):0;}
+function makeGroups(list){
+  const left=list.slice(),groups=[];
+  const score=(a,b)=>{const c=coop(a.id,b.id);return c?(c.v<0?-9:(c.src==='L'?1:2)):0;};
+  while(left.length){
+    const g=[left.shift()];
+    while(g.length<3){
+      let best=null,bs=0;
+      left.forEach(c=>{if(g.some(m=>score(m,c)<0))return;const sc=g.reduce((a,m)=>a+score(m,c),0);if(g.every(m=>score(m,c)>0)&&sc>bs){bs=sc;best=c;}});
+      if(!best)break;g.push(best);left.splice(left.indexOf(best),1);
+    }
+    groups.push(g);
+  }
+  // planta sozinha ganha uma parceira documentada, mesmo que ela já esteja em outro grupo
+  groups.forEach((g,i)=>{if(g.length>1)return;const x=g[0];
+    const cands=list.filter(o=>o!==x&&score(x,o)>0).sort((a,b)=>score(x,b)-score(x,a));
+    if(cands.length)groups[i]=[x,cands[0]];});
+  // ordena os trechos para que vizinhos cooperem e antagônicas fiquem longe
+  const cross=(g1,g2)=>{let v=0;g1.forEach(a=>g2.forEach(b=>{v+=score(a,b);}));return v;};
+  const rest=groups.slice(1),ord=[groups[0]];
+  while(rest.length){const last=ord[ord.length-1];let bi=0,bv=-1e9;
+    rest.forEach((g,i)=>{const v=cross(last,g);if(v>bv){bv=v;bi=i;}});ord.push(rest.splice(bi,1)[0]);}
+  return ord;
+}
+const UNDER=['amendoim','taioba','begonia','samambaia','boldinho'];
+function compOf(id){
+  const u=UMIDO[id],s=SECO[id];
+  if(S.solo==='umido')return u||s||null;
+  if(S.solo==='seco')return s||u||null;
+  if(u&&s)return [s[0],[...new Set(s[1].concat(u[1]))]];
+  return u||s||null;
+}
+// grupo de cada planta e origem: N nativa, Z naturalizada, E endêmica, '' exótica cultivada
+const GRUPO={
+ f:'banana mamao acerola limao cafe pitanga araca cambuci jabuticaba grumixama uvaia cereja cabeludinha gabiroba maracuja tuna',
+ a:'margaridao canaacucar guandu crotalaria feijaoporco feijaocorda mandioca amendoim maravilha canaindia heliconia assapeixe begonia samambaia dyckia',
+ t:'boldo boldinho cidreira hibisco lavanda manjericao cebolinha salsinha hortela alecrim capimsanto carqueja macela alecrimcampo lantana',
+ h:'alface rucula peixinho cenoura beterraba couve tomate berinjela pimenta quiabo feijao abobora batatadoce milho taioba cara orapronobis',
+ p:'chanana gervao oficialsala perpetua vedelia arnicacampo ruelia falsairis salviavermelha salviaazul esponjinha jacobinia lixeira alamanda ciposaojoao',
+ g:'inga embauba aroeira jucara castanha dedaleira candeia sangra crindiuva patadevaca guariroba'
+};
+const ORIG={N:'chanana gervao oficialsala perpetua vedelia arnicacampo ruelia falsairis salviavermelha salviaazul esponjinha jacobinia lixeira alamanda ciposaojoao cidreira pimenta taioba cara orapronobis carqueja macela alecrimcampo lantana mandioca canaindia heliconia begonia samambaia dyckia tuna assapeixe pitanga araca uvaia cereja gabiroba maracuja inga embauba aroeira jucara castanha dedaleira candeia sangra crindiuva patadevaca guariroba',
+ Z:'margaridao capimsanto guandu maravilha mamao cafe',
+ E:'dipladenia amendoim cambuci jabuticaba grumixama cabeludinha'};
+// plantas que aparecem também em um segundo grupo
+const GRUPO_EXTRA={p:['margaridao']};
+const ORIG_TXT={N:'Nativa',Z:'Naturalizada',E:'Endêmica',X:'Exótica cultivada'};
+const PORTE={P:'pequeno',M:'médio',G:'grande'};
+const SIG_N={R:1,B:2,M:3,A:4,E:5};
+const sig=e=>`<span class="sig" aria-hidden="true">${[1,2,3,4,5].map(i=>`<i${i<=SIG_N[e]?` class="d-${e}"`:''}></i>`).join('')}</span>`;
+const ORIG_SIG={N:'N',Z:'N',E:'E',X:'EX'};
+const ICON={
+ N:'<svg class="ico" viewBox="0 0 26 18" aria-hidden="true"><rect x="0" y="1" width="20" height="14" rx="1.5" fill="#009C3B"/><path d="M10 2.8 L18.2 8 L10 13.2 L1.8 8 Z" fill="#FFDF00"/><circle cx="10" cy="8" r="3.1" fill="#002776"/><path d="M7.2 7.6 Q10 6.6 12.8 8.2" stroke="#fff" stroke-width=".7" fill="none"/><circle cx="20.5" cy="12.8" r="5.2" class="ico-bg"/><path d="M18 12.4h1.5v4h-1.5z M20.2 16.4h2.6c.5 0 .9-.3 1-.8l.6-2.5c.1-.6-.3-1.1-.9-1.1h-1.7l.3-1.6c.1-.6-.3-1-.8-1l-1.1 2.6z" fill="#F2C200" stroke="#7A5C00" stroke-width=".45" stroke-linejoin="round"/></svg>',
+ Z:'<svg class="ico" viewBox="0 0 26 18" aria-hidden="true"><path d="M9.5 1.6 L13 1.2 L15.6 2.8 L18.2 3 L20.3 4.4 L24.4 5.9 L24.8 7.5 L22.7 10 L21.7 12.6 L19.2 14.1 L17.2 16 L15.6 17.6 L14.4 16.1 L14.9 14.1 L13 12.6 L11 12.1 L10 10.2 L8 9.6 L6.6 8 L7.1 5.5 L8.2 3.9 Z" class="ico-map"/><path d="M0.9 15.2 L11.6 8.6" class="ico-halo" stroke-width="4" stroke-linecap="round"/><path d="M8.3 7.8 L12.6 8 L10.8 11.8" class="ico-halo" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M0.9 15.2 L11.6 8.6" class="ico-arrow" stroke-width="2" stroke-linecap="round"/><path d="M8.3 7.8 L12.6 8 L10.8 11.8" class="ico-arrow" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+ E:'<svg class="ico" viewBox="0 0 26 18" aria-hidden="true"><path d="M9.5 1.6 L13 1.2 L15.6 2.8 L18.2 3 L20.3 4.4 L24.4 5.9 L24.8 7.5 L22.7 10 L21.7 12.6 L19.2 14.1 L17.2 16 L15.6 17.6 L14.4 16.1 L14.9 14.1 L13 12.6 L11 12.1 L10 10.2 L8 9.6 L6.6 8 L7.1 5.5 L8.2 3.9 Z" class="ico-map"/><path d="M15.6 13.6 C15.6 13.6 12 9.6 12 7.3 A3.6 3.6 0 1 1 19.2 7.3 C19.2 9.6 15.6 13.6 15.6 13.6 Z" class="ico-pin"/><circle cx="15.6" cy="7.3" r="1.35" class="ico-bg"/></svg>',
+ X:'<svg class="ico" viewBox="0 0 26 18" aria-hidden="true"><path d="M0.5 17.5 Q13 9 25.5 17.5 Z" class="ico-soil"/><path d="M5 1.5 L17 13" class="ico-wood" stroke-width="2" stroke-linecap="round"/><path d="M14.6 11.2 L19.6 9.4 L21.4 13.6 L17.2 14.8 Z" class="ico-metal"/></svg>'
+};
+// sigla automática (duas letras, sem repetir) para as plantas que não têm uma
+{const used=new Set(DATA.map(s=>s.a).filter(Boolean));
+  DATA.forEach(s=>{if(s.a)return;const L=s.n.normalize('NFD').replace(/[^A-Za-z]/g,'');let a=null;
+    for(let i=1;i<L.length&&!a;i++){const c=L[0].toUpperCase()+L[i].toLowerCase();if(!used.has(c))a=c;}
+    for(let i=1;i<L.length&&!a;i++)for(let j=i+1;j<L.length&&!a;j++){const c=L[0].toUpperCase()+L[i].toLowerCase()+L[j].toLowerCase();if(!used.has(c))a=c;}
+    for(let k=0;!a;k++){const c=L[0].toUpperCase()+k;if(!used.has(c))a=c;}
+    s.a=a;used.add(a);});}
+DATA.forEach(s=>{for(const k in GRUPO)if(GRUPO[k].split(' ').includes(s.id))s.c=k;s.o=s.o||'X';for(const k in ORIG)if(ORIG[k].split(' ').includes(s.id))s.o=k;s.nat=(s.o==='N'||s.o==='E')?1:0;});
+const BYID={};DATA.forEach(s=>BYID[s.id]=s);
+const DEF_SP={R:{el:.25,ep:.2,h:.3},B:{el:.6,ep:.5,h:.8},M:{el:1,ep:1,h:2},A:{el:4,ep:2,h:6}};
+
+const DEFAULT={L:6,W:3,sol:'P',agua:'facil',modo:'chao',vista:'planta',sel:['alface','couve','cebolinha','manjericao','tomate','cenoura','guandu','mandioca','banana','pitanga'],custom:[],exemplo:true};
+let S;
+try{S=JSON.parse(localStorage.getItem('quintal-saf-v2')||'null');}catch(e){S=null}
+if(!S||!Array.isArray(S.sel))S=JSON.parse(JSON.stringify(DEFAULT));
+S.custom=(S.custom||[]).filter(c=>c&&c.el);S.vista=S.vista||'planta';
+S.custom.forEach(c=>BYID[c.id]=c);
+S.sel=S.sel.filter(i=>BYID[i]);
+// no site do GitHub (ou com ?limpo no endereço), o app sempre abre no exemplo do quintal de 6 × 3 m, sem plantas escolhidas
+try{if(/github\.io$/i.test(location.hostname)||new URLSearchParams(location.search).has('limpo')){const c=S.custom;S=JSON.parse(JSON.stringify(DEFAULT));S.custom=c;S.sel=[];S.mtab='espaco';}}catch(e){}
+function save(){try{localStorage.setItem('quintal-saf-v2',JSON.stringify(S));}catch(e){}}
+
+const QSTUB=new Proxy(function(){},{get:(t,k)=>k===Symbol.toPrimitive?(()=>''):k==='value'||k==='textContent'||k==='innerHTML'?'':k==='length'?0:(k==='querySelectorAll'?()=>[]:k==='querySelector'||k==='closest'?()=>null:k==='then'?undefined:QSTUB),set:()=>true,apply:()=>QSTUB});const $=id=>QSTUB;
+const fmt=(n,d=1)=>n.toLocaleString('pt-BR',{maximumFractionDigits:d,minimumFractionDigits:0});
+const cm_=m=>m<1?fmt(m*100,0)+' cm':fmt(m,1)+' m';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const darkLab=e=>(e==='M'||e==='B')?'lt':'dk';
+const isTree=s=>!!s.arv;
+const isMed=s=>!s.arv&&!s.bed&&(s.e==='M'||s.e==='A'||s.e==='E');
+const isBed=s=>!s.arv&&(s.e==='R'||s.e==='B'||s.bed);
+const hOf=s=>s.arv?Math.min(s.pt||6,10):(s.h||DEF_SP[s.e].h);
+const solTxt={P:'sol pleno',M:'meia-sombra',S:'sombra'};
+const isCirc=()=>S.forma==='circ';
+const LW=()=>isCirc()?[S.D||4,S.D||4]:[S.L,S.W];
+const areaM2=()=>isCirc()?Math.PI*Math.pow((S.D||4)/2,2):S.L*S.W;
+
+// ---------- controles ----------
+// a linha da subopção parte do botão "Tenho um vaso ou floreira"
+function alignSub(){const sub=$('potMine'),btn=document.querySelector('#potmode button[data-v="meu"]');if(!sub||!btn||sub.hidden)return;
+  sub.style.marginLeft='0px';const off=btn.getBoundingClientRect().left-sub.getBoundingClientRect().left+18;sub.style.marginLeft=Math.max(0,off)+'px';}
+window.addEventListener('resize',()=>{try{alignSub();}catch(e){}});
+function bindSeg(id,key){$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S[key]=b.dataset.v;if(key!=='vista')S.exemplo=false;update();});}
+bindSeg('modo','modo');bindSeg('potmode','potmode');bindSeg('pottipo','pottipo');
+[['pD','pD'],['pC','pC'],['pW','pW'],['pH','pH']].forEach(([id,k])=>{$(id).addEventListener('input',e=>{const v=parseFloat(e.target.value);if(!isFinite(v)||v<=0)return;S[k]=v;S.exemplo=false;update(true);});});bindSeg('forma','forma');bindSeg('sol','sol');bindSeg('agua','agua');bindSeg('solo','solo');
+function syncSeg(id,val){const el=$(id);if(!el)return;[...el.querySelectorAll('button')].forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===val?'true':'false'));}
+$('inD').addEventListener('input',e=>{const v=parseFloat(e.target.value);if(!isFinite(v))return;S.D=Math.min(40,Math.max(1,v));S.exemplo=false;update(true);});
+['inL','inW'].forEach(id=>{$(id).addEventListener('input',e=>{const v=parseFloat(e.target.value);if(!isFinite(v))return;S[id==='inL'?'L':'W']=Math.min(40,Math.max(.5,v));S.exemplo=false;update(true);});});
+document.querySelectorAll('[data-ico]').forEach(el=>{el.innerHTML=ICON[el.dataset.ico];});
+document.querySelectorAll('[data-sig]').forEach(el=>{el.outerHTML=sig(el.dataset.sig);});
+$('busca').addEventListener('input',renderCats);
+$('tray').addEventListener('click',e=>{const b=e.target.closest('[data-rmsel]');if(!b)return;S.sel=S.sel.filter(i=>i!==b.dataset.rmsel);S.exemplo=false;update();});
+try{$('legbox').open=!!(S.legOpen);}catch(e){}
+$('legbox').addEventListener('toggle',()=>{S.legOpen=$('legbox').open;save();});
+$('limpar').addEventListener('click',()=>{if(!S.sel.length)return;const prev={sel:S.sel.slice(),consSel:(S.consSel||[]).slice(),exemplo:S.exemplo};
+  S.sel=[];S.consSel=[];S.exemplo=false;update();
+  let t=document.getElementById('toast');if(t)t.remove();t=document.createElement('div');t.id='toast';t.className='toast';t.setAttribute('role','status');
+  t.innerHTML=`<span>Seleção limpa (${prev.sel.length} ${prev.sel.length===1?'planta':'plantas'}).</span><button type="button">Desfazer</button>`;document.body.appendChild(t);
+  const tm=setTimeout(()=>t.remove(),7000);
+  t.querySelector('button').addEventListener('click',()=>{clearTimeout(tm);t.remove();S.sel=prev.sel;S.consSel=prev.consSel;S.exemplo=prev.exemplo;update();});});
+$('quick').addEventListener('click',e=>{
+  const b=e.target.closest('[data-q]');if(!b)return;
+  const q=b.dataset.q;
+
+  const ids=q==='viela'?VIELA:q==='umido'?Object.keys(UMIDO):Object.keys(SECO).concat(['maracuja','dyckia']);
+  ids.forEach(i=>{if(!S.sel.includes(i))S.sel.push(i);});
+  if(q!=='viela')S.solo=q;
+  S.exemplo=false;update();
+});
+function showInfo(id){
+  const s=BYID[id];if(!s)return;
+  const luz=s.sol.split('').map(x=>solTxt[x]).join(' ou ');
+  const det=`${s.sci?`<i>${esc(s.sci)}</i> · `:''}Estrato ${EST[s.e].toLowerCase()} · ${luz} · ${s.o?ORIG_TXT[s.o].toLowerCase():'origem não informada'}${s.msp?` · Manual de Arb. de SP, porte ${PORTE[s.msp]}`:''}${s.tox?' · tóxica se ingerida':''}`;
+  $('chipinfo').innerHTML=`<span class="ci-top">${sig(s.e)}${s.o?`<span class="ico-w">${ICON[s.o]}</span>`:''}<b>${esc(s.n)}</b></span><span class="ci-d">${det}</span>`;
+  $('chipinfo').title=det.replace(/<[^>]+>/g,'');
+}
+$('cats').addEventListener('mouseover',e=>{const b=e.target.closest('.chip');if(b)showInfo(b.dataset.id);});
+$('cats').addEventListener('focusin',e=>{const b=e.target.closest('.chip');if(b)showInfo(b.dataset.id);});
+// ao tirar o mouse (ou o foco) de uma planta, o campo volta ao texto inicial
+function clearInfo(){const ci=$('chipinfo');ci.innerHTML='<span class="ci-d">Passe o mouse ou toque numa planta para ver o estrato, a luz e a origem.</span>';ci.title='';}
+$('cats').addEventListener('mouseout',e=>{const b=e.target.closest('.chip');if(b&&!(e.relatedTarget&&b.contains(e.relatedTarget)))clearInfo();});
+$('cats').addEventListener('focusout',e=>{if(e.target.closest('.chip'))clearInfo();});
+$('cats').addEventListener('toggle',e=>{const d=e.target;if(!d.matches||!d.matches('details.cat'))return;if($('busca').value.trim())return;S.openCats=S.openCats||{};S.openCats[d.dataset.k]=d.open;save();},true);
+$('cats').addEventListener('click',e=>{
+  const ac=e.target.closest('[data-addcons]');if(ac){ac.dataset.addcons.split(',').forEach(i=>{if(BYID[i]&&!S.sel.includes(i))S.sel.push(i);});S.consSel=(S.consSel||[]).filter(k=>k!==ac.dataset.addcons).concat([ac.dataset.addcons]);S.exemplo=false;update();return;}
+  {const c=e.target.closest('.chip');if(c){const id=c.dataset.id;setTimeout(()=>{if(S.sel.length)showInfo(id);},0);}}
+  const x=e.target.closest('[data-rm]');
+  if(x){e.stopPropagation();const id=x.dataset.rm;S.custom=S.custom.filter(c=>c.id!==id);S.sel=S.sel.filter(i=>i!==id);delete BYID[id];S.exemplo=false;update();return;}
+  const b=e.target.closest('.chip');if(!b)return;
+  const id=b.dataset.id;const i=S.sel.indexOf(id);
+  if(i>=0)S.sel.splice(i,1);else S.sel.push(id);
+  S.exemplo=false;update();
+});
+// a opção de acrescentar plantas fora da lista foi retirada; plantas próprias salvas antes continuam em "Minhas plantas"
+
+// menor vaso redondo e menor floreira em que cabem todas as plantas de um consórcio (uma muda de cada)
+const _cpCache={};// v2
+function consPot(sp){const k=sp.join('|');if(_cpCache[k])return _cpCache[k];
+  const L=sp.map(i=>BYID[i]).filter(Boolean);let res;
+  const no=L.filter(s=>!s.v);
+  if(no.length)res={no};
+  else{const dep=Math.max(...L.map(s=>depthNeed(s.v))),nT=L.filter(s=>s.arv).length;
+    const fits=(m)=>{const pl=[];m.pl=pl;let v=0;const ord=L.filter(s=>s.arv).concat(L.filter(s=>!s.arv));
+      for(const s of ord){const h=!s.arv&&pl.find(p=>p.s.arv&&underOk(p.s,s));const vv=h?s.v*.5:s.v;if(v+vv>m.V+.01)return false;
+        let p;if(!s.arv&&!pl.length&&m.round){const r=prad(s);if(m.Wd/200<r*.85+.02)return false;p={s,x:-(m.Wd/200-Math.max(.04,r*.85)),y:0,r};}else if(s.arv&&!m.round&&nT>1){const kk=pl.filter(q=>q.s.arv).length;p={s,x:(kk?1:-1)*(m.Wd/200-TEND),y:0,r:prad(s)};}else p=tryPlace(m,pl,s);
+        if(!p)return false;pl.push(p);v+=vv;}return true;};
+    let pot=null,fl=null;
+    if(nT<=1)for(let d=20;d<=120&&!pot;d+=5){const H=Math.max(dep,Math.min(60,Math.round(d*.8)));const m={round:true,strict:1,Wd:d,Dp:d,H,V:Math.PI*Math.pow(d/2,2)*H/1000*.85};if(fits(m))pot=m;}
+    for(const w of [20,25,30,40,50,60])for(let c=40;c<=300;c+=10){const H=Math.max(dep,nT>1?50:25);if(c<w)continue;
+      const m={round:false,strict:1,Wd:c,Dp:w,H,V:c*w*H/1000*.92};if(nT>maxTrees(m))continue;if(fits(m)&&(!fl||m.V<fl.V-1e-9))fl=m;if(fl&&fl.Dp===w)break;}
+    res={pot,fl};}
+  return _cpCache[k]=res;}
+function consPotTxt(sp){const r=consPot(sp);
+  if(r.no)return `Não vai para vaso: ${r.no.map(s=>esc(s.n)).join(', ')} precisa${r.no.length>1?'m':''} de chão.`;
+  const a=[];if(r.pot)a.push(`vaso redondo de Ø ${r.pot.Wd} cm e ${r.pot.H} cm de fundo (≈ ${fmt(r.pot.V,0)} L)`);
+  if(r.fl)a.push(`floreira de ${r.fl.Wd} × ${r.fl.Dp} cm e ${r.fl.H} cm de fundo (≈ ${fmt(r.fl.V,0)} L)`);
+  return a.length?`<b>Em vaso:</b> ${a.join(' ou ')}.`:'Não cabe num vaso comum: plante no chão.';}
+function renderCats(){
+  const q=$('busca').value.trim().toLowerCase();
+  const all=DATA.concat(S.custom);
+  let h='';
+  CATS.forEach(([k,lab])=>{
+    const items=all.filter(s=>(s.c===k||(GRUPO_EXTRA[k]||[]).includes(s.id))&&(!q||s.n.toLowerCase().includes(q)));
+    if(!items.length)return;
+    items.sort((a,b)=>a.n.localeCompare(b.n,'pt'));
+    const nOn=items.filter(s=>S.sel.includes(s.id)).length;
+    const open=!!q||!!(S.openCats||{})[k];
+    h+=`<details class="cat" data-k="${k}"${open?' open':''}><summary>${catIco(k)}<span class="cat-t">${lab}</span><span class="cat-n">${nOn?`${nOn} de ${items.length}`:items.length}</span></summary><div class="chips">`+items.map(s=>{
+      const on=S.sel.includes(s.id);
+      const off=!s.sol.includes(S.sol);
+      return `<button type="button" class="chip${off?' off':''}" data-id="${s.id}" aria-pressed="${on}">${sig(s.e)}${esc(s.n)}${s.o?` <span class="ico-w" role="img" aria-label="${ORIG_TXT[s.o]}">${ICON[s.o]}</span>`:''}${s.custom?` <span class="x" data-rm="${s.id}" role="button" aria-label="Remover ${esc(s.n)}">×</span>`:''}</button>`;
+    }).join('')+`</div></details>`;
+  });
+  // Parceiras fica no topo da lista
+  const hCats=h;h='';
+  {const cons=consorcios().filter(c=>!q||c.sp.some(i=>BYID[i]&&BYID[i].n.toLowerCase().includes(q)));
+    if(cons.length){const ids=new Set(S.sel);const nAll=cons.filter(c=>c.sp.every(i=>ids.has(i))).length;const open=!!q||!!(S.openCats||{}).parc;
+      h+=`<details class="cat cat-parc" data-k="parc"${open?' open':''}><summary>${catIco('parc')}<span class="cat-t">Parceiras <span class="cat-sub">consórcios com estudo</span></span><span class="cat-n">${nAll?`${nAll} de ${cons.length}`:cons.length}</span></summary><ul class="pc-list">`+cons.map(c=>{
+        const all=c.sp.every(i=>ids.has(i)),some=c.sp.some(i=>ids.has(i));const R=REFS[c.src];
+        return `<li class="pc${all?' all':''}" title="${esc(c.t)}"><div class="pc-n">${c.sp.map(i=>BYID[i]?`<span class="${ids.has(i)?'on':''}">${esc(BYID[i].n)}</span>`:'').join('<i>+</i>')}</div><p class="pc-t">${esc(c.t)}${R&&R.n?` [${R.n}]`:''}</p><p class="pc-a">${esc(consArr(c.sp))}</p><div class="pc-act">${all?'<span class="cons-ok">✓ no seu plantio</span>':`<button type="button" class="btn cons-add" data-addcons="${c.sp.join(',')}">${some?'Completar consórcio':'Plantar consórcio'}</button>`}${consPot(c.sp).no?`<span class="pc-chao" title="${esc(consPot(c.sp).no.map(s=>s.n).join(' e '))}: plantar direto no chão"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="g-soil" d="M2 17h20v5H2z"/><path class="g-line" d="M2 17h20"/><path class="g-stem" d="M12 17V9"/><path class="g-leaf" d="M12 12c-4 0-6-2-6-5 4 0 6 2 6 5z"/><path class="g-leaf" d="M12 10c0-3 2-5 6-5 0 3-2 5-6 5z"/><path class="g-root" d="M12 17v3M12 18l-2 2M12 18l2 2"/></svg>consórcio não recomendado para vasos</span>`:''}</div></li>`;}).join('')+
+        COOP.filter(c=>c[2]<0).map(c=>`<li class="pc bad"><div class="pc-n"><span>${esc(BYID[c[0]].n)}</span><i>✕</i><span>${esc(BYID[c[1]].n)}</span></div><p class="pc-t">Não plantar juntas. ${esc(c[3])}${REFS[c[4]]?` [${REFS[c[4]].n}]`:''}</p></li>`).join('')+`</ul></details>`;}}
+  h+=hCats;
+  $('cats').innerHTML=h||'<p class="empty">Nenhuma planta com esse nome.</p>';
+  $('limpar').disabled=!S.sel.length;
+  $('nsel').textContent=S.sel.length+(S.sel.length===1?' escolhida':' escolhidas');
+  $('tray').innerHTML=S.sel.length?`<span class="tray-t">Sua seleção</span><div class="tray-l">${S.sel.map(i=>BYID[i]).filter(Boolean).map(s=>`<button type="button" data-rmsel="${s.id}" title="Tirar ${esc(s.n)} da seleção"><span class="tdot d-${s.e}" aria-hidden="true"></span>${esc(s.n)}<span class="tray-x" aria-hidden="true">×</span></button>`).join('')}</div>`:`<span class="tray-t">Sua seleção</span><span class="hint">Nenhuma planta escolhida. Abra um grupo abaixo e toque nas plantas.</span>`;
+}
+
+// ---------- plano ----------
+function plan(){
+  const sel=S.sel.map(i=>BYID[i]).filter(Boolean);
+  const [L,W]=LW();
+  const trees=sel.filter(isTree),meds=sel.filter(isMed);
+  const hasTreeStuff=trees.length+meds.length>0;
+  const strips=[];let y=0;
+  const BED=1.2,PATH=.4,LINE=.8;
+  // trecho útil de uma linha horizontal (no círculo, a corda)
+  const chord=cy=>{if(!isCirc())return [.5,L-.3];const R=L/2,h2=R*R-(cy-R)*(cy-R);if(h2<=.09)return [R,R-1];const hc=Math.sqrt(h2)-.35;return [R-hc,R+hc];};
+  if(trees.length&&W>=LINE-.001&&W<BED+PATH+LINE-.001){
+    // espaço estreito: as árvores têm prioridade e ganham uma linha no meio
+    const side=(W-LINE)/2;
+    if(side>=.5){strips.push({t:'bed',y:0,h:side-.15},{t:'path',y:side-.15,h:.15},{t:'line',y:side,h:LINE},{t:'path',y:side+LINE,h:.15},{t:'bed',y:side+LINE+.15,h:side-.15});}
+    else strips.push({t:'line',y:(W-LINE)/2,h:LINE});
+  }
+  else if(W<BED+.01){strips.push({t:'bed',y:0,h:W});}
+  else{
+    let next='bed';
+    while(true){
+      if(next==='bed'){
+        if(y+BED<=W+.001){strips.push({t:'bed',y,h:BED});y+=BED;}
+        else{if(W-y>=.5)strips.push({t:'bed',y,h:W-y});break;}
+        if(hasTreeStuff&&W-y>=PATH+LINE-.001){strips.push({t:'path',y,h:PATH});y+=PATH;next='line';}
+        else if(W-y>=PATH+.5){strips.push({t:'path',y,h:PATH});y+=PATH;next='bed';}
+        else break;
+      }else{
+        strips.push({t:'line',y,h:LINE});y+=LINE;
+        if(W-y>=PATH+.5){strips.push({t:'path',y,h:PATH});y+=PATH;next='bed';}else break;
+      }
+    }
+  }
+  const beds=strips.filter(s=>s.t==='bed'),lines=strips.filter(s=>s.t==='line');
+  // arranjo em triângulo: uma linha só de árvores e mais árvores pequenas/médias do que cabem nela.
+  // As da linha vão para as pontas; as menores sobram e vão para o meio dos canteiros, nos vãos entre elas
+  // (primeiro o canteiro do sul, que fica embaixo no desenho). Nunca com árvores altas ou emergentes.
+  let TRI=null;
+  if(!isCirc()&&lines.length===1&&beds.length&&trees.length>=3&&trees.every(t=>t.e==='M'||t.e==='B')){
+    const [x0,x1]=chord(lines[0].y+lines[0].h/2),sp=Math.max(...trees.map(t=>Math.max(t.ep,1)));
+    const slots=Math.floor((x1-x0)/sp+1e-6)+1;
+    if(slots>=2&&trees.length>slots){
+      const bySize=trees.slice().sort((a,b)=>(b.pt||0)-(a.pt||0));
+      const inLine=bySize.slice(0,slots),rest=bySize.slice(slots);
+      const xe=L-.5,gap=(xe-x0)/(slots-1);
+      const bedsS=beds.slice().sort((a,b)=>b.y-a.y);const spots=[];
+      for(let g=0;g<slots-1;g++)bedsS.forEach((bd,bi)=>spots.push({x:x0+gap*(g+.5),y:bd.y+bd.h/2,bi,g}));
+      spots.sort((a,b)=>a.bi-b.bi||a.g-b.g);
+      const ly=lines[0].y+lines[0].h/2;
+      const ok=spots.filter(q=>Math.hypot(gap/2,q.y-ly)>=1.8);
+      const inBed=rest.slice(0,ok.length).map((t,i)=>({t,x:ok[i].x,y:ok[i].y}));
+      TRI={inLine,inBed,x0,gap};
+    }
+  }
+  const pts=[];const count={};
+  const add=(s,x,yy,kind,cell)=>{pts.push({s,x,y:yy,kind,cell});count[s.id]=(count[s.id]||0)+1;};
+  let dropped=[];
+  if(lines.length){
+    const useN={};
+    let useL={};
+    let useLS={};
+    const pick=(list0,nbrs,mix)=>{const fresh=list0.filter(c=>!useL[c.id]);const list=fresh.length?fresh:list0;let best=list[0],bv=-1e9;
+      list.forEach(c=>{let v=-(useN[c.id]||0)*2+(mix&&!useLS[c.e]?12:0)+(mix&&!useN[c.id]?14:0);nbrs.forEach(n=>{if(n)v+=cs(c,n)*1.5;});if(v>bv){bv=v;best=c;}});
+      useN[best.id]=(useN[best.id]||0)+1;useL[best.id]=1;if(mix)useLS[best.e]=1;return best;};
+    // várias linhas: cada linha mistura os estratos (emergente, alto, médio)
+    // - pares com cooperação documentada ficam juntos na mesma linha
+    // - altas e médias se repetem em todas as linhas; emergentes não se repetem e vão primeiro para o lado sul
+    //   (embaixo no desenho), para a sombra cair menos sobre os canteiros
+    let clusters=trees.map(t=>[t]);
+    for(let moved=true;moved;){moved=false;
+      for(let i=0;i<clusters.length&&!moved;i++)for(let j=i+1;j<clusters.length&&!moved;j++)
+        if(clusters[i].some(a=>clusters[j].some(b=>docCoop(a,b)))){clusters[i]=clusters[i].concat(clusters[j]);clusters.splice(j,1);moved=true;}}
+    // a emergente fica só no sul, mas as parceiras altas e médias dela também se repetem nas outras linhas
+    clusters=clusters.flatMap(cl=>{const ne=cl.filter(t=>t.e!=='E');return cl.some(t=>t.e==='E')&&ne.length?[cl,ne]:[cl];});
+    const RK={E:0,A:1,M:2,B:3,R:4};const top=cl=>Math.min(...cl.map(t=>RK[t.e]??2));
+    // do sul para o norte; no terreno circular, as linhas curtas (cordas pequenas) ficam por último
+    const lenOf=ln=>{const [a,b]=chord(ln.y+ln.h/2);return b-a;};
+    const southFirst=lines.map((ln,i)=>i).sort((a,b)=>Math.floor(lenOf(lines[b])/3)-Math.floor(lenOf(lines[a])/3)||lines[b].y-lines[a].y);
+    const lineTrees=lines.map(()=>[]);
+    if(trees.length<2||lines.length<2){lines.forEach((ln,i)=>{lineTrees[i]=trees.slice();});}
+    else{
+      [0,1,2,3,4].forEach(k=>{const us=clusters.filter(cl=>top(cl)===k).sort((a,b)=>b.length-a.length||Math.max(...b.map(t=>t.pt||0))-Math.max(...a.map(t=>t.pt||0)));
+        if(!us.length)return;
+        const n=lines.length,reps=k===0?us.length:Math.max(us.length,n);
+        for(let j=0;j<reps;j++){const li=southFirst[j%n];const u=us[j%us.length];u.forEach(t=>{if(!lineTrees[li].includes(t))lineTrees[li].push(t);});}});
+      // nenhuma linha fica sem árvore
+      lineTrees.forEach((lt,i)=>{if(!lt.length)lineTrees[i]=trees.filter(t=>RK[t.e]>0).length?trees.filter(t=>RK[t.e]>0):trees.slice();});
+    }
+    lines.forEach((ln,li)=>{
+      const cy=ln.y+ln.h/2;let prev=null,prevT=null;useL={};useLS={};
+      if(TRI){
+        // pontas da linha: árvores espaçadas igualmente; adubadeiras a cada metro entre elas
+        TRI.inLine.forEach((T,i)=>{const x=TRI.x0+i*TRI.gap;add(T,x,cy,'tree');prev=T;
+          if(meds.length&&i<TRI.inLine.length-1)for(let k=1;k<TRI.gap-.5;k++){const M=pick(meds,[prev,T]);add(M,x+k,cy,'med');prev=M;}});
+      }
+      else if(trees.length){
+        const [x0,x1]=chord(cy);
+        let x=x0+(li%2&&x1-x0>2?.5:0);
+        while(x<=x1){
+          const T=pick(lineTrees[li],[prev,prevT],true);
+          add(T,x,cy,'tree');prev=T;prevT=T;
+          const sp=Math.max(T.ep,1);
+          if(meds.length)for(let k=1;k<sp-.01&&x+k<=x1;k++){const M=pick(meds,[prev,T]);add(M,x+k,cy,'med');prev=M;}
+          x+=sp;
+        }
+      }else{
+        const [x0,x1]=chord(cy);for(let x=x0;x<=x1;x+=1){const M=pick(meds,[prev]);add(M,x,cy,'med');prev=M;}
+      }
+    });
+  }else{dropped=trees.slice();}
+  let bedSp=sel.filter(isBed);
+  if(!lines.length)bedSp=bedSp.concat(meds);
+  // sub-bosque: plantas de sombra ou cobertura nos espaços entre árvores e adubadeiras
+  const under=lines.length?sel.filter(s=>UNDER.includes(s.id)):[];
+  const nearTree=[];const lineFill=new Set();
+  // plantas baixas que aguentam meia-sombra também ocupam os vãos entre árvores e adubadeiras
+  const shadeOk=sel.filter(o=>isBed(o)&&!o.bed&&!UNDER.includes(o.id)&&(o.sol.includes('M')||o.sol.includes('S'))&&o.ep<=.6);
+  const useF={};let fi=0;
+  if(lines.length){let ui=0;const tp={};
+    lines.forEach(ln=>{const cy=ln.y+ln.h/2;
+      const ts=pts.filter(q=>q.kind==='tree'&&Math.abs(q.y-cy)<1e-6);
+      const occ=new Set(pts.filter(q=>Math.abs(q.y-cy)<1e-6).map(q=>q.x.toFixed(2)));
+      for(let x=1;x<=L-.3;x+=.5){if(occ.has(x.toFixed(2)))continue;
+        const t=ts.find(q=>Math.abs(q.x-x)<=.55);
+        const parts=t?sel.filter(o=>!isTree(o)&&docCoop(t.s,o)):[];
+        if(parts.length){const k=t.s.id;tp[k]=(tp[k]||0)+1;const o=parts[tp[k]%parts.length];add(o,x,cy,'bed',.35);if(!nearTree.some(n=>n[0]===t.s&&n[1]===o))nearTree.push([t.s,o]);}
+        else{const pool=under.length&&Math.abs(x-Math.round(x))<1e-6?under:shadeOk;
+          if(pool.length){const nb=pts.filter(q=>Math.abs(q.y-cy)<1e-6&&Math.abs(q.x-x)<=1.01).map(q=>q.s);
+            let best=null,bv=-1e9;pool.forEach(o=>{let v=-(useF[o.id]||0)*.5;nb.forEach(n=>{v+=cs(o,n);});if(v>bv){bv=v;best=o;}});
+            if(best&&bv>-5){useF[best.id]=(useF[best.id]||0)+1;add(best,x,cy,'bed',Math.min(.4,Math.max(best.ep,.2)));if(pool===under)ui++;else lineFill.add(best);fi++;}}}
+      }});}
+  let groups=[];const interc=[];
+  if(beds.length&&bedSp.length){
+    groups=makeGroups(bedSp);
+    const total=beds.length*L;
+    const wt=s=>Math.max(1,Math.sqrt((s.el*s.ep)/.0625));
+    const w=groups.map(g=>g.reduce((a,s)=>a+wt(s),0)/Math.sqrt(g.length));
+    const sw=w.reduce((a,b)=>a+b,0);
+    const rowsFor=(bd,g)=>{
+      const rows=[{s:g[0],y:0}];let k=0;
+      for(;;){const cur=rows[rows.length-1].s,nx=g[(k+1)%g.length],gap=(cur.el+nx.el)/2,ny=rows[rows.length-1].y+gap;
+        if(ny+(g[0].el+nx.el)/4>bd.h+1e-6)break;rows.push({s:nx,y:ny,gap});k++;}
+      const span=rows[rows.length-1].y;const off=bd.y+(bd.h-span)/2;
+      rows.forEach(r=>r.y+=off);return rows;
+    };
+    let s0=0;
+    groups.forEach((g,i)=>{
+      const s1=s0+total*w[i]/sw;
+      if(g.length>1){
+        // companheiras intercaladas na mesma fileira: A, B, A, B…, com fileiras desencontradas
+        const rowGap=Math.max(g.reduce((a,m)=>a+m.el,0)/g.length,...g.map(m=>Math.min(m.el,m.ep)));
+        const step=k=>(g[k%g.length].ep+g[(k+1)%g.length].ep)/2;
+        for(let bi=Math.floor(s0/L);bi<beds.length&&bi*L<s1;bi++){
+          const bd=beds[bi],x0=Math.max(s0,bi*L)-bi*L,x1=Math.min(s1,(bi+1)*L)-bi*L;
+          const rows=Math.max(1,Math.floor(bd.h/rowGap+.001)),y0=bd.y+(bd.h-(rows-1)*rowGap)/2;
+          for(let r=0;r<rows;r++){
+            const yy=rows>1?y0+r*rowGap:bd.y+bd.h/2;
+            let k=r%g.length,x=x0+g[k].ep/2;
+            while(x<x1-.001){const m=g[k%g.length];add(m,x,yy,'bed',Math.min(step(k),rowGap,m.ep*2));x+=step(k);k++;}
+          }
+        }
+        interc.push({g,rowGap,steps:g.map((m,k)=>[m,g[(k+1)%g.length],step(k)])});
+      }else{
+        const m=g[0];
+        const xs=[];
+        if(s1-s0<m.ep)xs.push((s0+s1)/2);else for(let x=s0+m.ep/2;x<s1-.001;x+=m.ep)xs.push(x);
+        xs.forEach(x=>{
+          const bi=Math.min(beds.length-1,Math.floor(x/L));const xi=x-bi*L;const bd=beds[bi];
+          const rows=Math.max(1,Math.floor(bd.h/m.el+.001)),y0=bd.y+(bd.h-(rows-1)*m.el)/2;
+          for(let r=0;r<rows;r++)add(m,xi,rows>1?y0+r*m.el:bd.y+bd.h/2,'bed',Math.min(m.ep,m.el));
+        });
+      }
+      s0=s1;
+    });
+  }
+  // árvores do triângulo dentro do canteiro: abre uma roda de 50 cm em volta do tronco
+  if(TRI)TRI.inBed.forEach(b=>{for(let i=pts.length-1;i>=0;i--){const q=pts[i];if(q.kind==='bed'&&Math.hypot(q.x-b.x,q.y-b.y)<.5){count[q.s.id]--;if(!count[q.s.id])delete count[q.s.id];pts.splice(i,1);}}
+    pts.forEach(q=>{if(q.kind==='bed'&&Math.hypot(q.x-b.x,q.y-b.y)<1)q.cell=Math.min(q.cell,Math.min(q.s.ep,q.s.el));});
+    add(b.t,b.x,b.y,'tree');});
+  // vizinhanças reais no desenho
+  if(isCirc()){const R=L/2;
+    for(let i=pts.length-1;i>=0;i--){const q=pts[i];const m=q.kind==='tree'?.3:.12;
+      if(Math.hypot(q.x-R,q.y-R)>R-m){count[q.s.id]--;if(!count[q.s.id])delete count[q.s.id];pts.splice(i,1);}}}
+  // ninguém se sobrepõe: cada planta ocupa um círculo no chão (árvores e adubadeiras pelo tronco/caule)
+  const foot=q=>q.kind==='tree'?.2:q.kind==='med'?.2:Math.max(.025,Math.min(q.s.el,q.s.ep)/2*.98);
+  const pri={tree:0,med:1,bed:2};
+  const order=pts.map((q,i)=>i).sort((a,b)=>pri[pts[a].kind]-pri[pts[b].kind]||a-b);
+  const keep=[],cell=.5,grid=new Map(),removed={};
+  const key=(x,y)=>Math.floor(x/cell)+','+Math.floor(y/cell);
+  order.forEach(i=>{const q=pts[i],r=foot(q);let hit=false;
+    const gx=Math.floor(q.x/cell),gy=Math.floor(q.y/cell),span=Math.ceil((r+.5)/cell);
+    for(let dx=-span;dx<=span&&!hit;dx++)for(let dy=-span;dy<=span&&!hit;dy++){const arr=grid.get((gx+dx)+','+(gy+dy));if(!arr)continue;
+      for(const o of arr){if(Math.hypot(o.x-q.x,o.y-q.y)<r+foot(o)-1e-6){hit=true;break;}}}
+    if(hit){removed[q.s.id]=(removed[q.s.id]||0)+1;count[q.s.id]--;if(!count[q.s.id])delete count[q.s.id];return;}
+    keep.push(q);const k=key(q.x,q.y);if(!grid.has(k))grid.set(k,[]);grid.get(k).push(q);});
+  pts.length=0;keep.forEach(q=>pts.push(q));
+  const placed=new Set(pts.map(q=>q.s.id));
+  const naoCoube=sel.filter(s=>!placed.has(s.id)&&!dropped.includes(s));
+  const adj=new Map();
+  const note=(a,b,where)=>{if(!a||!b||a.id===b.id)return;const k=[a.id,b.id].sort().join('|');if(!adj.has(k))adj.set(k,{a,b,where,c:coop(a.id,b.id)});};
+  lines.forEach(ln=>{const cy=ln.y+ln.h/2;const row=pts.filter(q=>(q.kind==='tree'||q.kind==='med')&&Math.abs(q.y-cy)<1e-6).sort((a,b)=>a.x-b.x);
+    for(let i=1;i<row.length;i++)note(row[i-1].s,row[i].s,'linha de árvores');});
+  groups.forEach(g=>{for(let i=0;i<g.length;i++)for(let j=i+1;j<g.length;j++)note(g[i],g[j],'mesmo canteiro');});
+  for(let i=1;i<groups.length;i++)groups[i-1].forEach(a=>groups[i].forEach(b=>note(a,b,'trechos vizinhos do canteiro')));
+  return {sel,strips,beds,lines,pts,count,dropped,trees,meds,bedSp,groups,interc,under,nearTree,lineFill:[...lineFill],naoCoube,tri:TRI,removed,adj:[...adj.values()]};
+}
+
+// ---------- avisos ----------
+function advice(p){
+  const out=[];const sel=p.sel;const area=areaM2();
+  const has=f=>sel.some(f);
+  const names=a=>a.map(s=>s.n).join(', ');
+  const fracos=sel.filter(s=>!s.sol.includes(S.sol));
+  if(fracos.length){
+    const forte=S.sol==='S';
+    out.push({k:forte?'warn':'',t:`${names(fracos)} ${fracos.length>1?'pedem':'pede'} mais luz do que o espaço recebe. ${forte?'Com menos de 3 h de sol, a produção fica muito baixa.':'Vão crescer, mas produzem menos.'}`,
+      add:S.sol==='P'?[]:['taioba','cafe','jucara','hortela','cebolinha'].filter(i=>!S.sel.includes(i)&&BYID[i].sol.includes(S.sol))});
+  }
+  if(S.modo==='chao'){
+    if(p.dropped.length)out.push({k:'warn',t:`${names(p.dropped)} ${p.dropped.length>1?'precisam':'precisa'} de uma linha própria de árvores, e isso pede pelo menos 2,4 m de largura. Neste espaço, prefira plantas menores ou plante em vaso grande.`});
+    const grandes=sel.filter(s=>(s.pt||0)>=8&&!p.dropped.includes(s));
+    if(grandes.length&&area<60)out.push({k:'',t:`${names(grandes)} ${grandes.length>1?'chegam':'chega'} a ${Math.max(...grandes.map(s=>s.pt))} m ou mais. Em ${fmt(area)} m², mantenha com poda anual ou troque por pitanga, araçá ou acerola, que ficam menores.`,add:['pitanga','araca','acerola'].filter(i=>!S.sel.includes(i))});
+    if(p.lines.length&&!has(s=>s.adubo))out.push({k:'tip',t:'Inclua uma adubadeira. O feijão-guandu e a crotalária fixam nitrogênio no solo, e a poda deles vira adubo para os canteiros.',add:['guandu','crotalaria']});
+    if(has(s=>s.nat&&isTree(s))&&!has(s=>s.bio))out.push({k:'tip',t:'Árvores nativas jovens crescem melhor com sombra provisória. Banana e mandioca fazem essa proteção nos primeiros anos e ainda dão comida e palha.',add:['banana','mandioca']});
+    if(p.tri&&p.tri.inBed.length){const nb=p.tri.inBed.map(b=>b.t.n);out.push({k:'tip',t:`Para caber ${nb.length>1?'mais árvores':'mais uma árvore'}, ${nb.join(' e ')} ${nb.length>1?'foram':'foi'} para o meio ${nb.length>1?'dos canteiros':'do canteiro'}, formando um triângulo com as árvores das pontas da linha, a cerca de 2 m de cada uma. Deixe uma roda de 50 cm sem hortaliças em volta do tronco e pode a copa toda vez que ela passar de 2 m de altura ou começar a sombrear demais as hortaliças.`});}
+    if(p.lines.length&&!p.trees.length&&!p.meds.length)out.push({k:'tip',t:'As linhas de árvores estão vazias. Escolha frutíferas, nativas ou adubadeiras para ocupá-las.'});
+    if(p.beds.length&&!p.bedSp.length&&sel.length)out.push({k:'tip',t:'Os canteiros estão sem plantas baixas. Escolha hortaliças ou temperos, ou semeie crotalária para cobrir e adubar o solo.',add:['crotalaria']});
+    if(sel.some(s=>s.espalha))out.push({k:'',t:'A hortelã espalha pelas raízes e toma o canteiro. Plante dentro de um vaso enterrado.'});
+  }
+  if(S.agua==='dificil'){
+    const sed=sel.filter(s=>['alface','rucula','couve','salsinha','hortela'].includes(s.id));
+    out.push({k:sed.length?'warn':'tip',t:(sed.length?`${names(sed)} ${sed.length>1?'pedem':'pede'} rega quase diária. `:'')+'Com pouca água, cubra o solo com 10 cm de palha e prefira plantas resistentes como mandioca, batata-doce, ora-pro-nóbis e capim-santo.',add:sed.length?['mandioca','batatadoce','orapronobis','capimsanto'].filter(i=>!S.sel.includes(i)):[]});
+  }
+  if(S.solo==='umido'){
+    const secas=sel.filter(s=>(SECO[s.id]&&!UMIDO[s.id])||s.id==='dyckia');
+    out.push({k:'tip',t:'Com solo úmido, prefira as plantas do grupo “Solos mais úmidos”. Se a água ficar parada por muitos dias, plante em montinhos (camalhões).',add:['jucara','taioba','heliconia','inga','cara'].filter(i=>!S.sel.includes(i))});
+    if(secas.length)out.push({k:'warn',t:`${names(secas)} ${secas.length>1?'preferem':'prefere'} solo que drena bem. Plante em camalhão alto ou na parte mais seca do terreno.`});
+  }
+  if(S.solo==='seco'){
+    const molhadas=sel.filter(s=>UMIDO[s.id]&&!SECO[s.id]);
+    out.push({k:'tip',t:'Com solo seco ou pedregoso, prefira as plantas da seleção rápida “Solo seco ou pedregoso”.',add:['feijaoporco','candeia','assapeixe','carqueja','gabiroba'].filter(i=>!S.sel.includes(i))});
+    if(molhadas.length)out.push({k:'warn',t:`${names(molhadas)} ${molhadas.length>1?'preferem':'prefere'} umidade constante. Em solo seco, plante só onde der para regar ou na parte mais baixa e úmida do terreno.`});
+  }
+  if(sel.some(x=>x.id==='mastruz'))out.push({k:'warn',t:'O mastruz é medicinal, mas é tóxico em doses altas. Use só com orientação de um profissional de saúde e mantenha longe de crianças e animais.'});
+  if(!sel.length)out.push({k:'tip',t:'Escolha as plantas na lista ao lado para montar o desenho.'});
+  return out;
+}
+
+// ---------- planta baixa ----------
+// texturas: grãos de terra nos canteiros e palha nas linhas de árvores
+const TEX=`<pattern id="tx-soil" width="9" height="9" patternUnits="userSpaceOnUse"><circle cx="2" cy="3" r=".9" class="tx-g"/><circle cx="6.5" cy="7" r=".7" class="tx-g"/><circle cx="7" cy="1.5" r=".5" class="tx-g"/></pattern><pattern id="tx-mulch" width="14" height="10" patternUnits="userSpaceOnUse"><path d="M1 3 l5 -1.5 M8 8 l5 1 M3 8 l3 -2.5 M9 2 l4 2" class="tx-m"/></pattern>`;
+function rose(x,y){return `<g class="rose" transform="translate(${x} ${y})"><circle r="13" class="rose-c"/><path d="M0 -11 L3 0 L0 11 L-3 0 Z" class="rose-s"/><path d="M0 -11 L3 0 L-3 0 Z" class="rose-n"/><text y="-15" text-anchor="middle">N</text></g>`;}
+const EMPTY_ILL=`<svg class="empty-ill" viewBox="0 0 240 120" aria-hidden="true"><rect x="20" y="70" width="200" height="34" rx="8" class="h-soil"/><rect x="20" y="70" width="200" height="34" rx="8" fill="url(#tx-soil-e)"/><defs><pattern id="tx-soil-e" width="9" height="9" patternUnits="userSpaceOnUse"><circle cx="2" cy="3" r=".9" class="tx-g"/><circle cx="6.5" cy="7" r=".7" class="tx-g"/></pattern></defs><g class="e-sprout"><path d="M70 72 V60 M70 63 q-7 0 -9 -7 q7 0 9 7 M70 61 q6 -1 8 -7 q-6 0 -8 7"/></g><g class="e-sprout"><path d="M120 72 V56 M120 60 q-8 0 -10 -8 q8 0 10 8 M120 58 q7 -1 9 -8 q-7 0 -9 8"/></g><g class="e-sprout"><path d="M170 72 V62 M170 65 q-6 0 -8 -6 q6 0 8 6"/></g><path d="M196 34 h-22 l-4 12 h30 z M200 38 q14 0 16 12 M174 40 l-14 -10" class="e-can"/><g class="e-drop"><circle cx="154" cy="40" r="1.6"/><circle cx="150" cy="47" r="1.6"/><circle cx="157" cy="49" r="1.6"/></g></svg>`;
+const HERO_ILL=`<svg class="empty-hero" viewBox="0 0 360 172" role="img" aria-label="Corte de uma agrofloresta com os cinco estratos: abóbora no rasteiro, couve e alface no baixo, bananeira no médio, frutífera no alto e uma árvore de copa larga no emergente">
+      <defs>
+        <linearGradient id="h-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--sun)" stop-opacity=".16"/><stop offset="1" stop-color="var(--sun)" stop-opacity="0"/></linearGradient>
+        <linearGradient id="h-dirt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--bed)"/><stop offset="1" stop-color="var(--side1)"/></linearGradient>
+      </defs>
+      <rect x="0" y="0" width="360" height="128" rx="10" fill="url(#h-sky)"/>
+      <g class="h-sung"><circle cx="30" cy="26" r="12" class="h-sun"/>
+        <path class="h-ray" d="M30 6v-4M30 50v-4M10 26h-4M54 26h-4M16 12l-3-3M44 40l3 3M44 12l3-3M16 40l-3 3"/></g>
+      <path class="h-beam" d="M44 36 L150 128 M50 32 L230 128 M54 28 L320 120"/>
+      <!-- solo -->
+      <rect x="0" y="126" width="360" height="46" rx="8" fill="url(#h-dirt)"/>
+      <g class="h-root">
+        <path d="M30 130c-4 6-10 8-14 12M30 130c3 5 8 7 12 9"/>
+        <path d="M80 130v10M80 134c-5 4-8 5-11 8M80 134c4 3 7 5 10 6"/>
+        <path d="M140 130c-2 8-8 12-14 15M140 130c2 7 7 11 13 13M140 130v16"/>
+        <path d="M215 130c-3 9-12 14-20 17M215 130c3 9 11 13 19 16M215 130v20"/>
+        <path d="M302 130c-4 10-14 15-24 18M302 130c4 10 14 15 24 17M302 130c-1 8-2 14-1 22"/>
+      </g>
+      <path class="h-mulch" d="M4 127l7-3M18 128l6-4M48 127l7-3M60 128l5-4M98 127l7-3M112 128l6-3M160 127l7-3M174 128l6-4M188 127l5-3M240 127l7-3M254 128l6-4M268 127l5-3M330 127l7-3M344 128l6-4"/>
+      <!-- emergente: árvore de copa larga -->
+      <g class="h-pl d5">
+        <path class="h-trunk" d="M302 128 C300 100 304 74 301 40"/>
+        <path class="h-br" d="M301 58 L286 40 M302 50 L318 36 M301 44 L292 30"/>
+        <ellipse cx="302" cy="26" rx="44" ry="13" class="h-c1"/>
+        <ellipse cx="282" cy="32" rx="20" ry="8" class="h-c2"/>
+        <ellipse cx="322" cy="31" rx="21" ry="8" class="h-c2"/>
+        <ellipse cx="303" cy="19" rx="24" ry="8" class="h-c3"/>
+      </g>
+      <!-- alto: frutífera -->
+      <g class="h-pl d4">
+        <path class="h-trunk" d="M215 128 C214 110 217 92 215 74"/>
+        <path class="h-br" d="M215 92 L203 78 M216 86 L228 76"/>
+        <circle cx="200" cy="70" r="17" class="h-c2"/>
+        <circle cx="231" cy="69" r="17" class="h-c2"/>
+        <circle cx="215" cy="56" r="21" class="h-c1"/>
+        <circle cx="206" cy="48" r="9" class="h-c3"/>
+        <circle cx="198" cy="76" r="3.2" class="h-fr"/><circle cx="226" cy="78" r="3.2" class="h-fr"/><circle cx="220" cy="64" r="3.2" class="h-fr"/><circle cx="236" cy="62" r="3" class="h-fr"/>
+      </g>
+      <!-- médio: bananeira -->
+      <g class="h-pl d3">
+        <path class="h-pseudo" d="M137 128 L138 84 L143 84 L144 128Z"/>
+        <path class="h-leaf2" d="M140 86 C126 66 108 62 96 70 C112 70 126 76 140 88Z"/>
+        <path class="h-leaf2" d="M141 86 C156 64 176 60 188 68 C170 68 156 76 142 88Z"/>
+        <path class="h-leaf3" d="M140 85 C134 64 128 52 120 46 C128 58 134 70 139 86Z"/>
+        <path class="h-leaf3" d="M141 85 C150 62 160 52 170 48 C160 60 150 72 142 86Z"/>
+        <path class="h-leaf2" d="M140 85 C141 66 142 56 146 44 C145 58 143 70 141 86Z"/>
+        <path class="h-stalk" d="M143 92 C150 96 152 102 151 108"/>
+        <g class="h-ban"><ellipse cx="148" cy="100" rx="2" ry="4.5" transform="rotate(-20 148 100)"/><ellipse cx="152" cy="101" rx="2" ry="4.5" transform="rotate(10 152 101)"/><ellipse cx="150" cy="106" rx="2" ry="4.5"/></g>
+        <path class="h-flor" d="M151 108 c-1 3 0 6 2 7 c1-3 0-5-2-7Z"/>
+      </g>
+      <!-- baixo: touceira de folhas largas e eretas, como a cana-da-índia, com flores no alto -->
+      <g class="h-pl d2">
+        <path class="h-cstem" d="M80 128 L80 112"/><path class="h-cstem" d="M86 128 L87 108"/><path class="h-cstem" d="M92 128 L94 113"/>
+        <path class="h-c3" d="M78.0 121.0 Q73.3 110.6 62.1 112.5 Q66.8 123.0 78.0 121.0Z"/><path class="h-rib" d="M78.0 121.0 L63.7 113.4"/><path class="h-c3" d="M95.0 121.0 Q105.5 124.3 110.8 114.6 Q100.3 111.3 95.0 121.0Z"/><path class="h-rib" d="M95.0 121.0 L109.2 115.3"/><path class="h-c1" d="M80.0 116.0 Q82.3 102.0 69.0 96.9 Q66.7 111.0 80.0 116.0Z"/><path class="h-rib" d="M80.0 116.0 L70.1 98.9"/><path class="h-c1" d="M94.0 117.0 Q107.1 117.5 109.8 104.7 Q96.6 104.1 94.0 117.0Z"/><path class="h-rib" d="M94.0 117.0 L108.2 105.9"/><path class="h-c2" d="M86.0 118.0 Q85.7 105.2 73.1 102.7 Q73.4 115.5 86.0 118.0Z"/><path class="h-rib" d="M86.0 118.0 L74.4 104.2"/><path class="h-c2" d="M90.0 118.0 Q102.2 115.9 102.2 103.4 Q90.0 105.6 90.0 118.0Z"/><path class="h-rib" d="M90.0 118.0 L101.0 104.9"/><path class="h-c3" d="M83.0 112.0 Q88.9 99.0 78.2 89.5 Q72.3 102.5 83.0 112.0Z"/><path class="h-rib" d="M83.0 112.0 L78.7 91.8"/><path class="h-c3" d="M91.0 113.0 Q102.7 105.6 98.5 92.3 Q86.8 99.8 91.0 113.0Z"/><path class="h-rib" d="M91.0 113.0 L97.8 94.4"/><path class="h-c1" d="M87.0 111.0 Q95.7 100.6 88.5 89.1 Q79.8 99.5 87.0 111.0Z"/><path class="h-rib" d="M87.0 111.0 L88.4 91.2"/>
+        <path class="h-cstem" d="M87 108 L88 82"/><ellipse cx="85.5" cy="85" rx="2.8" ry="1.6" transform="rotate(-40 85.5 85)" class="h-cfl"/><ellipse cx="90.5" cy="86" rx="2.8" ry="1.6" transform="rotate(40 90.5 86)" class="h-cfl"/><ellipse cx="86" cy="89" rx="2.8" ry="1.6" transform="rotate(-30 86 89)" class="h-cfl"/><ellipse cx="90" cy="90.5" rx="2.8" ry="1.6" transform="rotate(35 90 90.5)" class="h-cfl"/><ellipse cx="87.8" cy="82" rx="2.8" ry="1.6" transform="rotate(0 87.8 82)" class="h-cfl"/><ellipse cx="86.5" cy="93" rx="2.8" ry="1.6" transform="rotate(-20 86.5 93)" class="h-cfl"/><ellipse cx="89.5" cy="94" rx="2.8" ry="1.6" transform="rotate(25 89.5 94)" class="h-cfl"/>
+      </g>
+      <!-- rasteiro: forração de folhinhas se esparramando pelo chão -->
+      <g class="h-pl d1">
+        <path class="h-vine" d="M34.0 124.0 L31.0 125.0 L28.0 124.6 L25.0 123.9 L22.0 124.7 L19.0 125.9 L16.0 125.6 L13.0 124.8 L10.0 125.3 L7.0 126.6 L4.0 126.7"/><path class="h-vine" d="M34.0 124.0 L31.0 124.5 L28.0 123.6 L25.0 122.4 L22.0 122.7 L19.0 123.4 L16.0 122.7 L13.0 121.4 L10.0 121.5"/><path class="h-vine" d="M34.0 124.0 L37.0 125.0 L40.0 124.5 L43.0 123.8 L46.0 124.6 L49.0 125.8 L52.0 125.6 L55.0 124.7 L58.0 125.2 L61.0 126.5 L64.0 126.6"/><path class="h-vine" d="M34.0 124.0 L37.0 124.5 L40.0 123.4 L43.0 122.2 L46.0 122.4 L49.0 123.0 L52.0 122.3 L55.0 120.9 L58.0 120.8"/><path class="h-vine" d="M34.0 124.0 L31.0 125.6 L28.0 125.7 L25.0 125.7 L22.0 127.0 L19.0 128.8 L16.0 129.2"/><path class="h-vine" d="M34.0 124.0 L37.0 125.5 L40.0 125.5 L43.0 125.3 L46.0 126.5 L49.0 128.2 L52.0 128.5"/><path class="h-vine" d="M34.0 124.0 L34.9 123.0 L35.8 120.5 L36.7 117.8"/><path class="h-vine" d="M34.0 124.0 L33.1 123.0 L32.2 120.5 L31.3 117.8"/>
+        <ellipse cx="30.6" cy="122.8" rx="2.4" ry="1.1" transform="rotate(-40 30.6 122.8)" class="h-c3"/><ellipse cx="31.0" cy="126.0" rx="2.4" ry="1.1" transform="rotate(22 31.0 126.0)" class="h-c1"/><ellipse cx="28.0" cy="122.4" rx="2.3" ry="1.1" transform="rotate(-48 28.0 122.4)" class="h-c1"/><ellipse cx="27.5" cy="125.6" rx="2.3" ry="1.1" transform="rotate(33 27.5 125.6)" class="h-c1"/><ellipse cx="25.4" cy="121.7" rx="2.3" ry="1.1" transform="rotate(-37 25.4 121.7)" class="h-c1"/><ellipse cx="25.2" cy="124.9" rx="2.3" ry="1.1" transform="rotate(27 25.2 124.9)" class="h-c3"/><ellipse cx="21.9" cy="122.5" rx="2.2" ry="1.1" transform="rotate(-33 21.9 122.5)" class="h-c3"/><ellipse cx="22.4" cy="125.7" rx="2.2" ry="1.1" transform="rotate(21 22.4 125.7)" class="h-c1"/><ellipse cx="18.5" cy="123.7" rx="2.2" ry="1.0" transform="rotate(-46 18.5 123.7)" class="h-c1"/><ellipse cx="18.6" cy="126.9" rx="2.2" ry="1.0" transform="rotate(44 18.6 126.9)" class="h-c3"/><ellipse cx="15.8" cy="123.4" rx="2.1" ry="1.0" transform="rotate(-31 15.8 123.4)" class="h-c3"/><ellipse cx="15.5" cy="126.6" rx="2.1" ry="1.0" transform="rotate(22 15.5 126.6)" class="h-c1"/>
+        <ellipse cx="12.9" cy="122.6" rx="2.1" ry="1.0" transform="rotate(-30 12.9 122.6)" class="h-c1"/><ellipse cx="12.9" cy="125.8" rx="2.1" ry="1.0" transform="rotate(38 12.9 125.8)" class="h-c1"/><ellipse cx="10.2" cy="123.1" rx="2.0" ry="1.0" transform="rotate(-26 10.2 123.1)" class="h-c1"/><ellipse cx="10.0" cy="126.3" rx="2.0" ry="1.0" transform="rotate(37 10.0 126.3)" class="h-c3"/><ellipse cx="6.7" cy="124.4" rx="2.0" ry="0.9" transform="rotate(-28 6.7 124.4)" class="h-c3"/><ellipse cx="6.9" cy="127.6" rx="2.0" ry="0.9" transform="rotate(24 6.9 127.6)" class="h-c3"/><ellipse cx="4.0" cy="124.5" rx="1.9" ry="0.9" transform="rotate(-45 4.0 124.5)" class="h-c1"/><ellipse cx="4.3" cy="127.7" rx="1.9" ry="0.9" transform="rotate(40 4.3 127.7)" class="h-c3"/><ellipse cx="30.8" cy="122.3" rx="2.3" ry="1.1" transform="rotate(-24 30.8 122.3)" class="h-c3"/><ellipse cx="31.1" cy="125.5" rx="2.3" ry="1.1" transform="rotate(38 31.1 125.5)" class="h-c1"/><ellipse cx="28.5" cy="121.4" rx="2.3" ry="1.1" transform="rotate(-25 28.5 121.4)" class="h-c1"/><ellipse cx="27.5" cy="124.6" rx="2.3" ry="1.1" transform="rotate(40 27.5 124.6)" class="h-c3"/>
+        <ellipse cx="25.6" cy="120.2" rx="2.2" ry="1.1" transform="rotate(-31 25.6 120.2)" class="h-c3"/><ellipse cx="24.9" cy="123.4" rx="2.2" ry="1.1" transform="rotate(29 24.9 123.4)" class="h-c3"/><ellipse cx="22.0" cy="120.5" rx="2.2" ry="1.0" transform="rotate(-49 22.0 120.5)" class="h-c1"/><ellipse cx="21.5" cy="123.7" rx="2.2" ry="1.0" transform="rotate(24 21.5 123.7)" class="h-c3"/><ellipse cx="18.7" cy="121.2" rx="2.1" ry="1.0" transform="rotate(-46 18.7 121.2)" class="h-c1"/><ellipse cx="18.5" cy="124.4" rx="2.1" ry="1.0" transform="rotate(46 18.5 124.4)" class="h-c1"/><ellipse cx="16.5" cy="120.5" rx="2.1" ry="1.0" transform="rotate(-34 16.5 120.5)" class="h-c3"/><ellipse cx="15.7" cy="123.7" rx="2.1" ry="1.0" transform="rotate(46 15.7 123.7)" class="h-c1"/><ellipse cx="13.5" cy="119.2" rx="2.0" ry="0.9" transform="rotate(-39 13.5 119.2)" class="h-c3"/><ellipse cx="12.6" cy="122.4" rx="2.0" ry="0.9" transform="rotate(25 12.6 122.4)" class="h-c1"/><ellipse cx="10.0" cy="119.3" rx="2.0" ry="0.9" transform="rotate(-43 10.0 119.3)" class="h-c3"/><ellipse cx="9.4" cy="122.5" rx="2.0" ry="0.9" transform="rotate(28 9.4 122.5)" class="h-c1"/>
+        <ellipse cx="37.1" cy="122.8" rx="2.4" ry="1.1" transform="rotate(-39 37.1 122.8)" class="h-c3"/><ellipse cx="37.0" cy="126.0" rx="2.4" ry="1.1" transform="rotate(41 37.0 126.0)" class="h-c3"/><ellipse cx="39.5" cy="122.3" rx="2.3" ry="1.1" transform="rotate(-30 39.5 122.3)" class="h-c3"/><ellipse cx="40.4" cy="125.5" rx="2.3" ry="1.1" transform="rotate(43 40.4 125.5)" class="h-c3"/><ellipse cx="42.9" cy="121.6" rx="2.3" ry="1.1" transform="rotate(-38 42.9 121.6)" class="h-c1"/><ellipse cx="42.5" cy="124.8" rx="2.3" ry="1.1" transform="rotate(39 42.5 124.8)" class="h-c1"/><ellipse cx="45.6" cy="122.4" rx="2.2" ry="1.1" transform="rotate(-44 45.6 122.4)" class="h-c1"/><ellipse cx="45.4" cy="125.6" rx="2.2" ry="1.1" transform="rotate(22 45.4 125.6)" class="h-c1"/><ellipse cx="48.8" cy="123.6" rx="2.2" ry="1.0" transform="rotate(-47 48.8 123.6)" class="h-c1"/><ellipse cx="49.1" cy="126.8" rx="2.2" ry="1.0" transform="rotate(46 49.1 126.8)" class="h-c1"/><ellipse cx="51.8" cy="123.4" rx="2.1" ry="1.0" transform="rotate(-42 51.8 123.4)" class="h-c1"/><ellipse cx="52.4" cy="126.6" rx="2.1" ry="1.0" transform="rotate(24 52.4 126.6)" class="h-c3"/>
+        <ellipse cx="55.0" cy="122.5" rx="2.1" ry="1.0" transform="rotate(-36 55.0 122.5)" class="h-c1"/><ellipse cx="54.8" cy="125.7" rx="2.1" ry="1.0" transform="rotate(23 54.8 125.7)" class="h-c1"/><ellipse cx="57.6" cy="123.0" rx="2.0" ry="1.0" transform="rotate(-25 57.6 123.0)" class="h-c1"/><ellipse cx="58.0" cy="126.2" rx="2.0" ry="1.0" transform="rotate(49 58.0 126.2)" class="h-c1"/><ellipse cx="60.4" cy="124.3" rx="2.0" ry="0.9" transform="rotate(-34 60.4 124.3)" class="h-c3"/><ellipse cx="61.4" cy="127.5" rx="2.0" ry="0.9" transform="rotate(49 61.4 127.5)" class="h-c3"/><ellipse cx="63.8" cy="124.4" rx="1.9" ry="0.9" transform="rotate(-42 63.8 124.4)" class="h-c1"/><ellipse cx="64.0" cy="127.6" rx="1.9" ry="0.9" transform="rotate(43 64.0 127.6)" class="h-c3"/><ellipse cx="36.7" cy="122.3" rx="2.3" ry="1.1" transform="rotate(-40 36.7 122.3)" class="h-c3"/><ellipse cx="37.4" cy="125.5" rx="2.3" ry="1.1" transform="rotate(50 37.4 125.5)" class="h-c3"/><ellipse cx="40.3" cy="121.2" rx="2.3" ry="1.1" transform="rotate(-25 40.3 121.2)" class="h-c1"/><ellipse cx="39.8" cy="124.4" rx="2.3" ry="1.1" transform="rotate(36 39.8 124.4)" class="h-c1"/>
+        <ellipse cx="42.7" cy="120.0" rx="2.2" ry="1.1" transform="rotate(-49 42.7 120.0)" class="h-c1"/><ellipse cx="43.5" cy="123.2" rx="2.2" ry="1.1" transform="rotate(41 43.5 123.2)" class="h-c1"/><ellipse cx="46.6" cy="120.2" rx="2.2" ry="1.0" transform="rotate(-22 46.6 120.2)" class="h-c3"/><ellipse cx="45.7" cy="123.4" rx="2.2" ry="1.0" transform="rotate(31 45.7 123.4)" class="h-c1"/><ellipse cx="48.6" cy="120.8" rx="2.1" ry="1.0" transform="rotate(-44 48.6 120.8)" class="h-c3"/><ellipse cx="49.4" cy="124.0" rx="2.1" ry="1.0" transform="rotate(47 49.4 124.0)" class="h-c1"/><ellipse cx="52.4" cy="120.1" rx="2.1" ry="1.0" transform="rotate(-30 52.4 120.1)" class="h-c1"/><ellipse cx="52.5" cy="123.3" rx="2.1" ry="1.0" transform="rotate(40 52.5 123.3)" class="h-c3"/><ellipse cx="55.0" cy="118.7" rx="2.0" ry="0.9" transform="rotate(-27 55.0 118.7)" class="h-c1"/><ellipse cx="54.8" cy="121.9" rx="2.0" ry="0.9" transform="rotate(44 54.8 121.9)" class="h-c3"/><ellipse cx="57.9" cy="118.6" rx="2.0" ry="0.9" transform="rotate(-21 57.9 118.6)" class="h-c1"/><ellipse cx="58.3" cy="121.8" rx="2.0" ry="0.9" transform="rotate(48 58.3 121.8)" class="h-c1"/>
+        <ellipse cx="30.6" cy="123.4" rx="2.3" ry="1.1" transform="rotate(-46 30.6 123.4)" class="h-c3"/><ellipse cx="30.6" cy="126.6" rx="2.3" ry="1.1" transform="rotate(44 30.6 126.6)" class="h-c3"/><ellipse cx="28.2" cy="123.5" rx="2.3" ry="1.1" transform="rotate(-21 28.2 123.5)" class="h-c1"/><ellipse cx="27.6" cy="126.7" rx="2.3" ry="1.1" transform="rotate(36 27.6 126.7)" class="h-c1"/><ellipse cx="25.2" cy="123.5" rx="2.2" ry="1.0" transform="rotate(-21 25.2 123.5)" class="h-c3"/><ellipse cx="24.9" cy="126.7" rx="2.2" ry="1.0" transform="rotate(48 24.9 126.7)" class="h-c3"/><ellipse cx="21.7" cy="124.8" rx="2.1" ry="1.0" transform="rotate(-25 21.7 124.8)" class="h-c1"/><ellipse cx="21.7" cy="128.0" rx="2.1" ry="1.0" transform="rotate(29 21.7 128.0)" class="h-c3"/><ellipse cx="18.9" cy="126.6" rx="2.0" ry="1.0" transform="rotate(-42 18.9 126.6)" class="h-c1"/><ellipse cx="18.8" cy="129.8" rx="2.0" ry="1.0" transform="rotate(47 18.8 129.8)" class="h-c1"/><ellipse cx="16.5" cy="127.0" rx="2.0" ry="0.9" transform="rotate(-32 16.5 127.0)" class="h-c1"/><ellipse cx="16.0" cy="130.2" rx="2.0" ry="0.9" transform="rotate(48 16.0 130.2)" class="h-c3"/>
+        <ellipse cx="36.4" cy="123.3" rx="2.3" ry="1.1" transform="rotate(-34 36.4 123.3)" class="h-c1"/><ellipse cx="36.4" cy="126.5" rx="2.3" ry="1.1" transform="rotate(25 36.4 126.5)" class="h-c3"/><ellipse cx="40.0" cy="123.3" rx="2.3" ry="1.1" transform="rotate(-45 40.0 123.3)" class="h-c3"/><ellipse cx="39.8" cy="126.5" rx="2.3" ry="1.1" transform="rotate(37 39.8 126.5)" class="h-c3"/><ellipse cx="43.3" cy="123.1" rx="2.2" ry="1.0" transform="rotate(-33 43.3 123.1)" class="h-c1"/><ellipse cx="42.7" cy="126.3" rx="2.2" ry="1.0" transform="rotate(37 42.7 126.3)" class="h-c1"/><ellipse cx="46.0" cy="124.3" rx="2.1" ry="1.0" transform="rotate(-27 46.0 124.3)" class="h-c3"/><ellipse cx="46.5" cy="127.5" rx="2.1" ry="1.0" transform="rotate(43 46.5 127.5)" class="h-c1"/><ellipse cx="49.0" cy="126.0" rx="2.0" ry="1.0" transform="rotate(-32 49.0 126.0)" class="h-c3"/><ellipse cx="48.9" cy="129.2" rx="2.0" ry="1.0" transform="rotate(41 48.9 129.2)" class="h-c3"/><ellipse cx="52.5" cy="126.3" rx="2.0" ry="0.9" transform="rotate(-36 52.5 126.3)" class="h-c3"/><ellipse cx="52.5" cy="129.5" rx="2.0" ry="0.9" transform="rotate(46 52.5 129.5)" class="h-c1"/>
+        <ellipse cx="35.4" cy="120.8" rx="2.3" ry="1.1" transform="rotate(-33 35.4 120.8)" class="h-c3"/><ellipse cx="34.4" cy="124.0" rx="2.3" ry="1.1" transform="rotate(24 34.4 124.0)" class="h-c1"/><ellipse cx="35.5" cy="118.3" rx="2.1" ry="1.0" transform="rotate(-48 35.5 118.3)" class="h-c1"/><ellipse cx="36.1" cy="121.5" rx="2.1" ry="1.0" transform="rotate(40 36.1 121.5)" class="h-c3"/><ellipse cx="37.0" cy="115.6" rx="2.0" ry="0.9" transform="rotate(-45 37.0 115.6)" class="h-c3"/><ellipse cx="37.2" cy="118.8" rx="2.0" ry="0.9" transform="rotate(24 37.2 118.8)" class="h-c3"/><ellipse cx="33.6" cy="120.8" rx="2.3" ry="1.1" transform="rotate(-43 33.6 120.8)" class="h-c1"/><ellipse cx="33.7" cy="124.0" rx="2.3" ry="1.1" transform="rotate(35 33.7 124.0)" class="h-c3"/><ellipse cx="32.1" cy="118.3" rx="2.1" ry="1.0" transform="rotate(-45 32.1 118.3)" class="h-c3"/><ellipse cx="31.8" cy="121.5" rx="2.1" ry="1.0" transform="rotate(30 31.8 121.5)" class="h-c1"/><ellipse cx="30.7" cy="115.6" rx="2.0" ry="0.9" transform="rotate(-28 30.7 115.6)" class="h-c3"/><ellipse cx="30.7" cy="118.8" rx="2.0" ry="0.9" transform="rotate(33 30.7 118.8)" class="h-c1"/>
+        <circle cx="20" cy="121" r="1.3" class="h-fl"/><circle cx="20" cy="121" r=".5" class="h-pump"/><circle cx="44" cy="120" r="1.3" class="h-fl"/><circle cx="44" cy="120" r=".5" class="h-pump"/><circle cx="31" cy="118" r="1.3" class="h-fl"/><circle cx="31" cy="118" r=".5" class="h-pump"/><circle cx="56" cy="123" r="1.3" class="h-fl"/><circle cx="56" cy="123" r=".5" class="h-pump"/><circle cx="12" cy="125" r="1.3" class="h-fl"/><circle cx="12" cy="125" r=".5" class="h-pump"/>
+      </g>
+      <g class="h-lab">
+        <circle cx="30" cy="152" r="4" class="p-R"/><text x="30" y="166">rasteiro</text>
+        <circle cx="88" cy="152" r="4" class="p-B"/><text x="88" y="166">baixo</text>
+        <circle cx="146" cy="152" r="4" class="p-M"/><text x="146" y="166">médio</text>
+        <circle cx="215" cy="152" r="4" class="p-A"/><text x="215" y="166">alto</text>
+        <circle cx="302" cy="152" r="4" class="p-E"/><text x="302" y="166">emergente</text>
+      </g>
+    </svg>`;
+function emptyState(msg){return `<div class="empty-state">${HERO_ILL}<p>${msg}</p></div>`;}
+let FZ=1;const MQ='(max-width:640px)';
+function isMob(){try{return matchMedia(MQ).matches;}catch(e){return false;}}
+function planRot(){const [L,W]=LW();return isMob()&&!isCirc()&&L>W*1.15;}
+// no celular, aumenta o texto dos desenhos para compensar a redução da escala
+function fitText(){if(!isMob())return;document.querySelectorAll('#out .drawing svg:not([data-fz])').forEach(svg=>{const vb=svg.viewBox&&svg.viewBox.baseVal;const w=svg.getBoundingClientRect().width;if(!vb||!w)return;svg.style.setProperty('--fz',Math.min(2.4,Math.max(1,vb.width/w)).toFixed(2));});}
+function mtabSync(){const t=S.mtab||'espaco';document.body.dataset.mtab=t;
+  document.querySelectorAll('#mtabs [data-mt]').forEach(b=>{if(b.dataset.mt===t)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
+  const np=$('mt-np');if(np)np.textContent=S.sel.length?S.sel.length:'';
+  const nw=$('mt-nw');if(nw)nw.textContent=document.querySelector('#out .cap-alert')?'!':'';}
+function stripList(p){const nm={bed:'Canteiro',path:'Rua',line:'Linha de árvores'};const rot=planRot();
+  return `<div class="strips"><span class="strips-t">Faixas ${rot?'da esquerda para a direita':'de cima para baixo'}</span><ol>${p.strips.map(st=>`<li class="st-${st.t}"><span>${nm[st.t]}</span><b>${cm_(st.h)}</b></li>`).join('')}</ol>${rot?'<p class="hint">No celular, o desenho aparece deitado para caber melhor na tela. A rosa dos ventos continua indicando o norte.</p>':''}</div>`;}
+function drawPlan(p){
+  const [L,W]=LW();const circ=isCirc();const mob=isMob();const rot=planRot();
+  const K=Math.max(14,Math.min(90,680/Math.max(L,W*.8)));
+  const pl=34,pt=mob?58:46,pr=mob?16:74,pb=10;
+  const vw=L*K+pl+pr,vh=W*K+pt+pb;
+  if(mob){const o=$('out');const avail=Math.max(240,Math.min((o&&o.clientWidth)||9999,window.innerWidth-32)-58);FZ=Math.min(2.6,Math.max(1,(rot?vh:vw)/(avail*(S.zoom||1))));}else FZ=1;
+  const open=`<svg viewBox="0 0 ${(rot?vh:vw).toFixed(1)} ${(rot?vw:vh).toFixed(1)}" data-fz style="--fz:${FZ.toFixed(2)}" role="img" aria-label="Planta baixa do plantio em ${fmt(L)} por ${fmt(W)} metros">`;
+  let g=`<g transform="translate(${pl},${pt})">`;
+  if(circ)g+=`<defs><clipPath id="tclip"><circle cx="${L*K/2}" cy="${W*K/2}" r="${L*K/2}"/></clipPath></defs><g clip-path="url(#tclip)">`;
+  g+=`<defs>${TEX}</defs>`;
+  g+=`<rect class="s-ground" x="0" y="0" width="${L*K}" height="${W*K}"/>`;
+  p.strips.forEach(s=>{if(s.t==='bed')g+=`<rect class="s-bed" x="2" y="${s.y*K+1}" width="${L*K-4}" height="${s.h*K-2}" rx="4"/><rect fill="url(#tx-soil)" x="2" y="${s.y*K+1}" width="${L*K-4}" height="${s.h*K-2}" rx="4"/>`;if(s.t==='line')g+=`<rect fill="url(#tx-mulch)" x="2" y="${s.y*K+1}" width="${L*K-4}" height="${s.h*K-2}" rx="${s.h*K/2}"/>`;if(s.t==='line')g+=`<rect class="s-line" x="2" y="${s.y*K+1}" width="${L*K-4}" height="${s.h*K-2}" rx="${s.h*K/2}"/>`;});
+  for(let x=1;x<L;x++)g+=`<line class="s-grid" x1="${x*K}" y1="0" x2="${x*K}" y2="${W*K}"/>`;
+  for(let y=1;y<W;y++)g+=`<line class="s-grid" x1="0" y1="${y*K}" x2="${L*K}" y2="${y*K}"/>`;
+  // cada símbolo fica menor que a metade da distância até a planta mais próxima: nenhum se sobrepõe
+  const cellG=.5,grid=new Map();p.pts.forEach(q=>{const k=Math.floor(q.x/cellG)+','+Math.floor(q.y/cellG);if(!grid.has(k))grid.set(k,[]);grid.get(k).push(q);});
+  const nn=q=>{let m=9;const gx=Math.floor(q.x/cellG),gy=Math.floor(q.y/cellG);for(let dx=-3;dx<=3;dx++)for(let dy=-3;dy<=3;dy++){const a=grid.get((gx+dx)+','+(gy+dy));if(a)for(const o of a)if(o!==q)m=Math.min(m,Math.hypot(o.x-q.x,o.y-q.y));}return m;};
+  p.pts.forEach(q=>{
+    let rr;
+    if(q.kind==='tree')rr=.34*K;
+    else if(q.kind==='med')rr=.28*K;
+    else rr=Math.min(q.cell*.45,.5)*K;
+    rr=Math.max(1,Math.min(rr,nn(q)*K*.46,Math.min(q.x,L-q.x,q.y,W-q.y)*K*.95));
+    if(q.kind!=='bed'&&rr>6)g+=`<circle class="shd" cx="${(q.x*K+rr*.18).toFixed(1)}" cy="${(q.y*K+rr*.22).toFixed(1)}" r="${(rr*.98).toFixed(1)}"/>`;
+    g+=`<circle class="p-${q.s.e}" cx="${(q.x*K).toFixed(1)}" cy="${(q.y*K).toFixed(1)}" r="${rr.toFixed(1)}"><title>${esc(q.s.n)}</title></circle>`;
+    if(rr>=8*Math.max(1,FZ*.8))g+=`<text class="lab ${darkLab(q.s.e)}" x="${(q.x*K).toFixed(1)}" y="${(q.y*K).toFixed(1)}">${esc(q.s.a)}</text>`;
+  });
+  if(circ)g+=`</g>`;
+  g+=dims(p,K);
+  // régua de faixas: canteiros, ruas e linhas de árvores (no celular vira lista abaixo do desenho)
+  if(!mob){const rx=L*K+12;const nm={bed:'canteiro',path:'rua',line:'árvores'};
+    p.strips.forEach((st,i)=>{const a=st.y*K,b=(st.y+st.h)*K,mid=(a+b)/2;
+      g+=`<path class="dim" d="M${rx.toFixed(1)},${a.toFixed(1)}V${b.toFixed(1)}M${(rx-3).toFixed(1)},${a.toFixed(1)}h6M${(rx-3).toFixed(1)},${b.toFixed(1)}h6"/>`;
+      const cls=`dimt ${st.t==='path'?'dim-rua':''}`;
+      if(b-a>=26)g+=`<text class="${cls}" x="${(rx+7).toFixed(1)}" y="${(mid-2).toFixed(1)}">${nm[st.t]}</text><text class="${cls}" x="${(rx+7).toFixed(1)}" y="${(mid+10).toFixed(1)}">${cm_(st.h)}</text>`;
+      else{const ty=b-a<12?mid+((i%2)?7:-1):mid+3.5;g+=`<text class="${cls}" x="${(rx+7).toFixed(1)}" y="${ty.toFixed(1)}">${nm[st.t]} ${cm_(st.h)}</text>`;}});}
+  g+=mob?rose(L*K-14,-30):rose(L*K+pr-20,-24);
+  if(circ){g+=`<circle class="s-edge" cx="${L*K/2}" cy="${W*K/2}" r="${L*K/2}"/>`;g+=`<text class="s-dim" x="${L*K/2}" y="-9" text-anchor="middle">Ø ${fmt(L)} m</text>`;}
+  else{
+  g+=`<rect class="s-edge" x="0" y="0" width="${L*K}" height="${W*K}"/>`;
+  g+=`<text class="s-dim" x="${L*K/2}" y="-9" text-anchor="middle">${fmt(L)} m</text>`;
+  g+=rot?`<text class="s-dim" x="-14" y="${W*K/2}" text-anchor="middle">${fmt(W)} m</text>`:`<text class="s-dim" transform="translate(-12 ${W*K/2}) rotate(-90)" text-anchor="middle">${fmt(W)} m</text>`;}
+  g+=`</g>`;
+  if(rot){g=g.replace(/<text(?![^>]*transform=)([^>]*)>/g,(m,a)=>{const x=(a.match(/\sx="([-\d.]+)"/)||[0,0])[1],y=(a.match(/\sy="([-\d.]+)"/)||[0,0])[1];return `<text${a} transform="rotate(90 ${x} ${y})">`;});
+    return open+`<g transform="translate(0 ${vw.toFixed(1)}) rotate(-90)">`+g+`</g></svg>`;}
+  return open+g+`</svg>`;
+}
+
+// cotas: distância ideal entre plantas (um exemplo por planta)
+function dims(p,K){
+  const X=n=>n.toFixed(1);let o='';
+  const H=(x1,x2,y,t)=>{if((x2-x1)*K<16*FZ)return '';const a=x1*K,b=x2*K,yy=y*K;
+    return `<path class="dim" d="M${X(a)},${X(yy)}H${X(b)}M${X(a)},${X(yy-3)}v6M${X(b)},${X(yy-3)}v6"/><text class="dimt" x="${X((a+b)/2)}" y="${X(yy-4)}" text-anchor="middle">${t}</text>`;};
+  const V=(y1,y2,x,t)=>{if((y2-y1)*K<14*FZ)return '';const a=y1*K,b=y2*K,xx=x*K;
+    return `<path class="dim" d="M${X(xx)},${X(a)}V${X(b)}M${X(xx-3)},${X(a)}h6M${X(xx-3)},${X(b)}h6"/><text class="dimt" x="${X(xx+4)}" y="${X((a+b)/2+3)}">${t}</text>`;};
+  const by={};p.pts.forEach(q=>{(by[q.s.id]=by[q.s.id]||[]).push(q);});
+  const done=new Set();
+  // intervalo entre companheiras na mesma fileira e distância entre fileiras
+  (p.interc||[]).forEach(ic=>{const a=ic.g[0],b=ic.g[1];
+    const qa=p.pts.find(q=>q.s===a&&q.kind==='bed'&&p.pts.some(o=>o.s===b&&Math.abs(o.y-q.y)<1e-6&&o.x>q.x&&o.x-q.x<ic.steps[0][2]*1.05));
+    if(!qa)return;const qb=p.pts.find(o=>o.s===b&&Math.abs(o.y-qa.y)<1e-6&&o.x>qa.x&&o.x-qa.x<ic.steps[0][2]*1.05);
+    const r=Math.min(qa.cell*.45,.5);o+=H(qa.x,qb.x,qa.y-r-.04,`${cm_(qb.x-qa.x)}`);
+    const qn=p.pts.find(q=>q.kind==='bed'&&ic.g.includes(q.s)&&Math.abs(q.y-qa.y-ic.rowGap)<1e-3&&Math.abs(q.x-qa.x)<ic.steps[0][2]*1.2);
+    if(qn)o+=V(qa.y,qn.y,Math.min(qa.x,qn.x)-r-.06,cm_(qn.y-qa.y));
+    ic.g.forEach(m=>done.add(m.id));});
+  Object.values(by).forEach(arr=>{
+    const s=arr[0].s;if(done.has(s.id))return;
+    if(arr[0].kind==='bed'){
+      for(const q0 of arr){
+        const q1=arr.find(q=>Math.abs(q.y-q0.y)<1e-6&&q.x>q0.x+1e-6&&q.x-q0.x<s.ep*1.05);
+        const q2=arr.find(q=>Math.abs(q.x-q0.x)<1e-6&&q.y>q0.y+1e-6&&q.y-q0.y<s.el*3.2);
+        if(q1||q2){
+          const r=Math.min(q0.cell*.45,.5);
+          if(q1)o+=H(q0.x,q1.x,q0.y-r-.04,cm_(q1.x-q0.x));
+          if(q2)o+=V(q0.y,q2.y,q0.x-r-.04,cm_(q2.y-q0.y));
+          done.add(s.id);break;
+        }
+      }
+    }
+  });
+  const trees=p.pts.filter(q=>q.kind==='tree');
+  if(trees.length){
+    const t0=trees[0];
+    const t1=trees.find(q=>Math.abs(q.y-t0.y)<1e-6&&q.x>t0.x+1e-6);
+    const m1=p.pts.find(q=>q.kind==='med'&&Math.abs(q.y-t0.y)<1e-6&&q.x>t0.x);
+    const edgeT=t0.y<.7;// linha encostada na borda de cima: cotas por baixo, para não cobrir a medida do terreno
+    if(t1)o+=H(t0.x,t1.x,edgeT?t0.y+.6:t0.y-.55,`${cm_(t1.x-t0.x)} entre árvores`);
+    if(m1&&(!t1||m1.x<t1.x))o+=H(t0.x,m1.x,edgeT?t0.y+.95:t0.y+.5,cm_(m1.x-t0.x));
+    const t2=trees.find(q=>q.y>t0.y+.5);
+    if(t2)o+=V(t0.y,t2.y,Math.max(.15,t0.x-.35),`${cm_(t2.y-t0.y)} entre linhas`);
+  }
+  return o;
+}
+
+// ---------- vista 3D (isométrica) ----------
+// formato de copa das árvores
+const CROWN_TXT={round:'arredondada',oval:'ovalada',umbrella:'em guarda-chuva',conical:'cônica',vase:'em taça',open:'aberta e irregular',candelabro:'em candelabro',palm:'de palmeira',banana:'de bananeira',papaya:'em tufo no alto',allspice:'densa e arredondada-alongada',citrus:'arredondada e densa',bush:'densa, ramificada desde a base',psidium:'aberta e irregular',dome:'em domo largo',coffee:'em andares',jabuti:'densa, com vários troncos'};
+const CROWN_D={round:.8,oval:.55,umbrella:1.1,conical:.5,vase:.8,open:.75,candelabro:.65,palm:.55,banana:.6,papaya:.4,allspice:.75,citrus:.9,bush:.95,psidium:.9,dome:1,coffee:.7,jabuti:.9};
+const CROWN_MAX={allspice:4.5,citrus:3.5,bush:3.5,psidium:4.5,dome:8,coffee:2,jabuti:5,round:6,oval:5,umbrella:6,conical:3,vase:4,open:5,candelabro:4,palm:3.5,banana:2.6,papaya:1.8};
+const TREEFORM={a_pimentadioica:{f:'allspice'},lixeira:{f:'oval',fl:'fl-w'},banana:{f:'banana'},mamao:{f:'papaya'},jucara:{f:'palm',fr:'fr-p'},guariroba:{f:'palm'},embauba:{f:'candelabro'},jabuticaba:{f:'jabuti',trunkfr:1},pitanga:{f:'bush',fr:'fl-r'},araca:{f:'psidium',fr:'fl-y'},acerola:{f:'bush',fr:'fl-r'},limao:{f:'citrus',fr:'fl-y'},mexerica:{f:'citrus',fr:'fr-o'},nespera:{f:'round',fr:'fr-o'},cafe:{f:'coffee',fr:'fl-r'},cambuci:{f:'round',fr:'fl-y'},grumixama:{f:'oval',fr:'fr-p'},uvaia:{f:'oval',fr:'fl-y'},cereja:{f:'oval',fr:'fl-r'},cabeludinha:{f:'bush',fr:'fl-y'},castanha:{f:'oval'},dedaleira:{f:'oval'},candeia:{f:'open',fl:'fl-w'},sangra:{f:'round'},crindiuva:{f:'umbrella'},patadevaca:{f:'vase',fl:'fl-w'},aroeira:{f:'round',fr:'fl-r'},inga:{f:'umbrella'},abacate:{f:'round'},goiaba:{f:'psidium',fr:'fl-y'},manga:{f:'dome',fr:'fr-o'},caqui:{f:'oval',fr:'fr-o'},espinheira:{f:'round'},urucum:{f:'round',fr:'fl-r'}};
+const GENFORM=[[/^(Handroanthus|Tabebuia|Zeyheria|Cybistax)/,'open'],[/^(Inga|Poincianella|Libidibia|Peltophorum|Tipuana|Albizia|Samanea|Jacaranda|Machaerium|Dalbergia|Platypodium|Pterocarpus|Holocalyx|Myrocarpus|Myroxylon|Lonchocarpus|Bowdichia|Pterodon|Andira|Ormosia|Tachigali|Copaifera|Cariniana|Cassia|Poecilanthe)/,'umbrella'],[/^(Calophyllum|Lophanthera|Michelia)/,'conical'],[/^Pimenta/,'oval'],[/^(Lagerstroemia|Bauhinia|Dictyoloma)/,'vase'],[/^(Eugenia|Plinia|Psidium|Myrcia|Myrcianthes|Campomanesia|Pouteria|Tibouchina|Allophylus|Casearia|Erythroxylum|Licania|Sapindus|Koelreuteria)/,'round']];
+const GENFL=[[/^Handroanthus (chrysotrichus|umbellatus|albus|ochraceus|vellosoi)|^(Zeyheria|Poincianella|Peltophorum|Tipuana|Pterocarpus|Cassia|Vochysia|Lophanthera|Koelreuteria|Michelia|Libidibia)/,'fl','fl-y'],[/^Handroanthus (heptaphyllus|impetiginosus)|^(Jacaranda|Tibouchina|Bowdichia|Pterodon|Lagerstroemia|Bauhinia blakeana|Bauhinia purpurea)/,'fl','fr-p'],[/^(Physocalymma)/,'fl','fl-r'],[/^(Tabebuia roseoalba|Bauhinia variegata|Bauhinia longifolia|Citharexylum)/,'fl','fl-w'],[/^(Campomanesia|Myrcianthes|Plinia|Pouteria|Eugenia dysenterica)/,'fr','fl-y'],[/^(Pimenta)/,'fr','fr-p']];
+// tom natural da folhagem (1 verde-escuro brilhante, 2 oliva, 3 verde-azulado, 4 verde-vivo) e fruto de cada árvore [classe, tamanho]
+const FOLT={limao:1,mexerica:1,manga:1,abacate:1,jabuticaba:1,a_pimentadioica:1,grumixama:1,a_myrcianthespungens:3,goiaba:2,araca:2,caqui:2,cagaita:2,a_eugeniadysenterica:2,nespera:3,a_pouteriatorta:3,pitanga:4,acerola:4,cereja:4,uvaia:4,cambuci:4,cabeludinha:4,a_pliniaedulis:4,a_campomanesiaxanthocarpa:4};
+const FRUIT={pitanga:['fr-rd',1],acerola:['fr-rd',1.05],cereja:['fr-rd',1],limao:['fr-li',1.5],mexerica:['fr-or',1.5],manga:['fr-mg',2.2],abacate:['fr-av',2],caqui:['fr-or',1.6],nespera:['fr-ye',1.1],goiaba:['fr-li',1.5],araca:['fr-ye',1.05],uvaia:['fr-ye',1.1],cambuci:['fr-li',1.3],cabeludinha:['fr-ye',1],grumixama:['fr-bk',1],jabuticaba:['fr-bk',1.1],a_pliniaedulis:['fr-ye',1.4],a_eugeniadysenterica:['fr-ye',1.2],a_pouteriatorta:['fr-ye',1.4],a_myrcianthespungens:['fr-bk',1],a_campomanesiaxanthocarpa:['fr-ye',1],urucum:['fr-rd',1.2],aroeira:['fr-rd',.6]};
+function crownOf(s){
+  if(TREEFORM[s.id])return TREEFORM[s.id];
+  const o={f:s.e==='M'?'round':'oval'};
+  if(s.sci){for(const [re,f] of GENFORM)if(re.test(s.sci)){o.f=f;break;}
+    for(const [re,k,c] of GENFL)if(re.test(s.sci)){o[k]=c;break;}}
+  return o;
+}
+// ---------- aromáticas: desenho em vista lateral, usado no 3D e nos vasos ----------
+const HERBF=new Set(['elephant','frond','basil','herb','mint','needle','parsley','lavender','cactus','fruitshrub','tomato','rosette','amaranth','groundvine','kale']);
+function hseed(str){let h=2166136261>>>0;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}return ()=>{h=(Math.imul(h,1664525)+1013904223)>>>0;return h/4294967296;};}
+function herbSVG(f,s,cx,base,w,h,opt,key){
+  const X=n=>n.toFixed(1),r=hseed(s.id+'|'+(key||''));const t=plTone(s),P=`pl-${t}`,PL=`pl-${t} hb-lt`,KS=`pk-${t}`;opt=opt||{};
+  const lf=(x,y,rx,ry,deg,cls)=>`<ellipse class="${cls||P}" cx="${X(x)}" cy="${X(y)}" rx="${X(Math.max(.6,rx))}" ry="${X(Math.max(.4,ry))}" transform="rotate(${Math.round(deg)} ${X(x)} ${X(y)})"/>`;
+  const ln=(x1,y1,x2,y2,cls,sw)=>`<line class="${cls}" stroke-width="${sw.toFixed(2)}" stroke-linecap="round" x1="${X(x1)}" y1="${X(y1)}" x2="${X(x2)}" y2="${X(y2)}"/>`;
+  const sw=Math.max(.6,Math.min(1.6,w*.03));const fl=opt.fr?opt.fr[0]:null;
+  let o=`<title>${esc(s.n)}</title>`;
+  if(f==='basil'||f==='herb'){
+    // hastes eretas com pares de folhas opostas; manjericão com espiga de flores no alto
+    const n=f==='basil'?5:4,big=opt.big?1.45:1,L=Math.max(1.1,Math.min(w*.11,h*.1))*big;
+    for(let i=0;i<n;i++){const u=n===1?0:i/(n-1)-.5,x0=cx+u*w*.16,x1=cx+u*w*.74,hh=h*(.78+.22*r())*(1-Math.abs(u)*.3),y1=base-hh;
+      o+=ln(x0,base,x1,y1,'stem',sw);
+      const nodes=Math.max(2,Math.min(5,Math.round(hh/(L*2.4))));
+      for(let k=1;k<=nodes;k++){const tt=k/(nodes+.5),x=x0+(x1-x0)*tt,y=base+(y1-base)*tt,sz=L*(1.2-.5*tt),c=(k+i)%2?P:PL;
+        o+=lf(x-sz*.85,y-sz*.35,sz,sz*.58,25,c)+lf(x+sz*.85,y-sz*.35,sz,sz*.58,-25,c);}
+      if(f==='basil'&&fl){for(let k=0;k<4;k++)o+=`<circle class="${fl}" cx="${X(x1+(k%2?.6:-.6))}" cy="${X(y1-k*L*.55)}" r="${X(Math.max(.6,L*.26))}"/>`;}
+      else{o+=lf(x1-L*.5,y1-L*.2,L*.8,L*.45,40,P)+lf(x1+L*.5,y1-L*.2,L*.8,L*.45,-40,P)+lf(x1,y1-L*.6,L*.7,L*.4,90,PL);
+        if(fl&&opt.daisy){const rr_=L*.6;for(let k=0;k<8;k++){const aa=k/8*Math.PI*2;o+=lf(x1+Math.cos(aa)*rr_*.8,y1-L*1.2+Math.sin(aa)*rr_*.8,rr_*.55,rr_*.22,aa*180/Math.PI,'fl-y');}o+=`<circle class="fr-o" cx="${X(x1)}" cy="${X(y1-L*1.2)}" r="${X(rr_*.35)}"/>`;}
+        else if(fl&&(i%2===0||opt.fr[1]>=5)){const fr_=opt.fr[1]>=6?L*.55:L*.3;o+=`<circle class="${fl}" cx="${X(x1)}" cy="${X(y1-L*1.2)}" r="${X(Math.max(.7,fr_))}"/>`;if(opt.fr[1]>=6)o+=`<circle class="${fl}" cx="${X(x1+L*.9)}" cy="${X(y1-L*.3)}" r="${X(Math.max(.6,fr_*.8))}"/>`;}}}
+  }else if(f==='mint'){
+    // touceira baixa de folhinhas arredondadas, com ramos rasteiros
+    const L=Math.max(1.1,Math.min(w*.085,h*.17))*(opt.fleshy?.85:1);
+    for(let i=0;i<5;i++){const u=i/4-.5;o+=ln(cx+u*w*.2,base,cx+u*w*.8,base-h*(.35+.3*r()),'stem',sw*.8);}
+    const N=Math.round(Math.max(14,Math.min(70,(w*h)/(L*L*1.3))));
+    for(let j=0;j<N;j++){const u=r()*2-1,x=cx+u*w*.48,top=h*(.95-.6*u*u),y=base-(.06+.94*Math.sqrt(r()))*top;
+      o+=lf(x,y,L*(opt.fleshy?.8:1),L*(opt.fleshy?.65:.72),r()*180,j%3?P:PL);}
+    if(fl)for(let k=0;k<(opt.fr[1]||2)+2;k++){const u=r()*1.2-.6;o+=`<circle class="${fl}" cx="${X(cx+u*w*.45)}" cy="${X(base-h*(.92-.5*u*u))}" r="${X(Math.max(.7,L*.38))}"/>`;}
+  }else if(f==='needle'){
+    // hastes lenhosas cobertas de folhas finas como agulhas (alecrim)
+    const n=6,L=Math.max(1.1,Math.min(w*.075,h*.065));
+    for(let i=0;i<n;i++){const u=i/(n-1)-.5,x0=cx+u*w*.14,x1=cx+u*w*.82,hh=h*(.75+.25*r())*(1-Math.abs(u)*.25),y1=base-hh,mx=x0+(x1-x0)*.3;
+      o+=`<path class="trunk-thin" fill="none" stroke-width="${sw.toFixed(2)}" d="M${X(x0)},${X(base)} Q${X(mx)},${X(base-hh*.55)} ${X(x1)},${X(y1)}"/>`;
+      const steps=Math.max(4,Math.round(hh/(L*.9)));
+      for(let k=2;k<=steps;k++){const tt=k/steps,a=1-tt,x=a*a*x0+2*a*tt*mx+tt*tt*x1,y=a*a*base+2*a*tt*(base-hh*.55)+tt*tt*y1,ll=L*(1.35-.5*tt);
+        o+=ln(x,y,x-ll*.8,y-ll*.6,KS,sw*.85)+ln(x,y,x+ll*.8,y-ll*.6,KS,sw*.85);
+        if(fl&&tt>.55&&k%3===0)o+=`<circle class="${fl}" cx="${X(x+(k%2?ll*.6:-ll*.6))}" cy="${X(y-ll*.5)}" r="${X(Math.max(.6,L*.32))}"/>`;}}
+  }else if(f==='parsley'){
+    // talos finos em leque, cada um com um tufo de folhas recortadas na ponta
+    const n=8,L=Math.max(1,Math.min(w*.07,h*.09));
+    for(let i=0;i<n;i++){const u=i/(n-1)-.5,x1=cx+u*w*.86,y1=base-h*(.6+.4*(1-Math.abs(u)*1.6)*(.85+.15*r()));
+      o+=ln(cx+u*w*.1,base,x1,y1,KS,sw*.8);
+      [[0,0],[-1,.5],[1,.5],[-.6,-.7],[.6,-.7]].forEach(([dx,dy],k)=>{o+=`<circle class="${k%2?PL:P}" cx="${X(x1+dx*L*.95)}" cy="${X(y1+dy*L*.95)}" r="${X(L*(k?.62:.72))}"/>`;});}
+  }else if(f==='elephant'){
+    // taioba: pecíolos longos saindo da base e folhas enormes em forma de coração/seta, penduradas para fora
+    const leaf=(x,y,L,ang,cls)=>{const a=ang*Math.PI/180,ca=Math.cos(a),sa=Math.sin(a),P=(u,v)=>[x+u*ca-v*sa,y+u*sa+v*ca],f=q=>X(q[0])+','+X(q[1]);
+      const tip=P(L,0),c1=P(L*.55,L*.42),c2=P(L*.55,-L*.42),l1=P(-L*.12,L*.36),l2=P(-L*.12,-L*.36),n=P(L*.05,0);
+      return `<path class="${cls}" d="M${f(n)} Q${f(l1)} ${f(P(L*.18,L*.4))} Q${f(c1)} ${f(tip)} Q${f(c2)} ${f(P(L*.18,-L*.4))} Q${f(l2)} ${f(n)}Z"/><path class="hb-vein" d="M${f(n)} L${f(P(L*.92,0))}"/>`;};
+    const L=Math.max(5,Math.min(w*.62,h*.6));
+    const specs=[[-.55,.55,165,P],[.55,.58,15,P],[-.28,.8,128,PL],[.3,.84,52,PL],[0,.95,95,P]];
+    specs.forEach(([u,hh,ang,cls],i)=>{const tx=cx+u*w*.42,ty=base-h*hh*.92;
+      o+=`<path class="${KS}" fill="none" stroke-width="${(sw*1.3).toFixed(2)}" d="M${X(cx+u*w*.05)},${X(base)} Q${X(cx+u*w*.2)},${X(ty+h*.1)} ${X(tx)},${X(ty)}"/>`;
+      o+=leaf(tx,ty,L*(i<2?.9:i<4?1:.85),ang,cls);});
+  }else if(f==='frond'){
+    // samambaia: frondes arqueadas com folíolos dos dois lados
+    const n=8;
+    for(let i=0;i<n;i++){const u=i/(n-1)-.5,ex=cx+u*w*1.0,ey=base-h*(.35+.5*(1-Math.abs(u)*1.6)),mx=cx+u*w*.25,my=base-h*(1.05-Math.abs(u)*.5);
+      o+=`<path class="${KS}" stroke-width="${(sw*.9).toFixed(2)}" fill="none" d="M${X(cx)},${X(base)} Q${X(mx)},${X(my)} ${X(ex)},${X(ey)}"/>`;
+      const steps=9;for(let k=2;k<=steps;k++){const t=k/steps,a=1-t,x=a*a*cx+2*a*t*mx+t*t*ex,y=a*a*base+2*a*t*my+t*t*ey,dx=2*a*(mx-cx)+2*t*(ex-mx),dy=2*a*(my-base)+2*t*(ey-my),ang=Math.atan2(dy,dx),ll=Math.max(1,w*.07*(1.15-t*.7));
+        [1,-1].forEach(d=>{const px=x+Math.cos(ang+d*1.3)*ll*.55,py=y+Math.sin(ang+d*1.3)*ll*.55;o+=lf(px,py,ll*.55,ll*.22,(ang+d*1.3)*180/Math.PI,(k+i)%2?P:PL);});}}
+  }else if(f==='cactus'){
+    // raquetes (cladódios) empilhadas, com frutos na borda das de cima
+    const pw=Math.max(3,w*.17),ph=Math.max(4,h*.2);
+    const pad=(x,y,deg,sc,cls)=>`<ellipse class="${cls||P}" cx="${X(x)}" cy="${X(y)}" rx="${X(pw*sc)}" ry="${X(ph*sc)}" transform="rotate(${deg} ${X(x)} ${X(y)})"/>`;
+    const L0=[[0,.2,0,1]],L1=[[-.32,.48,-28,.9],[.3,.5,24,.92]],L2=[[-.58,.74,-40,.75],[-.12,.8,-6,.8],[.48,.76,34,.75],[.18,.95,12,.7]];
+    [...L0,...L1,...L2].forEach(([kx,ky,deg,sc],i)=>{o+=pad(cx+kx*w*.5,base-h*ky,deg,sc,i%2?P:PL);});
+    L2.forEach(([kx,ky,deg,sc],i)=>{const x=cx+kx*w*.5,y=base-h*ky-ph*sc*.9;o+=`<ellipse class="${i%2?'fr-p':'fl-r'}" cx="${X(x)}" cy="${X(y)}" rx="${X(Math.max(.8,pw*.22))}" ry="${X(Math.max(1,pw*.3))}"/>`;});
+  }else if(f==='fruitshrub'){
+    // arbusto ramificado com folhas largas e frutos pendurados (berinjela, pimenta, physalis, jurubeba)
+    const L=Math.max(1.5,Math.min(w*.19,h*.15))*(opt.big?1.2:1),fy=base-h*.2,tips=[];
+    o+=ln(cx,base,cx,fy,'stem',sw*1.6);
+    [-1,-.35,.35,1].forEach((k,i)=>{const x1=cx+k*w*.38,y1=base-h*(.86+.14*r());tips.push([cx,fy,x1,y1]);
+      o+=`<path class="stem" fill="none" d="M${X(cx)},${X(fy)} Q${X(cx+k*w*.12)},${X(fy-h*.3)} ${X(x1)},${X(y1)}"/>`;});
+    const [fc,shape,nf]=opt.fruit||['fl-r','round',4];const fr=[];
+    tips.forEach(([x0,y0,x1,y1],i)=>{for(let k=1;k<=4;k++){const t=k/4.3,x=x0+(x1-x0)*t,y=y0+(y1-y0)*t,d=(k+i)%2?1:-1;
+      o+=lf(x+d*L*.8,y-L*.25,L,L*.6,d*-28,(k+i)%3?P:PL);if(k>=2)fr.push([x+d*L*.3,y+L*.35]);}
+      o+=lf(x1,y1-L*.3,L*.85,L*.55,i%2?30:-30,P);});
+    fr.slice(0,nf).forEach(([x,y],i)=>{
+      if(shape==='long')o+=`<ellipse class="${fc}" cx="${X(x)}" cy="${X(y+L*.9)}" rx="${X(L*.42)}" ry="${X(L*1.05)}"/><ellipse class="pl-1" cx="${X(x)}" cy="${X(y)}" rx="${X(L*.4)}" ry="${X(L*.2)}"/>`;
+      else if(shape==='chili')o+=`<ellipse class="${fc}" cx="${X(x)}" cy="${X(y-L*.2)}" rx="${X(L*.18)}" ry="${X(L*.6)}" transform="rotate(${i%2?14:-14} ${X(x)} ${X(y-L*.2)})"/>`;
+      else if(shape==='lantern')o+=`<path class="${fc}" d="M${X(x)},${X(y-L*.2)} q${X(L*.6)},${X(L*.5)} 0,${X(L*1.2)} q${X(-L*.6)},${X(-L*.7)} 0,${X(-L*1.2)}Z"/>`;
+      else o+=`<circle class="${fc}" cx="${X(x)}" cy="${X(y+L*.3)}" r="${X(L*.38)}"/>`;});
+  }else if(f==='tomato'){
+    // haste em zigue-zague amarrada ao tutor, folhas recortadas e cachos de tomatinhos
+    const L=Math.max(1.5,Math.min(w*.2,h*.075)),sx=cx+w*.1,n=7;
+    o+=ln(sx,base+1,sx,base-h*1.04,'trunk-thin',1.4);
+    let px=cx,py=base;
+    for(let i=1;i<=n;i++){const nx=cx+(i%2?w*.06:-w*.04),ny=base-h*i/n;o+=ln(px,py,nx,ny,'stem',sw*1.2);
+      if(i%2===0)o+=ln(nx-1,ny,sx+1,ny,'pk-2',.8);
+      const d=i%2?1:-1;for(let j=1;j<=3;j++)o+=lf(nx+d*L*j*1.05,ny-L*.15+L*.25*j,L*.62,L*.36,d*22+(j%2?10:-10),j%2?P:PL);
+      if(i===2||i===4||i===6){const dd=-d;for(let k=0;k<5;k++)o+=`<circle class="fl-r" cx="${X(nx+dd*L*(.6+k*.55))}" cy="${X(ny+L*(.6+k*.38))}" r="${X(Math.max(.8,L*.3))}"/>`;}
+      px=nx;py=ny;}
+  }else if(f==='rosette'){
+    // folhas carnudas em roseta (cariru, major-gomes); o major-gomes tem panícula alta de flores rosadas
+    const Lr=Math.min(w*.75,h*(opt.panicle?.45:.75)),n=9;
+    if(opt.panicle){const tx=cx,ty=base-h;o+=ln(cx,base-Lr*.3,tx,ty+h*.08,'stem',sw*.9);
+      for(let k=0;k<6;k++){const yy=ty+h*.1+k*h*.07,d=k%2?1:-1,bx2=tx+d*w*(.12+.03*k);o+=ln(tx,yy,bx2,yy-h*.06,'stem',sw*.6);
+        for(let j=0;j<3;j++)o+=`<circle class="${opt.fl||'fl-pk'}" cx="${X(bx2+d*j*1.6)}" cy="${X(yy-h*.06-j*1.2)}" r="${X(Math.max(.7,w*.018))}"/>`;}}
+    for(let i=0;i<n;i++){const a=(-165+i*(150/(n-1)))*Math.PI/180,len=Lr*(.75+.25*Math.sin((i/(n-1))*Math.PI)),x=cx+Math.cos(a)*len*.5,y=base-Lr*.15+Math.sin(a)*len*.55;
+      o+=lf(x,y,len*.5,len*.24,a*180/Math.PI,i%2?P:PL);}
+    if(!opt.panicle&&opt.fl)for(let k=0;k<3;k++)o+=`<circle class="${opt.fl}" cx="${X(cx+(k-1)*Lr*.25)}" cy="${X(base-Lr*.95)}" r="${X(Math.max(.7,Lr*.06))}"/>`;
+  }else if(f==='amaranth'){
+    // caruru: haste ereta, folhas ovais alternadas e espiga no alto
+    const L=Math.max(1.2,Math.min(w*.17,h*.11));o+=ln(cx,base,cx,base-h*.8,'stem',sw*1.3);
+    for(let k=0;k<6;k++){const y=base-h*(.15+k*.11),d=k%2?1:-1,sz=L*(1.15-k*.08);o+=lf(cx+d*sz*.9,y,sz,sz*.6,d*-25,k%2?P:PL);}
+    for(let k=0;k<6;k++)o+=`<ellipse class="pl-3" cx="${X(cx)}" cy="${X(base-h*(.8+k*.035))}" rx="${X(L*.3)}" ry="${X(L*.32)}"/>`;
+    [-1,1].forEach(d=>{for(let k=0;k<3;k++)o+=`<ellipse class="pl-3" cx="${X(cx+d*L*(.5+k*.25))}" cy="${X(base-h*(.74+k*.03))}" rx="${X(L*.22)}" ry="${X(L*.26)}"/>`;});
+  }else if(f==='groundvine'){
+    // ramas rasteiras que cobrem o chão (abóbora, maxixe, batata-doce)
+    const L=Math.max(1.3,w*(opt.big?.11:.075)),n=opt.big?6:7;
+    for(let i=0;i<n;i++){const a=i/n*Math.PI*2+r()*.4,len=w*.5*(.65+.35*r()),ex=cx+Math.cos(a)*len,ey=base+Math.sin(a)*len*.42;
+      o+=ln(cx,base,ex,ey,'stem',sw*.8);
+      const m=Math.max(2,Math.round(len/(L*1.5)));
+      for(let k=1;k<=m;k++){const t=k/m,x=cx+(ex-cx)*t,y=base+(ey-base)*t,d=k%2?1:-1;
+        o+=lf(x+d*L*.25,y-L*.35,L,L*.62,(a*180/Math.PI)+d*25,(k+i)%3?P:PL);}}
+    for(let k=0;k<4;k++){const a=r()*Math.PI*2,rr=w*.15*r();o+=lf(cx+Math.cos(a)*rr,base-L*.5+Math.sin(a)*rr*.4,L*1.05,L*.7,r()*180,PL);}
+    if(opt.flower){const a=r()*Math.PI*2,x=cx+Math.cos(a)*w*.25,y=base-L*.8+Math.sin(a)*w*.1;
+      for(let k=0;k<5;k++){const aa=k/5*Math.PI*2;o+=lf(x+Math.cos(aa)*L*.35,y+Math.sin(aa)*L*.25,L*.38,L*.2,aa*180/Math.PI,'fl-y');}}
+    if(opt.fruit){const nf=opt.big?2:4;for(let k=0;k<nf;k++){const a=k*2.1+.5,x=cx+Math.cos(a)*w*.28,y=base-L*.3+Math.sin(a)*w*.12;
+      o+=opt.big?`<ellipse class="${opt.fruit}" cx="${X(x)}" cy="${X(y)}" rx="${X(L*1.1)}" ry="${X(L*.8)}"/><path class="pk-1" stroke-width="1" fill="none" d="M${X(x-L*.5)},${X(y-L*.7)} Q${X(x-L*.6)},${X(y)} ${X(x-L*.5)},${X(y+L*.7)} M${X(x+L*.5)},${X(y-L*.7)} Q${X(x+L*.6)},${X(y)} ${X(x+L*.5)},${X(y+L*.7)}"/>`
+        :`<ellipse class="${opt.fruit}" cx="${X(x)}" cy="${X(y)}" rx="${X(L*.45)}" ry="${X(L*.32)}"/>`;}}
+  }else if(f==='kale'){
+    // couve: caule com marcas das folhas colhidas e roseta de folhas grandes no alto
+    const st=base-h*.42,Lk=Math.min(w*.5,h*.48);
+    o+=ln(cx,base,cx,st,'stem',sw*2.2);for(let k=1;k<4;k++)o+=ln(cx-1.6,base-(base-st)*k/4,cx+1.6,base-(base-st)*k/4,'cv-node',1);
+    const ang=[200,215,235,255,270,285,305,325,340,160,20];
+    ang.forEach((d,i)=>{const a=d*Math.PI/180,x=cx+Math.cos(a)*Lk*.5,y=st+Math.sin(a)*Lk*.55;o+=lf(x,y,Lk*.52,Lk*.27,d,i%2?'pl-2':'pl-2 hb-lt');
+      o+=ln(cx,st,x+Math.cos(a)*Lk*.3,y+Math.sin(a)*Lk*.3,'kale-v',.6);});
+  }else if(f==='lavender'){
+    // folhagem cinza estreita na base e hastes longas com espigas roxas
+    const L=Math.max(1,Math.min(w*.06,h*.05));
+    for(let i=0;i<12;i++){const u=i/11-.5;o+=ln(cx+u*w*.2,base,cx+u*w*.62,base-h*(.22+.12*r()),KS,sw*1.3);}
+    for(let i=0;i<9;i++){const u=i/8-.5,x1=cx+u*w*.95,y1=base-h*(.82+.18*(1-Math.abs(u)*1.5)),x0=cx+u*w*.25,y0=base-h*.25;
+      o+=ln(x0,y0,x1,y1,KS,sw*.7);const dx=(x1-x0),dy=(y1-y0),len=Math.hypot(dx,dy),ux=dx/len,uy=dy/len,deg=Math.atan2(dy,dx)*180/Math.PI;
+      for(let k=0;k<5;k++){const d=k*L*1.1;o+=lf(x1-ux*d,y1-uy*d,L*.75,L*.45,deg,opt.spike||'fr-p');}}
+  }
+  return o;
+}
+// forma e largura real (m) das plantas de adubo verde e biomassa
+const FORM={peixinho:['rosette',.3],tuna:['cactus',.8],gabiroba:['herb',.8,{fr:['fl-y',6,'top']}],chanana:['mint',.4,{fr:['fl-y',6,'top']}],gervao:['lavender',.6,{spike:'fr-p'}],oficialsala:['herb',.5,{fr:['fl-r',8,'top']}],perpetua:['herb',.4,{fr:['fr-p',8,'top']}],vedelia:['mint',.5,{fr:['fl-y',6,'top']}],arnicacampo:['herb',.4,{fr:['fr-p',3,'top']}],ruelia:['fruitshrub',.3,{fruit:['fl-r','chili',6]}],falsairis:['spiky',.5,{fr:['fr-p',3,'top']}],salviavermelha:['lavender',.4,{spike:'fl-r'}],salviaazul:['lavender',.6,{spike:'fr-p'}],esponjinha:['herb',1.5,{fr:['fl-r',8,'top']}],jacobinia:['herb',.8,{big:1,fr:['fl-pk',8,'top']}],alamanda:['herb',1.5,{big:1,fr:['fl-y',6,'top']}],ciposaojoao:['trellis',1.4,{fr:['fr-o',8,'top']}],dipladenia:['trellis',1,{fr:['fl-r',5,'top']}],guandu:['herb',1.1,{fr:['fl-y',6,'top']}],margaridao:['herb',1.5,{big:1,daisy:1,fr:['fl-y',6,'top']}],assapeixe:['herb',1.6,{big:1,fr:['fl-w',8,'top']}],maravilha:['herb',.8,{fr:['fl-pk',6,'top']}],feijaoporco:['fruitshrub',.7,{big:1,fruit:['pl-3','long',4]}],feijaocorda:['groundvine',.8,{fruit:'pl-3'}],begonia:['rosette',.35,{fl:'fl-pk'}],mandioca:['cassava',1.1],crotalaria:['herb',.35,{fr:['fl-y',5,'top']}],canaacucar:['cane',.6],canaindia:['leafy',.7],heliconia:['leafy',.9],amendoim:['mint',.5,{fr:['fl-y',6,'top']}],samambaia:['frond',.7],dyckia:['spiky',.45,{stalk:1}],
+ // hortaliças
+ alface:['lettuce',.28],rucula:['tuft',.18],cenoura:['feather',.12,{fr:['fr-o',1,'ground']}],beterraba:['tuft',.2,{fr:['fl-r',1,'ground']}],couve:['kale',.55],tomate:['tomato',.55],berinjela:['fruitshrub',.6,{big:1,fruit:['fr-p','long',3]}],pimenta:['fruitshrub',.5,{fruit:['fl-r','chili',8]}],quiabo:['stalkleaves',.5,{fr:['fl-y',2,'top']}],feijao:['tripod',.6],abobora:['groundvine',2,{big:1,flower:1,fruit:'fr-o'}],batatadoce:['groundvine',.7],milho:['cane',.35,{tassel:1}],taioba:['elephant',.8],cara:['trellis',.45,{nofl:1}],orapronobis:['trellis',1.1],
+ // aromáticas
+ manjericao:['basil',.35,{fr:['fl-w',3,'top']}],cebolinha:['grass',.12,{straight:1}],salsinha:['parsley',.18],hortela:['mint',.45],alecrim:['needle',.5,{fr:['fr-p',3,'top']}],capimsanto:['grass',.8],carqueja:['clump',.35,{noflower:1}],macela:['needle',.4,{fr:['fl-y',6,'top']}],alecrimcampo:['needle',1.5,{fr:['fl-w',5,'top']}],lantana:['mound',.8,{fr:['fr-p',6,'top']}],boldo:['herb',.8,{big:1}],boldinho:['mint',.4,{fr:['fr-p',2,'top'],fleshy:1}],cidreira:['herb',.9,{fr:['fl-w',4,'top']}],hibisco:['stalkleaves',.6,{fr:['fl-r',4,'top']}],lavanda:['lavender',.5],maracuja:['trellis',1.4,{passion:1}],melancia:['groundvine',2,{big:1,flower:1,fruit:'fr-wm'}],abacaxi:['spiky',.7,{fr:['fr-o',1,'top']}],majorgomes:['rosette',.35,{panicle:1,fl:'fl-pk'}],cariru:['rosette',.3,{fl:'fl-pk'}],jambu:['mint',.25,{fr:['fl-y',0,'top']}],mangarito:['leafy',.4],araruta:['leafy',.5],coentropara:['tuft',.15],physalis:['fruitshrub',.6,{fruit:['fr-o','lantern',5]}],jurubeba:['fruitshrub',1.2,{fruit:['fl-y','round',8]}],amendoimgrao:['mound',.35,{fr:['fl-y',3,'top']}],maxixe:['groundvine',1,{fruit:'pl-3'}],caruru:['amaranth',.35],baleeira:['herb',1.3,{fr:['fl-w',5,'top']}],guaco:['climber',.5],pariparoba:['leafy',.8],alecrimpimenta:['herb',.9,{fr:['fl-w',4,'top']}],cipoalho:['climber',.5,{fr:['fr-p',3,'top']}],mastruz:['herb',.4],alfavacacravo:['basil',.7,{fr:['fl-w',4,'top']}]};
+function draw3D(p,raio){
+  const [L,W]=LW();const circ=isCirc();const c=Math.cos(Math.PI/6),sn=.5,ZF=.85;
+  const maxH=raio?.4:Math.max(1,...p.pts.map(q=>hOf(q.s)));
+  const K=Math.max(8,Math.min(70,660/((L+W)*c)));
+  const pad=24,base=.3;
+  const ox=W*c*K+pad,oy=pad+maxH*K*ZF+12;
+  const iso=(x,y,z)=>[(x-y)*c*K+ox,(x+y)*sn*K-z*K*ZF+oy];
+  const P=a=>a.map(q=>q.map(n=>n.toFixed(1)).join(',')).join(' ');
+  const DM=raio&&!circ?.75:0;// régua das faixas no lado direito (só na vista com raios)
+  const vw=(L+W)*c*K+pad*2+(DM?DM*c*K+120:0),vh=(L+W)*sn*K+maxH*K*ZF+base*K*ZF+pad*2+12+(DM?DM*sn*K:0);
+  let g=`<svg viewBox="0 0 ${vw.toFixed(1)} ${vh.toFixed(1)}" role="img" aria-label="${raio?'Vista em 3D com o raio de cada planta':'Vista em 3D do plantio'}"><defs>${TEX}</defs>`;
+  // bloco de terra
+  if(S.forma==='poly'){const pg=S.poly,n=pg.length;if(S.muro){const [a,b]=S.muro,mh=S.muroH||1.8;g+=`<polygon class="muro3d" points="${P([iso(a[0],a[1],0),iso(b[0],b[1],0),iso(b[0],b[1],mh),iso(a[0],a[1],mh)])}"/>`;}for(let i=0;i<n;i++){const a=pg[i],b=pg[(i+1)%n],nx=b[1]-a[1],ny=-(b[0]-a[0]);if(nx+ny<=0)continue;g+=`<polygon class="${ny>=nx?'s-side1':'s-side2'}" points="${P([iso(a[0],a[1],0),iso(b[0],b[1],0),iso(b[0],b[1],-base),iso(a[0],a[1],-base)])}"/>`;}g+=`<polygon class="s-ground" points="${P(pg.map(q=>iso(q[0],q[1],0)))}"/>`;}else if(circ){const R=L/2,ring=z=>{const a=[];for(let i=0;i<72;i++){const t=i/72*Math.PI*2;a.push(iso(R+Math.cos(t)*R,R+Math.sin(t)*R,z));}return a;};
+    g+=`<polygon class="s-side1" points="${P(ring(-base))}"/>`;
+    // faixa lateral do cilindro
+    const sideP=[];for(let i=0;i<=36;i++){const t=-Math.PI/4+i/36*Math.PI;sideP.push(iso(R+Math.cos(t)*R,R+Math.sin(t)*R,0));}
+    for(let i=36;i>=0;i--){const t=-Math.PI/4+i/36*Math.PI;sideP.push(iso(R+Math.cos(t)*R,R+Math.sin(t)*R,-base));}
+    g+=`<polygon class="s-side2" points="${P(sideP)}"/>`;
+    g+=`<polygon class="s-ground" points="${P(ring(0))}"/>`;
+    p.strips.forEach(s=>{if(s.t==='path')return;const cls=s.t==='bed'?'s-bed':'s-line';const z=s.t==='bed'?.08:.03;
+      const y0=s.y+.03,y1=s.y+s.h-.03,Lp=[],Rp=[];
+      for(let i=0;i<=12;i++){const yy=y0+(y1-y0)*i/12,hc2=R*R-(yy-R)*(yy-R);if(hc2<=0)continue;const hc=Math.sqrt(hc2)-.05;if(hc<=0)continue;Lp.push(iso(R-hc,yy,z));Rp.unshift(iso(R+hc,yy,z));}
+      if(Lp.length>1)g+=`<polygon class="${cls}" points="${P(Lp.concat(Rp))}"/><polygon fill="url(#${s.t==='bed'?'tx-soil':'tx-mulch'})" points="${P(Lp.concat(Rp))}"/>`;});
+  }else{
+  g+=`<polygon class="s-side1" points="${P([iso(0,W,0),iso(L,W,0),iso(L,W,-base),iso(0,W,-base)])}"/>`;
+  g+=`<polygon class="s-side2" points="${P([iso(L,0,0),iso(L,W,0),iso(L,W,-base),iso(L,0,-base)])}"/>`;
+  g+=`<polygon class="s-ground" points="${P([iso(0,0,0),iso(L,0,0),iso(L,W,0),iso(0,W,0)])}"/>`;
+  p.strips.forEach(s=>{if(s.t==='path')return;const cls=s.t==='bed'?'s-bed':'s-line';const z=s.t==='bed'?.08:.03;
+    g+=`<polygon class="${cls}" points="${P([iso(.05,s.y+.03,z),iso(L-.05,s.y+.03,z),iso(L-.05,s.y+s.h-.03,z),iso(.05,s.y+s.h-.03,z)])}"/>`;
+    g+=`<polygon fill="url(#${s.t==='bed'?'tx-soil':'tx-mulch'})" points="${P([iso(.05,s.y+.03,z),iso(L-.05,s.y+.03,z),iso(L-.05,s.y+s.h-.03,z),iso(.05,s.y+s.h-.03,z)])}"/>`;});
+  }
+  const trs=p.pts.filter(q=>q.kind==='tree');const nearT=q=>trs.reduce((m,o)=>o===q?m:Math.min(m,Math.hypot(o.x-q.x,o.y-q.y)),99);
+  const treeSVG=(s,bx,by,h,dmax)=>{
+    const X=n=>n.toFixed(1),U=m=>m*K*ZF,cr=crownOf(s);
+    const D=Math.min(cr.d||CROWN_D[cr.f]*h,CROWN_MAX[cr.f]||4.5,(dmax||99)*1.3,Math.max(L,W)*.85),Rs=Math.max(4,D/2*K*.95);
+    const top=by-U(h);
+    let b=`<title>${esc(s.n)} · copa ${CROWN_TXT[cr.f]} · cerca de ${fmt(h)} m de altura e ${fmt(D)} m de copa</title>`;
+    b+=`<ellipse class="shd" cx="${X(bx)}" cy="${X(by)}" rx="${X(Rs*.95)}" ry="${X(Rs*.48)}"/>`;
+    const tn=FOLT[s.id]||({E:3,A:1,M:4,B:4,R:4})[s.e]||1,cls=`crown tn${tn}`,clsS=`crown tn${tn}s`;let cc=null;
+    const hl=(x,y,rx,ry)=>`<ellipse class="lt-in" cx="${X(x)}" cy="${X(y)}" rx="${X(rx)}" ry="${X(ry)}"/>`;
+    const tw=Math.max(2.2,Math.min(6,Rs*.09));
+    const trunk=(x1,y1,x2,y2,w)=>`<line class="trunk" stroke-width="${(w||tw).toFixed(1)}" x1="${X(x1)}" y1="${X(y1)}" x2="${X(x2)}" y2="${X(y2)}"/>`;
+    // copa com contorno de folhagem (lóbulos em cima e nos lados)
+    // copa em volume: base sombreada, lóbulos de folhagem e tufos claros do lado da luz
+    const lobed=(cx,cy,rx,ry,k)=>{let o=`<ellipse class="${clsS}" cx="${X(cx)}" cy="${X(cy)}" rx="${X(rx)}" ry="${X(ry)}"/>`;
+      const n=Math.max(5,Math.min(11,Math.round((rx+ry)/5)));const rl=Math.min(rx,ry)*(k||.4);
+      for(let i=0;i<n;i++){const a=Math.PI*(.82+i/(n-1)*1.36);o+=`<circle class="${i<n*.35||i>n*.8?clsS:cls}" cx="${X(cx+Math.cos(a)*(rx-rl*.55))}" cy="${X(cy+Math.sin(a)*(ry-rl*.55))}" r="${X(rl)}"/>`;}
+      o+=`<ellipse class="${cls}" cx="${X(cx-rx*.08)}" cy="${X(cy-ry*.12)}" rx="${X(rx*.78)}" ry="${X(ry*.72)}"/>`;
+      [[-.35,-.35,.32],[.1,-.5,.26],[-.55,.0,.22],[.3,-.15,.22]].forEach(([dx,dy,kr])=>{o+=`<circle class="crown-hi tn${tn}" cx="${X(cx+dx*rx)}" cy="${X(cy+dy*ry)}" r="${X(Math.min(rx,ry)*kr)}"/>`;});
+      return o;};
+    const Hh=U(h);
+    switch(cr.f){
+      case 'round':{const ch=Hh*.66,ry=ch/2,cy=top+ry;
+        b+=trunk(bx,by,bx,cy+ry*.4);b+=lobed(bx,cy,Rs,ry);cc=[bx,cy,Rs,ry];break;}
+      case 'oval':{const ch=Hh*.76,ry=ch/2,cy=top+ry;
+        b+=trunk(bx,by,bx,cy+ry*.5);b+=lobed(bx,cy,Rs,ry,.34);cc=[bx,cy,Rs,ry];break;}
+      case 'allspice':{// pimenta-da-jamaica: tronco claro e liso que descasca, bifurcado baixo, ramos ascendentes,
+        // copa densa e arredondada de folhas coriáceas brilhantes, panículas de flores brancas e frutinhos que passam de verdes a marrom-escuros
+        const ch=Hh*.7,ry=ch/2,cy=top+ry,fy=by-Hh*.17;
+        b+=`<path class="trunk-pale" stroke-width="${tw.toFixed(1)}" d="M${X(bx)},${X(by)} L${X(bx)},${X(fy)}"/>`;
+        [[-.62,.35],[-.3,.1],[0,-.05],[.3,.1],[.62,.35]].forEach(([k,t])=>{b+=`<path class="trunk-pale" stroke-width="${(tw*.55).toFixed(1)}" fill="none" d="M${X(bx)},${X(fy)} Q${X(bx+k*Rs*.25)},${X(fy-Hh*.08)} ${X(bx+k*Rs*.6)},${X(cy+ry*t)}"/>`;});
+        b+=`<path class="trunk-peel" d="M${X(bx-tw*.25)},${X(by-Hh*.05)} v${X(-Hh*.06)} M${X(bx+tw*.2)},${X(by-Hh*.15)} v${X(-Hh*.05)} M${X(bx-tw*.1)},${X(by-Hh*.24)} v${X(-Hh*.03)}"/>`;
+        b+=lobed(bx,cy,Rs,ry,.22);
+        // folhas brilhantes (reflexo) espalhadas na copa
+        for(let i=0;i<14;i++){const a=i*2.4,rr=.3+.6*((i*7%10)/10),x=bx+Math.cos(a)*Rs*rr,y=cy+Math.sin(a)*ry*rr*.85;
+          b+=`<ellipse class="lf-gl" cx="${X(x)}" cy="${X(y)}" rx="${X(Math.max(1.6,Rs*.06))}" ry="${X(Math.max(.8,Rs*.028))}" transform="rotate(${(i*37%70)-35} ${X(x)} ${X(y)})"/>`;}
+        // panículas terminais espalhadas pela copa: flores brancas e frutinhos (verdes→marrom-escuros)
+        const pr=Math.max(1.2,Math.min(2.2,Rs*.045));
+        for(let i=0;i<11;i++){const a=i*2.39996+.5,rr=.45+.42*(((i*5)%7)/6),x=bx+Math.cos(a)*Rs*rr,y=cy-ry*.12+Math.sin(a)*ry*rr*.8,fl=i%3===0;
+          for(let k=0;k<6;k++){const dx=(k%3-1)*pr*1.5,dy=Math.floor(k/3)*pr*1.4-(k%3===1?pr*.6:0);
+            b+=`<circle class="${fl?'fl-w':(k%3===1?'fr-ap':'fr-bk')}" cx="${X(x+dx)}" cy="${X(y+dy)}" r="${X(fl?pr*.85:pr)}"/>`;}}
+        break;}
+      case 'dome':{const ch=Hh*.68,ry=ch/2,cy=top+ry;
+        b+=trunk(bx,by,bx,cy+ry*.3,3.4);[-1,1].forEach(k=>{b+=trunk(bx,cy+ry*.55,bx+k*Rs*.45,cy+ry*.1,2);});
+        b+=lobed(bx,cy,Rs,ry,.32);cc=[bx,cy,Rs,ry];break;}
+      case 'citrus':{const ch=Hh*.8,ry=ch/2,cy=top+ry;
+        b+=trunk(bx,by,bx,cy+ry*.6,2.2);b+=lobed(bx,cy,Rs,ry,.3);cc=[bx,cy,Rs,ry];break;}
+      case 'bush':{const ch=Hh*.74,ry=ch/2,cy=top+ry,fy=by-Hh*.12;
+        [-.35,0,.35].forEach(k=>{b+=trunk(bx+k*Rs*.12,by,bx+k*Rs*.7,cy+ry*.3,1.6);});
+        b+=lobed(bx,cy,Rs,ry,.36);cc=[bx,cy,Rs,ry];break;}
+      case 'psidium':{const fy=by-Hh*.28;
+        b+=`<line class="trunk-l" x1="${X(bx)}" y1="${X(by)}" x2="${X(bx)}" y2="${X(fy)}"/>`;
+        const cl=[[-.48,.42,.55],[.45,.36,.58],[0,.18,.62]];
+        cl.forEach(([kx,ky])=>{b+=`<path class="trunk-l" stroke-width="2" fill="none" d="M${X(bx)},${X(fy)} Q${X(bx+kx*Rs*.2)},${X(fy-Hh*.15)} ${X(bx+kx*Rs)},${X(top+Hh*ky+4)}"/>`;});
+        cl.forEach(([kx,ky,kr])=>{const r_=Rs*kr;b+=lobed(bx+kx*Rs,top+Hh*ky,r_,Math.min(r_*.8,Hh*.2),.42);});
+        cc=[bx,top+Hh*.3,Rs*.9,Hh*.18];break;}
+      case 'jabuti':{const ch=Hh*.72,ry=ch/2,cy=top+ry,fy=by-Hh*.3;
+        [-.5,-.22,.05,.3,.55].forEach(k=>{b+=`<path class="trunk" stroke-width="2.2" fill="none" d="M${X(bx+k*Rs*.18)},${X(by)} Q${X(bx+k*Rs*.3)},${X(fy+Hh*.1)} ${X(bx+k*Rs*.75)},${X(fy-Hh*.08)}"/>`;});
+        b+=lobed(bx,cy,Rs,ry,.3);cc=[bx,cy,Rs,ry];
+        for(let i=0;i<16;i++){const k=[-.5,-.22,.05,.3,.55][i%5],t=.15+.6*((i*7)%10)/10;b+=`<circle class="fr-bk" cx="${X(bx+k*Rs*(.18+(.3-.18)*t)+(i%2?1.5:-1.5))}" cy="${X(by-Hh*.3*t)}" r="${X(Math.max(1.8,Math.min(3.2,K*.038)))}"/><circle class="fr-hi" cx="${X(bx+k*Rs*(.18+(.3-.18)*t)+(i%2?1.5:-1.5)-.6)}" cy="${X(by-Hh*.3*t-.7)}" r="${X(Math.max(.5,Math.min(1,K*.012)))}"/>`;}
+        break;}
+      case 'coffee':{const n=6;b+=trunk(bx,by,bx,top+2,1.8);
+        for(let k=0;k<n;k++){const y=by-Hh*(.14+k*.8/n),len=Rs*(1-k*.13);
+          [-1,1].forEach(d=>{const ex=bx+d*len,ey=y+len*.12;b+=`<line class="trunk-thin" x1="${X(bx)}" y1="${X(y)}" x2="${X(ex)}" y2="${X(ey)}"/>`;
+            for(let j=1;j<=3;j++){const t=j/3.4,lx=bx+d*len*t,ly=y+len*.12*t;b+=`<ellipse class="${cls}" cx="${X(lx)}" cy="${X(ly-1.6)}" rx="${X(Math.max(1.6,len*.16))}" ry="${X(Math.max(1,len*.08))}" transform="rotate(${d*-18} ${X(lx)} ${X(ly-1.6)})"/><ellipse class="${cls}" cx="${X(lx)}" cy="${X(ly+1.8)}" rx="${X(Math.max(1.6,len*.16))}" ry="${X(Math.max(1,len*.08))}" transform="rotate(${d*18} ${X(lx)} ${X(ly+1.8)})"/>`;
+              if(cr.fr&&(j+k)%2===0)b+=`<circle class="${cr.fr}" cx="${X(lx)}" cy="${X(ly)}" r="${X(Math.max(1.1,Math.min(2,K*.025)))}"/>`;}});}
+        b+=`<ellipse class="${cls}" cx="${X(bx)}" cy="${X(top+3)}" rx="${X(Math.max(2,Rs*.18))}" ry="${X(Math.max(2,Rs*.14))}"/>`;break;}
+      case 'umbrella':{const ry=Math.max(Rs*.26,U(h)*.12),cy=top+ry,fy=by-U(h)*.5;
+        b+=trunk(bx,by,bx,fy);[-1,-.35,.35,1].forEach(k=>{b+=trunk(bx,fy,bx+k*Rs*.6,cy+ry*.4,1.6);});
+        b+=`<ellipse class="${cls}" cx="${X(bx)}" cy="${X(cy)}" rx="${X(Rs)}" ry="${X(ry)}"/>`+hl(bx-Rs*.2,cy-ry*.4,Rs*.6,ry*.35);cc=[bx,cy,Rs,ry];break;}
+      case 'conical':{const bt=by-U(h)*.22;
+        b+=trunk(bx,by,bx,bt-2)+`<path class="${cls}" d="M${X(bx)},${X(top)} L${X(bx+Rs)},${X(bt)} Q${X(bx)},${X(bt+Rs*.35)} ${X(bx-Rs)},${X(bt)} Z"/>`;
+        b+=`<path class="lt-in" d="M${X(bx)},${X(top+4)} L${X(bx-Rs*.55)},${X(bt-4)} L${X(bx-Rs*.1)},${X(bt-4)} Z"/>`;cc=[bx,(top+bt)/2+4,Rs*.45,(bt-top)*.3];break;}
+      case 'vase':{const ry=Math.max(Rs*.5,U(h)*.25),cy=top+ry,fy=by-U(h)*.35;
+        b+=trunk(bx,by,bx,fy);[-1,0,1].forEach(k=>{b+=trunk(bx,fy,bx+k*Rs*.6,cy+ry*.3,1.8);});
+        b+=`<ellipse class="${cls}" cx="${X(bx)}" cy="${X(cy)}" rx="${X(Rs)}" ry="${X(ry)}"/>`+hl(bx-Rs*.3,cy-ry*.35,Rs*.4,ry*.35);cc=[bx,cy,Rs,ry];break;}
+      case 'open':{const fy=by-U(h)*.5,pts=[[-.7,.32],[-.2,.1],[.35,.16],[.75,.36]];
+        b+=trunk(bx,by,bx,fy);
+        pts.forEach(([kx,ky])=>{b+=trunk(bx,fy,bx+kx*Rs,top+U(h)*ky+Rs*.15,1.5);});
+        pts.forEach(([kx,ky])=>{b+=`<ellipse class="${cls}" cx="${X(bx+kx*Rs)}" cy="${X(top+U(h)*ky)}" rx="${X(Rs*.4)}" ry="${X(Rs*.3)}"/>`;});
+        cc=[bx,top+U(h)*.22,Rs*.8,Rs*.35];break;}
+      case 'candelabro':{const fy=by-U(h)*.6;b+=trunk(bx,by,bx,fy);
+        [[-.8,.18],[-.3,.02],[.3,.08],[.85,.22]].forEach(([kx,ky])=>{const tx=bx+kx*Rs,ty=top+U(h)*ky;
+          b+=`<path class="trunk" stroke-width="1.6" d="M${X(bx)},${X(fy)} Q${X(bx+kx*Rs*.8)},${X(fy-U(h)*.05)} ${X(tx)},${X(ty)}"/>`;
+          for(let i=0;i<6;i++)b+=`<ellipse class="${cls}" cx="${X(tx)}" cy="${X(ty)}" rx="${X(Rs*.24)}" ry="${X(Math.max(1.5,Rs*.06))}" transform="rotate(${i*30} ${X(tx)} ${X(ty)}) translate(${X(Rs*.18)} 0)"/>`;});break;}
+      case 'palm':{const ty=top+Rs*.3;b+=trunk(bx,by,bx,ty,2.2);
+        for(let i=0;i<9;i++){const a=i/9*Math.PI*2,tx=bx+Math.cos(a)*Rs,tyy=ty+Math.sin(a)*Rs*.4+Rs*.35;
+          b+=`<path class="k-${s.e}" stroke-width="2.4" d="M${X(bx)},${X(ty)} Q${X(bx+Math.cos(a)*Rs*.55)},${X(ty-Rs*.45+Math.sin(a)*Rs*.2)} ${X(tx)},${X(tyy)}"/>`;}
+        if(cr.fr)for(let i=0;i<6;i++)b+=`<circle class="${cr.fr}" cx="${X(bx+(i%3-1)*3)}" cy="${X(ty+6+Math.floor(i/3)*3)}" r="1.8"/>`;break;}
+      case 'banana':{const ty=by-U(h)*.5,pw=Math.max(3,Rs*.12);
+        b+=`<path class="stem-b2" d="M${X(bx-pw)},${X(by)} L${X(bx-pw*.8)},${X(ty)} L${X(bx+pw*.8)},${X(ty)} L${X(bx+pw)},${X(by)}Z"/>`;
+        // folhas longas arqueadas, as de baixo pendentes
+        [[-150,1],[-125,.95],[-100,.9],[-80,.9],[-55,.95],[-30,1],[-170,.85],[-10,.85]].forEach(([a,k],i)=>{const rad=a*Math.PI/180,L=Rs*1.45*k,ex=bx+Math.cos(rad)*L,ey=ty+Math.sin(rad)*L*.7+(Math.abs(a+90)>50?L*.35:0),mx=bx+Math.cos(rad)*L*.5,my=ty+Math.sin(rad)*L*.7-L*.12;
+          const nx=-Math.sin(rad)*L*.13,ny=Math.cos(rad)*L*.13;
+          b+=`<path class="${i%2?cls:clsS}" d="M${X(bx)},${X(ty)} Q${X(mx+nx)},${X(my+ny)} ${X(ex)},${X(ey)} Q${X(mx-nx)},${X(my-ny)} ${X(bx)},${X(ty)}Z"/><path class="ban-rib" d="M${X(bx)},${X(ty)} Q${X(mx)},${X(my)} ${X(ex)},${X(ey)}"/>`;});
+        const cx2=bx+Rs*.18,cy2=ty+Rs*.1;b+=`<path class="cv-pet" fill="none" d="M${X(bx)},${X(ty)} Q${X(cx2)},${X(ty)} ${X(cx2)},${X(cy2)}"/>`;
+        for(let r_=0;r_<4;r_++)for(let k=0;k<3;k++)b+=`<ellipse class="fr-ban" cx="${X(cx2+(k-1)*Math.max(1.4,Rs*.05))}" cy="${X(cy2+r_*Math.max(2.4,Rs*.08))}" rx="${X(Math.max(1,Rs*.03))}" ry="${X(Math.max(2,Rs*.07))}" transform="rotate(${(k-1)*18} ${X(cx2+(k-1)*Math.max(1.4,Rs*.05))} ${X(cy2+r_*Math.max(2.4,Rs*.08))})"/>`;
+        b+=`<ellipse class="fr-mg" cx="${X(cx2)}" cy="${X(cy2+4*Math.max(2.4,Rs*.08)+2)}" rx="${X(Math.max(1.2,Rs*.04))}" ry="${X(Math.max(2,Rs*.08))}"/>`;break;}
+      case 'papaya':{const ty=top+Rs*.45;b+=trunk(bx,by,bx,ty,2.6);
+        for(let k=1;k<7;k++){const yy=by-(by-ty)*k/7;b+=`<line class="cv-node" x1="${X(bx-2)}" y1="${X(yy)}" x2="${X(bx+2)}" y2="${X(yy)}"/>`;}
+        // folhas palmadas grandes em pecíolos longos, as de baixo pendentes
+        const pl=(x,y,r_,rot)=>{let o='';for(let i=0;i<7;i++){const a=rot+(i-3)*.38,ll=r_*(i===3?1:i===2||i===4?.88:.7);o+=`<ellipse class="${cls}" cx="${X(x+Math.cos(a)*ll*.5)}" cy="${X(y+Math.sin(a)*ll*.5)}" rx="${X(ll*.5)}" ry="${X(Math.max(1,ll*.16))}" transform="rotate(${(a*180/Math.PI).toFixed(0)} ${X(x+Math.cos(a)*ll*.5)} ${X(y+Math.sin(a)*ll*.5)})"/>`;}return o;};
+        for(let i=0;i<9;i++){const a=(-175+i*(170/8))*Math.PI/180,len=Rs*.7,tx=bx+Math.cos(a)*len,tyy=ty+Math.sin(a)*len*.55+Math.abs(Math.cos(a))*Rs*.18;
+          b+=`<path class="cv-pet" fill="none" d="M${X(bx)},${X(ty)} Q${X(bx+Math.cos(a)*len*.5)},${X(ty+Math.sin(a)*len*.5-Rs*.08)} ${X(tx)},${X(tyy)}"/>`+pl(tx,tyy,Rs*.42,a);}
+        for(let i=0;i<6;i++)b+=`<ellipse class="fr-o" cx="${X(bx+(i%2?3.2:-3.2))}" cy="${X(ty+6+Math.floor(i/2)*6.5)}" rx="2.5" ry="3.8"/>`;break;}
+    }
+    if(cc){const [x0,y0,rx,ry]=cc;
+      const FR=FRUIT[s.id]||(cr.fr?[cr.fr,1]:null);
+      if(FR){const rr=Math.max(2.2,Math.min(4.2,K*.055))*Math.min(FR[1],1.6)*(FR[1]>1.8?1.2:1),n=FR[1]>1.8?6:FR[1]>1.3?8:11;
+        for(let i=0;i<n;i++){const a=i*2.4+.4,r=.3+.55*((i%3)/2),fx=x0+Math.cos(a)*rx*r,fy=y0+Math.sin(a)*ry*r+ry*.2;
+          b+=FR[1]>1.8?`<ellipse class="${FR[0]}" cx="${X(fx)}" cy="${X(fy)}" rx="${X(rr*.75)}" ry="${X(rr)}"/>`:`<circle class="${FR[0]}" cx="${X(fx)}" cy="${X(fy)}" r="${X(rr)}"/>`;
+          b+=`<circle class="fr-hi" cx="${X(fx-rr*.3)}" cy="${X(fy-rr*.35)}" r="${X(rr*.3)}"/>`;}}
+      if(cr.fl)for(let i=0;i<12;i++){const a=i*2.4,r=.3+.6*((i%4)/3);b+=`<circle class="${cr.fl}" cx="${X(x0+Math.cos(a)*rx*r)}" cy="${X(y0+Math.sin(a)*ry*r-ry*.2)}" r="${X(Math.max(1.2,Math.min(2.4,K*.03)))}"/>`;}
+    }
+
+    return `<g>${b}</g>`;
+  };
+  const pts=p.pts.slice().sort((a,b)=>(a.x+a.y)-(b.x+b.y));
+  if(raio){
+    // raio de cada planta no chão (o mesmo círculo da planta baixa, visto em perspectiva), com a sigla no centro
+    const nn=q=>p.pts.reduce((m,o)=>o===q?m:Math.min(m,Math.hypot(o.x-q.x,o.y-q.y)),9);
+    // anéis tracejados das árvores ficam recortados no limite do terreno
+    const gp=circ?Array.from({length:72},(_,i)=>{const t=i/72*Math.PI*2;return iso(L/2+Math.cos(t)*L/2,L/2+Math.sin(t)*L/2,.03);}):[iso(0,0,.03),iso(L,0,.03),iso(L,W,.03),iso(0,W,.03)];
+    let rings='';
+    pts.forEach(q=>{const s=q.s,gz=q.kind==='bed'?.08:.03;
+      let r=q.kind==='tree'?.34:q.kind==='med'?.28:Math.min(q.cell*.45,.5);
+      r=Math.max(.04,Math.min(r,nn(q)*.46,circ?9:Math.min(q.x,L-q.x,q.y,W-q.y)*.95));
+      const [bx,by]=iso(q.x,q.y,gz),rx=r*K*c*Math.SQRT2,ry=r*K*sn*Math.SQRT2;
+      g+=`<g><title>${esc(s.n)} · raio de ${cm_(r)} no desenho</title>`;
+      if(q.kind==='tree'){const rt=Math.max(s.ep,1)/2;rings+=`<ellipse class="r-tree" cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" rx="${(rt*K*c*Math.SQRT2).toFixed(1)}" ry="${(rt*K*sn*Math.SQRT2).toFixed(1)}"/>`;}
+      g+=`<ellipse class="p-${s.e} r-pl" cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}"/>`;
+      // sigla sempre visível: nas plantas pequenas, a letra diminui até 6,5 px
+      const fs=Math.max(6.5,Math.min(9.5,rx*.62));
+      g+=`<text class="lab ${darkLab(s.e)}" style="font-size:${fs.toFixed(1)}px" x="${bx.toFixed(1)}" y="${by.toFixed(1)}">${esc(s.a)}</text>`;
+      g+=`</g>`;});
+    if(DM){
+      // largura de cada faixa (canteiro, rua, linha de árvores), com setas, ao longo da borda direita do terreno
+      const nm={bed:'canteiro',path:'rua',line:'árvores'};const X=n=>n.toFixed(1);
+      g+=`<defs><marker id="dm-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9Z" class="dm-hd"/></marker></defs>`;
+      const [ex0,ey0]=iso(L,0,0),[ex1,ey1]=iso(L+DM+.12,0,0);g+=`<line class="dm-ext" x1="${X(ex0)}" y1="${X(ey0)}" x2="${X(ex1)}" y2="${X(ey1)}"/>`;
+      p.strips.forEach(st=>{const y0=st.y,y1=st.y+st.h;
+        const [a,b]=iso(L+DM,y0,0),[c2,d]=iso(L+DM,y1,0),[t1,t2]=iso(L,y1,0),[t3,t4]=iso(L+DM+.12,y1,0);
+        g+=`<line class="dm-ext" x1="${X(t1)}" y1="${X(t2)}" x2="${X(t3)}" y2="${X(t4)}"/>`;
+        g+=`<line class="dm-ln" marker-start="url(#dm-ar)" marker-end="url(#dm-ar)" x1="${X(a)}" y1="${X(b)}" x2="${X(c2)}" y2="${X(d)}"/>`;
+        const [mx,my]=iso(L+DM+.18,(y0+y1)/2,0);
+        g+=`<text class="s-dim dm-t" x="${X(mx)}" y="${X(my)}">${nm[st.t]||''} ${cm_(st.h)}</text>`;});
+    }
+    g+=`<clipPath id="rclip"><polygon points="${P(gp)}"/></clipPath><g clip-path="url(#rclip)">${rings}</g>`;
+    pts.length=0;
+  }
+  pts.forEach(q=>{
+    const s=q.s,h=hOf(s),gz=q.kind==='bed'?.08:.03;
+    const [bx,by]=iso(q.x,q.y,gz);
+    if(q.kind==='tree'){
+      g+=treeSVG(s,bx,by,h,nearT(q));
+    }else if(FORM[s.id]){
+      const [f,wm0,opt0]=FORM[s.id];const opt=opt0||{};const isClimb=['tripod','trellis','climber'].includes(f);const wm=f==='groundvine'?wm0*.8:isClimb?Math.min(wm0,.7):Math.min(wm0,q.kind==='med'?.95:Math.max(.05,(q.cell||wm0)*.98));
+      if(f==='tripod'&&Math.round(q.x/.1)%6!==0)return;
+      const U=m=>m*K*ZF, X=n=>n.toFixed(1);
+      const R=Math.max(2,wm/2*K*c*1.15);
+      let b=`<title>${esc(s.n)} · cerca de ${fmt(h)} m de altura e ${f==='carpet'?'cobre o chão':fmt(wm)+' m de largura'}</title>`;
+      if(f!=='carpet')b+=`<ellipse class="shd" cx="${X(bx)}" cy="${X(by)}" rx="${X(R)}" ry="${X(R*.5)}"/>`;
+      if(HERBF.has(f)){b+=herbSVG(f,s,bx,by,R*2,U(h),opt,q.x.toFixed(2)+','+q.y.toFixed(2));}
+      else if(f==='carpet'){
+        const hx=s.el/2,hy=s.ep/2,z=gz+.06;
+        b+=`<polygon class="pl-${plTone(s)}" opacity=".9" points="${P([iso(q.x-hx,q.y-hy,z),iso(q.x+hx,q.y-hy,z),iso(q.x+hx,q.y+hy,z),iso(q.x-hx,q.y+hy,z)])}"/>`;
+        const [fx,fy]=iso(q.x,q.y,z);b+=`<circle class="fl-y" cx="${X(fx)}" cy="${X(fy)}" r="1.4"/>`;
+      }else if(f==='shrub'){
+        b+=`<ellipse class="pl-${plTone(s)} iso-c" cx="${X(bx)}" cy="${X(by-U(h)*.52)}" rx="${X(R)}" ry="${X(Math.max(U(h)*.5,R*.5))}"/>`;
+      }else if(f==='mound'){
+        b+=`<ellipse class="pl-${plTone(s)} iso-c" cx="${X(bx)}" cy="${X(by-U(h)*.45)}" rx="${X(R)}" ry="${X(Math.max(U(h)*.5,R*.42))}"/>`;
+      }else if(f==='cassava'){
+        const Hh=U(h),tone=plTone(s);
+        const leaf=(x,y,r,rot)=>{let o=`<line class="cv-pet" x1="${X(x)}" y1="${X(y)}" x2="${X(x+Math.cos(rot)*r*.35)}" y2="${X(y+Math.sin(rot)*r*.35)}"/>`;
+          const lx=x+Math.cos(rot)*r*.35,ly=y+Math.sin(rot)*r*.35;
+          for(let i=0;i<7;i++){const a=rot+(i-3)*.42,d=a*180/Math.PI,len=r*(i===3?.62:i===2||i===4?.56:.46);
+            o+=`<ellipse class="pl-${tone}" cx="${X(lx+Math.cos(a)*len*.5)}" cy="${X(ly+Math.sin(a)*len*.5)}" rx="${X(len*.5)}" ry="${X(Math.max(.8,len*.11))}" transform="rotate(${d.toFixed(0)} ${X(lx+Math.cos(a)*len*.5)} ${X(ly+Math.sin(a)*len*.5)})"/>`;}
+          return o;};
+        [-.32,.04,.34].forEach((k,si)=>{const sx=bx+k*R*.35,fx=bx+k*R*.75,fy=by-Hh*(.56+.06*si);
+          b+=`<path class="cv-stem" d="M${X(sx)},${X(by)} Q${X(sx+k*R*.15)},${X(by-Hh*.3)} ${X(fx)},${X(fy)}"/>`;
+          for(let n=1;n<6;n++){const t=n/6,nx=sx+(fx-sx)*t,ny=by+(fy-by)*t;b+=`<line class="cv-node" x1="${X(nx-1.8)}" y1="${X(ny)}" x2="${X(nx+1.8)}" y2="${X(ny)}"/>`;}
+          [-1,1].forEach(d=>{const tx=fx+d*R*.3+k*R*.25,ty=by-Hh*(.86+.08*((si+d+3)%3)/2);
+            b+=`<line class="cv-br" x1="${X(fx)}" y1="${X(fy)}" x2="${X(tx)}" y2="${X(ty)}"/>`;
+            b+=leaf(tx,ty+Hh*.07,R*.6,-Math.PI/2+d*1.6)+leaf(tx,ty+Hh*.03,R*.66,-Math.PI/2+d*1.0)+leaf(tx,ty,R*.72,-Math.PI/2+d*.35)+leaf(tx,ty+Hh*.05,R*.55,Math.PI*.15*-d-Math.PI/2*.1);});});
+      }else if(f==='umbrella'){
+        [-1,0,1].forEach(i=>{b+=`<line class="trunk-thin" x1="${X(bx+i*R*.2)}" y1="${X(by)}" x2="${X(bx+i*R*.38)}" y2="${X(by-U(h)*.85)}"/>`;});
+        b+=`<ellipse class="pl-${plTone(s)} iso-c" cx="${X(bx)}" cy="${X(by-U(h)*.9)}" rx="${X(R)}" ry="${X(Math.max(R*.4,U(h)*.14))}"/>`;
+      }else if(f==='clump'||f==='cane'){
+        const n=f==='cane'?6:7;
+        for(let i=0;i<n;i++){const dx=(i/(n-1)-.5)*2*R*.75,hh=h*(.82+.18*((i*37)%7)/6),tx=bx+dx,ty=by-U(hh);
+          b+=`<line class="pk-${plTone(s)}" stroke-width="${f==='cane'?2.2:1.5}" x1="${X(bx+dx*.35)}" y1="${X(by)}" x2="${X(tx)}" y2="${X(ty)}"/>`;
+          if(f==='cane')b+=`<path class="pk-${plTone(s)}" stroke-width="1.2" d="M${X(tx)},${X(ty+4)} q${X(R*.5)},-6 ${X(R*.9)},5 M${X(tx)},${X(ty+4)} q${X(-R*.5)},-6 ${X(-R*.9)},5"/>`;
+          else if(!opt.noflower)b+=`<circle class="fl-y" cx="${X(tx)}" cy="${X(ty)}" r="1.6"/>`;}
+        if(opt.tassel)b+=`<path class="k-B" stroke-width="1.6" d="M${X(bx)},${X(by-U(h)*1.02)} l-3,-6 M${X(bx)},${X(by-U(h)*1.02)} l3,-6 M${X(bx)},${X(by-U(h)*1.02)} v-7"/>`;
+      }else if(f==='leafy'){
+        const n=5;
+        for(let i=0;i<n;i++){const dx=(i/(n-1)-.5)*2*R*.6,hh=h*(.75+.25*((i*29)%5)/4),tx=bx+dx,ty=by-U(hh),ang=(i/(n-1)-.5)*50;
+          b+=`<line class="pk-${plTone(s)}" stroke-width="1.6" x1="${X(bx+dx*.3)}" y1="${X(by)}" x2="${X(tx)}" y2="${X(ty+U(h)*.15)}"/>`;
+          b+=`<ellipse class="pl-${plTone(s)} iso-c" cx="${X(tx)}" cy="${X(ty+U(h)*.1)}" rx="${X(Math.max(2,R*.26))}" ry="${X(Math.max(4,U(h)*.2))}" transform="rotate(${ang.toFixed(0)} ${X(tx)} ${X(ty+U(h)*.1)})"/>`;}
+        if(s.id==='heliconia')b+=`<rect class="fl-r" x="${X(bx-2)}" y="${X(by-U(h)*.55)}" width="4" height="${X(Math.max(5,U(h)*.18))}" rx="1"/>`;
+        else if(s.id==='canaindia')b+=`<circle class="fl-r" cx="${X(bx)}" cy="${X(by-U(h)*1.02)}" r="2.2"/>`;
+      }else if(f==='fern'){
+        for(let i=0;i<7;i++){const dx=(i/6-.5)*2*R;
+          b+=`<path class="pk-${plTone(s)}" stroke-width="2" d="M${X(bx)},${X(by-1)} Q${X(bx+dx*.35)},${X(by-U(h)*1.15)} ${X(bx+dx)},${X(by-U(h)*.3)}"/>`;}
+      }else if(f==='spiky'){
+        for(let i=0;i<9;i++){const a=(i/8-.5)*2.4;
+          b+=`<line class="pk-${plTone(s)}" stroke-width="1.5" x1="${X(bx)}" y1="${X(by-1)}" x2="${X(bx+Math.sin(a)*R*1.1)}" y2="${X(by-Math.cos(a)*U(h))}"/>`;}
+        if(opt.stalk)b+=`<line class="fl-y" stroke="var(--sun)" stroke-width="1.4" x1="${X(bx)}" y1="${X(by-U(h)*.5)}" x2="${X(bx+R*.3)}" y2="${X(by-U(h)*1.6)}"/>`;
+        if(opt.tips)for(let i=1;i<9;i+=2){const a=(i/8-.5)*2.4;b+=`<ellipse class="${opt.tips}" cx="${X(bx+Math.sin(a)*R*1.1)}" cy="${X(by-Math.cos(a)*U(h))}" rx="1.6" ry="3.2" transform="rotate(${(a*57).toFixed(0)} ${X(bx+Math.sin(a)*R*1.1)} ${X(by-Math.cos(a)*U(h))})"/>`;}
+      }else if(f==='lettuce'){
+        b+=`<ellipse class="pl-${plTone(s)} iso-c" cx="${X(bx)}" cy="${X(by-U(h)*.45)}" rx="${X(R)}" ry="${X(Math.max(R*.6,U(h)*.55))}"/>`;
+        b+=`<ellipse class="lt-in" cx="${X(bx)}" cy="${X(by-U(h)*.55)}" rx="${X(R*.55)}" ry="${X(Math.max(R*.32,U(h)*.3))}"/>`;
+      }else if(f==='tuft'){
+        for(let i=0;i<5;i++){const ang=(i/4-.5)*80,cx=bx+(i/4-.5)*R*.8,cy=by-U(h)*.5;
+          b+=`<ellipse class="pl-${plTone(s)} iso-c" cx="${X(cx)}" cy="${X(cy)}" rx="${X(Math.max(1.2,R*.28))}" ry="${X(Math.max(2.5,U(h)*.5))}" transform="rotate(${ang.toFixed(0)} ${X(cx)} ${X(by)})"/>`;}
+      }else if(f==='feather'){
+        for(let i=0;i<7;i++){const dx=(i/6-.5)*2*R*1.2;
+          b+=`<path class="pk-${plTone(s)}" stroke-width="1" d="M${X(bx)},${X(by)} Q${X(bx+dx*.3)},${X(by-U(h)*.7)} ${X(bx+dx)},${X(by-U(h))}"/><circle class="pl-${plTone(s)}" cx="${X(bx+dx)}" cy="${X(by-U(h))}" r="${X(Math.max(1,R*.25))}"/>`;}
+      }else if(f==='grass'){
+        const n=opt.straight?6:9;
+        for(let i=0;i<n;i++){const dx=(i/(n-1)-.5)*2*R;
+          b+=opt.straight?`<line class="pk-${plTone(s)}" stroke-width="1.3" x1="${X(bx+dx*.3)}" y1="${X(by)}" x2="${X(bx+dx*.6)}" y2="${X(by-U(h)*(.85+.15*(i%2)))}"/>`
+            :`<path class="pk-${plTone(s)}" stroke-width="1.2" d="M${X(bx+dx*.15)},${X(by)} Q${X(bx+dx*.4)},${X(by-U(h)*1.1)} ${X(bx+dx*1.1)},${X(by-U(h)*.45)}"/>`;}
+      }else if(f==='staked'){
+        b+=`<line class="trunk-thin" x1="${X(bx+R*.15)}" y1="${X(by)}" x2="${X(bx+R*.15)}" y2="${X(by-U(h)*1.05)}"/>`;
+        b+=`<ellipse class="pl-${plTone(s)} iso-c" cx="${X(bx)}" cy="${X(by-U(h)*.55)}" rx="${X(R)}" ry="${X(Math.max(R*.6,U(h)*.42))}"/>`;
+      }else if(f==='stalkleaves'){
+        b+=`<line class="k-A" stroke-width="1.6" x1="${X(bx)}" y1="${X(by)}" x2="${X(bx)}" y2="${X(by-U(h))}"/>`;
+        [.3,.5,.7,.9].forEach((t,i)=>{const cy=by-U(h)*t,side=i%2?1:-1,rx=Math.max(2.5,R*.5*(1.1-t*.4)),ry=Math.max(1.6,rx*.45);
+          b+=`<ellipse class="pl-${plTone(s)} iso-c" cx="${X(bx+side*rx*.9)}" cy="${X(cy)}" rx="${X(rx)}" ry="${X(ry)}" transform="rotate(${-side*25} ${X(bx+side*rx*.9)} ${X(cy)})"/>`;});
+      }else if(f==='vine'){
+        for(let i=0;i<7;i++){const a=i*2.4,rr=R*(.25+.75*((i*3)%7)/6),cx=bx+Math.cos(a)*rr,cy=by-U(h)*.3+Math.sin(a)*rr*.5;
+          b+=`<path class="k-A" stroke-width="1" d="M${X(bx)},${X(by)} L${X(cx)},${X(cy)}"/><ellipse class="pl-${plTone(s)} iso-c" cx="${X(cx)}" cy="${X(cy)}" rx="${X(Math.max(2,R*.2))}" ry="${X(Math.max(1.4,R*.13))}"/>`;}
+      }else if(f==='tripod'||f==='trellis'||f==='climber'){
+        b+=climbSVG(f==='climber'?'stake':f,bx,by,Math.max(8,R*2),U(h),opt);
+      }else if(f==='climber_old'){
+        b+=`<line class="trunk-thin" x1="${X(bx)}" y1="${X(by)}" x2="${X(bx)}" y2="${X(by-U(h)*1.05)}"/>`;
+        for(let i=0;i<6;i++){const t=.2+i*.15,side=i%2?1:-1,cx=bx+side*Math.max(2.5,R*.3),cy=by-U(h)*t;
+          b+=`<ellipse class="pl-${plTone(s)} iso-c" cx="${X(cx)}" cy="${X(cy)}" rx="${X(Math.max(2.2,R*.28))}" ry="${X(Math.max(1.6,R*.18))}"/>`;}
+      }
+      if(opt.fr&&!HERBF.has(f)){const [cls,n,zone]=opt.fr;const rr0=Math.max(1.3,Math.min(3,K*.03));
+        for(let i=0;i<n;i++){const a=i*2.4+.6,rr=n===1?0:R*.55*(((i%3)+1)/3),
+          x=bx+Math.cos(a)*rr,y=(zone==='ground'?by-1:by-U(h)*.6)+Math.sin(a)*rr*.5;
+          b+=`<circle class="${cls}" cx="${X(x)}" cy="${X(y)}" r="${X(zone==='ground'&&n<=2?rr0*1.6:rr0)}"/>`;}}
+      g+=`<g>${b}</g>`;
+    }else{
+      const w=(q.kind==='bed'?Math.min(q.cell,.5):.4)*K*c*.55;
+      const [tx,ty]=iso(q.x,q.y,gz+h);
+      const rx=Math.max(1.4,w),ry=Math.max(1.4,Math.min(h*K*ZF*.45,rx*1.6));
+      if(h>.6)g+=`<line class="stem" x1="${bx.toFixed(1)}" y1="${by.toFixed(1)}" x2="${tx.toFixed(1)}" y2="${(ty+ry*.5).toFixed(1)}"/>`;
+      g+=`<ellipse class="p-${s.e} iso-c" cx="${tx.toFixed(1)}" cy="${(h>.6?ty:(by+ty)/2).toFixed(1)}" rx="${rx.toFixed(1)}" ry="${(h>.6?ry:Math.max(1.4,(by-ty)/2+rx*.4)).toFixed(1)}"><title>${esc(s.n)} · cerca de ${fmt(h)} m</title></ellipse>`;
+    }
+  });
+  const [lx,ly]=iso(L/2,W,-base);const [wx,wy]=iso(L,W/2,-base);
+  if(circ){const [dx,dy]=iso(L,W,-base);g+=`<text class="s-dim" x="${dx.toFixed(1)}" y="${(dy+18).toFixed(1)}" text-anchor="middle">Ø ${fmt(L)} m</text>`;}
+  else{
+  g+=`<text class="s-dim" x="${(lx-14).toFixed(1)}" y="${(ly+16).toFixed(1)}" text-anchor="end">${fmt(L)} m</text>`;
+  if(!DM)g+=`<text class="s-dim" x="${(wx+14).toFixed(1)}" y="${(wy+16).toFixed(1)}">${fmt(W)} m</text>`;}
+  g+=`</svg>`;
+  return g;
+}
+
+// lista de todas as plantas que já estão no desenho, para a pessoa escolher qual tirar e abrir espaço
+function otherList(arr,count){
+  if(!arr.length)return '';
+  return `<div class="cap-other"><b>Ou tire outra planta para abrir espaço:</b><div class="cap-list other">${arr.map(s=>`<button type="button" data-rmsel="${s.id}" title="Tirar ${esc(s.n)} da área de plantio">${sig(s.e)}${esc(s.n)}${count&&count[s.id]?` <span class="hint" style="font-weight:400">· ${count[s.id]}</span>`:''}<span class="cap-x" aria-hidden="true">×</span></button>`).join('')}</div></div>`;
+}
+function capAlert(p){
+  const nc=(p.naoCoube||[]).concat(p.dropped||[]);
+  if(nc.length){const tr=nc.filter(isTree);
+    return `<div class="cap-alert" role="alert"><div class="cap-h"><span class="cap-ico" aria-hidden="true">!</span><b>${nc.length===1?'1 planta não cabe':`${nc.length} plantas não cabem`} neste terreno</b></div>
+    <p>Há mais plantas escolhidas do que o espaço comporta sem que uma fique em cima da outra. Tire algumas da lista ou aumente a área.${tr.length?' As árvores têm prioridade: tire primeiro as plantas menores.':''}</p>
+    <div class="cap-list">${nc.map(s=>`<button type="button" data-rmsel="${s.id}" title="Tirar ${esc(s.n)} da lista">${sig(s.e)}${esc(s.n)}<span class="cap-x" aria-hidden="true">×</span></button>`).join('')}</div>
+    <p class="hint">Toque numa planta para tirá-la da lista.</p>
+    ${otherList(p.sel.filter(s=>!nc.includes(s)),p.count)}</div>`;}
+  const tot=Object.values(p.removed||{}).reduce((a,b)=>a+b,0),cnt=Object.values(p.count).reduce((a,b)=>a+b,0);
+  if(tot>0&&tot>=.15*(tot+cnt))return `<div class="cap-alert lim" role="status"><div class="cap-h"><span class="cap-ico" aria-hidden="true">!</span><b>Terreno no limite</b></div><p>Para nenhuma planta ficar em cima da outra, o app tirou ${tot} mudas do desenho. Se escolher mais plantas, algumas não vão caber.</p></div>`;
+  return '';
+}
+// catálogo de todas as parcerias com cooperação documentada
+// consórcios documentados, cada um como uma unidade que pode ser plantada de uma vez
+function consorcios(){
+  const list=[];const done=new Set();
+  const tri=['couve','alface','cebolinha'];
+  list.push({sp:tri,t:'Consórcio triplo com UET 2,04: rende o dobro das três plantas em canteiros separados. Só couve e alface já dá UET 1,42.',src:'C3'});
+  ['alface|cebolinha','alface|couve','cebolinha|couve'].forEach(k=>done.add(k));
+  COOP.forEach(c=>{if(c[2]<=0||c[4]==='L')return;const k=[c[0],c[1]].sort().join('|');if(done.has(k))return;done.add(k);list.push({sp:[c[0],c[1]],t:c[3],src:c[4]});});
+  return list;
+}
+function consArr(sp){
+  const a=sp.map(i=>BYID[i]).filter(Boolean);if(a.length<2)return '';
+  const k=sp.slice().sort().join('|');if(TREEARR[k])return TREEARR[k];
+  if(a.every(isTree))return 'Na mesma linha de árvores, a árvore maior sombreando a menor.';
+  if(a.some(isTree)){const t=a.find(isTree),o=a.find(x=>!isTree(x));return `${o.n} nos espaços ao redor de ${t.n}, a ${cm_(Math.max(.3,(o.ep||.3)))} uma da outra.`;}
+  const steps=a.map((m,i)=>`${m.n} → ${a[(i+1)%a.length].n} a cada ${cm_((m.ep+a[(i+1)%a.length].ep)/2)}`);
+  const rg=Math.max(a.reduce((x,m)=>x+m.el,0)/a.length,...a.map(m=>Math.min(m.el,m.ep)));
+  return `Intercaladas na mesma fileira: ${steps.slice(0,a.length===2?1:a.length).join(', ')}; fileiras a ${cm_(rg)}, desencontradas.`;
+}
+function coopCatalog(){
+  const ids=new Set(S.sel);const used=new Set();
+  const card=c=>{used.add(c.src);const R=REFS[c.src];const all=c.sp.every(i=>ids.has(i)),some=c.sp.some(i=>ids.has(i));
+    const names=c.sp.map(i=>BYID[i]?`<span class="cs-p${ids.has(i)?' on':''}">${sig(BYID[i].e)}${esc(BYID[i].n)}</span>`:'').join('<span class="cc-x">+</span>');
+    return `<li class="cons${all?' all':''}"><div class="cons-h"><div class="cons-n">${names}</div>${all?'<span class="cons-ok">✓ no seu plantio</span>':`<button type="button" class="btn cons-add" data-addcons="${c.sp.join(',')}">${some?'Completar consórcio':'Plantar consórcio'}</button>`}</div>
+      <p class="cons-t">${esc(c.t)} ${R&&R.n?`<span class="hint">[${R.n}]</span>`:''}</p>
+      <p class="cons-a"><b>Arranjo:</b> ${esc(consArr(c.sp))}</p></li>`;};
+  const cs_=consorcios();const cardsHTML=cs_.map(card).join('');
+  const bad=COOP.filter(c=>c[2]<0);
+  bad.forEach(c=>used.add(c[4]));
+  const rl=[...used].filter(k=>REFS[k]&&REFS[k].n).sort((a,b)=>REFS[a].n-REFS[b].n).map(k=>`<li value="${REFS[k].n}">${esc(REFS[k].t)} <a href="${REFS[k].u}" target="_blank" rel="noopener">Abrir</a></li>`).join('');
+  return `<section class="panel" aria-labelledby="t-cat"><div class="head"><h2 id="t-cat">Parceiras</h2><span class="hint">${cs_.length} consórcios com estudo publicado</span></div>
+  <p class="hint">Cada item é um consórcio testado. "Plantar consórcio" acrescenta todas as plantas dele ao seu plantio; as que já estão na sua seleção aparecem em verde.</p>
+  <ul class="cons-list">${cardsHTML}</ul>
+  ${bad.length?`<div class="coop-sec bad"><h3>Não plantar juntas</h3><ul class="notes">${bad.map(c=>`<li class="note warn"><span class="tag">Não junte</span><div class="body"><span><b>${esc(BYID[c[0]].n)}</b> e <b>${esc(BYID[c[1]].n)}</b></span><span class="hint">${esc(c[3])} [${REFS[c[4]].n}]</span></div></li>`).join('')}</ul></div>`:''}
+  ${rl?`<details class="refs-d"><summary>Ver fontes (${(rl.match(/<li/g)||[]).length})</summary><ol class="refs">${rl}</ol></details>`:''}</section>`;
+}
+function coopPanel(p){
+  const sel=p.sel,ids=new Set(S.sel),used=new Set();
+  const refN=src=>REFS[src]&&REFS[src].n?` <span class="hint">[${REFS[src].n}]</span>`:(src==='L'?' <span class="hint">(suas listas)</span>':'');
+  let good='',badR='',noneR='',sugR='';
+  (p.groups||[]).filter(g=>g.length>1).forEach(g=>{
+    const pairs=[];for(let i=0;i<g.length;i++)for(let j=i+1;j<g.length;j++){const c=coop(g[i].id,g[j].id);if(c){pairs.push(c);used.add(c.src);}}
+    let c=pairs.sort((a,b)=>(a.src==='L')-(b.src==='L'))[0];
+    const gid=g.map(x=>x.id).sort().join();
+    if(gid==='alface,cebolinha,couve')c={t:'Consórcio triplo com UET 2,04: rende o dobro das três plantas em canteiros separados.',src:'C3'};
+    const ic=(p.interc||[]).find(x=>x.g===g);
+    const how=ic?`intercaladas na mesma fileira: ${ic.steps.slice(0,g.length===2?1:g.length).map(([a,b2,d])=>`${esc(a.n)} → ${esc(b2.n)} a cada ${cm_(d)}`).join(', ')}; fileiras a ${cm_(ic.rowGap)} uma da outra, desencontradas`:'no mesmo canteiro';
+    good+=`<li class="note tip"><span class="tag">Junto</span><div class="body"><span><b>${g.map(s=>esc(s.n)).join(' + ')}</b> ${how}.</span><span class="hint">${esc(c.t)}${refN(c.src)}</span></div></li>`;
+  });
+  const adj=p.adj||[];
+  const goodLine=adj.filter(x=>x.c&&x.c.v>0&&x.where==='linha de árvores');
+  if(goodLine.length){goodLine.forEach(x=>used.add(x.c.src));good+=`<li class="note tip"><span class="tag">Linha</span><div class="body"><span>Nas linhas de árvores, o app intercalou vizinhas que cooperam:</span><span class="hint">${goodLine.map(x=>`${esc(x.a.n)} + ${esc(x.b.n)}${refN(x.c.src)}`).join(' · ')}</span></div></li>`;}
+  // consórcios entre árvores: quem sombreia quem, distância no desenho e arranjo do estudo
+  {const trs=sel.filter(isTree);const seenT=new Set();let tr='';
+    trs.forEach((a,i)=>trs.slice(i+1).forEach(b=>{const c=coop(a.id,b.id);if(!c||c.v<0)return;const k=[a.id,b.id].sort().join('|');if(seenT.has(k))return;seenT.add(k);used.add(c.src);
+      const [hi,lo]=c.src!=='L'&&c.a&&BYID[c.a]&&BYID[c.b]?[BYID[c.a],BYID[c.b]]:((a.pt||0)>=(b.pt||0)?[a,b]:[b,a]);
+      const qa=p.pts.filter(q=>q.s===a),qb=p.pts.filter(q=>q.s===b);let dmin=99;qa.forEach(x=>qb.forEach(y=>{dmin=Math.min(dmin,Math.hypot(x.x-y.x,x.y-y.y));}));
+      tr+=`<li class="note tip"><span class="tag">Árvores</span><div class="body"><span><b>${esc(hi.n)}</b> (sombreia${hi.pt?`, até ${fmt(hi.pt)} m`:''}) + <b>${esc(lo.n)}</b> (fica na meia-sombra${lo.pt?`, até ${fmt(lo.pt)} m`:''})${dmin<99?`. No desenho, a ${cm_(dmin)} uma da outra`:''}.</span><span class="hint">${esc(c.t)}${refN(c.src)}</span>${TREEARR[k]?`<span class="hint">${esc(TREEARR[k])}</span>`:''}</div></li>`;}));
+    good=tr+good;}
+  if(p.lineFill&&p.lineFill.length)good+=`<li class="note tip"><span class="tag">Entre árvores</span><div class="body"><span>Nos vãos entre as árvores e as adubadeiras também entram <b>${p.lineFill.map(s=>esc(s.n)).join(', ')}</b>, que aguentam meia-sombra. O app escolhe, para cada vão, a planta que melhor coopera com as vizinhas.</span></div></li>`;
+  if(p.under&&p.under.length)good+=`<li class="note tip"><span class="tag">Sub-bosque</span><div class="body"><span><b>${p.under.map(s=>esc(s.n)).join(', ')}</b> ${p.under.length>1?'também ocupam':'também ocupa'} os espaços entre árvores e adubadeiras, onde há meia-sombra.</span></div></li>`;
+  // comprovadamente não devem ficar juntas
+  const bad=[];sel.forEach((a,i)=>sel.slice(i+1).forEach(b=>{const c=coop(a.id,b.id);if(c&&c.v<0){bad.push([a,b,c]);used.add(c.src);}}));
+  bad.forEach(([a,b,c])=>{const near=adj.find(x=>(x.a===a&&x.b===b)||(x.a===b&&x.b===a));
+    badR+=`<li class="note warn"><span class="tag">Não junte</span><div class="body"><span><b>${esc(a.n)}</b> e <b>${esc(b.n)}</b>. ${near?`Neste espaço elas ainda ficaram vizinhas (${near.where}); deixe pelo menos um trecho de outra planta entre elas.`:'O app colocou as duas em trechos separados.'}</span><span class="hint">${esc(c.t)}${refN(c.src)}</span></div></li>`;});
+  // sem cooperação conhecida
+  const none=adj.filter(x=>!x.c);
+  if(none.length){
+    const byWhere={};none.forEach(x=>{(byWhere[x.where]=byWhere[x.where]||[]).push(x);});
+    noneR=Object.entries(byWhere).map(([w,arr])=>`<li class="note"><span class="tag">${w==='linha de árvores'?'Linha':'Canteiro'}</span><div class="body"><span>Vizinhas ${w==='linha de árvores'?'na linha de árvores':w==='mesmo canteiro'?'no mesmo canteiro':'em trechos vizinhos do canteiro'}:</span><div class="pairs">${arr.map(x=>`<span>${esc(x.a.n)} <i>↔</i> ${esc(x.b.n)}</span>`).join('')}</div></div></li>`).join('');
+  }
+  if(p.nearTree&&p.nearTree.length){p.nearTree.forEach(([t,o])=>used.add(docCoop(t,o).src));
+    good=`<li class="note tip"><span class="tag">Árvores</span><div class="body"><span>Ao redor das árvores, o app colocou plantas menores com cooperação documentada:</span><span class="hint">${p.nearTree.map(([t,o])=>`${esc(t.n)} + ${esc(o.n)}${refN(docCoop(t,o).src)}`).join(' · ')}</span></div></li>`+good;}
+  // sugestões de parceiras documentadas: árvores grandes e frutíferas primeiro
+  const sug=[];const seen=new Set();
+  sel.filter(t=>isTree(t)).forEach(t=>COOP.forEach(c=>{if(c[2]<0||c[4]==='L')return;const o=c[0]===t.id?c[1]:c[1]===t.id?c[0]:null;
+    if(o&&BYID[o]&&(!isTree(BYID[o])||(BYID[o].pt||0)<(t.pt||0))&&!ids.has(o)&&!seen.has(o)){seen.add(o);sug.push([o,t,c]);used.add(c[4]);}}));
+  sel.filter(s=>isBed(s)).forEach(s=>COOP.forEach(c=>{if(c[2]<0||c[4]==='L')return;let o=c[0]===s.id?c[1]:c[1]===s.id?c[0]:null;if(o&&BYID[o]&&isTree(BYID[o]))o=null;
+    if(o&&!ids.has(o)&&!seen.has(o)&&BYID[o]){seen.add(o);sug.push([o,s,c]);used.add(c[4]);}}));
+  if(p.lines.length&&!sel.some(s=>UNDER.includes(s.id)))sug.push(['amendoim',null,null]);
+  if(sug.length)sugR=`<li class="note tip"><span class="tag">Aproveite</span><div class="body"><span>Para ocupar melhor o espaço, inclua parceiras com cooperação documentada:</span><div class="acts">${sug.map(([o,s,c])=>`<button type="button" data-addsp="${o}" title="${c?esc(c[3]):'Cobre o chão entre as árvores'}">+ ${esc(BYID[o].n)}${s?` (com ${esc(s.n)})`:' (sob as árvores)'}</button>`).join('')}</div></div></li>`;
+  if(!good&&!badR&&!noneR&&!sugR)return '';
+  const sec=(cls,t,d,body)=>body?`<div class="coop-sec ${cls}"><h3>${t}</h3>${d?`<p class="hint">${d}</p>`:''}<ul class="notes">${body}</ul></div>`:'';
+  const refs=[...used].filter(k=>REFS[k]&&REFS[k].n).sort((a,b)=>REFS[a].n-REFS[b].n).map(k=>`<li value="${REFS[k].n}">${esc(REFS[k].t)} <a href="${REFS[k].u}" target="_blank" rel="noopener">Abrir</a></li>`).join('');
+  return `<section class="panel" aria-labelledby="t-coop"><h2 id="t-coop">Consórcios e cooperação</h2><p class="hint">O app intercala, nos canteiros e nas linhas de árvores, as plantas que cooperam entre si. UET (uso eficiente da terra) acima de 1 indica que o consórcio produz mais do que as mesmas plantas em canteiros separados.</p>
+  ${sec('ok','Cooperam entre si','',good)}
+  ${sec('bad','Não podem ser plantadas juntas','Há estudo mostrando que uma prejudica a outra.',badR)}
+  ${sec('none','Sem cooperação conhecida','Não há estudo nem indicação nas suas listas de que se ajudem ou se prejudiquem. Podem ficar lado a lado, mas o ideal é intercalar uma planta que coopere com as duas.',noneR)}
+  ${sec('sug','Para aproveitar melhor o espaço','',sugR)}
+  ${refs?`<details class="refs-d"><summary>Ver fontes (${(refs.match(/<li/g)||[]).length})</summary><ol class="refs">${refs}</ol></details>`:''}</section>`;
+}
+function legend(p){
+  const ids=Object.keys(p.count);
+  if(!ids.length)return '';
+  const order='EAMBR';
+  ids.sort((a,b)=>order.indexOf(BYID[a].e)-order.indexOf(BYID[b].e)||BYID[a].n.localeCompare(BYID[b].n));
+  const kindOf=id=>{const q=p.pts.find(x=>x.s.id===id);return q?q.kind:'bed';};
+  const spTxt=s=>{const k=kindOf(s.id);if(k==='tree')return `${cm_(s.ep)} entre árvores na linha`;if(k==='med')return '1 m entre plantas na linha';return `${cm_(s.ep)} na fileira · ${cm_(s.el)} entre fileiras`;};
+  const strips=p.strips||[];const ruas=strips.filter(x=>x.t==='path'),cant=strips.filter(x=>x.t==='bed'),lin=strips.filter(x=>x.t==='line');
+  const ruaTxt=[ruas.length?`ruas de ${[...new Set(ruas.map(r=>cm_(r.h)))].join(' e ')}`:'',cant.length?`canteiros de ${[...new Set(cant.map(r=>cm_(r.h)))].join(' e ')}`:'',lin.length?`linhas de árvores de ${cm_(lin[0].h)}`:''].filter(Boolean).join(' · ');
+  const ic=(p.interc||[]).map(x=>`${x.steps.slice(0,x.g.length===2?1:x.g.length).map(([a,b,d])=>`${esc(a.n)} ↔ ${esc(b.n)} ${cm_(d)}`).join(', ')} (fileiras a ${cm_(x.rowGap)})`);
+  return `<div class="legend">`+ids.map(i=>{const s=BYID[i];return `<div class="lg"><span class="ab d-${s.e} ${darkLab(s.e)}">${esc(s.a)}</span><span class="nm">${esc(s.n)}<small class="sp">${spTxt(s)}</small></span><span class="q">${p.count[i]} ${p.count[i]>1?'plantas':'planta'}</span></div>`}).join('')+`</div>`
+   +`<div class="sp-sum">${ruaTxt?`<p><b>Espaçamento entre ruas e faixas:</b> ${ruaTxt}.</p>`:''}${ic.length?`<p><b>Intercaladas na mesma fileira:</b> ${ic.join(' · ')}.</p>`:''}</div>`;
+}
+
+// ---------- vasos e floreiras em vista isométrica ----------
+// pots: [{round, Wd, Dp, H (m), X0, Y0 (centro, m), placed:[{s,x,y,r}], label, sub}]
+function isoPots(pots,aria){
+  const c=Math.cos(Math.PI/6),sn=.5,ZF=.85,X=n=>n.toFixed(1);
+  const maxPH=p=>Math.max(.2,...p.placed.map(q=>potPlantH(q.s)));
+  // limites em unidades (K=1)
+  let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;
+  const isoU=(x,y,z)=>[(x-y)*c,(x+y)*sn-z*ZF];
+  pots.forEach(p=>{const hx=p.Wd/2,hy=p.Dp/2;[[-hx,-hy],[hx,-hy],[hx,hy],[-hx,hy]].forEach(([dx,dy])=>{[0,p.H+maxPH(p)].forEach(z=>{const [a,b]=isoU(p.X0+dx,p.Y0+dy,z);x0=Math.min(x0,a);x1=Math.max(x1,a);y0=Math.min(y0,b);y1=Math.max(y1,b);});});});
+  const pad=28,top=24;const K=Math.min(170,620/Math.max(.4,x1-x0),620/Math.max(.4,y1-y0));
+  const ox=pad-x0*K+20,oy=top-y0*K;const VW=(x1-x0)*K+pad*2+40,VH=(y1-y0)*K+top+70;
+  const iso=(x,y,z)=>[(x-y)*c*K+ox,(x+y)*sn*K-z*K*ZF+oy];
+  const P=a=>a.map(q=>q.map(n=>n.toFixed(1)).join(',')).join(' ');
+  let g=`<defs>${TEX}</defs>`;let extra=0;
+  pots.slice().sort((a,b)=>(a.X0+a.Y0)-(b.X0+b.Y0)).forEach(p=>{
+    const hx=p.Wd/2,hy=p.Dp/2,H=p.H;
+    if(p.round){const rt=hx,rb=hx*.78,N=48;
+      const ring=(r,z,a0,a1)=>{const o=[];for(let i=0;i<=N;i++){const t=a0+(a1-a0)*i/N;o.push(iso(p.X0+Math.cos(t)*r,p.Y0+Math.sin(t)*r,z));}return o;};
+      const f0=-Math.PI/4,f1=Math.PI*3/4;
+      g+=`<polygon class="pot-dark-f" points="${P(ring(rb,0,0,Math.PI*2))}"/>`;
+      g+=`<polygon class="pot" points="${P(ring(rt,H,f0,f1).concat(ring(rb,0,f0,f1).reverse()))}"/>`;
+      g+=`<polygon class="s-bed" points="${P(ring(rt*.94,H-.02,0,Math.PI*2))}"/><polygon fill="url(#tx-soil)" points="${P(ring(rt*.94,H-.02,0,Math.PI*2))}"/>`;
+      g+=`<polygon class="pot-rim-l" points="${P(ring(rt,H,0,Math.PI*2))}"/>`;
+    }else{const C=(dx,dy,z)=>iso(p.X0+dx,p.Y0+dy,z);
+      g+=`<polygon class="pot-dark-f" points="${P([C(hx,-hy,0),C(hx,hy,0),C(hx,hy,H),C(hx,-hy,H)])}"/>`;
+      g+=`<polygon class="pot" points="${P([C(-hx,hy,0),C(hx,hy,0),C(hx,hy,H),C(-hx,hy,H)])}"/>`;
+      g+=`<polygon class="s-bed" points="${P([C(-hx,-hy,H),C(hx,-hy,H),C(hx,hy,H),C(-hx,hy,H)])}"/><polygon fill="url(#tx-soil)" points="${P([C(-hx,-hy,H),C(hx,-hy,H),C(hx,hy,H),C(-hx,hy,H)])}"/>`;
+      g+=`<polygon class="pot-rim-l" points="${P([C(-hx,-hy,H),C(hx,-hy,H),C(hx,hy,H),C(-hx,hy,H)])}"/>`;}
+    p.placed.slice().sort((a,b)=>(a.x+a.y)-(b.x+b.y)).forEach(q=>{const [bx,by]=iso(p.X0+q.x,p.Y0+q.y,H),ph=potPlantH(q.s)*K*ZF,pw=Math.max(10,2*q.r*K*.95);
+      g+=`<ellipse class="shd" cx="${X(bx)}" cy="${X(by)}" rx="${X(pw*.45)}" ry="${X(pw*.22)}"/>`;
+      g+=q.s.arv?crownSVG(q.s,bx,by,ph,Math.max(pw,ph*.2),Math.max(pw*3,ph*.55)):potPlantSVG(q.s,bx,by,pw*.95,ph,pw);});
+  });
+  // nomes por último, por cima de tudo
+  pots.forEach(p=>{const hx=p.Wd/2,hy=p.Dp/2;const [,ly]=iso(p.X0+hx,p.Y0+hy,0);const [mx]=iso(p.X0,p.Y0,0);
+    const lines=[];if(p.label){const parts=p.label.split(p.sep||' · ');let cur='';const max=p.wrap||46;
+      parts.forEach(t=>{const nx=cur?cur+(p.sep||' · ')+t:t;if(nx.length>max&&cur){lines.push(cur);cur=t;}else cur=nx;});if(cur)lines.push(cur);}
+    lines.forEach((t,k)=>{g+=`<text class="nm-lab iso-lab" x="${X(mx)}" y="${X(ly+16+k*14)}">${esc(t)}</text>`;});
+    if(p.sub)g+=`<text class="s-dim iso-lab" x="${X(mx)}" y="${X(ly+16+lines.length*14+2)}" text-anchor="middle">${esc(p.sub)}</text>`;
+    extra=Math.max(extra,lines.length*14);});
+  return `<svg viewBox="0 0 ${X(VW)} ${X(VH+Math.max(0,extra-14))}" role="img" aria-label="${esc(aria)}">${g}</svg>`;
+}
+function drawMyPotIso(m){
+  const nm=m.fit.map(s=>s.n.replace(/ \(.*\)$/,'')+((m.count||{})[s.id]>1?` (${m.count[s.id]})`:'')).join(' · ');
+  return isoPots([{round:m.round,Wd:m.Wd/100,Dp:m.Dp/100,H:m.H/100,X0:0,Y0:0,placed:m.placed||[],label:nm,wrap:50,sub:`${m.round?'Ø '+fmt(m.Wd)+' cm':fmt(m.Wd)+' × '+fmt(m.Dp)+' cm'} · ${fmt(m.H)} cm de fundo · ≈ ${fmt(m.V,0)} L`}],'Seu vaso em 3D com as plantas');
+}
+function drawPotsIso(items){
+  const rows=[it=>rankOf(it)<=1,it=>rankOf(it)===2,it=>rankOf(it)===3].map(f=>items.filter(f).sort((a,b)=>potSun(b)-potSun(a))).filter(r=>r.length);
+  const pots=[];let Y=0;const sN=s=>(s.sol||'P')==='P'?1:(s.sol||'').includes('P')?0:-1;
+  rows.forEach(r=>{let X=0,rowD=0;
+    r.forEach(it=>{const m=it.kind==='cons'?{round:it.round,Wd:it.Wd/100,Dp:it.Dp/100}:it.kind==='jard'?{round:false,Wd:.6,Dp:.2}:(()=>{const d=Math.round(Math.cbrt(it.v/.6)*10)/100;return {round:true,Wd:d,Dp:d};})();
+      const H=it.kind==='cons'?it.H/100:it.kind==='jard'?Math.max(.1,it.v/1000/(.6*.2)):m.Wd*.95;
+      const mm={round:m.round,Wd:m.Wd*100,Dp:m.Dp*100};const placed=it.kind==='cons'?it.placed.slice():[];
+      if(it.kind!=='cons')it.sp.concat((it.under||[]).slice().sort((a,b)=>sN(b)-sN(a))).forEach(s=>{const q=tryPlace(mm,placed,s);if(q)placed.push(q);});
+      const lab=it.sp.concat(it.under||[]).map(s=>s.n.replace(/ \(.*\)$/,'')).join(' + ');
+      pots.push({round:m.round,Wd:m.Wd,Dp:m.Dp,H,X0:X+m.Wd/2,Y0:Y+m.Dp/2,placed,label:lab,sep:' + ',wrap:24,sub:`${it.v} L`});
+      X+=m.Wd+.35;rowD=Math.max(rowD,m.Dp);});
+    Y+=rowD+.55;});
+  return isoPots(pots,'Vasos sugeridos em 3D');
+}
+// ---------- vasos ----------
+const DRYP=new Set(['peixinho','limao','mexerica','alecrim','lavanda','alecrimcampo','macela','carqueja','dyckia','tuna','abacaxi','alecrimpimenta']);
+const WETP=new Set(['alface','rucula','couve','salsinha','coentropara','hortela','taioba','jambu','cebolinha','beterraba','cenoura']);
+const VINEPOT={abobora:'Abóbora em vaso: só variedades miniatura (como a abóbora-de-pescoço mini ou a moranga mini), uma por vaso de 60 L ou mais. As ramas passam de 2 m: conduza-as para o chão ou para uma treliça.',maxixe:'Maxixe em vaso: um pé por vaso de 40 L, com tutor ou treliça para as ramas subirem.',batatadoce:'Batata-doce em vaso: um pé por vaso de 30 L; as ramas cobrem a terra toda e podem cair pela borda.'};
+function potNotes(host,under){const o=[];if(!host||!under.length)return o;
+  const wet=under.filter(s=>WETP.has(s.id));
+  if(DRYP.has(host.id)&&wet.length)o.push(`Rega: ${host.n} gosta que a terra seque um pouco entre as regas, e ${wet.map(s=>s.n).join(', ')} ${wet.length>1?'pedem':'pede'} terra sempre úmida. Regue pouco e com mais frequência, só na borda, longe do tronco, e cubra a terra com palha.`);
+  else if(!DRYP.has(host.id)&&under.some(s=>DRYP.has(s.id)))o.push(`Rega: ${under.filter(s=>DRYP.has(s.id)).map(s=>s.n).join(', ')} prefere terra mais seca que a ${host.n}; deixe-a no lado mais ensolarado e regue mais perto do tronco.`);
+  o.push(`Com o tempo: as plantas da borda funcionam bem nos primeiros 1–2 anos. Quando a copa de ${host.n} fechar e as raízes tomarem o vaso, colha, reduza ou mude-as de vaso.`);
+  return o;}
+const NOPOT={melancia:'Melancia não deve ser plantada em vaso: as ramas passam de 3 m e cada fruto pesa vários quilos. Plante no chão, com 2 × 2 m para cada planta.',mandioca:'Mandioca não deve ser plantada em vaso. As raízes engrossam e se espalham por 40–60 cm de profundidade e de largura, a planta passa de 2 m e tomba com o vento, e num recipiente ela produz muito pouco. Plante no chão, num canteiro ou na linha de árvores, a cerca de 80 × 60 cm.'};
+// frutíferas e plantas maiores recebem, na borda do vaso, hortaliças e aromáticas de raiz rasa
+const isHost=s=>!!(s&&s.v&&(s.arv||s.v>=20)&&!(FORM[s.id]&&FORM[s.id][0]==='groundvine'));
+const NOUNDER=new Set(['vine','trellis','climber','tripod','staked','cane','groundvine','tomato']);
+function underOk(h,s){if(!h||!s||!s.v||s===h||s.arv||s.v>8||s.espalha)return false;if(potRange(s)[1]>80)return false;const f=FORM[s.id];if(f&&NOUNDER.has(f[0]))return false;const c=coop(h.id,s.id);return !(c&&c.v<0);}
+const underFp=s=>{const e=Math.max(.15,Math.min(s.ep||.3,.35))*.85;return e*e;};
+const potTopA=v=>{const d=Math.cbrt(v/.6)/10;return Math.PI*d*d/4;};
+const ringA=v=>potTopA(v)*.75;
+function underPrio(h,s){const c=coop(h.id,s.id);return (c&&c.v>0?(c.src==='L'?1:0):2)*10+(/M/.test(s.sol||'')?0:1);}
+function underWhy(h,s){const c=coop(h.id,s.id);if(c&&c.v>0)return c.src==='L'?'boa companhia nas suas listas':`cooperação documentada${REFS[c.src]&&REFS[c.src].n?' ['+REFS[c.src].n+']':''}`;return /M/.test(s.sol||'')?'raiz rasa, aguenta meia-sombra':'raiz rasa; na borda virada para o sol';}
+// o vaso ou a floreira da pessoa
+const depthNeed=v=>v<=5?12:v<=15?18:v<=30?25:v<=60?35:45;
+const footA=s=>{const d=Math.cbrt(s.v/.6)/10;return d*d*.785;};
+// espaço que cada planta ocupa na superfície do vaso (raio, em m): 80% do espaçamento de canteiro;
+// a frutífera reserva só a zona do tronco, e as de raiz rasa ficam em volta dela
+const prad=s=>s.arv?.07:(FORM[s.id]&&FORM[s.id][0]==='groundvine')?.3:Math.min(.3,Math.max(.06,(s.ep||.3)*.4));
+function tryPlace(m,placed,s,tight){
+  const r=prad(s),e=Math.max(.04,r*(m.strict?.85:.5)),hx=m.Wd/200,hy=m.Dp/200;
+  const inside=(x,y)=>m.round?Math.hypot(x,y)<=hx-e+1e-9:(Math.abs(x)<=hx-e+1e-9&&Math.abs(y)<=hy-e+1e-9);
+  const ok=(x,y)=>placed.every(p=>Math.hypot(p.x-x,p.y-y)>=p.r+r-1e-9);
+  if(!placed.length&&(s.arv||(isHost(s)&&m.round)))return (m.strict&&!s.arv&&!inside(0,0))?null:{s,x:0,y:0,r};
+  let best=null,bs=1e9;
+  // com frutífera no centro: as menores vão para a borda, espalhadas; as de sol pleno do lado da luz (esquerda), as de sombra à direita
+  const trees=placed.filter(p=>p.s.arv),host=trees[0];
+  const sunNeed=(s.sol||'P')==='P'?1:(s.sol||'').includes('P')?0:-1; // 1 sol pleno, 0 sol ou meia-sombra, -1 sombra
+  if(host){const pref=sunNeed>0?Math.PI:0,wA=sunNeed===0?0:.06,others=placed.filter(p=>!p.s.arv);
+    for(let ix=-Math.round(hx*100);ix<=Math.round(hx*100);ix++)for(let iy=-Math.round(hy*100);iy<=Math.round(hy*100);iy++){
+      const x=ix/100,y=iy/100;if(!inside(x,y)||!ok(x,y)||trees.some(t=>Math.hypot(x-t.x,y-t.y)<treeZone(m,t,r)))continue;
+      const nt=nearT(trees,x,y);const dx=x-nt.t.x,dy=y-nt.t.y;
+      let da=Math.abs(Math.atan2(dy,dx)-pref);if(da>Math.PI)da=2*Math.PI-da;
+      // com duas árvores, as plantas baixas preferem o meio da floreira
+      const mid=trees.length>1?Math.abs(x)*.4:0;
+      let go=.12;others.forEach(p=>{go=Math.min(go,Math.hypot(p.x-x,p.y-y)-(p.r+r));});
+      const sc=tight?(-.3*nt.d+.6*go+wA*.3*da+mid):(wA*da-.3*nt.d-.6*go+mid);if(sc<bs){bs=sc;best={s,x,y,r};}}
+    return best;}
+  for(let ix=-Math.round(hx*100);ix<=Math.round(hx*100);ix++)for(let iy=-Math.round(hy*100);iy<=Math.round(hy*100);iy++){
+    const x=ix/100,y=iy/100;if(!inside(x,y)||!ok(x,y))continue;
+    // luz da esquerda: quem pede sol pleno puxa para a esquerda, quem aguenta sombra para a direita
+    const side=sunNeed>0?(x+hx):sunNeed<0?(hx-x):Math.abs(x)*.3;
+    let sc;if(!placed.length)sc=m.round?side-.5*Math.hypot(x,y):side+Math.abs(y)*.1;
+    else{let g=1e9;placed.forEach(p=>{g=Math.min(g,Math.hypot(p.x-x,p.y-y)-(p.r+r));});
+      sc=tight?g+(m.round?-.15*Math.hypot(x,y):(x+hx)*.02+Math.abs(y)*.005)+side*.04:g+side*.25+Math.abs(y)*.01;}
+    if(sc<bs){bs=sc;best={s,x,y,r};}}
+  if(!best&&!placed.length&&!m.strict)best={s,x:0,y:0,r};
+  return best;
+}
+// floreira de 200 cm ou mais, com 50 cm de largura e de fundo: cabe uma frutífera em cada ponta
+const maxTrees=m=>(!m.round&&m.Wd>=200&&m.Dp>=50&&m.H>=50)?2:1;
+const TEND=.35; // distância do tronco até a ponta da floreira (m)
+const nearT=(trees,x,y)=>trees.reduce((b,t)=>{const d=Math.hypot(t.x-x,t.y-y);return d<b.d?{t,d}:b;},{t:null,d:1e9});
+// zona livre em volta do tronco: metade do raio do vaso fica só com cobertura (palha), para as raízes da árvore
+const treeZone=(m,host,r)=>host?Math.max(host.r+r,m.round?m.Wd/200*.5:Math.min(.3,Math.min(m.Wd,m.Dp)/200)):0;
+// encaixe em grade regular (anéis no vaso redondo, fileiras desencontradas na floreira): enche melhor o espaço
+function latticePlace(m,placed,s){
+  const r=prad(s),e=Math.max(.04,r*.5),hx=m.Wd/200,hy=m.Dp/200;
+  const ok=(x,y)=>placed.every(p=>Math.hypot(p.x-x,p.y-y)>=p.r+r-1e-9);const pts=[];
+  if(m.round){const Rin=hx-e;for(let rho=Rin,k=0;rho>=-1e-9;rho-=2*r,k++){const rr=Math.max(0,rho);if(rr<1e-6){pts.push([0,0]);break;}
+      const n=Math.max(1,Math.floor(Math.PI/Math.asin(Math.min(1,r/rr))+1e-9));for(let i=0;i<n;i++){const a=(i+(k%2)*.5)/n*Math.PI*2;pts.push([Math.cos(a)*rr,Math.sin(a)*rr]);}}
+    // passo fino, para aproveitar as sobras
+    for(let ix=-Math.round(hx*100);ix<=Math.round(hx*100);ix+=2)for(let iy=-Math.round(hy*100);iy<=Math.round(hy*100);iy+=2){const x=ix/100,y=iy/100;if(Math.hypot(x,y)<=Rin+1e-9)pts.push([x,y]);}}
+  else{const ax=Math.max(0,hx-e),ay=Math.max(0,hy-e),dy=r*Math.sqrt(3),ny=Math.floor(2*ay/dy+1e-9)+1;
+    for(let iy=0;iy<ny;iy++){const y=ny===1?0:-ay+iy*dy,off=iy%2?r:0;for(let x=-ax+off;x<=ax+1e-9;x+=2*r)pts.push([x,y]);}
+    for(let ix=-Math.round(ax*100);ix<=Math.round(ax*100);ix+=2)for(let iy=-Math.round(ay*100);iy<=Math.round(ay*100);iy+=2)pts.push([ix/100,iy/100]);}
+  const trees=placed.filter(p=>p.s.arv);
+  for(const [x,y] of pts)if(ok(x,y)&&trees.every(t=>Math.hypot(x-t.x,y-t.y)>=treeZone(m,t,r)-1e-9))return {s,x,y,r};
+  return null;}
+function myPot(sel){
+  const round=S.pottipo!=='floreira',H=S.pH||25;let V,A,Wd,Dp;
+  if(round){const d=S.pD||30;V=Math.PI*Math.pow(d/2,2)*H/1000*.85;A=Math.PI*Math.pow(d/200,2);Wd=d;Dp=d;}
+  else{const c=S.pC||60,l=S.pW||20;V=c*l*H/1000*.92;A=c*l/10000;Wd=c;Dp=l;}
+  const m={round,V,A,H,Wd,Dp};
+  const out=[],cand=[];
+  sel.forEach(s=>{
+    if(!s.v){out.push([s,NOPOT[s.id]?'não deve ir para vaso; plante no chão':'não é indicada para vaso']);return;}
+    const need=depthNeed(s.v);if(H<need){out.push([s,`precisa de ${need} cm de fundo`]);return;}
+    const bad=cand.find(o=>{const c=coop(o.id,s.id);return c&&c.v<0;});if(bad){out.push([s,'não deve ficar junto de '+bad.n]);return;}
+    // uma árvore por recipiente: as copas e as raízes de duas frutíferas disputam o mesmo espaço
+    // (só cabe mais de uma em recipientes com pelo menos 0,8 m² de superfície por árvore)
+    if(s.arv){const nT=cand.filter(o=>o.arv).length,maxT=maxTrees({round,Wd,Dp,H});
+      if(nT>=maxT){out.push([s,maxT>1?`já há duas frutíferas nesta floreira, uma em cada ponta`:`já há ${cand.find(o=>o.arv).n} ${round?'neste vaso':'nesta floreira'}; cada frutífera precisa de um recipiente só dela${!round?' (floreiras a partir de 200 × 50 cm e 50 cm de fundo comportam uma em cada ponta)':''}`]);return;}}
+    cand.push(s);});
+  // a frutífera vai primeiro, no centro; depois as outras, na ordem escolhida, cada uma com o seu espaço
+  const sunN=s=>(s.sol||'P')==='P'?1:(s.sol||'').includes('P')?0:-1;
+  const order=cand.filter(isHost).concat(cand.filter(s=>!isHost(s)).sort((a,b)=>sunN(b)-sunN(a)));
+  // espécies baixas (estrato baixo ou rasteiro) enchem o recipiente: depois de uma muda de cada, o espaço que sobra
+  // é dividido entre elas em rodízio, até não caber mais nenhuma
+  const fillable=s=>!s.arv&&(s.e==='B'||s.e==='R')&&!s.espalha&&!(FORM[s.id]&&FORM[s.id][0]==='groundvine');
+  const tight=order.some(fillable);
+  const placed=[],under=[];let uV=0;
+  const volOf=s=>{const h=!isHost(s)&&placed.find(p=>isHost(p.s)&&underOk(p.s,s));return [h?s.v*.5:s.v,h];};
+  order.forEach(s=>{
+    const [vv,h]=volOf(s);
+    if(uV+vv>V+.01){out.push([s,s.v>V?`precisa de pelo menos ${s.v} L`:`falta terra (precisa de ${fmt(vv,0)} L; sobram ${fmt(Math.max(0,V-uV),0)} L)`]);return;}
+    const nTsel=order.filter(o=>o.arv).length;
+    const p=s.arv&&!m.round&&nTsel>1?(()=>{const k=placed.filter(q=>q.s.arv).length;return {s,x:(k?1:-1)*(m.Wd/200-TEND),y:0,r:prad(s)};})():tryPlace(m,placed,s,tight&&!isHost(s));
+    if(!p){out.push([s,`falta espaço na superfície: precisa de um círculo de ${Math.round(prad(s)*200)} cm só para ela`]);return;}
+    placed.push(p);uV+=vv;if(h&&!under.includes(s))under.push(s);});
+  const base=placed.slice();
+  let queue=order.filter(s=>fillable(s)&&placed.some(p=>p.s===s));
+  for(let guard=0;queue.length&&guard<200;guard++){const next=[];
+    queue.forEach(s=>{const [v0]=volOf(s);const vv=Math.min(v0,Math.PI*prad(s)*prad(s)*(H/100)*1000*.85);if(uV+vv>V+.01)return;const p=latticePlace(m,placed,s);if(!p)return;placed.push(p);uV+=vv;next.push(s);});
+    queue=next;}
+  const fit=sel.filter(s=>placed.some(p=>p.s===s));
+  const count={};placed.forEach(p=>{count[p.s.id]=(count[p.s.id]||0)+1;});
+  return Object.assign(m,{fit,out,uV,uA:0,under,placed,base,count});
+}
+function potCompanions(m){
+  const first=m.fit[0];if(!first)return [];
+  const res=[];
+  const host=m.fit.find(isHost);
+  DATA.forEach(o=>{
+    if(!o.v||S.sel.includes(o.id)||o.id===first.id)return;
+    if(o.arv&&m.fit.filter(f=>f.arv).length>=maxTrees(m))return;
+    const c=coop(first.id,o.id);if(c&&c.v<0)return;
+    const asUnder=!!host&&underOk(host,o);
+    if(!(c&&c.v>0)&&!asUnder)return;
+    if(m.fit.some(f=>{const k=coop(f.id,o.id);return k&&k.v<0;}))return;
+    const vv=asUnder?o.v*.5:o.v;
+    if(m.H<depthNeed(o.v)||!tryPlace(m,m.base||m.placed,o))return;
+    res.push([o,c&&c.v>0?c:{v:1,t:'Raiz rasa: ocupa a terra da superfície, na borda do vaso, sem disputar com as raízes da frutífera.',src:'P'},asUnder]);
+  });
+  const rk=c=>c.src==='P'?2:c.src==='L'?1:0;
+  res.sort((a,b)=>rk(a[1])-rk(b[1])||(/M/.test(a[0].sol||'')?0:1)-(/M/.test(b[0].sol||'')?0:1)||a[0].v-b[0].v);
+  return res.slice(0,6);
+}
+function crownSVG(s,cx,base,ph,w,room){
+  const X=n=>n.toFixed(1),cr=Math.min(Math.max(w*.9,ph*.34),ph*.42,room/2),cyc=base-ph+cr*.95,tn=FOLT[s.id]||({E:3,A:1,M:4})[s.e]||1;
+  let o=`<line class="trunk" stroke-width="${Math.max(2.4,Math.min(6,cr*.1)).toFixed(1)}" x1="${X(cx)}" y1="${X(base)}" x2="${X(cx)}" y2="${X(cyc+cr*.5)}"/><g><title>${esc(s.n)}</title>`;
+  o+=`<ellipse class="crown tn${tn}s" cx="${X(cx)}" cy="${X(cyc)}" rx="${X(cr)}" ry="${X(cr*.95)}"/>`;
+  [[-.45,.25,.62,.55,1],[.45,.25,.62,.55,1],[0,-.05,.82,.75,0],[-.25,-.35,.6,.5,0],[.3,-.3,.6,.5,0]].forEach(([dx,dy,rx,ry,sh])=>{o+=`<ellipse class="crown tn${tn}${sh?'s':''}" cx="${X(cx+dx*cr)}" cy="${X(cyc+dy*cr)}" rx="${X(cr*rx)}" ry="${X(cr*ry)}"/>`;});
+  [[-.35,-.35,.3],[.1,-.55,.22],[-.55,0,.2]].forEach(([dx,dy,k])=>{o+=`<circle class="crown-hi tn${tn}" cx="${X(cx+dx*cr)}" cy="${X(cyc+dy*cr)}" r="${X(cr*k)}"/>`;});
+  const c2=crownOf(s),FR=FRUIT[s.id]||(c2.fr?[c2.fr,1]:null);
+  if(FR){const rr=Math.max(2.4,Math.min(5,cr*.07))*Math.min(FR[1],1.6),n=FR[1]>1.8?5:8;
+    for(let i=0;i<n;i++){const a=i*2.4+.4,r_=.3+.5*((i%3)/2),fx=cx+Math.cos(a)*cr*r_,fy=cyc+Math.sin(a)*cr*r_*.8+cr*.15;
+      o+=`<circle class="${FR[0]}" cx="${X(fx)}" cy="${X(fy)}" r="${X(rr)}"/><circle class="fr-hi" cx="${X(fx-rr*.3)}" cy="${X(fy-rr*.35)}" r="${X(rr*.3)}"/>`;}}
+  return o+`</g>`;}
+function drawMyPot(m){
+  const X=n=>n.toFixed(1),n=m.fit.length;
+  const maxPH=Math.max(.3,...m.fit.map(potPlantH));
+  const K=Math.min(600/(m.Wd/100),380/(maxPH+m.H/100),400);
+  const w=m.Wd/100*K,h=m.H/100*K,VW=Math.max(360,w+140),x=(VW-w)/2,top=maxPH*K+46,floorY=top+h,VH=floorY+96;
+  let b='';
+  b+=`<line class="s-floor" x1="0" y1="${X(floorY)}" x2="${X(VW)}" y2="${X(floorY)}"/>`;
+  if(m.round){const inset=w*.12;b+=`<polygon class="pot" points="${X(x)},${X(top)} ${X(x+w)},${X(top)} ${X(x+w-inset)},${X(floorY)} ${X(x+inset)},${X(floorY)}"/><rect class="pot-rim" x="${X(x-3)}" y="${X(top-5)}" width="${X(w+6)}" height="8" rx="2"/>`;}
+  else b+=`<rect class="pot" x="${X(x)}" y="${X(top)}" width="${X(w)}" height="${X(h)}" rx="3"/><rect class="pot-rim" x="${X(x-3)}" y="${X(top-4)}" width="${X(w+6)}" height="6" rx="2"/>`;
+  if(h>=16)b+=`<text class="potlab" x="${X(x+w/2)}" y="${X(top+h/2+4)}">≈ ${fmt(m.V,0)} L</text>`;
+  // cada planta no lugar calculado (vista de frente: as do fundo primeiro)
+  const pl=(m.placed||[]).slice().sort((a,b)=>a.y-b.y),Kc=w/(m.Wd/100);
+  pl.forEach(p=>{const s=p.s,cx=x+w/2+p.x*Kc,ph=potPlantH(s)*K,pw=Math.max(14,2*p.r*Kc);
+    b+=s.arv?crownSVG(s,cx,top-4,ph,pw,Math.max(w*1.4,150)):potPlantSVG(s,cx,top-4,pw*.95,ph,pw);});
+  {const nm=m.fit.map(s=>s.n.replace(/ \(.*\)$/,''));const lines=[];for(let k=0;k<nm.length;k+=3)lines.push(nm.slice(k,k+3).join(' · '));
+    lines.forEach((t,k)=>{b+=`<text class="nm-lab" x="${X(x+w/2)}" y="${X(floorY+14+k*13)}">${esc(t)}</text>`;});}
+  if(!n)b+=`<text class="nm-lab" x="${X(x+w/2)}" y="${X(top-14)}">Escolha a primeira planta na lista</text>`;
+  const sb=.25*K;b+=`<line class="s-sunline" x1="10" y1="${X(VH-12)}" x2="${X(10+sb)}" y2="${X(VH-12)}"/><line class="s-sunline" x1="10" y1="${X(VH-17)}" x2="10" y2="${X(VH-7)}"/><line class="s-sunline" x1="${X(10+sb)}" y1="${X(VH-17)}" x2="${X(10+sb)}" y2="${X(VH-7)}"/><text class="s-dim" x="${X(16+sb)}" y="${X(VH-8)}">25 cm</text>`;
+  b+=`<text class="s-dim" x="${X(x+w/2)}" y="${X(floorY+14+Math.ceil(Math.max(1,n)/3)*13+6)}" text-anchor="middle">${m.round?`Ø ${fmt(m.Wd)} cm`:`${fmt(m.Wd)} × ${fmt(m.Dp)} cm`} · ${fmt(m.H)} cm de fundo</text>`;
+  return `<svg viewBox="0 0 ${X(VW)} ${X(VH)}" role="img" aria-label="Seu vaso com as plantas">${b}</svg>`;
+}
+// vista de cima: o círculo tracejado é o espaço de que cada planta precisa
+function drawPotTop(m){
+  const X=n=>n.toFixed(1),T=Math.min(260/(m.Wd/100),150/(m.Dp/100)),w=m.Wd/100*T,h=m.Dp/100*T,pad=16,VW=Math.max(w+pad*2,170),VH=h+pad*2,cx=VW/2,cy=pad+h/2;
+  let b=m.round?`<circle class="pot-top" cx="${X(cx)}" cy="${X(cy)}" r="${X(w/2)}"/>`:`<rect class="pot-top" x="${X(cx-w/2)}" y="${X(cy-h/2)}" width="${X(w)}" height="${X(h)}" rx="4"/>`;
+  (m.placed||[]).forEach(p=>{const x=cx+p.x*T,y=cy+p.y*T;
+    b+=`<circle class="need" cx="${X(x)}" cy="${X(y)}" r="${X(p.r*T)}"><title>${esc(p.s.n)}: ${Math.round(p.r*200)} cm de espaço</title></circle>`;
+    b+=`<circle class="p-${p.s.e}" cx="${X(x)}" cy="${X(y)}" r="${X(Math.max(6,Math.min(11,p.r*T*.55)))}"/><text class="lab ${darkLab(p.s.e)}" x="${X(x)}" y="${X(y)}">${esc(p.s.a)}</text>`;});
+  return `<svg viewBox="0 0 ${X(VW)} ${X(VH)}" role="img" aria-label="Vista de cima do vaso com o espaço de cada planta" style="max-width:${Math.round(VW*1.6)}px">${b}</svg>`;
+}
+// quantas plantas de cada estrato cabem neste vaso, com a mesma regra de espaço do desenho
+function potCapacity(m){
+  const M={round:m.round,Wd:m.Wd,Dp:m.Dp};
+  const T={id:'_t',arv:1,ep:2,sol:'P',v:50,e:'M'},HO={id:'_h',ep:.25,sol:'PM',v:5,e:'B'},AR={id:'_a',ep:.3,sol:'P',v:5,e:'B'},RA={id:'_r',ep:.15,sol:'PM',v:3,e:'R'};
+  const hx=m.Wd/200,hy=m.Dp/200;
+  // arranjo regular: anéis no vaso redondo, grade desencontrada na floreira
+  const layout=(kind,centerR)=>{const r=prad(kind),e=Math.max(.04,r*.5);const out=[];
+    if(m.round){const Rin=hx-e;if(Rin<0)return out;
+      const ring=(rho)=>{if(rho<1e-6)return [[0,0]];const n=Math.floor(Math.PI/Math.asin(Math.min(1,r/rho))+1e-9);const o=[];for(let k=0;k<n;k++){const a=k/n*Math.PI*2;o.push([Math.cos(a)*rho,Math.sin(a)*rho]);}return o;};
+      const tryRings=(rhos)=>{const o=[];rhos.forEach(rho=>{ring(rho).forEach(q=>o.push(q));});return o;};
+      const cands=[];
+      if(centerR!=null){const rhos=[];for(let rho=Rin;rho>=centerR+r-1e-9;rho-=2*r)rhos.push(rho);cands.push(tryRings(rhos));}
+      else{const a=[];for(let rho=Rin;rho>=-1e-9;rho-=2*r)a.push(Math.max(0,rho));const b=[0];for(let rho=2*r;rho<=Rin+1e-9;rho+=2*r)b.push(rho);cands.push(tryRings(a.filter(x=>x>=r||x===0)),tryRings(b));}
+      let best=[];cands.forEach(cd=>{const ok=[];cd.forEach(q=>{if(ok.every(o=>Math.hypot(o[0]-q[0],o[1]-q[1])>=2*r-1e-9)&&(centerR==null||Math.hypot(q[0],q[1])>=centerR+r-1e-9))ok.push(q);});if(ok.length>best.length)best=ok;});
+      return best.map(([x,y])=>({s:kind,x,y,r}));}
+    const ax=Math.max(0,hx-e),ay=Math.max(0,hy-e);const dy=r*Math.sqrt(3);const ny=Math.floor(2*ay/dy+1e-9)+1;const o=[];
+    for(let iy=0;iy<ny;iy++){const y=-ay+iy*dy+(ny===1?ay:0),off=iy%2?r:0;for(let x=-ax+off;x<=ax+1e-9;x+=2*r){if(centerR!=null&&Math.hypot(x,y)<centerR+r-1e-9)continue;o.push({s:kind,x,y,r});}}
+    return o;};
+  const cap=(list,vol0,v,half)=>{const n=Math.max(0,Math.min(list.length,Math.floor((m.V-vol0+.01)/(half?v*.5:v))));return list.slice(0,n);};
+  const rasFill=(pl,vol,half)=>{const p2=pl.slice();let n=0,v=vol;for(;n<30;n++){const vv=half?RA.v*.5:RA.v;if(v+vv>m.V+.01)break;const q=tryPlace(M,p2,RA,true);if(!q)break;p2.push(q);v+=vv;}return n;};
+  const r={};const treeOk=m.V>=T.v&&m.H>=depthNeed(T.v);
+  if(treeOk){const t0={s:T,x:0,y:0,r:prad(T)};
+    const zc=k=>treeZone(m,{r:prad(T)},prad(k))-prad(k);
+    const h=cap(layout(HO,zc(HO)),T.v,HO.v,true),a=cap(layout(AR,zc(AR)),T.v,AR.v,true);
+    r.tree={nh:h.length,nrh:rasFill([t0,...h],T.v+h.length*HO.v*.5,true),na:a.length,nra:rasFill([t0,...a],T.v+a.length*AR.v*.5,true)};}
+  // floreira longa: uma frutífera em cada ponta
+  if(treeOk&&maxTrees(m)>1&&m.V>=2*T.v){const tt=[{s:T,x:-(m.Wd/200-TEND),y:0,r:prad(T)},{s:T,x:m.Wd/200-TEND,y:0,r:prad(T)}];
+    const fl=(k,half,start,v0)=>{const pl=start.slice();let n=0,v=v0;for(;n<60;n++){const vv=half?k.v*.5:k.v;if(v+vv>m.V+.01)break;const q=latticePlace(M,pl,k);if(!q)break;pl.push(q);v+=vv;}return [n,pl,v];};
+    const [nh,plh,vh]=fl(HO,true,tt,2*T.v),[na,pla,va]=fl(AR,true,tt,2*T.v);
+    r.two={nh,nrh:fl(RA,true,plh,vh)[0],na,nra:fl(RA,true,pla,va)[0]};}
+  const h2=cap(layout(HO,null),0,HO.v,false),a2=cap(layout(AR,null),0,AR.v,false);
+  r.free={nh:h2.length,nrh:rasFill(h2,h2.length*HO.v,false),na:a2.length,nra:rasFill(a2,a2.length*AR.v,false)};r.treeOk=treeOk;
+  const fitsV=s=>s.v&&s.v<=m.V&&m.H>=depthNeed(s.v);const natF=(a,b)=>(b.nat||0)-(a.nat||0)||a.v-b.v;
+  r.exT=treeOk?DATA.filter(s=>s.arv&&fitsV(s)&&s.e==='M').sort(natF).slice(0,4):[];
+  r.exH=DATA.filter(s=>s.c==='h'&&(s.e==='B'||s.e==='R')&&fitsV(s)&&s.v<=5&&!NOUNDER.has((FORM[s.id]||[''])[0])).sort(natF).slice(0,4);
+  r.exA=DATA.filter(s=>s.c==='t'&&(s.e==='B'||s.e==='R')&&!s.arv&&!s.espalha&&fitsV(s)&&s.v<=8).sort(natF).slice(0,4);
+  r.exR=DATA.filter(s=>s.e==='R'&&fitsV(s)&&s.v<=5&&!s.espalha&&!NOUNDER.has((FORM[s.id]||[''])[0])&&!r.exH.includes(s)&&!r.exA.includes(s)).sort(natF).slice(0,4);
+  return r;
+}
+function capacityBox(m){const c=potCapacity(m);const pl=(n,a,b)=>`${n} ${n===1?a:b}`;
+  const chips=l=>l.map(s=>S.sel.includes(s.id)?`<button type="button" class="on" data-rmsel="${s.id}" aria-pressed="true" title="Tirar ${esc(s.n)} da seleção">✓ ${esc(s.n)}</button>`:`<button type="button" data-addsp="${s.id}" aria-pressed="false" title="Acrescentar ${esc(s.n)}">+ ${esc(s.n)}</button>`).join('');
+  const opt=[];
+  if(c.two){const t=c.two;opt.push(`<li><b>Com duas frutíferas pequenas, uma em cada ponta:</b> 2 de estrato médio + ${pl(t.nh,'hortaliça baixa','hortaliças baixas')}${t.nrh?` + ${pl(t.nrh,'rasteira','rasteiras')}`:''} no meio, ou 2 frutíferas + ${pl(t.na,'aromática baixa','aromáticas baixas')}${t.nra?` + ${pl(t.nra,'rasteira','rasteiras')}`:''}.</li>`);}
+  if(c.treeOk&&c.tree){const t=c.tree;
+    opt.push(`<li><b>Com uma frutífera pequena:</b> 1 de estrato médio no centro + ${pl(t.nh,'hortaliça baixa','hortaliças baixas')}${t.nrh?` + ${pl(t.nrh,'rasteira','rasteiras')} de forração`:''}, ou 1 frutífera + ${pl(t.na,'aromática baixa','aromáticas baixas')}${t.nra?` + ${pl(t.nra,'rasteira','rasteiras')}`:''}.</li>`);}
+  const f=c.free;
+  opt.push(`<li><b>${c.treeOk?'Sem árvore':'Só plantas baixas'}:</b> ${pl(f.nh,'hortaliça baixa','hortaliças baixas')}${f.nrh?` + ${pl(f.nrh,'rasteira','rasteiras')}`:''}, ou ${pl(f.na,'aromática baixa','aromáticas baixas')}${f.nra?` + ${pl(f.nra,'rasteira','rasteiras')}`:''}.</li>`);
+  if(!c.treeOk)opt.push(`<li class="hint">Para uma frutífera pequena (pitanga, acerola, limão) o recipiente precisa de pelo menos 50 L e 35 cm de fundo.</li>`);
+  return `<div class="capbox"><h3>O que cabe ${m.round?'neste vaso':'nesta floreira'} (≈ ${fmt(m.V,0)} L)</h3><ul>${opt.join('')}</ul>
+    <div class="attn" tabindex="0"><span class="attn-h"><span class="attn-i" aria-hidden="true">!</span>Atenção</span><p class="hint attn-b">Seguindo a agricultura sintrópica: combine estratos diferentes no mesmo recipiente, com a planta mais alta no centro (ou no lado oposto à luz), as baixas em volta e uma forração rasteira cobrindo a terra, que nunca deve ficar exposta. A poda da planta maior volta para a terra como cobertura. Contas feitas com valores típicos de cada estrato: frutífera pequena de 50 L no centro, hortaliças com 20 cm de espaço e 5 L, aromáticas com 24 cm e 5 L, rasteiras com 12 cm e 3 L. Plantas que pedem mais terra (como couve, cenoura ou limão) reduzem esses números.</p></div>
+    <h4 class="cap-ex-t">Exemplos:</h4><div class="cap-ex">${c.exT.length?`<div><span class="lbl">Médio (frutífera)</span><div class="acts">${chips(c.exT)}</div></div>`:''}<div><span class="lbl">Baixo · hortaliças</span><div class="acts">${chips(c.exH)}</div></div><div><span class="lbl">Baixo · aromáticas</span><div class="acts">${chips(c.exA)}</div></div><div><span class="lbl">Rasteiro · forração</span><div class="acts">${chips(c.exR)}</div></div></div></div>`;}
+function myPotPanel(sel){
+  const m=myPot(sel);const pct=Math.min(100,Math.round(m.uV/m.V*100));
+  let h=`<section class="panel card" aria-labelledby="t-mine"><div class="head"><h2 id="t-mine">${m.round?'Seu vaso':'Sua floreira'}</h2><div class="seg" id="potvista"><button type="button" data-v="frente" aria-pressed="${S.potview!=='cima'}">Vista 3D</button><button type="button" data-v="cima" aria-pressed="${S.potview==='cima'}">Planta baixa</button></div></div>
+  <div class="stats"><div class="stat"><b>${fmt(m.V,0)} L</b><span>volume de terra</span></div><div class="stat"><b>${m.placed.length}</b><span>${m.placed.length===1?'muda':'mudas'} · ${m.fit.length} ${m.fit.length===1?'espécie':'espécies'}</span></div><div class="stat"><b>${pct}%</b><span>do volume ocupado</span></div></div>
+  ${capacityBox(m)}
+  ${S.potview==='cima'?'':`<div class="drawing plain">${drawMyPotIso(m)}</div>`}
+  ${m.placed&&m.placed.length?`<div class="pot-top-w${S.potview==='cima'?' big':''}"><div class="drawing plain">${drawPotTop(m)}</div>${abLegend(m.placed.map(p=>p.s))}<p class="hint"><b>Vista de cima.</b> Cada círculo tracejado é o espaço mínimo da planta, cerca de 80% do espaçamento usado no canteiro. Os círculos não se sobrepõem, e o centro de cada planta fica afastado da parede do vaso; só a folhagem pode passar da borda: ${m.fit.map(s=>`${esc(s.n.replace(/ \(.*\)$/,''))} ${Math.round(prad(s)*200)} cm${m.count[s.id]>1?` (${m.count[s.id]} mudas)`:''}`).join(' · ')}.${m.placed.some(p=>p.s.arv)?' Na frutífera, o círculo marca só a zona do tronco; as plantas de raiz rasa ficam em volta, a pelo menos '+Math.round(Math.min(...m.placed.filter(p=>!p.s.arv).map(p=>nearT(m.placed.filter(q=>q.s.arv),p.x,p.y).d).concat([9]))*100)+' cm do tronco; a terra em volta do tronco fica só com palha, para as raízes da árvore.':''}</p></div>`:''}`;
+  if(m.out.length)h+=`<div class="cap-alert" role="alert"><div class="cap-h"><span class="cap-ico" aria-hidden="true">!</span><b>${m.out.length===1?'1 planta não cabe':`${m.out.length} plantas não cabem`} ${m.round?'neste vaso':'nesta floreira'}</b></div><p>A primeira planta escolhida tem prioridade. Tire plantas da lista ou use um recipiente maior.</p><div class="cap-list">${m.out.map(([s,why])=>`<button type="button" data-rmsel="${s.id}" title="Tirar ${esc(s.n)} da lista">${sig(s.e)}${esc(s.n)} <span class="hint" style="font-weight:400">· ${esc(why)}</span><span class="cap-x" aria-hidden="true">×</span></button>`).join('')}</div>${otherList(m.fit,null)}</div>`;
+  {const hst=m.fit.find(s=>s.arv);const nts=potNotes(hst,m.fit.filter(s=>s!==hst));if(hst&&nts.length)h+=`<ul class="notes">${nts.map(t=>`<li class="note tip"><span class="tag">${t.startsWith('Rega')?'Rega':'Tempo'}</span><div class="body"><span>${esc((x=>x.charAt(0).toUpperCase()+x.slice(1))(t.replace(/^(Rega|Com o tempo): /,'')))}</span></div></li>`).join('')}</ul>`;}
+  {const tr=m.fit.filter(s=>s.arv);if(tr.length>1){const wet=tr.filter(s=>DRYP.has(s.id)).length;const kg=Math.round(m.V*1.3/10)*10;
+    h+=`<ul class="notes"><li class="note tip"><span class="tag">Duas árvores</span><div class="body"><span>Uma frutífera em cada ponta, a ${Math.round(TEND*100)} cm da borda e ${fmt(m.Wd/100-2*TEND,1)} m uma da outra; o meio fica com as plantas baixas. Com o tempo as raízes se encontram: pode as copas e faça poda de raízes e troca de parte do substrato a cada 2–3 anos, ou coloque uma divisória no meio da floreira.</span></div></li>`
+      +(wet&&wet<tr.length?`<li class="note warn"><span class="tag">Rega</span><div class="body"><span>${esc(tr.map(s=>s.n).join(' e '))} pedem regas diferentes (${esc(tr.filter(s=>DRYP.has(s.id)).map(s=>s.n).join(', '))} gosta de terra mais seca). Prefira duas frutíferas com a mesma necessidade de água, como pitanga e acerola ou araçá e cabeludinha.</span></div></li>`:'')
+      +`<li class="note warn"><span class="tag">Peso</span><div class="body"><span>Cerca de ${fmt(m.V,0)} L de terra: molhada, a floreira pesa uns ${kg} kg. Em varanda ou laje, confirme se a estrutura aguenta.</span></div></li></ul>`;}}
+  m.fit.filter(s=>VINEPOT[s.id]).forEach(s=>{h+=`<ul class="notes"><li class="note tip"><span class="tag">Rama</span><div class="body"><span>${esc(VINEPOT[s.id])}</span></div></li></ul>`;});
+  m.out.filter(([s])=>NOPOT[s.id]).forEach(([s])=>{h+=`<ul class="notes"><li class="note warn"><span class="tag">Atenção</span><div class="body"><span>${esc(NOPOT[s.id])}</span></div></li></ul>`;});
+  if(m.fit.length){const comp=potCompanions(m);const first=m.fit[0];
+    h+=comp.length?`<div class="coop-sec ok"><h3>Companheiras para ${esc(first.n)}</h3><p class="hint">${m.fit.some(isHost)?'Cooperam ou convivem':'Cooperam'} com ${esc(first.n)} e caberiam junto com ela. Ao acrescentar uma, o app tira algumas mudas das espécies baixas para abrir espaço.</p><ul class="notes"><li class="note tip"><span class="tag">Junte</span><div class="body"><div class="acts">${comp.map(([o,c])=>`<button type="button" data-addsp="${o.id}" title="${esc(c.t)}">+ ${esc(o.n)} <span style="opacity:.75">(${c.src==='P'?'na borda, ≈ '+fmt(o.v*.5,1)+' L':'mín. '+o.v+' L'}${c.src==='L'?', suas listas':''})</span></button>`).join('')}</div>${comp.filter(([o,c])=>c.src!=='L'&&c.src!=='P').slice(0,2).map(([o,c])=>`<span class="hint">${esc(o.n)}: ${esc(c.t)}</span>`).join('')}${comp.some(([o,c])=>c.src==='P')?`<span class="hint">"Na borda": hortaliças e aromáticas de raiz rasa plantadas a 15–25 cm do tronco da ${esc(first.n)}, na terra da superfície. Usam cerca de metade do volume que pediriam num vaso só delas. É prática comum de cultivo em vaso, com pouco estudo publicado.</span>`:''}</div></li></ul></div>`
+      :`<p class="hint">Não há companheira conhecida de ${esc(first.n)} que caiba no espaço que sobra.</p>`;}
+  h+=`<p class="hint">Volume calculado pelas medidas internas. Cada planta precisa do volume mínimo de terra e da profundidade indicados para ela; as alturas são aproximadas.</p></section>`;
+  return h;
+}
+function potItems(sel0){
+  // consórcios completos na seleção: todas as plantas juntas num só vaso ou floreira
+  let sel=sel0.slice();const consIt=[],consNo=[];const ids=new Set(sel.map(s=>s.id));
+  // cada consórcio completo ganha o seu recipiente, com todas as plantas dele, mesmo quando divide uma espécie
+  // com outro consórcio; consórcios que não acrescentam nenhuma espécie nova são ignorados
+  const covered=new Set();const used=new Set();
+  // 1º os consórcios que a pessoa plantou pelo botão; depois a menor combinação que cubra as demais espécies
+  const full=consorcios().filter(c=>c.sp.every(i=>ids.has(i)));const key=c=>c.sp.join(',');
+  const chosen=full.filter(c=>(S.consSel||[]).includes(key(c)));chosen.forEach(c=>c.sp.forEach(i=>covered.add(i)));
+  const restC=full.filter(c=>!chosen.includes(c)&&c.sp.some(i=>!covered.has(i)));
+  const need=new Set(restC.flatMap(c=>c.sp).filter(i=>!covered.has(i)));let best=null;
+  if(restC.length<=14){for(let mask=1;mask<(1<<restC.length);mask++){const pick=restC.filter((c,k)=>mask>>k&1);
+      const cov=new Set(pick.flatMap(c=>c.sp));if(![...need].every(i=>cov.has(i)))continue;
+      const sc=pick.length*100-pick.reduce((a,c)=>a+c.sp.length,0);if(!best||sc<best.sc)best={pick,sc};}}
+  const order=chosen.concat(best?best.pick:restC.sort((a,b)=>b.sp.length-a.sp.length));
+  order.forEach(c=>{const r=consPot(c.sp),L=c.sp.map(i=>BYID[i]);
+    if(r.no){consNo.push({sp:L,no:r.no});return;}
+    const m=r.pot&&(!r.fl||r.pot.V<=r.fl.V*1.4)?r.pot:r.fl;if(!m)return;
+    consIt.push({kind:'cons',round:m.round,Wd:m.Wd,Dp:m.Dp,H:m.H,v:Math.round(m.V),sp:L,under:[],placed:m.pl,alt:m===r.pot?r.fl:r.pot});
+    c.sp.forEach(i=>used.add(i));});
+  sel=sel.filter(s=>!used.has(s.id));
+  const ok=sel.filter(s=>s.v>0),no=sel.filter(s=>!s.v);
+  const hosts=ok.filter(s=>s.arv).sort((a,b)=>b.v-a.v);
+  let rest=ok.filter(s=>!s.arv);
+  // distribui as plantas de raiz rasa entre os vasos das frutíferas, uma por vez
+  const HS=hosts.map(h=>({h,under:[],used:0,ring:ringA(h.v)}));
+  let moved=true;
+  while(moved){moved=false;
+    for(const o of HS){if(o.under.length>=3)continue;
+      const c=rest.filter(s=>underOk(o.h,s)&&!o.under.some(u=>{const k=coop(u.id,s.id);return k&&k.v<0;})&&o.used+underFp(s)<=o.ring+1e-9)
+        .sort((a,b)=>underPrio(o.h,a)-underPrio(o.h,b)||a.v-b.v)[0];
+      if(c){o.under.push(c);o.used+=underFp(c);rest=rest.filter(s=>s!==c);moved=true;}}}
+  // o vaso cresce até caberem todas com a distância mínima; se não der, a planta volta para outro recipiente
+  const potDimV=v=>{const d=Math.round(Math.cbrt(v/.6)*10);return {round:true,Wd:d,Dp:d};};
+  const fitsAll=(v,list)=>{const m=potDimV(v),pl=[];return list.every(s=>{const p=tryPlace(m,pl,s);if(p)pl.push(p);return !!p;});};
+  const items=HS.map(o=>{let v=Math.ceil(o.h.v+.5*o.under.reduce((a,s)=>a+s.v,0));
+    while(o.under.length){let vv=v;while(vv<=v*2.2&&!fitsAll(vv,[o.h,...o.under]))vv+=5;if(fitsAll(vv,[o.h,...o.under])){v=vv;break;}rest.push(o.under.pop());v=Math.ceil(o.h.v+.5*o.under.reduce((a,s)=>a+s.v,0));}
+    return {kind:'vaso',v,sp:[o.h],under:o.under};});
+  rest.filter(s=>s.v>5).sort((a,b)=>b.v-a.v).forEach(s=>items.push({kind:'vaso',v:s.v,sp:[s],under:[]}));
+  // jardineiras de 60 cm: cabem quantas a largura de cada planta permitir (até 4), juntando as que cooperam
+  const wcm=s=>Math.max(15,Math.round((s.ep||.25)*90));
+  let pool=rest.filter(s=>s.v<=5);
+  while(pool.length){const g=[pool.shift()];let ws=wcm(g[0]);
+    for(;;){const fits=pool.filter(s=>ws+wcm(s)<=60&&g.length<4&&!g.some(u=>{const k=coop(u.id,s.id);return k&&k.v<0;}));
+      if(!fits.length)break;
+      const co=s=>g.some(u=>{const k=coop(u.id,s.id);return k&&k.v>0;})?0:1;
+      const c=fits.sort((a,b)=>co(a)-co(b))[0];g.push(c);ws+=wcm(c);pool=pool.filter(s=>s!==c);}
+    items.push({kind:'jard',v:Math.max(10,g.reduce((a,s)=>a+s.v,0)),sp:g,under:[]});}
+  return {items:consIt.concat(items),no,consNo};
+}
+function potDims(it){
+  if(it.kind==='cons')return it.round?`Ø ${it.Wd} cm × ${it.H} cm de fundo`:`${it.Wd} × ${it.Dp} cm × ${it.H} cm de fundo`;
+  if(it.kind==='jard'){const hc=Math.max(10,Math.round(it.v/(60*20)*1000));return `≈ 60 × 20 cm, com ${hc} cm de altura`;}
+  const d=Math.cbrt(it.v/.6)*10;return `≈ ${Math.round(d)} cm de diâmetro × ${Math.round(d*.95)} cm de altura`;
+}
+const rankOf=it=>Math.min(...it.sp.map(s=>s.arv?0:({E:0,A:0,M:1,B:2,R:3})[s.e]));
+// altura mínima e máxima (cm) que cada planta costuma alcançar em vaso
+const POTH={peixinho:[20,40],chanana:[20,40],gervao:[40,100],oficialsala:[40,90],perpetua:[30,60],vedelia:[15,30],arnicacampo:[40,100],ruelia:[20,40],falsairis:[40,80],salviavermelha:[30,80],salviaazul:[60,150],esponjinha:[100,200],jacobinia:[60,150],lixeira:[150,300],alamanda:[100,250],ciposaojoao:[200,400],dipladenia:[100,300],maracuja:[200,400],manjericao:[30,60],cebolinha:[20,40],salsinha:[20,30],hortela:[20,40],alecrim:[40,100],capimsanto:[60,120],carqueja:[30,80],macela:[30,60],alecrimcampo:[100,200],lantana:[50,120],boldo:[60,120],boldinho:[20,40],cidreira:[60,150],hibisco:[100,200],lavanda:[30,60],guaco:[150,300],pariparoba:[60,150],alecrimpimenta:[60,150],cipoalho:[150,300],mastruz:[40,100],alfavacacravo:[60,150],baleeira:[100,200],espinheira:[100,250],urucum:[150,300],
+ alface:[15,30],rucula:[20,40],cenoura:[20,40],beterraba:[25,40],couve:[50,100],tomate:[100,180],berinjela:[60,120],pimenta:[40,80],quiabo:[100,180],batatadoce:[20,40],taioba:[60,120],orapronobis:[100,200],majorgomes:[30,60],cariru:[30,60],jambu:[20,40],mangarito:[30,50],araruta:[60,120],coentropara:[15,30],physalis:[50,100],jurubeba:[100,200],mandioca:[150,250],caruru:[40,100],
+ begonia:[20,40],samambaia:[30,60],canaindia:[80,150],heliconia:[80,150],dyckia:[20,40],amendoim:[10,20],maravilha:[50,100],assapeixe:[100,200],
+ acerola:[150,250],limao:[150,250],mexerica:[150,250],pitanga:[150,250],araca:[150,250],jabuticaba:[150,250],goiaba:[150,250],cafe:[100,200],cereja:[150,250],cabeludinha:[150,200],nespera:[150,250],caqui:[150,250],abacaxi:[60,100]};
+function potRange(s){if(POTH[s.id])return POTH[s.id];if(s.arv)return [100,Math.min(250,Math.round((s.pt||4)*40))];const h=Math.round((s.h||DEF_SP[s.e].h)*100);return [Math.max(10,Math.round(h*.5)),h];}
+const cmTxt=r=>`${r[0]}–${r[1]} cm`;
+function potPlantH(s){return potRange(s)[1]/100;}
+// trepadeiras: tutor, tripé de bambu ou espaldeira, com a rama enrolada
+function leafPath(x,y,r,ang,cls){return `<path class="${cls}" d="M0,0 C${(r*.7).toFixed(1)},${(-r*.9).toFixed(1)} ${(r*1.3).toFixed(1)},${(r*.1).toFixed(1)} 0,${(r*1.2).toFixed(1)} C${(-r*1.3).toFixed(1)},${(r*.1).toFixed(1)} ${(-r*.7).toFixed(1)},${(-r*.9).toFixed(1)} 0,0Z" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${ang.toFixed(0)})"/>`;}
+function twine(x0,y0,x1,y1,amp,turns,cls){const n=turns*4;let d=`M${x0.toFixed(1)},${y0.toFixed(1)}`;const dx=x1-x0,dy=y1-y0,L=Math.hypot(dx,dy)||1,nx=-dy/L,ny=dx/L;
+  for(let i=1;i<=n;i++){const t=i/n,ox=Math.sin(t*turns*Math.PI*2)*amp;d+=` L${(x0+dx*t+nx*ox).toFixed(1)},${(y0+dy*t+ny*ox).toFixed(1)}`;}return `<path class="${cls}" stroke-width="1.3" fill="none" d="${d}"/>`;}
+function climbSVG(kind,cx,base,W,H,opt){
+  const X=n=>n.toFixed(1),lr=Math.max(3,Math.min(W*.12,H*.04));let b='';
+  if(kind==='tripod'){ // feijão-de-vara: tripé de bambu com a rama subindo em cada vara
+    const tops=[cx,base-H*1.04],feet=[[cx-W*.45,base],[cx,base+2],[cx+W*.45,base]];
+    feet.forEach(([fx,fy])=>{b+=`<line class="trunk-thin" x1="${X(fx)}" y1="${X(fy)}" x2="${X(tops[0])}" y2="${X(tops[1])}"/>`;});
+    feet.forEach(([fx,fy],k)=>{b+=twine(fx,fy,tops[0],tops[1]+H*.08,3,5,'pk-1');
+      for(let i=1;i<6;i++){const t=i/6.2,x=fx+(tops[0]-fx)*t,y=fy+(tops[1]-fy)*t,side=(i+k)%2?1:-1;
+        [-35,0,35].forEach(a=>{b+=leafPath(x+side*lr*.8,y,lr,side*70+a,'pl-1 iso-c');});
+        if(i%2===0)b+=`<ellipse class="pl-3" cx="${X(x-side*lr)}" cy="${X(y+lr*2)}" rx="1.4" ry="${X(lr*2.2)}" transform="rotate(${side*12} ${X(x-side*lr)} ${X(y+lr*2)})"/>`;}});
+  }else if(kind==='trellis'){ // espaldeira: dois mourões e arames, com ramos que se apoiam e pendem
+    const xl=cx-W*.48,xr=cx+W*.48;
+    b+=`<line class="trunk" stroke-width="2" x1="${X(xl)}" y1="${X(base)}" x2="${X(xl)}" y2="${X(base-H)}"/><line class="trunk" stroke-width="2" x1="${X(xr)}" y1="${X(base)}" x2="${X(xr)}" y2="${X(base-H)}"/>`;
+    [.35,.65,.95].forEach(t=>{b+=`<line class="wire" x1="${X(xl)}" y1="${X(base-H*t)}" x2="${X(xr)}" y2="${X(base-H*t)}"/>`;});
+    for(let k=0;k<4;k++){const sx=cx+(k-1.5)*W*.16,ex=cx+(k%2?1:-1)*W*(.25+.12*k),ey=base-H*(.55+.13*k);
+      const stem=`M${X(sx)},${X(base)} Q${X(sx+(k%2?-1:1)*W*.12)},${X(base-H*.5)} ${X(ex)},${X(ey)} Q${X(ex+(k%2?1:-1)*W*.1)},${X(ey-H*.12)} ${X(ex+(k%2?1:-1)*W*.2)},${X(ey+H*.06)}`;
+      b+=`<path class="${opt&&opt.passion?'pk-1':'stem-w'}" stroke-width="${opt&&opt.passion?1.3:1.8}" fill="none" d="${stem}"/>`;
+      for(let i=1;i<7;i++){const t=i/7,x=sx+(ex-sx)*t+Math.sin(t*3+k)*W*.05,y=base+(ey-base)*t,side=(i+k)%2?1:-1;
+        if(opt&&opt.passion){[-40,0,40].forEach(a=>{b+=leafPath(x+side*lr,y,lr*1.05,side*60+a,'pl-1 iso-c');});
+          if(i%3===0)b+=`<path class="pk-1" stroke-width="1" fill="none" d="M${X(x)},${X(y)} q${X(-side*lr*1.5)},${X(-lr)} ${X(-side*lr*.6)},${X(-lr*2.2)} q${X(side*lr*.6)},${X(-lr*.4)} ${X(side*lr*.2)},${X(lr*.2)}"/>`;}
+        else{b+=`<ellipse class="pl-1 iso-c" cx="${X(x+side*lr)}" cy="${X(y)}" rx="${X(lr*1.3)}" ry="${X(lr*.85)}" transform="rotate(${side*25} ${X(x+side*lr)} ${X(y)})"/><ellipse class="pl-3 iso-c" cx="${X(x-side*lr*.9)}" cy="${X(y-lr*.9)}" rx="${X(lr*1)}" ry="${X(lr*.7)}" transform="rotate(${-side*30} ${X(x-side*lr*.9)} ${X(y-lr*.9)})"/>`;
+          b+=`<path class="spine" d="M${X(x)},${X(y)} l${X(-side*3)},-2 M${X(x)},${X(y)} l${X(-side*3)},2"/>`;}}
+      if(opt&&opt.passion){b+=`<circle class="fl-w" cx="${X(ex)}" cy="${X(ey)}" r="${X(lr*1.3)}"/><circle class="fr-p" cx="${X(ex)}" cy="${X(ey)}" r="${X(lr*.7)}"/>`;
+        if(k%2)b+=`<circle class="fl-y" cx="${X(ex-W*.08)}" cy="${X(ey+H*.12)}" r="${X(lr*1.4)}"/>`;}
+      else if(!(opt&&opt.nofl))for(let f=0;f<5;f++){const fx=ex+Math.cos(f*1.3)*lr*1.2,fy=ey-lr*.3+Math.sin(f*1.3)*lr*.9;b+=opt&&opt.fr?`<ellipse class="${opt.fr[0]}" cx="${X(fx)}" cy="${X(fy)}" rx="${X(lr*.42)}" ry="${X(lr*.8)}" transform="rotate(${f*36-70} ${X(fx)} ${X(fy)})"/>`:`<circle class="fl-w" cx="${X(fx)}" cy="${X(fy)}" r="${X(lr*.7)}"/><circle class="fl-y" cx="${X(fx)}" cy="${X(fy)}" r="${X(lr*.22)}"/>`;}}
+  }else{ // tutor único com rama enrolada e folhas em coração (guaco, cipó-alho, cará)
+    b+=`<line class="trunk-thin" x1="${X(cx)}" y1="${X(base)}" x2="${X(cx)}" y2="${X(base-H*1.04)}"/>`+twine(cx,base,cx,base-H,Math.max(3,lr*.9),8,'pk-1');
+    for(let i=0;i<15;i++){const t=.08+i*.062,side=i%2?1:-1,sz=lr*(1.25-t*.35);b+=leafPath(cx+side*lr*.5,base-H*t,sz,side*(55+(i%3)*12),'pl-1 iso-c');
+      if(i%4===1)b+=leafPath(cx-side*lr*.3,base-H*(t+.03),sz*.8,-side*40,'pl-3 iso-c');}
+    if(opt&&opt.fr)for(let i=0;i<4;i++)b+=`<circle class="${opt.fr[0]}" cx="${X(cx+(i%2?1:-1)*lr*1.4)}" cy="${X(base-H*(.45+i*.12))}" r="${X(lr*.45)}"/>`;
+  }
+  return b;
+}
+// desenho de cada planta no vaso, de frente, com a forma típica
+function plTone(s){return ['peixinho','alecrim','lavanda','macela','boldo','alecrimcampo','alecrimpimenta','carqueja','dyckia'].includes(s.id)?2:['cebolinha','capimsanto','salsinha','hortela','coentropara','boldinho','alface','milho','canaacucar','amendoim','amendoimgrao','rucula'].includes(s.id)?3:1;}
+function potPlantSVG(s,cx,base,w,ph,room){
+  const X=n=>n.toFixed(1),F=FORM[s.id]||['shrub',.4];const f=F[0],opt=F[2]||{};
+  const tone=plTone(s);
+  const R=Math.max(4,Math.min(Math.max(w*.5,ph*.36),ph*.7,(room||w)/2)),e=s.e,P=`pl-${tone} iso-c`,Kc=`pk-${tone}`;
+  let b=`<title>${esc(s.n)}</title>`;let fz=null; // zona de flores/frutos [cx,cy,rx,ry]
+  const stems=(n,hh,spread)=>{let o='';for(let i=0;i<n;i++){const dx=(i/(n-1||1)-.5)*2*spread;o+=`<line class="stem" x1="${X(cx+dx*.25)}" y1="${X(base)}" x2="${X(cx+dx)}" y2="${X(base-hh)}"/>`;}return o;};
+  if(HERBF.has(f))return `<g>${herbSVG(f,s,cx,base,Math.max(12,f==='groundvine'?Math.min(room||w,R*2.4):Math.min(R*2,ph*(f==='mint'||f==='rosette'||f==='kale'?1.6:1))),ph,opt,'pot')}</g>`;
+  switch(f){
+    case 'shrub':case 'staked':{
+      if(f==='staked')b+=`<line class="trunk-thin" x1="${X(cx+R*.2)}" y1="${X(base)}" x2="${X(cx+R*.2)}" y2="${X(base-ph*1.02)}"/>`;
+      b+=stems(4,ph*.6,R*.45);
+      const br=Math.max(3,Math.min(R*.55,ph*.22));const rows=Math.max(2,Math.round((ph*.75)/(br*1.3)));
+      for(let k=0;k<rows;k++){const yy=base-ph*.3-k*(ph*.68/rows)-br*.4;const wr=R*(k===rows-1?.55:k===0?.85:1);const n=Math.max(1,Math.round(wr*2/(br*1.4)));
+        for(let j=0;j<n;j++){const dx=n===1?0:(j/(n-1)-.5)*2*(wr-br*.6);b+=`<circle class="${P}" cx="${X(cx+dx)}" cy="${X(yy+((j+k)%2)*2)}" r="${X(br)}"/>`;}}
+      fz=[cx,base-ph*.68,R*.75,ph*.22];break;}
+    case 'mound':case 'lettuce':{
+      [[-.4,.3,.55],[.4,.3,.55],[0,.5,.65]].forEach(([dx,yy,rx])=>{b+=`<ellipse class="${P}" cx="${X(cx+dx*R)}" cy="${X(base-ph*yy)}" rx="${X(R*rx)}" ry="${X(Math.max(3,ph*.32))}"/>`;});
+      fz=[cx,base-ph*.5,R*.7,ph*.18];break;}
+    case 'spiky':{
+      for(let i=0;i<11;i++){const a=(i/10-.5)*1.5,tx=cx+Math.sin(a)*R,ty=base-Math.cos(a)*ph;
+        b+=`<line class="${Kc}" stroke-width="1.6" x1="${X(cx+Math.sin(a)*2)}" y1="${X(base)}" x2="${X(tx)}" y2="${X(ty)}"/>`;
+        for(let k=1;k<4;k++){const px=cx+Math.sin(a)*R*k/4,py=base-Math.cos(a)*ph*k/4;b+=`<path class="${Kc}" stroke-width="1" d="M${X(px)},${X(py)} l-2.5,-2 M${X(px)},${X(py)} l2.5,-2"/>`;}
+        if(opt.tips)b+=`<ellipse class="${opt.tips}" cx="${X(tx)}" cy="${X(ty)}" rx="1.8" ry="4" transform="rotate(${(a*57).toFixed(0)} ${X(tx)} ${X(ty)})"/>`;}
+      if(opt.stalk)b+=`<line stroke="var(--sun)" stroke-width="1.5" x1="${X(cx)}" y1="${X(base-ph*.4)}" x2="${X(cx+R*.2)}" y2="${X(base-ph*1.5)}"/>`;
+      fz=[cx,base-ph*.8,R*.6,ph*.12];break;}
+    case 'grass':{
+      const n=opt.straight?9:11;
+      for(let i=0;i<n;i++){const dx=(i/(n-1)-.5)*2*R;
+        b+=opt.straight?`<line class="${Kc}" stroke-width="1.8" x1="${X(cx+dx*.25)}" y1="${X(base)}" x2="${X(cx+dx*.5)}" y2="${X(base-ph*(.8+.2*(i%3)/2))}"/>`
+          :`<path class="${Kc}" stroke-width="1.6" d="M${X(cx+dx*.1)},${X(base)} Q${X(cx+dx*.35)},${X(base-ph*1.15)} ${X(cx+dx*1.05)},${X(base-ph*.4)}"/>`;}
+      break;}
+    case 'tuft':case 'feather':{
+      b+=stems(5,ph*.5,R*.5);
+      for(let i=0;i<7;i++){const a=(i/6-.5)*1.6,tx=cx+Math.sin(a)*R*.85,ty=base-Math.cos(a)*ph*.85;
+        b+=`<ellipse class="${P}" cx="${X(tx)}" cy="${X(ty)}" rx="${X(Math.max(2.5,R*.2))}" ry="${X(Math.max(2,R*.15))}"/>`;}
+      break;}
+    case 'clump':case 'cane':{
+      for(let i=0;i<9;i++){const dx=(i/8-.5)*2*R*.8;b+=`<line class="${Kc}" stroke-width="2" x1="${X(cx+dx*.3)}" y1="${X(base)}" x2="${X(cx+dx)}" y2="${X(base-ph*(.8+.2*((i*37)%7)/6))}"/>`;}
+      break;}
+    case 'stalkleaves':{
+      b+=`<line class="k-A" stroke-width="2" x1="${X(cx)}" y1="${X(base)}" x2="${X(cx)}" y2="${X(base-ph)}"/>`;
+      [.25,.42,.58,.74,.9].forEach((t,i)=>{const side=i%2?1:-1,rx=Math.max(4,R*.55*(1.1-t*.4)),ry=Math.max(2.5,rx*.42),lx=cx+side*rx*.9,ly=base-ph*t;
+        b+=`<ellipse class="${P}" cx="${X(lx)}" cy="${X(ly)}" rx="${X(rx)}" ry="${X(ry)}" transform="rotate(${-side*25} ${X(lx)} ${X(ly)})"/>`;});
+      fz=[cx,base-ph*.75,R*.5,ph*.15];break;}
+    case 'leafy':{
+      for(let i=0;i<5;i++){const dx=(i/4-.5)*2*R*.6,tx=cx+dx,ty=base-ph*(.7+.3*((i*29)%5)/4),ang=(i/4-.5)*50;
+        b+=`<line class="${Kc}" stroke-width="1.6" x1="${X(cx+dx*.3)}" y1="${X(base)}" x2="${X(tx)}" y2="${X(ty+ph*.12)}"/><ellipse class="${P}" cx="${X(tx)}" cy="${X(ty)}" rx="${X(Math.max(3,R*.3))}" ry="${X(Math.max(5,ph*.17))}" transform="rotate(${ang.toFixed(0)} ${X(tx)} ${X(ty)})"/>`;}
+      break;}
+    case 'tripod':case 'trellis':{b+=climbSVG(f,cx,base,R*2,ph,opt);fz=f==='tripod'?null:null;break;}
+    case 'climber':{b+=climbSVG('stake',cx,base,R*2,ph,opt);fz=[cx,base-ph*.6,R*.4,ph*.3];break;}
+    case 'climber_old':{
+      b+=`<line class="trunk-thin" x1="${X(cx)}" y1="${X(base)}" x2="${X(cx)}" y2="${X(base-ph*1.05)}"/><path class="k-A" stroke-width="1.2" fill="none" d="M${X(cx)},${X(base)} ${[...Array(8)].map((_,i)=>`Q${X(cx+(i%2?-1:1)*R*.35)},${X(base-ph*(i+.5)/8)} ${X(cx)},${X(base-ph*(i+1)/8)}`).join(' ')}"/>`;
+      for(let i=0;i<8;i++){const side=i%2?1:-1,lx=cx+side*Math.max(4,R*.35),ly=base-ph*(.15+i*.11);b+=`<ellipse class="${P}" cx="${X(lx)}" cy="${X(ly)}" rx="${X(Math.max(3,R*.3))}" ry="${X(Math.max(2,R*.18))}"/>`;}
+      fz=[cx,base-ph*.6,R*.4,ph*.3];break;}
+    case 'fern':{
+      for(let i=0;i<9;i++){const dx=(i/8-.5)*2*R;b+=`<path class="${Kc}" stroke-width="2.2" d="M${X(cx)},${X(base)} Q${X(cx+dx*.35)},${X(base-ph*1.2)} ${X(cx+dx)},${X(base-ph*.35)}"/>`;}
+      break;}
+    case 'vine':{
+      for(let i=0;i<7;i++){const dx=(i/6-.5)*2*R*1.2,ly=base-ph*(.2+.15*(i%3));b+=`<path class="k-A" stroke-width="1" d="M${X(cx)},${X(base)} L${X(cx+dx)},${X(ly)}"/><ellipse class="${P}" cx="${X(cx+dx)}" cy="${X(ly)}" rx="${X(Math.max(3,R*.22))}" ry="${X(Math.max(2,R*.15))}"/>`;}
+      fz=[cx,base-ph*.3,R*.8,ph*.1];break;}
+    default:{b+=`<ellipse class="${P}" cx="${X(cx)}" cy="${X(base-ph*.5)}" rx="${X(R)}" ry="${X(ph*.5)}"/>`;}
+  }
+  if(opt.fr&&fz){const [cls,n]=opt.fr;const [x0,y0,rx,ry]=fz;
+    for(let i=0;i<Math.max(n,3);i++){const a=i*2.4+.5,r=.3+.6*((i%3)/2);b+=`<circle class="${cls}" cx="${X(x0+Math.cos(a)*rx*r)}" cy="${X(y0+Math.sin(a)*ry*r)}" r="2.2"/>`;}}
+  return `<g>${b}</g>`;
+}
+// desenho de sol para indicar de onde vem a luz
+function sunIco(x,y,r,lab){let o=`<g class="sun-ico"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}"/>`;
+  for(let i=0;i<8;i++){const a=i*Math.PI/4;o+=`<line x1="${(x+Math.cos(a)*r*1.35).toFixed(1)}" y1="${(y+Math.sin(a)*r*1.35).toFixed(1)}" x2="${(x+Math.cos(a)*r*1.85).toFixed(1)}" y2="${(y+Math.sin(a)*r*1.85).toFixed(1)}"/>`;}
+  return o+`</g>`+(lab?`<text class="s-dim" x="${(x+r*2.3).toFixed(1)}" y="${(y+4).toFixed(1)}">${lab}</text>`:'');}
+// sol no canto superior esquerdo, com raios para a direita: nos vasos e floreiras a luz vem sempre da esquerda
+function sunCorner(x,y){const cx=x+16,cy=y+16,r=8;let o=sunIco(cx,cy,r,'');
+  [-7,0,7].forEach((d,i)=>{const y0=cy+d,x0=cx+r*2.1+(i===1?0:3),x1=x0+(i===1?30:22);o+=`<path class="sun-ray" d="M${x0.toFixed(1)},${y0.toFixed(1)} H${x1.toFixed(1)} m-4,-3 l4,3 l-4,3"/>`;});
+  return o+`<text class="s-dim" x="${(cx+r*2.1+36).toFixed(1)}" y="${(cy+4).toFixed(1)}">luz</text>`;}
+// planta baixa dos vasos sugeridos: cada vaso visto de cima, com o espaço de cada planta
+// quanto sol o vaso pede (pela planta principal): os de sol pleno ficam à esquerda, perto da luz
+const potSun=it=>{const s=it.sp[0];return (s.sol||'P')==='P'?1:(s.sol||'').includes('P')?0:-1;};
+// legenda das siglas da planta baixa
+function abLegend(list){const seen=new Set(),u=list.filter(s=>s&&!seen.has(s.id)&&seen.add(s.id));if(!u.length)return '';
+  return `<div class="ab-leg" aria-label="Legenda das siglas">${u.map(s=>`<span class="ab-i"><span class="ab d-${s.e} ${darkLab(s.e)}">${esc(s.a)}</span>${esc(s.n)}</span>`).join('')}</div>`;}
+function drawPotsTop(items){
+  const X=n=>n.toFixed(1);
+  const rows=[{t:'Plantas altas',f:it=>rankOf(it)<=1},{t:'Plantas médias',f:it=>rankOf(it)===2},{t:'Plantas baixas',f:it=>rankOf(it)===3}]
+    .map(r=>({t:r.t,it:items.filter(r.f).sort((a,b)=>potSun(b)-potSun(a))})).filter(r=>r.it.length);
+  const dim=it=>it.kind==='cons'?{round:it.round,Wd:it.Wd,Dp:it.Dp}:it.kind==='jard'?{round:false,Wd:60,Dp:20}:(()=>{const d=Math.round(Math.cbrt(it.v/.6)*10);return {round:true,Wd:d,Dp:d};})();
+  const gap=.12;const rowW=r=>r.it.reduce((a,it)=>a+dim(it).Wd/100,0)+gap*(r.it.length-1);
+  const maxW=Math.max(.6,...rows.map(rowW));const K=Math.min(420,600/maxW);const VW=Math.max(360,maxW*K+60);
+  let y=8,b='';
+  rows.forEach(r=>{const hMax=Math.max(...r.it.map(it=>dim(it).Dp/100))*K;
+    b+=`<text class="s-band" x="0" y="${y+12}">${r.t}</text>`;const cy=y+30+hMax/2;let x=(VW-rowW(r)*K)/2;
+    r.it.forEach((it,ii)=>{const m=dim(it),w=m.Wd/100*K,h=m.Dp/100*K,cx=x+w/2;
+      b+=m.round?`<circle class="pot-top" cx="${X(cx)}" cy="${X(cy)}" r="${X(w/2)}"/>`:`<rect class="pot-top" x="${X(x)}" y="${X(cy-h/2)}" width="${X(w)}" height="${X(h)}" rx="3"/>`;
+      const placed=it.kind==='cons'?it.placed.slice():[];const sN=s=>(s.sol||'P')==='P'?1:(s.sol||'').includes('P')?0:-1;if(it.kind!=='cons')it.sp.concat((it.under||[]).slice().sort((a,b)=>sN(b)-sN(a))).forEach(s=>{const p=tryPlace(m,placed,s);if(p)placed.push(p);});
+      placed.forEach(p=>{const px=cx+p.x*K,py=cy+p.y*K;
+        if(placed.length>1)b+=`<circle class="need" cx="${X(px)}" cy="${X(py)}" r="${X(p.r*K)}"><title>${esc(p.s.n)}: ${Math.round(p.r*200)} cm de espaço</title></circle>`;
+        b+=`<circle class="p-${p.s.e}" cx="${X(px)}" cy="${X(py)}" r="${X(Math.max(6,Math.min(10,p.r*K*.5)))}"/><text class="lab ${darkLab(p.s.e)}" x="${X(px)}" y="${X(py)}">${esc(p.s.a)}</text>`;});
+      const nms=it.sp.concat(it.under||[]).map(s=>s.n.replace(/ \(.*\)$/,''));const mx=Math.max(10,Math.floor((w+gap*K)/6.2));const ls=[];let cur='';
+      nms.forEach(t=>{const nx=cur?cur+' + '+t:t;if(nx.length>mx&&cur){ls.push(cur);cur=t;}else cur=nx;});if(cur)ls.push(cur);
+      ls.forEach((t,k)=>{b+=`<text class="nm-lab" x="${X(cx)}" y="${X(cy+hMax/2+16+k*13)}">${esc(t)}</text>`;});
+      b+=`<text class="s-dim" x="${X(cx)}" y="${X(cy+hMax/2+16+ls.length*13+2)}" text-anchor="middle">${it.kind==='jard'?'60 × 20 cm':m.round?'Ø '+m.Wd+' cm':m.Wd+' × '+m.Dp+' cm'} · ${it.v} L</text>`;
+      x+=w+gap*K;});
+    y+=hMax+30+58+Math.max(0,...r.it.map(it=>Math.ceil(it.sp.concat(it.under||[]).map(s=>s.n).join(' + ').length/Math.max(10,(dim(it).Wd/100*K+gap*K)/6.2))-1))*13;});
+  const sb=.5*K;b+=`<line class="s-sunline" x1="10" y1="${y+8}" x2="${10+sb}" y2="${y+8}"/><line class="s-sunline" x1="10" y1="${y+3}" x2="10" y2="${y+13}"/><line class="s-sunline" x1="${10+sb}" y1="${y+3}" x2="${10+sb}" y2="${y+13}"/><text class="s-dim" x="${16+sb}" y="${y+12}">50 cm</text>`;
+  return `<svg viewBox="0 0 ${VW.toFixed(0)} ${(y+26).toFixed(0)}" role="img" aria-label="Planta baixa dos vasos sugeridos">${b}</svg>`;
+}
+function drawPots(items){
+  const rows=[{t:'Plantas altas',f:it=>rankOf(it)<=1},{t:'Plantas médias',f:it=>rankOf(it)===2},{t:'Plantas baixas',f:it=>rankOf(it)===3}]
+    .map(r=>({t:r.t,it:items.filter(r.f).sort((a,b)=>potSun(b)-potSun(a))})).filter(r=>r.it.length);
+  const geo=it=>{if(it.kind==='jard')return {w:.6,h:Math.max(.1,it.v/1000/(.6*.2))};const d=Math.cbrt(it.v/.6)/10;return {w:d,h:d*.95};};
+  const gap=.24;
+  const rowW=r=>r.it.reduce((a,it)=>a+geo(it).w,0)+gap*(r.it.length-1);
+  const maxW=Math.max(.6,...rows.map(rowW));
+  const maxPH=Math.max(.3,...items.map(it=>Math.max(...it.sp.map(potPlantH))));
+  const K=Math.min(220,600/maxW,420/maxPH);
+  const VW=Math.max(360,maxW*K+80);
+  let y=8;let body='';
+  rows.forEach(r=>{
+    const plantH=Math.max(...r.it.map(it=>Math.max(...it.sp.map(potPlantH))));
+    const potH=Math.max(...r.it.map(it=>geo(it).h));
+    const ex=r.it.some(it=>it.under&&it.under.length)||r.it.length>2?28:0;
+    const bandH=(plantH+potH)*K+76+ex;
+    body+=`<text class="s-band" x="0" y="${y+12}">${r.t}</text>`;
+    const floorY=y+bandH-18-ex;
+    body+=`<line class="s-floor" x1="0" y1="${floorY}" x2="${VW}" y2="${floorY}"/>`;
+    let x=(VW-rowW(r)*K)/2;
+    r.it.forEach(it=>{
+      const g_=geo(it),w=g_.w*K,h=g_.h*K,top=floorY-h;
+      if(it.kind==='jard'){
+        body+=`<rect class="pot" x="${x.toFixed(1)}" y="${top.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="2"/><rect class="pot-rim" x="${(x-2).toFixed(1)}" y="${(top-3).toFixed(1)}" width="${(w+4).toFixed(1)}" height="5" rx="1.5"/>`;
+        it.sp.forEach((s,i)=>{const cx=x+w*(i+.5)/it.sp.length;const ph=potPlantH(s)*K;
+          body+=potPlantSVG(s,cx,top-3,w/it.sp.length*.95,ph,w/it.sp.length);
+          const jm=Math.max(...it.sp.map(potPlantH))*K;
+          body+=`<text class="hlab" x="${cx.toFixed(1)}" y="${(top-3-jm-5-(it.sp.length-1-i)*11).toFixed(1)}">${cmTxt(potRange(s))}</text>`;});
+        if(h>=13&&w>=34)body+=`<text class="potlab" x="${(x+w/2).toFixed(1)}" y="${(top+h/2+3).toFixed(1)}">${w>=60?'mín. ':''}${it.v} L</text>`;
+      }else{
+        const s=it.sp[0];const inset=w*.13;
+        body+=`<polygon class="pot" points="${x.toFixed(1)},${top.toFixed(1)} ${(x+w).toFixed(1)},${top.toFixed(1)} ${(x+w-inset).toFixed(1)},${floorY.toFixed(1)} ${(x+inset).toFixed(1)},${floorY.toFixed(1)}"/><rect class="pot-rim" x="${(x-2).toFixed(1)}" y="${(top-4).toFixed(1)}" width="${(w+4).toFixed(1)}" height="7" rx="2"/>`;
+        const ph=potPlantH(s)*K,cx=x+w/2;
+        if(!s.arv&&FORM[s.id]){body+=potPlantSVG(s,cx,top-4,w,ph,w+gap*K*.45);}
+        else if(s.arv||s.e==='M'){
+          const cr=Math.min(Math.max(w*.8,ph*.24),ph*.34,(w+gap*K*.45)/2),cyc=top-4-ph+cr*.95;
+          body+=`<line class="trunk" x1="${cx.toFixed(1)}" y1="${(top-4).toFixed(1)}" x2="${cx.toFixed(1)}" y2="${(cyc+cr*.5).toFixed(1)}"/>`;
+          body+=`<g><title>${esc(s.n)}</title>`;
+          [[0,0,1,.95],[-.45,.25,.62,.55],[.45,.25,.62,.55],[-.25,-.35,.6,.5],[.3,-.3,.6,.5]].forEach(([dx,dy,rx,ry])=>{body+=`<ellipse class="pl-1 iso-c" cx="${(cx+dx*cr).toFixed(1)}" cy="${(cyc+dy*cr).toFixed(1)}" rx="${(cr*rx).toFixed(1)}" ry="${(cr*ry).toFixed(1)}"/>`;});
+          const cr2=crownOf(s);if(cr2.fr)for(let i=0;i<7;i++){const a=i*2.4+.4,rr=.3+.5*((i%3)/2);body+=`<circle class="${cr2.fr}" cx="${(cx+Math.cos(a)*cr*rr).toFixed(1)}" cy="${(cyc+Math.sin(a)*cr*rr*.8).toFixed(1)}" r="2.6"/>`;}
+          body+=`</g>`;
+        }else{
+          body+=`<ellipse class="p-${s.e} iso-c" cx="${cx.toFixed(1)}" cy="${(top-4-ph*.48).toFixed(1)}" rx="${Math.min(w*.55,ph*.7).toFixed(1)}" ry="${(ph*.5).toFixed(1)}"><title>${esc(s.n)}</title></ellipse>`;
+        }
+        if(it.under&&it.under.length){const fr=[.2,.8,.4];const sw=w*.3;
+          it.under.forEach((u,k)=>{const ucx=x+w*fr[k%3];body+=potPlantSVG(u,ucx,top-4,sw*.95,potPlantH(u)*K,sw);});}
+        {const rg=potRange(s),y0=top-4-rg[0]/100*K,y1=top-4-rg[1]/100*K,bx=x+w+gap*K*.5;
+          body+=`<g class="hbar"><line x1="${bx.toFixed(1)}" y1="${(top-4).toFixed(1)}" x2="${bx.toFixed(1)}" y2="${y0.toFixed(1)}" class="hb-base"/><line x1="${bx.toFixed(1)}" y1="${y0.toFixed(1)}" x2="${bx.toFixed(1)}" y2="${y1.toFixed(1)}" class="hb-rng"/><line x1="${(bx-3).toFixed(1)}" y1="${y0.toFixed(1)}" x2="${(bx+3).toFixed(1)}" y2="${y0.toFixed(1)}" class="hb-rng"/><line x1="${(bx-3).toFixed(1)}" y1="${y1.toFixed(1)}" x2="${(bx+3).toFixed(1)}" y2="${y1.toFixed(1)}" class="hb-rng"/><title>Altura no vaso: ${cmTxt(rg)}</title></g>`;
+          body+=`<text class="hlab" x="${cx.toFixed(1)}" y="${(y1-6).toFixed(1)}">${cmTxt(rg)}</text>`;}
+        if(h>=16&&w>=30)body+=`<text class="potlab" x="${cx.toFixed(1)}" y="${(top+h/2+3).toFixed(1)}">${w>=60?'mín. ':''}${it.v} L</text>`;
+      }
+      const lab=it.sp.map(s=>s.n.replace(/ \(.*\)$/,'')).join(' + ');const slot=(w+gap*K)*(r.it.length>1?1.9:3);const mx=Math.max(6,Math.floor(slot/5.8));
+      const ii=r.it.indexOf(it),narrow=(w+gap*K)<95;
+      const ly=floorY+13+(narrow&&ii%2?26:0);
+      body+=`<text class="nm-lab" x="${(x+w/2).toFixed(1)}" y="${ly.toFixed(1)}">${esc(lab.length>mx?lab.slice(0,mx-1)+'…':lab)}</text>`;
+      if(it.under&&it.under.length){const ul='+ '+it.under.map(s=>s.n.replace(/ \(.*\)$/,'')).join(', ');body+=`<text class="nm-lab und-lab" x="${(x+w/2).toFixed(1)}" y="${(ly+13).toFixed(1)}">${esc(ul.length>mx?ul.slice(0,mx-1)+'…':ul)}</text>`;}
+      x+=w+gap*K;
+    });
+    y+=bandH+10;
+  });
+  // escala e luz
+  const sb=.5*K;
+  body+=`<line class="s-sunline" x1="10" y1="${y+8}" x2="${10+sb}" y2="${y+8}"/><line class="s-sunline" x1="10" y1="${y+3}" x2="10" y2="${y+13}"/><line class="s-sunline" x1="${10+sb}" y1="${y+3}" x2="${10+sb}" y2="${y+13}"/><text class="s-dim" x="${16+sb}" y="${y+12}">50 cm</text>`;
+  const VH=y+26;
+  return `<svg viewBox="0 0 ${VW.toFixed(0)} ${VH.toFixed(0)}" role="img" aria-label="Comparação de tamanho e posição dos vasos">${body}</svg>`;
+}
+
+// ---------- espaçamento ----------
+function spacing(sel){
+  const used=new Set();
+  const rows=sel.slice().sort((a,b)=>(isTree(a)-isTree(b))||a.n.localeCompare(b.n)).map(s=>{
+    used.add(s.src);const R=REFS[s.src];
+    let el,ep,dens;
+    if(isTree(s)){el='linha de árvores';ep=cm_(s.ep)+' na linha';dens='—';}
+    else if(isMed(s)&&S.modo==='chao'){el='linha de árvores';ep='1 m entre árvores';dens='—';}
+    else{el=cm_(s.el);ep=cm_(s.ep);const d=1/(s.el*s.ep);dens=d>=1?fmt(d,0):fmt(d,2);}
+    return `<tr><td>${esc(s.n)}</td><td class="num" data-l="Entre linhas">${el}</td><td class="num" data-l="Entre plantas">${ep}</td><td class="num" data-l="Plantas/m²">${dens}</td><td class="src" data-l="Fonte">${R.n?`[${R.n}]`:'prática'}</td></tr>`;
+  }).join('');
+  const refs=Object.entries(REFS).filter(([k,v])=>v.n&&used.has(k)).sort((a,b)=>a[1].n-b[1].n)
+    .map(([k,v])=>`<li value="${v.n}">${esc(v.t)} <a href="${v.u}" target="_blank" rel="noopener">Abrir</a></li>`).join('');
+  return `<div class="tbl"><table class="cards"><thead><tr><th>Planta</th><th class="num">Entre linhas</th><th class="num">Entre plantas</th><th class="num">Plantas/m²</th><th style="text-align:left">Fonte</th></tr></thead><tbody>${rows}</tbody></table></div>
+  <p class="hint">Nos canteiros, as hortaliças seguem o espaçamento das publicações. Nas linhas de árvores, frutíferas e nativas ficam a 2 m uma da outra e as adubadeiras ocupam os espaços entre elas, como nos sistemas agroflorestais testados. Onde não encontrei estudo específico, o app usa a prática comum de horta, marcada como “prática”.</p>
+  ${refs?`<details class="refs-d"><summary>Ver fontes (${(refs.match(/<li/g)||[]).length})</summary><ol class="refs">${refs}</ol></details>`:''}`;
+}
+
+function calendar(sel){
+  const cm=new Date().getMonth()+1;
+  const rows=sel.slice().sort((a,b)=>a.n.localeCompare(b.n));
+  let h=`<div class="tbl"><table class="cal"><thead><tr><th>Planta</th>${MESES.map((m,i)=>`<th class="${i+1===cm?'curm':''}">${m}</th>`).join('')}<th style="text-align:right">1ª colheita</th></tr></thead><tbody>`;
+  rows.forEach(s=>{h+=`<tr><td>${esc(s.n)}</td>${MESES.map((m,i)=>`<td class="mo${i+1===cm?' curm':''}"><i class="${s.pl.includes(i+1)?'on':''}"></i></td>`).join('')}<td class="h">${esc(s.col)}</td></tr>`;});
+  h+=`</tbody></table></div><p class="hint">Faixas verdes: meses bons para plantar no Sudeste. A coluna destacada é o mês atual. As árvores pegam melhor no início das chuvas, de outubro a março.</p>`;
+  return h;
+}
+
+function manejo(p){
+  const sel=p.sel;const has=id=>sel.some(s=>s.id===id);
+  const names=a=>a.map(s=>s.n).join(', ');
+  const ph=[];
+  ph.push(['Antes de plantar',S.modo==='vaso'?['Use substrato com 2 partes de terra, 1 de composto e 1 de areia, e confira os furos de drenagem.','Cubra a superfície com uma camada fina de palha ou folhas secas.']:['Afofe a terra até 20–30 cm e misture composto ou esterco curtido.','Cubra os canteiros com 10 cm de palha, folhas secas ou grama cortada. O solo coberto segura água e alimenta a vida do solo.','Plante tudo junto, no mesmo dia: árvores, adubadeiras e horta.'].concat(S.solo==='umido'?['Se a água ficar parada por muitos dias, faça montinhos (camalhões) de 30–40 cm e plante em cima.']:S.solo==='seco'?['Em solo pobre ou pedregoso, abra covas menores, encha com composto e mantenha palha grossa por cima.']:[])]);
+  ph.push(['Primeiras semanas',['Regue todo dia nas duas primeiras semanas, de manhã cedo ou no fim da tarde.'].concat(S.agua==='dificil'?['Com pouca água, regue no pé da planta e reforce a palha.']:[])]);
+  const rap=sel.filter(s=>s.d>0&&s.d<=130);
+  const a=[];
+  if(rap.length)a.push(`Primeiras colheitas: ${names(rap)}.`);
+  if(rap.some(s=>s.c==='h'||s.c==='t'))a.push('Semeie um pouco de hortaliça a cada 2–3 semanas para colher sem parar.');
+  if(has('crotalaria'))a.push('Corte a crotalária quando florir e deixe tudo sobre o solo.');
+  if(has('guandu'))a.push('Corte o guandu na floração, quando ele mais acumula nutrientes, e espalhe os galhos picados nos canteiros.');
+  if(a.length)ph.push(['Até 4 meses',a]);
+  const b=[];
+  const med=sel.filter(s=>s.d>130&&s.d<=450);
+  if(med.length)b.push(`Colheitas: ${names(med)}.`);
+  if(has('banana'))b.push('Tire as folhas secas da bananeira e deixe só 3 plantas por touceira (mãe, filha e neta).');
+  if(p.trees.length||p.meds.length)b.push('Faça podas leves nas frutíferas para formar a copa, sempre devolvendo o material ao solo.');
+  if(b.length)ph.push(['4 a 12 meses',b]);
+  const c=[];
+  const fr=sel.filter(s=>s.d>450&&s.d<=1200);
+  if(fr.length)c.push(`Começam a frutificar: ${names(fr)}.`);
+  if(p.trees.length)c.push('As árvores passam a sombrear parte dos canteiros. Leve a horta de sol para onde ainda bate luz e use a sombra para taioba, café e juçara.');
+  if(c.length)ph.push(['1 a 3 anos',c]);
+  const d=[];
+  const lo=sel.filter(s=>s.d>1200||(s.nat&&isTree(s)&&!s.d));
+  if(lo.length)d.push(`Fase das árvores maiores: ${names(lo)}.`);
+  if(p.trees.length)d.push('Pode as árvores no fim do inverno (julho e agosto) para controlar a altura e abrir luz.');
+  if(d.length)ph.push(['3 anos ou mais',d]);
+  return `<ol class="phases">`+ph.map(([t,l])=>`<li class="phase"><h4>${t}</h4><ul>${l.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></li>`).join('')+`</ol>`;
+}
+
+// ---------- render ----------
+function update(fromInput){
+  save();
+  if(!fromInput){$('inL').value=S.L;$('inW').value=S.W;$('inD').value=S.D||4;}
+  syncSeg('modo',S.modo);syncSeg('sol',S.sol);syncSeg('agua',S.agua);syncSeg('solo',S.solo||'normal');
+  if(!S.sel.length)clearInfo();
+  syncSeg('forma',S.forma||'ret');
+  syncSeg('potmode',S.potmode||'auto');syncSeg('pottipo',S.pottipo||'vaso');
+  $('potF').hidden=S.modo!=='vaso';$('potMine').hidden=S.modo!=='vaso'||S.potmode!=='meu';
+  $('fD').hidden=S.pottipo==='floreira';
+  alignSub();$('fC').hidden=$('fW').hidden=S.pottipo!=='floreira';
+  if(!fromInput){$('pD').value=S.pD||30;$('pC').value=S.pC||60;$('pW').value=S.pW||20;$('pH').value=S.pH||25;}
+  $('formaF').hidden=S.modo==='vaso';
+  $('medidas').hidden=S.modo==='vaso'||isCirc();
+  $('medD').hidden=S.modo==='vaso'||!isCirc();
+  renderCats();
+  const p=plan();
+  const adv=advice(p);
+  const cm=new Date().getMonth()+1;
+  const agora=p.sel.filter(s=>s.pl.includes(cm));
+  let h='';
+  // resumo do projeto
+  {const nPl=Object.values(p.count).reduce((a,b)=>a+b,0);
+    const nCons=(p.groups||[]).filter(g=>g.length>1).length+(p.nearTree||[]).length+(()=>{let n=0;const t=p.sel.filter(isTree);t.forEach((a,i)=>t.slice(i+1).forEach(b=>{const c=coop(a.id,b.id);if(c&&c.v>0)n++;}));return n;})();
+    const nc=((p.naoCoube||[]).length+(p.dropped||[]).length);
+    const nWarn=adv.filter(a=>a.k==='warn').length;
+    const vaso=S.modo==='vaso';
+    h+=`<section class="summary" aria-label="Resumo do plano">
+      <div class="sm-i"><b>${vaso?(S.potmode==='meu'?fmt(myPot(p.sel).V,0)+' L':'—'):fmt(areaM2())+' m²'}</b><span>${vaso?(S.potmode==='meu'?'no seu vaso':'em vasos'):(isCirc()?'terreno circular':'de terreno')}</span></div>
+      <div class="sm-i"><b>${p.sel.length}</b><span>${p.sel.length===1?'espécie':'espécies'}${vaso?'':` · ${nPl} mudas`}</span></div>
+      <div class="sm-i"><b>${vaso?'—':nCons}</b><span>${nCons===1?'consórcio formado':'consórcios formados'}</span></div>
+      ${nc&&!vaso?`<a class="sm-i sm-bad" href="#" data-go="cap"><b>${nc}</b><span>${nc===1?'planta não cabe':'plantas não cabem'}</span></a>`:`<a class="sm-i${nWarn?' sm-warn':' sm-ok'}" href="#" data-go="t-av"><b>${nWarn}</b><span>${nWarn===1?'aviso':'avisos'}</span></a>`}
+    </section>`;}
+  if(S.exemplo)h+=`<div class="banner">Exemplo: quintal de 6 × 3 m com sol pleno. Troque pelas medidas e plantas do seu espaço.</div>`;
+  if(S.modo==='chao'){
+    const total=Object.values(p.count).reduce((a,b)=>a+b,0);
+    const v3=S.vista==='3d',vr=S.vista==='raio';
+    h+=`<section class="panel card" aria-labelledby="t-des"><div class="head"><h2 id="t-des">Desenho do plantio</h2>
+      <div class="seg" id="vista"><button type="button" data-v="planta" aria-pressed="${!v3&&!vr}">Planta baixa</button><button type="button" data-v="3d" aria-pressed="${v3}">Vista 3D</button><button type="button" data-v="raio" aria-pressed="${vr}">3D com raios</button></div></div>
+      ${p.sel.length?`<div class="stats"><div class="stat"><b>${p.beds.length}</b><span>${p.beds.length===1?'canteiro':'canteiros'}</span></div><div class="stat"><b>${p.lines.length}</b><span>${p.lines.length===1?'linha de árvores':'linhas de árvores'}</span></div></div>`:''}
+      ${p.sel.length?`<div class="zoom" role="group" aria-label="Tamanho do desenho"><button type="button" data-zoom="-1" aria-label="Diminuir desenho">−</button><span>${Math.round((S.zoom||1)*100)}%</span><button type="button" data-zoom="1" aria-label="Ampliar desenho">+</button></div><div class="drawing"${isMob()&&(S.zoom||1)>1?` style="--zw:${(S.zoom||1)*100}%"`:''}>${v3?draw3D(p):vr?draw3D(p,true):drawPlan(p)}</div>${!v3&&isMob()?stripList(p):''}`:emptyState("Escolha as plantas na lista ao lado: o app monta aqui o desenho do plantio, com as distâncias de cada uma.")}
+      ${capAlert(p)}
+      ${p.sel.length?`<p class="hint">`:'<p class="hint" hidden>'}${vr?'Mesma posição da vista 3D, mas no lugar de cada planta aparece o círculo que ela ocupa no chão, com a sigla no centro (veja a legenda abaixo). Nas árvores, a linha tracejada mostra a área de cada uma na linha, metade da distância até a próxima árvore.':v3?'Alturas aproximadas das plantas adultas, na mesma escala do terreno. Cada árvore aparece com o formato típico da copa adulta (arredondada, ovalada, em guarda-chuva, cônica, em taça, aberta, de palmeira) e, quando é o caso, com flores ou frutos. Adubo verde, hortaliças e aromáticas aparecem com a forma, a largura e as flores ou frutos típicos: cabeça da alface, folhagem da cenoura, tomate no tutor, touceira da cebolinha, espigas da lavanda, guarda-chuva da mandioca e tapete do amendoim-forrageiro. Passe o dedo ou o mouse sobre uma planta para ver nome, altura e largura.':'Cada quadrado = 1 m². Plantas que cooperam ficam intercaladas na mesma fileira, e as fileiras vizinhas ficam desencontradas. As cotas mostram, em um exemplo de cada planta, a distância ideal até a vizinha da mesma fileira (horizontal) e até a fileira seguinte (vertical). Canteiros de 1,2 m com corredores de 40 cm. Linhas de árvores (faixa escura) com palha grossa. Se puder, deixe as linhas no sentido norte–sul para os dois lados receberem sol.'+(p.lines.length>1&&p.sel.filter(isTree).length>1?' Cada linha de árvores mistura os estratos (alto e médio se repetem em todas as linhas) e os pares com cooperação documentada ficam juntos. As emergentes vão primeiro para as linhas do lado sul, embaixo no desenho: com as linhas no sentido leste–oeste, a sombra delas cai menos sobre os canteiros.':'')+''}</p>
+      ${legend(p)}</section>`;
+    h+=coopPanel(p);
+  }else{
+    if(S.potmode==='meu'){h+=myPotPanel(p.sel);}else{
+    const pi=potItems(p.sel);
+    h+=`<section class="panel card" aria-labelledby="t-vas"><div class="head"><h2 id="t-vas">Vasos sugeridos</h2><div class="seg" id="potvista"><button type="button" data-v="frente" aria-pressed="${S.potview!=='cima'}">Vista 3D</button><button type="button" data-v="cima" aria-pressed="${S.potview==='cima'}">Planta baixa</button></div></div>`;
+    if(pi.items.length){
+      h+=S.potview==='cima'?`<div class="drawing plain">${drawPotsTop(pi.items)}</div>${abLegend(pi.items.flatMap(it=>it.sp.concat(it.under||[])))}<p class="hint"><b>Planta baixa.</b> Cada vaso visto de cima, na mesma escala. O círculo tracejado é o espaço mínimo de cada planta, cerca de 80% do espaçamento de canteiro, e os círculos não se sobrepõem. Nos vasos das frutíferas, a árvore fica no centro e as plantas de raiz rasa ficam em volta: as de sol pleno do lado da luz (à esquerda) e as que aguentam sombra à direita. A luz vem da esquerda: em cada fileira, os vasos que pedem mais sol ficam à esquerda.</p>`:`<div class="drawing plain">${drawPotsIso(pi.items)}</div><p class="hint">Vasos e plantas em 3D, na mesma escala; cada planta aparece no lugar calculado e na altura máxima que costuma alcançar em vaso (a faixa de altura está em cada cartão abaixo). São valores aproximados, que variam com a variedade, a poda e o tamanho do vaso. As plantas altas ficam atrás e as baixas na frente. Supondo a luz vindo da esquerda, em cada fileira os vasos que pedem mais sol ficam à esquerda e os que aguentam sombra à direita. Ao arrumar a varanda, deixe as plantas altas do lado oposto à luz, para não sombrear as baixas.</p>${pi.items.some(it=>it.under&&it.under.length)?`<p class="hint">Para aproveitar melhor o espaço, as hortaliças e aromáticas de raiz rasa vão na borda dos vasos das frutíferas, a 10–15 cm do tronco, na terra da superfície que a árvore pouco usa. O vaso cresce só metade do volume que elas pediriam sozinhas. É prática comum de cultivo em vaso; há pouco estudo publicado sobre esses consórcios em recipiente, por isso o app prefere as parceiras com cooperação documentada e as que aguentam meia-sombra. Pode a frutífera para a copa não fechar sobre elas.</p>`:''}`;
+      h+=`<div class="pots">`+pi.items.map(it=>`<div class="potc"><b>${it.kind==='cons'?`Consórcio · ${it.round?'vaso redondo':'floreira'} de ${it.v} L`:it.kind==='jard'?`Jardineira de 60 cm · mínimo ${it.v} L`:`Vaso mínimo de ${it.v} L`}</b><span class="who">${esc(it.sp.map(s=>s.n).join(' + '))}${it.under&&it.under.length?` <span class="und">+ ${esc(it.under.map(s=>s.n).join(', '))} na borda</span>`:''}</span><span class="hint">${potDims(it)}</span><span class="hint"><b>Altura no vaso:</b> ${it.sp.map(s=>`${it.sp.length>1?esc(s.n)+' ':''}${cmTxt(potRange(s))}`).join(' · ')}</span><span class="hint">${it.kind==='jard'?it.sp.map(s=>`${esc(s.n)}: mín. ${s.v} L`).join(' · '):`${EST[it.sp[0].e]} · colheita em ${esc(it.sp[0].col)}`}</span>${it.under&&it.under.length?`<span class="hint"><b>Na borda:</b> ${it.under.map(u=>`${esc(u.n)} (${underWhy(it.sp[0],u)}; altura ${cmTxt(potRange(u))})`).join(' · ')}</span>`+potNotes(it.sp[0],it.under).map(t=>`<span class="hint">${esc(t)}</span>`).join(''):''}</div>`).join('')+`</div>`;
+    }else h+=emptyState("Escolha as plantas na lista ao lado para ver o tamanho e a posição de cada vaso.");
+    (pi.consNo||[]).forEach(c=>{h+=`<ul class="notes"><li class="note warn"><span class="tag">Atenção</span><div class="body"><span><b>${esc(c.sp.map(s=>s.n).join(' + '))}</b> não é apropriado para vaso: ${esc(c.no.map(s=>s.n).join(' e '))} ${c.no.length>1?'precisam':'precisa'} de chão. Plante esse consórcio no modo "No chão".</span></div></li></ul>`;});
+    if(pi.no.length)h+=`<div class="nopot" role="note"><span class="cap-ico" aria-hidden="true">!</span><div><b>Atenção: não indicadas para vaso</b><span>${esc(pi.no.map(s=>s.n).join(', '))}. Essas plantas precisam ser plantadas direto no chão.</span></div></div>`;
+    pi.no.filter(s=>NOPOT[s.id]).forEach(s=>{h+=`<ul class="notes"><li class="note warn"><span class="tag">Atenção</span><div class="body"><span>${esc(NOPOT[s.id])}</span><div class="acts"><button type="button" data-rmsel="${s.id}">Tirar ${esc(s.n)} da lista</button></div></div></li></ul>`;});
+    h+=`</section>`;}
+  }
+  if(adv.length||agora.length){
+    h+=`<section class="panel" aria-labelledby="t-av"><h2 id="t-av">Ajustes e sugestões</h2>`;
+    if(agora.length)h+=`<div class="field"><h3>Bom para plantar em ${MESES_L[cm-1]}</h3><div class="now">${agora.map(s=>`<span>${esc(s.n)}</span>`).join('')}</div></div>`;
+    if(adv.length)h+=`<ul class="notes">`+adv.map(a=>`<li class="note ${a.k}"><span class="tag">${a.k==='warn'?'Atenção':a.k==='tip'?'Sugestão':'Observe'}</span><div class="body"><span>${esc(a.t)}</span>${a.add&&a.add.length?`<div class="acts">${a.add.map(i=>`<button type="button" data-addsp="${i}">+ ${esc(BYID[i].n)}</button>`).join('')}</div>`:''}</div></li>`).join('')+`</ul>`;
+    h+=`</section>`;
+  }
+  if(p.sel.length){
+    if(S.modo==='chao')h+=`<section class="panel" aria-labelledby="t-esp"><h2 id="t-esp">Espaçamento sugerido</h2>${spacing(p.sel)}</section>`;
+    const comp=p.sel.filter(s=>compOf(s.id));
+    if(comp.length){
+      const selIds=new Set(S.sel);
+      h+=`<section class="panel" aria-labelledby="t-comp"><h2 id="t-comp">Boas companhias</h2><div class="tbl"><table class="cards"><thead><tr><th>Planta</th><th style="text-align:left">Ciclo</th><th style="text-align:left">Vai bem com</th></tr></thead><tbody>`+comp.map(s=>`<tr><td>${esc(s.n)}</td><td class="src" data-l="Ciclo">${esc(compOf(s.id)[0])}</td><td class="src blk" data-l="Vai bem com">${compOf(s.id)[1].map(i=>selIds.has(i)?`<strong style="color:var(--leaf)">${esc(BYID[i].n)}</strong>`:esc(BYID[i].n)).join(', ')}</td></tr>`).join('')+`</tbody></table></div><p class="hint">Em verde, as companheiras que já estão no seu plantio.</p></section>`;
+    }
+    h+=`<section class="panel" aria-labelledby="t-cal"><h2 id="t-cal">Calendário de plantio</h2>${calendar(p.sel)}</section>`;
+    h+=`<section class="panel" aria-labelledby="t-man"><h2 id="t-man">Cuidados ao longo do tempo</h2>${manejo(p)}</section>`;
+  }
+  const tab=S.rtab==='parceiras'?'parceiras':'plano';
+  const tabs=`<div class="rtabs" role="tablist"><button type="button" role="tab" data-rtab="plano" aria-selected="${tab==='plano'}">Plano</button><button type="button" role="tab" data-rtab="parceiras" aria-selected="${tab==='parceiras'}">Parceiras</button></div>`;
+  // barra de atalhos para as seções do plano
+  const secs=[['t-des','Desenho'],['t-vas','Vasos'],['t-mine','Seu vaso'],['t-coop','Consórcios'],['t-av','Ajustes'],['t-esp','Espaçamento'],['t-comp','Companhias'],['t-cal','Calendário'],['t-man','Cuidados']].filter(([id])=>h.includes(`id="${id}"`));
+  const nav=`<nav class="secnav" aria-label="Seções do plano">${secs.map(([id,l])=>`<a href="#" data-go="${id}">${l}</a>`).join('')}</nav>`;
+  $('out').innerHTML=nav+h;
+  spy();
+  mtabSync();try{fitText();}catch(e){}
+}
+function spy(){const nav=document.querySelector('#out .secnav');if(!nav)return;const ls=[...nav.querySelectorAll('a[data-go]')];let cur=ls[0];
+  ls.forEach(a=>{const el=document.getElementById(a.dataset.go);if(!el)return;const sec=el.closest('section')||el;if(sec.offsetParent!==null&&sec.getBoundingClientRect().top<110)cur=a;});
+  ls.forEach(a=>{if(a===cur){if(a.getAttribute('aria-current')!=='true'){a.setAttribute('aria-current','true');const nl=nav.getBoundingClientRect(),al=a.getBoundingClientRect();if(al.left<nl.left||al.right>nl.right-36)nav.scrollBy({left:al.left-nl.left-40,behavior:'smooth'});}}else a.removeAttribute('aria-current');});}
+{let rq=0;window.addEventListener('scroll',()=>{if(rq)return;rq=requestAnimationFrame(()=>{rq=0;spy();});},{passive:true});}
+$('out').addEventListener('click',e=>{
+  const zb=e.target.closest('[data-zoom]');if(zb){const Z=[1,1.5,2,3];let i=Z.indexOf(S.zoom||1);if(i<0)i=0;i=Math.max(0,Math.min(Z.length-1,i+(+zb.dataset.zoom)));S.zoom=Z[i];update();return;}
+  const go=e.target.closest('[data-go]');if(go){e.preventDefault();const id=go.dataset.go;const el=id==='cap'?document.querySelector('#out .cap-alert'):document.getElementById(id);
+    if(el){const sec=el.closest('section')||el;const y=sec.getBoundingClientRect().top+window.scrollY-70;try{window.scrollTo({top:y,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}catch(_){window.scrollTo(0,y);}}return;}
+  const tb=e.target.closest('[data-rtab]');if(tb){S.rtab=tb.dataset.rtab;save();update();return;}
+  const ac=e.target.closest('[data-addcons]');if(ac){ac.dataset.addcons.split(',').forEach(i=>{if(BYID[i]&&!S.sel.includes(i))S.sel.push(i);});S.consSel=(S.consSel||[]).filter(k=>k!==ac.dataset.addcons).concat([ac.dataset.addcons]);S.exemplo=false;update();return;}
+  const rs=e.target.closest('[data-rmsel]');if(rs){S.sel=S.sel.filter(i=>i!==rs.dataset.rmsel);S.exemplo=false;update();return;}
+  const v=e.target.closest('#vista button');if(v){S.vista=v.dataset.v;update();return;}
+  const pv=e.target.closest('#potvista button');if(pv){S.potview=pv.dataset.v;update();return;}
+  const b=e.target.closest('[data-addsp]');if(!b)return;const id=b.dataset.addsp;if(!S.sel.includes(id))S.sel.push(id);S.exemplo=false;update();
+});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-mt]');if(!b)return;S.mtab=b.dataset.mt;save();mtabSync();window.scrollTo(0,0);update();});
+window.QUINTAL={draw3D,BYID,S,hOf,DEF_SP,crownOf};
+})();
