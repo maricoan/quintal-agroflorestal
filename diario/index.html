@@ -80,6 +80,7 @@ figure.mapa-fig{margin:0;display:flex;flex-direction:column;gap:8px}
 .pino{all:unset;box-sizing:border-box;position:absolute;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:.95rem;background:var(--mata);color:var(--surface);border:2px solid var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.45);cursor:pointer}
 .pino.sombra{background:var(--ardosia)}
 .pino.meia{background:var(--e-medio)}
+.pino,.pino.sombra,.pino.meia{background:var(--pin-bg,var(--mata));color:var(--fg);border-color:var(--fg)}
 .pino[aria-pressed="true"]{width:40px;height:40px;font-size:1.1rem;outline:3px solid var(--ocre)}
 .pino:focus-visible{outline:3px solid var(--ocre)}
 figcaption{display:flex;justify-content:space-between;gap:8px 16px;flex-wrap:wrap;align-items:center;font-family:var(--mono);font-size:.75rem;color:var(--muted)}
@@ -374,7 +375,7 @@ function renderMapa(){
   mapa.querySelectorAll(".pino").forEach(p=>p.remove());
   for (const a of AREAS){
     const p = st.pinos[a.id]; if(!p || typeof p.x!=="number") continue;
-    const b = h("button",{class:`pino ${a.luz}`,style:`left:${p.x}%;top:${p.y}%`,"aria-pressed":String(st.filtro===a.id),"aria-label":"Área "+areaNome(a.id),title:areaNome(a.id)}, a.id.slice(1));
+    const b = h("button",{class:`pino ${a.luz}`,style:`left:${p.x}%;top:${p.y}%;--pin-bg:var(--amarelo-${a.id.slice(1)})`,"aria-pressed":String(st.filtro===a.id),"aria-label":"Área "+areaNome(a.id),title:areaNome(a.id)}, a.id.slice(1));
     b.addEventListener("click",ev=>{ if(st.marcando) return; ev.stopPropagation(); st.filtro = st.filtro===a.id?null:a.id; render(); });
     mapa.append(b);
   }
