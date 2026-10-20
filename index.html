@@ -1056,7 +1056,10 @@ S.custom=(S.custom||[]).filter(c=>c&&c.el);S.vista=S.vista||'planta';
 S.custom.forEach(c=>BYID[c.id]=c);
 S.sel=S.sel.filter(i=>BYID[i]);
 // no site do GitHub (ou com ?limpo no endereço), o app sempre abre no exemplo do quintal de 6 × 3 m, sem plantas escolhidas
-try{if(/github\.io$/i.test(location.hostname)||new URLSearchParams(location.search).has('limpo')){const c=S.custom;S=JSON.parse(JSON.stringify(DEFAULT));S.custom=c;S.sel=[];S.mtab='espaco';}}catch(e){}
+// site público (GitHub Pages e quintal.marianacoan.com): toda visita começa limpa, sem plantas, no topo da página inicial
+const PUBLICO=/github\.io$|marianacoan\.com$/i.test(location.hostname);
+try{if(PUBLICO){history.scrollRestoration='manual';window.scrollTo(0,0);}}catch(e){}
+try{if(PUBLICO||new URLSearchParams(location.search).has('limpo')){const c=S.custom;S=JSON.parse(JSON.stringify(DEFAULT));S.custom=c;S.sel=[];S.mtab='espaco';}}catch(e){}
 function save(){try{localStorage.setItem('quintal-saf-v2',JSON.stringify(S));}catch(e){}}
 
 const $=id=>document.getElementById(id);
