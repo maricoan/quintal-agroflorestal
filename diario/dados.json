@@ -1,0 +1,314 @@
+{
+ "atualizado": "19/10/2026",
+ "entradas": [
+  {
+   "area": "a1",
+   "criado": 1792462800001,
+   "data": "2026-10-19",
+   "especies": [
+    "taioba",
+    "singônio"
+   ],
+   "fotos": [
+    "81f5112c098e5f888bcb7d34b0b359e2"
+   ],
+   "texto": "Canto sombreado entre dois muros, com um trecho de tijolo aparente. Já há taioba e singônio crescendo, galhos secos e algum lixo no chão.",
+   "tipo": "observacao",
+   "titulo": "Antes do plantio",
+   "_id": "antes-a1"
+  },
+  {
+   "area": "a2",
+   "criado": 1792462800002,
+   "data": "2026-10-19",
+   "especies": [],
+   "fotos": [
+    "c347d6f174f904ba7d4ee896e5874c89"
+   ],
+   "texto": "Faixa ao pé do muro com pintura de espirais roxas. O reboco está rachado e mostra os tijolos. Chão de capim baixo, cascalho e restos de entulho.",
+   "tipo": "observacao",
+   "titulo": "Antes do plantio",
+   "_id": "antes-a2"
+  },
+  {
+   "area": "a3",
+   "criado": 1792462800003,
+   "data": "2026-10-19",
+   "especies": [
+    "mangueira"
+   ],
+   "fotos": [
+    "84ac33ce1eab7ca4f452a64afdf8eb2b"
+   ],
+   "texto": "Mangueiras jovens ao lado do caminho de terra, com folhas secas cobrindo o chão e vegetação espontânea na beira do muro.",
+   "tipo": "observacao",
+   "titulo": "Antes do plantio",
+   "_id": "antes-a3"
+  },
+  {
+   "area": "a4",
+   "criado": 1792462800004,
+   "data": "2026-10-19",
+   "especies": [
+    "bananeira"
+   ],
+   "fotos": [
+    "f55f6a19b657c702c23328cc66282b17"
+   ],
+   "texto": "Área aberta em frente ao mural do rosto, com bananeiras no canto. Chão coberto de folhas secas de bananeira, com pedras e um pedaço de cano.",
+   "tipo": "observacao",
+   "titulo": "Antes do plantio",
+   "_id": "antes-a4"
+  },
+  {
+   "area": "a6",
+   "criado": 1792462800005,
+   "data": "2026-10-19",
+   "especies": [],
+   "fotos": [
+    "4c9c51da4008cc7ac0e43415398e1981"
+   ],
+   "texto": "Canto entre dois muros, com um cano branco descendo até o chão. Solo coberto de palha seca, com capim brotando e algumas pedras.",
+   "tipo": "observacao",
+   "titulo": "Antes do plantio",
+   "_id": "antes-a5"
+  },
+  {
+   "area": "a7",
+   "criado": 1792462800006,
+   "data": "2026-10-19",
+   "especies": [],
+   "fotos": [
+    "50bc557b696cece4e64b48ee7160b562"
+   ],
+   "texto": "Ao pé de um muro alto, com bananeiras do outro lado. Solo coberto de palha, uma enxada fincada e um monte de composto escuro já no lugar.",
+   "tipo": "observacao",
+   "titulo": "Antes do plantio",
+   "_id": "antes-a6"
+  },
+  {
+   "area": "a5",
+   "criado": 1792463100000,
+   "data": "2026-10-19",
+   "especies": [
+    "boldo",
+    "manjericão",
+    "margaridão"
+   ],
+   "fotos": [],
+   "texto": "Plantamos boldo, manjericão e margaridão.",
+   "tipo": "plantio",
+   "titulo": "Primeiro plantio do canteiro de aromáticas",
+   "_id": "plantio-a5-20261019"
+  },
+  {
+   "area": "a6",
+   "criado": 1792463000000,
+   "data": "2026-10-19",
+   "especies": [
+    "pitanga",
+    "amendoim-forrageiro",
+    "cana-da-índia",
+    "maravilha"
+   ],
+   "fotos": [],
+   "texto": "Plantamos uma pitangueira, amendoim-forrageiro, cana-da-índia e maravilhas.",
+   "tipo": "plantio",
+   "titulo": "Primeiro plantio da área 6",
+   "_id": "plantio-a6-20261019"
+  },
+  {
+   "area": "a7",
+   "criado": 1792463200000,
+   "data": "2026-10-19",
+   "especies": [
+    "dedaleira",
+    "pitanga",
+    "cereja-do-rio-grande",
+    "ora-pro-nóbis",
+    "amendoim-forrageiro",
+    "cana-da-índia",
+    "maravilha"
+   ],
+   "fotos": [],
+   "texto": "Plantamos uma dedaleira ao fundo, uma pitangueira e uma cereja-do-rio-grande. Junto ao muro, três ora-pro-nóbis. Semeamos 60 sementes de cana-da-índia, 30 de maravilha e 40 de amendoim-forrageiro.",
+   "tipo": "plantio",
+   "titulo": "Primeiro plantio da área 7",
+   "_id": "plantio-a7-20261019"
+  }
+ ],
+ "plantas": [
+  {
+   "area": "a6",
+   "criado": 1792463000002,
+   "nome": "Amendoim-forrageiro",
+   "qtd": 30,
+   "status": "plantada",
+   "unidade": "sementes",
+   "_id": "amendoim-forrageiro-a6"
+  },
+  {
+   "area": "a7",
+   "criado": 1792463200002,
+   "nome": "Amendoim-forrageiro",
+   "qtd": 40,
+   "status": "plantada",
+   "unidade": "sementes",
+   "_id": "amendoim-forrageiro-a7"
+  },
+  {
+   "area": "a5",
+   "criado": 1792463100001,
+   "nome": "Boldo",
+   "qtd": 3,
+   "status": "plantada",
+   "_id": "boldo-a5"
+  },
+  {
+   "area": "",
+   "criado": 1792461200002,
+   "nome": "Cabeludinha",
+   "qtd": 1,
+   "status": "muda",
+   "_id": "cabeludinha"
+  },
+  {
+   "area": "a6",
+   "criado": 1792463000003,
+   "nome": "Cana-da-índia",
+   "qtd": 20,
+   "status": "plantada",
+   "unidade": "sementes",
+   "_id": "cana-da-india-a6"
+  },
+  {
+   "area": "a7",
+   "criado": 1792463200003,
+   "nome": "Cana-da-índia",
+   "qtd": 60,
+   "status": "plantada",
+   "unidade": "sementes",
+   "_id": "cana-da-india-a7"
+  },
+  {
+   "area": "",
+   "criado": 1792461200003,
+   "nome": "Castanha-do-maranhão",
+   "qtd": 2,
+   "status": "muda",
+   "_id": "castanha-do-maranhao"
+  },
+  {
+   "area": "a7",
+   "criado": 1792463200001,
+   "nome": "Cereja-do-rio-grande",
+   "qtd": 1,
+   "status": "plantada",
+   "_id": "cereja-do-rio-grande-a7"
+  },
+  {
+   "area": "a7",
+   "criado": 1792461200004,
+   "nome": "Dedaleira",
+   "qtd": 1,
+   "status": "plantada",
+   "_id": "dedaleira"
+  },
+  {
+   "area": "a5",
+   "criado": 1792463100002,
+   "nome": "Manjericão",
+   "qtd": 6,
+   "status": "plantada",
+   "_id": "manjericao-a5"
+  },
+  {
+   "area": "a6",
+   "criado": 1792463000004,
+   "nome": "Maravilha",
+   "qtd": 7,
+   "status": "plantada",
+   "unidade": "sementes",
+   "_id": "maravilha-a6"
+  },
+  {
+   "area": "a7",
+   "criado": 1792463200004,
+   "nome": "Maravilha",
+   "qtd": 30,
+   "status": "plantada",
+   "unidade": "sementes",
+   "_id": "maravilha-a7"
+  },
+  {
+   "area": "a5",
+   "criado": 1792463100003,
+   "nome": "Margaridão",
+   "qtd": 4,
+   "status": "plantada",
+   "_id": "margaridao-a5"
+  },
+  {
+   "area": "a7",
+   "criado": 1792463300000,
+   "nome": "Ora-pro-nóbis",
+   "qtd": 3,
+   "status": "plantada",
+   "_id": "ora-pro-nobis-a7"
+  },
+  {
+   "area": "a6",
+   "criado": 1792463000001,
+   "nome": "Pitanga",
+   "qtd": 1,
+   "status": "plantada",
+   "_id": "pitanga-a6"
+  },
+  {
+   "area": "a7",
+   "criado": 1792461200000,
+   "nome": "Pitanga",
+   "qtd": 1,
+   "status": "plantada",
+   "_id": "pitanga"
+  }
+ ],
+ "pinos": {
+  "a1": {
+   "x": 67.4,
+   "y": 33.7
+  },
+  "a2": {
+   "x": 60.8,
+   "y": 41.4
+  },
+  "a3": {
+   "x": 42.8,
+   "y": 52.2
+  },
+  "a4": {
+   "x": 29.1,
+   "y": 64
+  },
+  "a5": {
+   "x": 23.7,
+   "y": 66.5
+  },
+  "a6": {
+   "x": 21.5,
+   "y": 74.2
+  },
+  "a7": {
+   "x": 17.3,
+   "y": 81.9
+  }
+ },
+ "capas": {
+  "a1": "81f5112c098e5f888bcb7d34b0b359e2",
+  "a2": "c347d6f174f904ba7d4ee896e5874c89",
+  "a3": "84ac33ce1eab7ca4f452a64afdf8eb2b",
+  "a4": "f55f6a19b657c702c23328cc66282b17",
+  "a6": "4c9c51da4008cc7ac0e43415398e1981",
+  "a7": "50bc557b696cece4e64b48ee7160b562"
+ }
+}

@@ -10,3 +10,7 @@ Abra `index.html` no navegador. O app é um único arquivo e não precisa de ins
 
 Em **Settings → Pages**, escolha **Deploy from a branch**, branch `main` e pasta `/ (root)`.
 O site fica em `https://maricoan.github.io/quintal-agroflorestal/`.
+
+## Diário da Viela
+
+Cópia pública, só de leitura, do diário da agrofloresta da Viela Estevam Garcia: [quintal.marianacoan.com/diario](https://quintal.marianacoan.com/diario/). Os dados ficam em `diario/dados.json` e as fotos em `diario/fotos/`.
