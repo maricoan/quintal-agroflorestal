@@ -94,6 +94,8 @@ figcaption{display:flex;justify-content:space-between;gap:8px 16px;flex-wrap:wra
 .tab svg{width:18px;height:18px;flex:none}
 .tab:focus-visible{outline:2px solid var(--ocre);outline-offset:2px}
 #tab-registros{--tab-c:var(--verde1)} #tab-plantas{--tab-c:var(--verde2)} #tab-pb{--tab-c:var(--verde3);--tab-tinta:var(--verde3-tinta)}
+#tab-3d{--tab-c:color-mix(in srgb, var(--verde3) 55%, #ffffff);--tab-tinta:var(--verde3-tinta)}
+#painel-pb > .bar{justify-content:flex-start}
 .bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .filtro{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
 .filtro button{all:unset;cursor:pointer;color:var(--mata);text-decoration:underline;margin-left:6px}
@@ -241,6 +243,7 @@ footer a{color:var(--mata)}
       <button class="tab" role="tab" id="tab-registros" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 3v18"/><circle cx="6" cy="7" r="2.2" fill="currentColor"/><circle cx="6" cy="17" r="2.2" fill="currentColor"/><path d="M11 7h9M11 17h6"/></svg>Linha do tempo</button>
       <button class="tab" role="tab" id="tab-plantas" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21v-9"/><path d="M12 12c0-4 3-6.5 7.5-6.5 0 4.2-3 6.5-7.5 6.5z"/><path d="M12 14.5c0-3.2-2.5-5.5-6.5-5.5 0 3.3 2.6 5.5 6.5 5.5z"/><path d="M7 21h10"/></svg>Plantas por área</button>
       <button class="tab" role="tab" id="tab-pb" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M3 13h8v8M11 3v5M15 13h6"/></svg>Planta baixa</button>
+      <button class="tab" role="tab" id="tab-3d" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5 3.5 7v10l8.5 4.5 8.5-4.5V7z"/><path d="M3.5 7 12 11.5 20.5 7M12 11.5v10"/></svg>Vista 3D</button>
     </div>
 
     <div id="painel-registros" style="display:flex;flex-direction:column;gap:20px">
@@ -281,10 +284,6 @@ footer a{color:var(--mata)}
     </div>
     <div id="painel-pb" hidden style="display:flex;flex-direction:column;gap:14px">
       <div class="bar">
-        <div class="seg" role="group" aria-label="Tipo de desenho">
-          <button type="button" id="pb-m-planta">Planta baixa</button>
-          <button type="button" id="pb-m-3d">Vista 3D</button>
-        </div>
         <div class="seg" role="group" aria-label="Escolha a área">
           <button type="button" id="pb-a6">Área 6</button>
           <button type="button" id="pb-a7">Área 7</button>
@@ -511,8 +510,6 @@ function renderPlanta(){
   if (sel){ const b=h("button",{type:"button",class:"btn ghost small"},"Tirar "+sel.rotulo+" do desenho"); b.addEventListener("click",()=>{ st.selPB=null; salvarPos(st.pbArea, sel.key, null); }); $("pb-sel").replaceChildren(h("span",{class:"status-msg"},"Toque no desenho para mudar o lugar."), b); }
   if (!st.pbMsgFixa) $("pb-msg").textContent = st.selPB ? "Agora toque no lugar dentro da área" : "";
   const v3 = st.pbModo==="3d";
-  $("pb-m-planta").setAttribute("aria-pressed", String(!v3));
-  $("pb-m-3d").setAttribute("aria-pressed", String(v3));
   $("pb-wrap").hidden = v3; $("pb-legenda").hidden = v3; $("pb-3d").hidden = !v3;
   if (v3){ $("pb-bandeja-box").hidden = true; $("pb-sel").hidden = true; $("pb-msg").textContent="";
     $("pb-nota").textContent = "Vista em 3D com os mesmos desenhos do Quintal Agroflorestal, mostrando as plantas já adultas. Aparecem as mudas posicionadas na planta baixa" + (cfg.linhaSementes ? ", as sementes intercaladas" : "") + (area==="a7" ? " e a touceira de bananeira." : ".");
@@ -690,7 +687,8 @@ function render(){
   $("painel-registros").hidden = st.tab!=="registros";
   $("painel-plantas").hidden = st.tab!=="plantas";
   $("painel-pb").hidden = st.tab!=="pb";
-  $("tab-pb").setAttribute("aria-selected", String(st.tab==="pb"));
+  $("tab-pb").setAttribute("aria-selected", String(st.tab==="pb" && st.pbModo!=="3d"));
+  $("tab-3d").setAttribute("aria-selected", String(st.tab==="pb" && st.pbModo==="3d"));
   $("bar-reg").hidden = !st.edit;
   $("form-planta").hidden = !st.edit;
   if (st.tab==="registros") renderTimeline(); else if (st.tab==="plantas") renderPlantas(); else renderPlanta();
@@ -718,9 +716,8 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape") $("lightbox").hidd
 
 $("tab-registros").addEventListener("click",()=>{st.tab="registros";render();});
 $("tab-plantas").addEventListener("click",()=>{st.tab="plantas";render();});
-$("tab-pb").addEventListener("click",()=>{st.tab="pb";render();});
-$("pb-m-planta").addEventListener("click",()=>{st.pbModo="planta";render();});
-$("pb-m-3d").addEventListener("click",()=>{st.pbModo="3d";st.selPB=null;render();});
+$("tab-pb").addEventListener("click",()=>{st.tab="pb";st.pbModo="planta";render();});
+$("tab-3d").addEventListener("click",()=>{st.tab="pb";st.pbModo="3d";st.selPB=null;render();});
 $("pb-a6").addEventListener("click",()=>{st.pbArea="a6";st.selPB=null;render();});
 $("pb-a7").addEventListener("click",()=>{st.pbArea="a7";st.selPB=null;render();});
 $("btn-novo").addEventListener("click",()=>{
