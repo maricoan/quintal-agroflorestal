@@ -317,7 +317,7 @@ details.add summary{cursor:pointer;font-size:13.5px;font-weight:700;color:var(--
 .drawing.plain{background:var(--bg)}
 .drawing svg{display:block;width:var(--zw,100%);max-width:none;height:auto;min-width:300px}
 svg text{font-family:var(--f-mono);fill:var(--ink)}
-.s-water{fill:var(--water)}.s-free{fill:var(--leaf);opacity:.18}.strips .st-free{background:var(--leaf-soft)}.s-water-ln{fill:none;stroke:var(--water-ln);stroke-width:1.4;stroke-linecap:round}.s-water-t{fill:var(--water-ln);font-size:calc(11px * var(--fz,1));font-family:var(--f-body);font-weight:700}
+.s-water{fill:var(--water)}.s-free{fill:var(--leaf);opacity:.18}.s-borda{fill:var(--bed);opacity:.85}.strips .st-borda{background:var(--bed)}.strips .st-free{background:var(--leaf-soft)}.s-water-ln{fill:none;stroke:var(--water-ln);stroke-width:1.4;stroke-linecap:round}.s-water-t{fill:var(--water-ln);font-size:calc(11px * var(--fz,1));font-family:var(--f-body);font-weight:700}
 .s-ground{fill:var(--ground)} .s-bed{fill:var(--bed)} .s-line{fill:var(--mulch)} .s-grid{stroke:var(--grid)} .s-edge{fill:none;stroke:var(--muted);stroke-width:1.2}
 .s-side1{fill:var(--side1)} .s-side2{fill:var(--side2)}
 .s-dim{fill:var(--muted);font-size:calc(11px * var(--fz,1))}
@@ -1487,14 +1487,17 @@ function plan(){
 // ---------- plantio em volta de um lago: anéis concêntricos (linha de árvores, rua, canteiro, rua…) ----------
 function planLago(sel,A){
   const [L,W]=LW();const circ=isCirc();
-  const trees=sel.filter(isTree),meds=sel.filter(isMed);
+  // plantas de jardim de chuva e bordas úmidas (Pinheiro, 2017) vão para a beira do lago
+  const JC=new Set(BEIRA.find(b=>b[0]==='jc')[3].split(' ')),borda=sel.filter(s=>JC.has(s.id)&&!isTree(s));
+  const trees=sel.filter(isTree),meds=sel.filter(s=>isMed(s)&&!borda.includes(s));
   const BED=1.2,PATH=.4,LINE=.8,cx=A.cx,cy=A.cy;
   const inside=(x,y,m)=>circ?Math.hypot(x-L/2,y-L/2)<=L/2-m:(x>=m&&x<=L-m&&y>=m&&y<=W-m);
   const Rmax=circ?L/2:Math.hypot(Math.max(cx,L-cx),Math.max(cy,W-cy));
   const hasT=trees.length+meds.length>0;
   const rings=[];let r=A.R;
   const gap=Math.max(0,Math.min(A.dist,3));
-  if(gap>0){rings.push({t:'free',r0:r,r1:r+gap});r+=gap;}
+  if(borda.length){const bw=Math.max(gap,.8);rings.push({t:'borda',r0:r,r1:r+bw});r+=bw;rings.push({t:'path',r0:r,r1:r+PATH});r+=PATH;}
+  else if(gap>0){rings.push({t:'free',r0:r,r1:r+gap});r+=gap;}
   let next=hasT?'line':'bed';
   while(r<Rmax-.3){
     if(next==='line'){rings.push({t:'line',r0:r,r1:r+LINE});r+=LINE;next='bed';}
@@ -1503,7 +1506,7 @@ function planLago(sel,A){
   rings.forEach(g=>{g.h=g.r1-g.r0;});
   // anel com algum trecho dentro do terreno
   const usable=g=>{const rm=(g.r0+g.r1)/2;for(let i=0;i<72;i++){const a=i/72*Math.PI*2;if(inside(cx+Math.cos(a)*rm,cy+Math.sin(a)*rm,.3))return true;}return false;};
-  const RG=rings.filter(g=>g.t==='free'||g.t==='path'||usable(g));
+  const RG=rings.filter(g=>g.t==='free'||g.t==='path'||g.t==='borda'||usable(g));
   const lines=RG.filter(g=>g.t==='line'),beds=RG.filter(g=>g.t==='bed');
   const pts=[];const count={};
   const add=(s,x,y,kind,cell)=>{pts.push({s,x,y,kind,cell});count[s.id]=(count[s.id]||0)+1;};
@@ -1521,8 +1524,13 @@ function planLago(sel,A){
   });
   if(!trees.length&&meds.length)lines.forEach(ln=>{const rm=(ln.r0+ln.r1)/2,n=Math.max(3,Math.round(2*Math.PI*rm));let mi=0;
     for(let i=0;i<n;i++){const a=i/n*Math.PI*2,x=cx+Math.cos(a)*rm,y=cy+Math.sin(a)*rm;if(inside(x,y,.25))add(meds[mi++%meds.length],x,y,'med');}});
+  // borda do lago: fileiras circulares só com as plantas de borda úmida
+  RG.filter(g=>g.t==='borda').forEach(bd=>{const rowGap=Math.max(...borda.map(m=>m.el)),rows=Math.max(1,Math.floor(bd.h/rowGap+.001)),rr0=bd.r0+(bd.h-(rows-1)*rowGap)/2;
+    for(let ro=0;ro<rows;ro++){const rr=rows>1?rr0+ro*rowGap:(bd.r0+bd.r1)/2;let k=ro%borda.length,sArc=0;const end=2*Math.PI*rr;
+      while(sArc<end-.001){const m=borda[k%borda.length],nx=borda[(k+1)%borda.length],st=(m.ep+nx.ep)/2,a=sArc/rr+ro*.3,x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr;
+        if(inside(x,y,.1))add(m,x,y,'bed',Math.min(st,rowGap));sArc+=st;k++;}}});
   // canteiros: cada grupo de companheiras ocupa um setor do anel, em fileiras circulares
-  let bedSp=sel.filter(isBed);if(!lines.length)bedSp=bedSp.concat(meds);
+  let bedSp=sel.filter(s=>isBed(s)&&!borda.includes(s));if(!lines.length)bedSp=bedSp.concat(meds);
   let groups=[];const interc=[];
   if(beds.length&&bedSp.length){
     groups=makeGroups(bedSp);
@@ -1586,6 +1594,8 @@ function advice(p){
       const faixa=A.t==='rio'?`${app} m de cada margem para rios de ${A.real<10?'até 10 m':'mais de '+(A.real<50?10:A.real<200?50:A.real<600?200:600)+' m'} de largura`:'50 m em volta de nascentes e 30 m em volta de lagos naturais em área urbana';
       const dentro=A.t==='rio'?A.dist<app:A.dist<50;
       out.push({k:'',t:`Margem de curso d’água é Área de Preservação Permanente (APP) pelo Código Florestal: ${faixa}. Em cidades, o município pode definir outra faixa. ${dentro?`A ${fmt(A.dist)} m da água, seu terreno provavelmente está dentro dessa faixa: ali vale recompor a vegetação com nativas, sem cortar a mata existente nem fazer canteiros que deixem o solo exposto na beira.`:'Seu terreno parece estar fora dessa faixa, mas a parte mais perto da água continua sendo a mais importante para a proteção.'}`});
+      if(A.t==='lago'){const JC=BEIRA.find(b=>b[0]==='jc')[3].split(' ');const bj=sel.filter(s=>JC.includes(s.id));
+        out.push({k:'tip',t:bj.length?`${names(bj)} ${bj.length>1?'ficam':'fica'} na borda do lago, o anel mais perto da água: são plantas de jardim de chuva e bordas úmidas, que seguram a margem e filtram a enxurrada.`:'Para a borda do lago, o anel mais perto da água, escolha plantas de jardim de chuva e bordas úmidas: elas seguram a margem e filtram a enxurrada antes de chegar à água.',add:bj.length?[]:['canademacaco','falsairis','marantacinza','taioba'].filter(i=>!S.sel.includes(i))});}
       const z1=sel.filter(s=>BEIRA_Z1.has(s.id));
       out.push({k:'tip',t:z1.length?`${names(z1)} ${z1.length>1?'ficam':'fica'} na linha de árvores mais perto da água, onde o solo é mais úmido. Na beira, deixe o capim e as ervas nativas crescerem: eles freiam a enxurrada e seguram o barranco.`:'Perto da água, a linha de árvores mais próxima deve ter espécies que aguentam solo encharcado. Veja o grupo “Beira d’água e nascentes”.',add:z1.length?[]:['inga','salgueiro','embauba','guapuruvu'].filter(i=>!S.sel.includes(i))});
     }
@@ -1711,7 +1721,7 @@ function mtabSync(){const t=S.mtab||'espaco';document.body.dataset.mtab=t;
   document.querySelectorAll('#mtabs [data-mt]').forEach(b=>{if(b.dataset.mt===t)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
   const np=$('mt-np');if(np)np.textContent=S.sel.length?S.sel.length:'';
   const nw=$('mt-nw');if(nw)nw.textContent=document.querySelector('#out .cap-alert')?'!':'';}
-function stripList(p){const nm={bed:'Canteiro',path:'Rua',line:'Linha de árvores',free:'Beira livre'};const rot=planRot();
+function stripList(p){const nm={bed:'Canteiro',path:'Rua',line:'Linha de árvores',free:'Beira livre',borda:'Borda úmida'};const rot=planRot();
   if(p.rings)return `<div class="strips"><span class="strips-t">Anéis, do lago para fora</span><ol>${p.rings.map(st=>`<li class="st-${st.t}"><span>${nm[st.t]}</span><b>${cm_(st.h)}</b></li>`).join('')}</ol></div>`;
   return `<div class="strips"><span class="strips-t">Faixas ${rot?'da esquerda para a direita':'de cima para baixo'}</span><ol>${p.strips.map(st=>`<li class="st-${st.t}"><span>${nm[st.t]}</span><b>${cm_(st.h)}</b></li>`).join('')}</ol>${rot?'<p class="hint">No celular, o desenho aparece deitado para caber melhor na tela. A rosa dos ventos continua indicando o norte.</p>':''}</div>`;}
 function ringsPlan(p,K,L,W){
@@ -1719,7 +1729,7 @@ function ringsPlan(p,K,L,W){
   const circ=r=>`M${X(cx-r*K)},${X(cy)}a${X(r*K)},${X(r*K)} 0 1 0 ${X(2*r*K)},0a${X(r*K)},${X(r*K)} 0 1 0 ${X(-2*r*K)},0Z`;
   const ann=(g,cls,att)=>`<path ${cls} fill-rule="evenodd" d="${circ(g.r1-.02)}${circ(g.r0+.02)}"${att||''}/>`;
   let o=`<defs><clipPath id="pclip"><rect x="0" y="0" width="${X(L*K)}" height="${X(W*K)}"/></clipPath></defs><g clip-path="url(#pclip)">`;
-  p.rings.forEach(g=>{if(g.t==='bed')o+=ann(g,'class="s-bed"')+ann(g,'fill="url(#tx-soil)"');
+  p.rings.forEach(g=>{if(g.t==='bed'||g.t==='borda')o+=ann(g,`class="${g.t==='borda'?'s-borda':'s-bed'}"`)+ann(g,'fill="url(#tx-soil)"');
     else if(g.t==='line')o+=ann(g,'fill="url(#tx-mulch)"')+ann(g,'class="s-line"');
     else if(g.t==='free')o+=ann(g,'class="s-free"');});
   const r=A.R*K;
@@ -2044,7 +2054,7 @@ function draw3D(p,raio){
     const gpoly=circ?ringPts(L/2-.02,0):[iso(.02,.02,0),iso(L-.02,.02,0),iso(L-.02,W-.02,0),iso(.02,W-.02,0)];
     if(circ){const a=[];for(let i=0;i<72;i++){const t=i/72*Math.PI*2;a.push(iso(L/2+Math.cos(t)*(L/2-.02),L/2+Math.sin(t)*(L/2-.02),0));}gpoly.splice(0,gpoly.length,...a);}
     g+=`<clipPath id="gclip3"><polygon points="${P(gpoly)}"/></clipPath><g clip-path="url(#gclip3)">`;
-    p.rings.forEach(rg=>{if(rg.t==='path')return;const z=rg.t==='bed'?.08:.03;const d=dP(ringPts(rg.r1-.03,z))+dP(ringPts(rg.r0+.03,z));
+    p.rings.forEach(rg=>{if(rg.t==='path')return;if(rg.t==='borda')rg={...rg,t:'bed'};const z=rg.t==='bed'?.08:.03;const d=dP(ringPts(rg.r1-.03,z))+dP(ringPts(rg.r0+.03,z));
       if(rg.t==='free')g+=`<path class="s-free" fill-rule="evenodd" d="${d}"/>`;
       else g+=`<path class="${rg.t==='bed'?'s-bed':'s-line'}" fill-rule="evenodd" d="${d}"/><path fill="url(#${rg.t==='bed'?'tx-soil':'tx-mulch'})" fill-rule="evenodd" d="${d}"/>`;});
     g+=`<polygon class="s-water" points="${P(ringPts(L2.R,.01))}"/></g>`;
@@ -3133,7 +3143,7 @@ function update(fromInput){
       ${p.sel.length?`<div class="stats"><div class="stat"><b>${p.beds.length}</b><span>${p.beds.length===1?'canteiro':'canteiros'}</span></div><div class="stat"><b>${p.lines.length}</b><span>${p.lines.length===1?'linha de árvores':'linhas de árvores'}</span></div></div>`:''}
       ${p.sel.length?`<div class="zoom" role="group" aria-label="Tamanho do desenho"><button type="button" data-zoom="-1" aria-label="Diminuir desenho">−</button><span>${Math.round((S.zoom||1)*100)}%</span><button type="button" data-zoom="1" aria-label="Ampliar desenho">+</button></div><div class="drawing"${isMob()&&(S.zoom||1)>1?` style="--zw:${(S.zoom||1)*100}%"`:''}>${v3?draw3D(p):vr?draw3D(p,true):drawPlan(p)}</div>${!v3&&isMob()?stripList(p):''}`:emptyState("Escolha as plantas na lista ao lado: o app monta aqui o desenho do plantio, com as distâncias de cada uma.")}
       ${capAlert(p)}
-      ${p.sel.length?`<p class="hint">`:'<p class="hint" hidden>'}${p.rings?'Com o lago, o plantio forma anéis em volta da água: primeiro a beira livre, depois a linha de árvores (com as que aguentam solo encharcado), uma rua, um canteiro, outra rua e assim por diante até o limite do terreno. ':''}${vr?'Mesma posição da vista 3D, mas no lugar de cada planta aparece o círculo que ela ocupa no chão, com a sigla no centro (veja a legenda abaixo). Nas árvores, a linha tracejada mostra a área de cada uma na linha, metade da distância até a próxima árvore.':v3?'Alturas aproximadas das plantas adultas, na mesma escala do terreno. Cada árvore aparece com o formato típico da copa adulta (arredondada, ovalada, em guarda-chuva, cônica, em taça, aberta, de palmeira) e, quando é o caso, com flores ou frutos. Adubo verde, hortaliças e aromáticas aparecem com a forma, a largura e as flores ou frutos típicos: cabeça da alface, folhagem da cenoura, tomate no tutor, touceira da cebolinha, espigas da lavanda, guarda-chuva da mandioca e tapete do amendoim-forrageiro. Passe o dedo ou o mouse sobre uma planta para ver nome, altura e largura.':(p.rings?'Cada quadrado = 1 m². Nos canteiros, as plantas que cooperam ficam intercaladas na mesma fileira circular. Anéis de árvores com palha grossa; canteiros de 1,2 m com ruas de 40 cm.':'Cada quadrado = 1 m². Plantas que cooperam ficam intercaladas na mesma fileira, e as fileiras vizinhas ficam desencontradas. As cotas mostram, em um exemplo de cada planta, a distância ideal até a vizinha da mesma fileira (horizontal) e até a fileira seguinte (vertical). Canteiros de 1,2 m com corredores de 40 cm. Linhas de árvores (faixa escura) com palha grossa. Se puder, deixe as linhas no sentido norte–sul para os dois lados receberem sol.')+(p.rings?'':(p.lines.length>1&&p.sel.filter(isTree).length>1?' Cada linha de árvores mistura os estratos (alto e médio se repetem em todas as linhas) e os pares com cooperação documentada ficam juntos. As emergentes vão primeiro para as linhas do lado sul, embaixo no desenho: com as linhas no sentido leste–oeste, a sombra delas cai menos sobre os canteiros.':''))+''}</p>
+      ${p.sel.length?`<p class="hint">`:'<p class="hint" hidden>'}${p.rings?'Com o lago, o plantio forma anéis em volta da água: primeiro a borda úmida (com as plantas de jardim de chuva e bordas úmidas, se escolhidas; senão, capim), depois a linha de árvores (com as que aguentam solo encharcado), uma rua, um canteiro, outra rua e assim por diante até o limite do terreno. ':''}${vr?'Mesma posição da vista 3D, mas no lugar de cada planta aparece o círculo que ela ocupa no chão, com a sigla no centro (veja a legenda abaixo). Nas árvores, a linha tracejada mostra a área de cada uma na linha, metade da distância até a próxima árvore.':v3?'Alturas aproximadas das plantas adultas, na mesma escala do terreno. Cada árvore aparece com o formato típico da copa adulta (arredondada, ovalada, em guarda-chuva, cônica, em taça, aberta, de palmeira) e, quando é o caso, com flores ou frutos. Adubo verde, hortaliças e aromáticas aparecem com a forma, a largura e as flores ou frutos típicos: cabeça da alface, folhagem da cenoura, tomate no tutor, touceira da cebolinha, espigas da lavanda, guarda-chuva da mandioca e tapete do amendoim-forrageiro. Passe o dedo ou o mouse sobre uma planta para ver nome, altura e largura.':(p.rings?'Cada quadrado = 1 m². Nos canteiros, as plantas que cooperam ficam intercaladas na mesma fileira circular. Anéis de árvores com palha grossa; canteiros de 1,2 m com ruas de 40 cm.':'Cada quadrado = 1 m². Plantas que cooperam ficam intercaladas na mesma fileira, e as fileiras vizinhas ficam desencontradas. As cotas mostram, em um exemplo de cada planta, a distância ideal até a vizinha da mesma fileira (horizontal) e até a fileira seguinte (vertical). Canteiros de 1,2 m com corredores de 40 cm. Linhas de árvores (faixa escura) com palha grossa. Se puder, deixe as linhas no sentido norte–sul para os dois lados receberem sol.')+(p.rings?'':(p.lines.length>1&&p.sel.filter(isTree).length>1?' Cada linha de árvores mistura os estratos (alto e médio se repetem em todas as linhas) e os pares com cooperação documentada ficam juntos. As emergentes vão primeiro para as linhas do lado sul, embaixo no desenho: com as linhas no sentido leste–oeste, a sombra delas cai menos sobre os canteiros.':''))+''}</p>
       ${legend(p)}</section>`;
     h+=coopPanel(p);
   }else{
