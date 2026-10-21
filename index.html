@@ -139,6 +139,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .cats{gap:8px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{font:inherit;font-size:13.5px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:5px 11px 5px 8px;cursor:pointer}
+.ci-luz{font-weight:700}
 .chipinfo{margin:0;font-size:13.5px;background:var(--ci-bg);color:var(--ci-fg);border-radius:10px;padding:8px 14px;height:76px;box-sizing:border-box;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:3px;position:sticky;top:calc(env(safe-area-inset-top, 0px) + 8px);z-index:5;box-shadow:0 6px 16px rgba(60,40,20,.14)}
 .chipinfo b{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .ci-top{display:flex;align-items:center;gap:8px;min-width:0}
@@ -155,6 +156,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .chip[aria-pressed="true"]{background:var(--leaf-soft);border-color:var(--leaf);font-weight:700}
 .chip .x{color:var(--muted);font-weight:400;margin-left:2px}
 .chip.off{opacity:.62}
+.leg-off{pointer-events:none;flex:none;font-size:12px;padding:2px 8px;margin-right:2px}
 .og{font-family:var(--f-mono);font-size:10.5px;font-weight:500;border-radius:4px;padding:0 4px;line-height:16px;color:var(--surface);flex:none}
 .og-N,.og-E{background:var(--leaf)} .og-Z{background:var(--yel);color:var(--yel-ink)} .og-X{background:var(--pink);color:var(--pink-ink)}
 .ico{width:31px;height:22px;display:block}
@@ -640,6 +642,9 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
           <li><span class="sig" data-sig="B"></span>Baixo</li>
           <li><span class="sig" data-sig="R"></span>Rasteiro: cobre o chão</li>
         </ul>
+        <ul class="oleg" aria-label="Legenda de luz">
+          <li><span class="chip off leg-off">Planta</span>Botão mais apagado: a planta não combina com o sol do seu espaço. Pede mais sol do que ele recebe ou prefere sombra. Dá para escolher mesmo assim; passe o mouse para ver o motivo.</li>
+        </ul>
         </details>
         <div class="quick" id="quick"><span class="hint">Seleção rápida:</span>
           <button type="button" data-q="umido">Solo úmido</button>
@@ -1123,6 +1128,10 @@ const isMed=s=>!s.arv&&!s.bed&&(s.e==='M'||s.e==='A'||s.e==='E');
 const isBed=s=>!s.arv&&(s.e==='R'||s.e==='B'||s.bed);
 const hOf=s=>s.arv?Math.min(s.pt||6,10):(s.h||DEF_SP[s.e].h);
 const solTxt={P:'sol pleno',M:'meia-sombra',S:'sombra'};
+// por que o botão está apagado: a luz do espaço não combina com a da planta
+function luzMotivo(s){if(!s||s.sol.includes(S.sol))return '';
+  if(S.sol==='P')return `Prefere ${s.sol.includes('M')?'meia-sombra':'sombra'}: no seu espaço de sol pleno, plante à sombra de árvores ou arbustos maiores.`;
+  const RK={P:3,M:2,S:1};return RK[s.sol[0]]>RK[S.sol]?'Pede mais sol do que o seu espaço recebe: vai crescer, mas produz menos.':'Prefere mais sombra do que o seu espaço tem.';}
 const isCirc=()=>S.forma==='circ';
 const LW=()=>isCirc()?[S.D||4,S.D||4]:[S.L,S.W];
 // curso d'água ao lado do terreno: medidas reais (real, dist) e o tamanho desenhado, limitado para caber na figura
@@ -1174,7 +1183,8 @@ function showInfo(id){
   const s=BYID[id];if(!s)return;
   const luz=s.sol.split('').map(x=>solTxt[x]).join(' ou ');
   const det=`${s.sci?`<i>${esc(s.sci)}</i> · `:''}Estrato ${EST[s.e].toLowerCase()} · ${luz} · ${s.o?ORIG_TXT[s.o].toLowerCase():'origem não informada'}${s.msp?` · Manual de Arb. de SP, porte ${PORTE[s.msp]}`:''}${s.tox?' · tóxica se ingerida':''}`;
-  $('chipinfo').innerHTML=`<span class="ci-top">${sig(s.e)}${s.o?`<span class="ico-w">${ICON[s.o]}</span>`:''}<b>${esc(s.n)}</b></span><span class="ci-d">${det}</span>`;
+  const mot=luzMotivo(s);
+  $('chipinfo').innerHTML=`<span class="ci-top">${sig(s.e)}${s.o?`<span class="ico-w">${ICON[s.o]}</span>`:''}<b>${esc(s.n)}</b></span><span class="ci-d">${mot?`<b class="ci-luz">${esc(mot)}</b> `:''}${det}</span>`;
   $('chipinfo').title=det.replace(/<[^>]+>/g,'');
 }
 $('cats').addEventListener('mouseover',e=>{const b=e.target.closest('.chip');if(b)showInfo(b.dataset.id);});
@@ -1234,7 +1244,7 @@ function renderCats(){
     const chip=s=>{
       const on=S.sel.includes(s.id);
       const off=!s.sol.includes(S.sol);
-      return `<button type="button" class="chip${off?' off':''}" data-id="${s.id}" aria-pressed="${on}">${sig(s.e)}${esc(s.n)}${s.o?` <span class="ico-w" role="img" aria-label="${ORIG_TXT[s.o]}">${ICON[s.o]}</span>`:''}${s.custom?` <span class="x" data-rm="${s.id}" role="button" aria-label="Remover ${esc(s.n)}">×</span>`:''}</button>`;
+      return `<button type="button" class="chip${off?' off':''}" data-id="${s.id}" aria-pressed="${on}"${off?` title="${esc(luzMotivo(s))}"`:''}>${sig(s.e)}${esc(s.n)}${s.o?` <span class="ico-w" role="img" aria-label="${ORIG_TXT[s.o]}">${ICON[s.o]}</span>`:''}${s.custom?` <span class="x" data-rm="${s.id}" role="button" aria-label="Remover ${esc(s.n)}">×</span>`:''}</button>`;
     };
     const head=`<details class="cat${k==='w'?' cat-w':''}" data-k="${k}"${open?' open':''}><summary>${catIco(k)}<span class="cat-t">${lab}${k==='w'&&molhado?` <span class="cat-sub">${S.solo==='umido'?'bom para solo úmido':'bom para perto da água'}</span>`:''}</span><span class="cat-n">${nOn?`${nOn} de ${items.length}`:items.length}</span></summary>`;
     if(k==='w'){
