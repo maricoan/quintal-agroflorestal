@@ -187,6 +187,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .cc-t{text-align:left;font-size:12.5px;line-height:1.4;min-width:220px}
 .cc-both td{background:var(--leaf-soft)}
 .cat-parc{border-color:var(--pc-bd);background:var(--pc-bg)}
+.wz{padding:4px 0 2px}.wz+.wz{border-top:1px dashed var(--line);margin-top:6px;padding-top:8px}.wz-t{margin:0 0 6px;font-size:12.5px;color:var(--muted)}.wz-t b{color:var(--ink)}.wz-n{margin:8px 0 2px;font-size:12.5px;color:var(--muted)}.wz-n a{color:var(--leaf)}
 .cat-sub{font-weight:400;font-size:12px;color:var(--muted);margin-left:4px}
 .pc-list{list-style:none;margin:0;padding:0 12px 12px;display:flex;flex-direction:column;gap:8px}
 .pc{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 10px;display:flex;flex-direction:column;gap:5px;align-items:flex-start}
@@ -655,9 +656,9 @@ const MESES=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','
 function r(a,b){const o=[];let m=a;for(;;){o.push(m);if(m===b)break;m=m%12+1;}return o;}
 const ALL=r(1,12);
 const EST={E:'Emergente',A:'Alto',M:'Médio',B:'Baixo',R:'Rasteiro'};
-const CAT_ICO={p:'<circle cx="9" cy="9" r="1.8"/><circle cx="9" cy="4.6" r="2.6"/><circle cx="13.2" cy="7.6" r="2.6"/><circle cx="11.6" cy="12.8" r="2.6"/><circle cx="6.4" cy="12.8" r="2.6"/><circle cx="4.8" cy="7.6" r="2.6"/>',f:'<circle cx="9" cy="11" r="5"/><path d="M9 6 q2 -4 6 -3 q-1 4 -6 3"/>',a:'<path d="M9 16 V9 M9 11 q-5 0 -6 -5 q5 0 6 5 M9 9 q4 -1 5 -5 q-4 0 -5 5"/>',t:'<path d="M5 16 L13 3 M7.4 12.2 l-3 -.8 M9.2 9.3 l-3 -.8 M11 6.4 l-3 -.8 M8.3 13.8 l3 .8 M10.1 10.9 l3 .8 M11.9 8 l3 .8"/>',h:'<path d="M4 14 Q4 4 14 4 Q14 14 4 14 Z M4 14 L11 7"/>',g:'<circle cx="9" cy="7" r="5"/><path d="M9 12 V17 M6 17 h6"/>',x:'<path d="M9 4 v10 M4 9 h10"/>',parc:'<path d="M3 14 Q3 6 9 6 Q9 14 3 14Z M15 14 Q15 6 9 6 Q9 14 15 14Z"/>'};
+const CAT_ICO={w:'<path d="M9 2.5 C6.5 6.5 4.5 9 4.5 11.5 a4.5 4.5 0 0 0 9 0 C13.5 9 11.5 6.5 9 2.5 Z"/><path d="M7 12.5 q1 1.6 3 1.4"/>',p:'<circle cx="9" cy="9" r="1.8"/><circle cx="9" cy="4.6" r="2.6"/><circle cx="13.2" cy="7.6" r="2.6"/><circle cx="11.6" cy="12.8" r="2.6"/><circle cx="6.4" cy="12.8" r="2.6"/><circle cx="4.8" cy="7.6" r="2.6"/>',f:'<circle cx="9" cy="11" r="5"/><path d="M9 6 q2 -4 6 -3 q-1 4 -6 3"/>',a:'<path d="M9 16 V9 M9 11 q-5 0 -6 -5 q5 0 6 5 M9 9 q4 -1 5 -5 q-4 0 -5 5"/>',t:'<path d="M5 16 L13 3 M7.4 12.2 l-3 -.8 M9.2 9.3 l-3 -.8 M11 6.4 l-3 -.8 M8.3 13.8 l3 .8 M10.1 10.9 l3 .8 M11.9 8 l3 .8"/>',h:'<path d="M4 14 Q4 4 14 4 Q14 14 4 14 Z M4 14 L11 7"/>',g:'<circle cx="9" cy="7" r="5"/><path d="M9 12 V17 M6 17 h6"/>',x:'<path d="M9 4 v10 M4 9 h10"/>',parc:'<path d="M3 14 Q3 6 9 6 Q9 14 3 14Z M15 14 Q15 6 9 6 Q9 14 15 14Z"/>'};
 const catIco=k=>`<svg class="cat-ico" viewBox="0 0 18 18" aria-hidden="true">${CAT_ICO[k]||''}</svg>`;
-const CATS=[['f','Frutíferas'],['a','Adubo verde e biomassa'],['t','Aromáticas'],['h','Hortaliças'],['p','Flores para polinizadores'],['g','Grandes árvores'],['x','Minhas plantas']];
+const CATS=[['f','Frutíferas'],['a','Adubo verde e biomassa'],['t','Aromáticas'],['h','Hortaliças'],['p','Flores para polinizadores'],['w','Beira d’água e nascentes'],['g','Grandes árvores'],['x','Minhas plantas']];
 const REFS={
  E47:{n:1,t:'Embrapa Hortaliças. Recomendações técnicas para o cultivo de hortaliças em agricultura familiar. Circular Técnica 47, 2007.',u:'https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/781607/1/ct47.pdf'},
  EPA:{n:2,t:'Souza, M. B.; Martins, V. C. Hortas: recomendações para cultivo no estado do Pará. Embrapa Amazônia Oriental, 2024.',u:'https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1168224/1/CartilhaHortas.pdf'},
@@ -674,6 +675,7 @@ const REFS={
  L:{n:0,t:'Suas listas de boas companhias.'},
  C7:{n:12,t:'Anjos, J. L. et al. Adubação verde e produtividade de citrus em Sergipe. Embrapa Tabuleiros Costeiros, Comunicado Técnico 59, 2006.',u:'https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/372655/1/cot59.pdf'},
  C8:{n:13,t:'Miranda, E. M.; Pereira, R. C. A.; Bergo, C. L. Comportamento de seis linhagens de café em condições de sombreamento e a pleno sol no Acre. Ciência e Agrotecnologia 23(1), 1999.',u:'https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/492536/1/1249.pdf'},
+ MBP:{n:15,t:'Pinheiro, M. B. Plantas para Infraestrutura Verde e o papel da vegetação no tratamento das águas urbanas de São Paulo: identificação de critérios para seleção de espécies. Dissertação, FAU-USP, 2017.',u:'https://www.teses.usp.br/teses/disponiveis/16/16139/tde-24072017-104105/pt-br.php'},
  C9:{n:14,t:'Ushimaru, T. Influência do sombreamento sobre a fisiologia, crescimento e qualidade das mudas de juçara. Dissertação, UFV, 2021.',u:'https://locus.ufv.br//handle/123456789/29143'}
 };
 // el = entre linhas (m); ep = entre plantas (m); src = referência; sol = luz tolerada (P pleno, M meia-sombra, S sombra)
@@ -897,7 +899,32 @@ const DATA=[
  {id:'lixeira',n:'Lixeira',sci:'Aloysia virgata',a:'Lx',c:'p',e:'M',arv:1,el:4,ep:3,src:'PR',sol:'P',pl:r(10,3),col:'flores perfumadas em 1–2 anos; muito procurada por abelhas',d:0,v:60,pt:5},
  {id:'alamanda',n:'Alamanda',sci:'Allamanda cathartica',a:'Ld',c:'p',e:'M',el:1.5,ep:1.5,src:'PR',sol:'P',pl:r(9,3),col:'flores em 6 meses; abelhas',d:0,v:30,h:2.5,tox:1},
  {id:'ciposaojoao',n:'Cipó-de-são-joão',sci:'Pyrostegia venusta',a:'Sj',c:'p',e:'M',el:3,ep:3,src:'PR',sol:'P',pl:r(9,3),col:'floração laranja no inverno; beija-flores e abelhas; precisa de suporte',d:0,v:40,h:4},
- {id:'dipladenia',n:'Dipladênia',sci:'Mandevilla sanderi',a:'Dp',c:'p',e:'M',el:1,ep:1,src:'PR',sol:'P',pl:r(9,3),col:'flores em 4–6 meses; beija-flores e borboletas; precisa de suporte',d:0,v:15,h:2.5,tox:1}
+ {id:'dipladenia',n:'Dipladênia',sci:'Mandevilla sanderi',a:'Dp',c:'p',e:'M',el:1,ep:1,src:'PR',sol:'P',pl:r(9,3),col:'flores em 4–6 meses; beija-flores e borboletas; precisa de suporte',d:0,v:15,h:2.5,tox:1},
+ {id:'guapuruvu',n:"Guapuruvu",sci:'Schizolobium parahyba',a:null,c:'w',o:'N',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; pioneira de crescimento rápido; aguenta alagamento",d:0,v:0,pt:20},
+ {id:'salgueiro',n:"Salgueiro-chorão nativo",sci:'Salix humboldtiana',a:null,c:'w',o:'N',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; pioneira; firma o barranco e aguenta alagamento",d:0,v:0,pt:15},
+ {id:'mulungu',n:"Mulungu",sci:'Erythrina speciosa',a:null,c:'w',o:'N',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"flores vermelhas no inverno; beija-flores; aguenta solo encharcado",d:0,v:0,pt:5},
+ {id:'angico',n:"Angico",sci:'Parapiptadenia rigida',a:null,c:'w',o:'N',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; margem de rio; aguenta cheias rápidas, mas não solo sempre encharcado",d:0,v:0,pt:20},
+ {id:'sapucaia',n:"Sapucaia",sci:'Lecythis pisonis',a:null,c:'w',o:'N',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"castanhas comestíveis; flores rosadas na primavera",d:0,v:0,pt:25},
+ {id:'jenipapo',n:"Jenipapo",sci:'Genipa americana',a:null,c:'w',o:'N',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"frutos para doces e licores; atrai fauna",d:0,v:0,pt:12},
+ {id:'peitodepombo',n:"Peito-de-pombo (tapirira)",sci:'Tapirira guianensis',a:null,c:'w',o:'N',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; gosta de beira de córrego; atrai aves",d:0,v:0,pt:20},
+ {id:'pindaiba',n:"Pindaíba",sci:'Duguetia lanceolata',a:null,c:'w',o:'N',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"sem colheita; várzeas e margens de rio",d:0,v:0,pt:18},
+ {id:'urundeuva',n:"Aroeira-verdadeira",sci:'Myracrodruon urundeuva',a:null,c:'w',o:'N',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; prefere encosta, rara em baixada encharcada",d:0,v:0,pt:20},
+ {id:'fedegoso',n:"Fedegoso-gigante",sci:'Senna alata',a:null,c:'w',o:'N',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"cachos amarelos; pioneira de crescimento rápido",d:0,v:0,pt:5},
+ {id:'cafezinho',n:"Cafezinho (pau-ervilha)",sci:'Trichilia elegans',a:null,c:'w',o:'N',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'MS',pl:r(10,3),col:"sub-bosque; atrai aves",d:0,v:0,pt:6},
+ {id:'goiabeiramato',n:"Goiabeira-do-mato",sci:'Eugenia hiemalis',a:null,c:'w',o:'N',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"frutinhos para aves; flores para abelhas",d:0,v:0,pt:9},
+ {id:'limaobravo',n:"Limão-bravo (capitu)",sci:'Siparuna guianensis',a:null,c:'w',o:'N',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'MS',pl:r(10,3),col:"sub-bosque; tolera sombra",d:0,v:0,pt:7},
+ {id:'paineira',n:"Paineira",sci:'Ceiba speciosa',a:null,c:'w',o:'N',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"flores rosadas no outono; pioneira",d:0,v:0,pt:25},
+ {id:'figueirabranca',n:"Figueira-branca",sci:'Ficus guaranitica',a:null,c:'w',o:'N',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"frutos para aves e morcegos; pioneira",d:0,v:0,pt:20},
+ {id:'canafistulaf',n:"Canafístula (Cassia ferruginea)",sci:'Cassia ferruginea',a:null,c:'w',o:'N',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"cachos amarelos; pioneira",d:0,v:0,pt:12},
+ {id:'amendoinzeiro',n:"Amendoinzeiro",sci:'Pterogyne nitens',a:null,c:'w',o:'N',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; pioneira, boa para revegetar",d:0,v:0,pt:12},
+ {id:'embira',n:"Embira-de-sapo (timbó)",sci:'Dahlstedtia muehlbergiana',a:null,c:'w',o:'N',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; flores para abelhas",d:0,v:0,pt:20},
+ {id:'canelabatalha',n:"Canela-batalha",sci:'Cryptocarya moschata',a:null,c:'w',o:'N',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"sem colheita; frutos para aves",d:0,v:0,pt:20},
+ {id:'canelaocotea',n:"Canela (Ocotea elegans)",sci:'Ocotea elegans',a:null,c:'w',o:'N',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"sem colheita; frutos para aves",d:0,v:0,pt:20},
+ {id:'gabirobaarvore',n:"Gabiroba-árvore",sci:'Campomanesia guazumifolia',a:null,c:'w',o:'N',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:"frutos comestíveis; atrai aves",d:0,v:0,pt:15},
+ {id:'cambui',n:"Cambuí",sci:'Myrcia tomentosa',a:null,c:'w',o:'N',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"frutinhos para aves; flores para abelhas",d:0,v:0,pt:8},
+ {id:'paudalho',n:"Pau-d'alho",sci:'Gallesia integrifolia',a:null,c:'w',o:'N',e:'E',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:"sem colheita; pioneira; folhas com cheiro de alho",d:0,v:0,pt:20},
+ {id:'canademacaco',n:'Cana-de-macaco',sci:'Costus spiralis',a:null,c:'w',o:'N',e:'B',el:.6,ep:.6,src:'PR',sol:'PM',pl:r(9,3),col:'flores vermelhas; beija-flores; gosta de solo úmido',d:0,v:20,h:1.5},
+ {id:'marantacinza',n:'Maranta-cinza',sci:'Ctenanthe setosa',a:null,c:'w',o:'N',e:'B',el:.5,ep:.5,src:'PR',sol:'MS',pl:r(9,3),col:'folhagem perene; aguenta sombra e solo encharcado',d:0,v:15,h:.8}
 ];
 const VIELA=['pitanga','grumixama','orapronobis','cereja','cabeludinha','castanha','dedaleira','candeia','assapeixe','lantana','canaindia','maravilha','amendoim'];
 // Solos mais úmidos: ciclo e boas companhias
@@ -1025,7 +1052,14 @@ const ORIG={N:'chanana gervao oficialsala perpetua vedelia arnicacampo ruelia fa
  Z:'margaridao capimsanto guandu maravilha mamao cafe',
  E:'dipladenia amendoim cambuci jabuticaba grumixama cabeludinha'};
 // plantas que aparecem também em um segundo grupo
-const GRUPO_EXTRA={p:['margaridao']};
+const GRUPO_EXTRA={p:['margaridao'],w:['inga','embauba','jucara','urucum','patadevaca','a_cedrelafissilis','a_cabraleacanjerana','a_handroanthusimpetiginosus','a_handroanthusochraceus','a_zeyheriatuberculosa','a_nectandramegapotamica','falsairis','vedelia','alamanda','heliconia']};
+// Beira d'água e nascentes (Pinheiro, 2017): zonas da faixa de proteção na margem e plantas para recompor mata ciliar
+const BEIRA=[
+ ['z1','Beira da água','solo encharcado ou que alaga (zonas 1 e 2)','inga embauba jucara urucum guapuruvu salgueiro mulungu'],
+ ['z3','Faixa de cima','recebe a enxurrada; solo sem excesso de água (zona 3)','patadevaca a_cedrelafissilis a_cabraleacanjerana angico sapucaia'],
+ ['mc','Mata ciliar e nascentes','árvores para recompor a mata da margem e cobrir nascentes','jenipapo peitodepombo pindaiba urundeuva fedegoso cafezinho goiabeiramato limaobravo paineira figueirabranca canafistulaf amendoinzeiro embira canelabatalha canelaocotea gabirobaarvore cambui paudalho a_handroanthusimpetiginosus a_handroanthusochraceus a_zeyheriatuberculosa a_nectandramegapotamica'],
+ ['jc','Jardim de chuva e bordas úmidas','herbáceas e arbustos que seguram e filtram a enxurrada','falsairis vedelia alamanda heliconia canademacaco marantacinza']];
+const BEIRA_Z1=new Set(BEIRA[0][3].split(' '));
 const ORIG_TXT={N:'Nativa',Z:'Naturalizada',E:'Endêmica',X:'Exótica cultivada'};
 const PORTE={P:'pequeno',M:'médio',G:'grande'};
 const SIG_N={R:1,B:2,M:3,A:4,E:5};
@@ -1160,18 +1194,30 @@ function renderCats(){
   const q=$('busca').value.trim().toLowerCase();
   const all=DATA.concat(S.custom);
   let h='';
+  let wHtml='';
   CATS.forEach(([k,lab])=>{
     const items=all.filter(s=>(s.c===k||(GRUPO_EXTRA[k]||[]).includes(s.id))&&(!q||s.n.toLowerCase().includes(q)));
     if(!items.length)return;
     items.sort((a,b)=>a.n.localeCompare(b.n,'pt'));
     const nOn=items.filter(s=>S.sel.includes(s.id)).length;
-    const open=!!q||!!(S.openCats||{})[k];
-    h+=`<details class="cat" data-k="${k}"${open?' open':''}><summary>${catIco(k)}<span class="cat-t">${lab}</span><span class="cat-n">${nOn?`${nOn} de ${items.length}`:items.length}</span></summary><div class="chips">`+items.map(s=>{
+    const oc=(S.openCats||{})[k];
+    const open=!!q||!!oc||(k==='w'&&S.solo==='umido'&&oc!==false);
+    const chip=s=>{
       const on=S.sel.includes(s.id);
       const off=!s.sol.includes(S.sol);
       return `<button type="button" class="chip${off?' off':''}" data-id="${s.id}" aria-pressed="${on}">${sig(s.e)}${esc(s.n)}${s.o?` <span class="ico-w" role="img" aria-label="${ORIG_TXT[s.o]}">${ICON[s.o]}</span>`:''}${s.custom?` <span class="x" data-rm="${s.id}" role="button" aria-label="Remover ${esc(s.n)}">×</span>`:''}</button>`;
-    }).join('')+`</div></details>`;
+    };
+    const head=`<details class="cat${k==='w'?' cat-w':''}" data-k="${k}"${open?' open':''}><summary>${catIco(k)}<span class="cat-t">${lab}${k==='w'&&S.solo==='umido'?' <span class="cat-sub">bom para solo úmido</span>':''}</span><span class="cat-n">${nOn?`${nOn} de ${items.length}`:items.length}</span></summary>`;
+    if(k==='w'){
+      const R=REFS.MBP;let b='';
+      BEIRA.forEach(([z,t,sub,ids])=>{const L=ids.split(' ');const its=items.filter(s=>L.includes(s.id));if(!its.length)return;
+        b+=`<div class="wz"><p class="wz-t"><b>${t}</b> · ${sub}</p><div class="chips">${its.map(chip).join('')}</div></div>`;});
+      b+=`<p class="wz-n">Para lagos e alagados, que não entram no desenho: taboa, alface-d’água e pinheirinho-d’água. Perto do olho d’água, prefira nativas que não gastam muita água. Fonte: <a href="${R.u}" target="_blank" rel="noopener">Pinheiro, 2017</a>.</p>`;
+      wHtml=head+b+`</details>`;return;}
+    h+=head+`<div class="chips">`+items.map(chip).join('')+`</div></details>`;
   });
+  // Beira d'água: no topo quando o solo é úmido, senão logo depois de Flores para polinizadores
+  if(wHtml){if(S.solo==='umido')h=wHtml+h;else{const i=h.indexOf('<details class="cat" data-k="g"');h=i>=0?h.slice(0,i)+wHtml+h.slice(i):h+wHtml;}}
   // Parceiras fica no topo da lista
   const hCats=h;h='';
   {const cons=consorcios().filter(c=>!q||c.sp.some(i=>BYID[i]&&BYID[i].n.toLowerCase().includes(q)));
@@ -1398,7 +1444,10 @@ function advice(p){
   const out=[];const sel=p.sel;const area=areaM2();
   const has=f=>sel.some(f);
   const names=a=>a.map(s=>s.n).join(', ');
-  const fracos=sel.filter(s=>!s.sol.includes(S.sol));
+  // plantas de sombra num espaço de sol pleno: pedem proteção, não mais luz
+  const sombra=S.sol==='P'?sel.filter(s=>!s.sol.includes('P')):[];
+  if(sombra.length)out.push({k:'',t:`${names(sombra)} ${sombra.length>1?'preferem':'prefere'} meia-sombra. Com sol pleno, plante à sombra de árvores ou arbustos maiores, do lado sul deles.`});
+  const fracos=sel.filter(s=>!s.sol.includes(S.sol)&&!sombra.includes(s));
   if(fracos.length){
     const forte=S.sol==='S';
     out.push({k:forte?'warn':'',t:`${names(fracos)} ${fracos.length>1?'pedem':'pede'} mais luz do que o espaço recebe. ${forte?'Com menos de 3 h de sol, a produção fica muito baixa.':'Vão crescer, mas produzem menos.'}`,
@@ -1421,11 +1470,11 @@ function advice(p){
   }
   if(S.solo==='umido'){
     const secas=sel.filter(s=>(SECO[s.id]&&!UMIDO[s.id])||s.id==='dyckia');
-    out.push({k:'tip',t:'Com solo úmido, prefira as plantas do grupo “Solos mais úmidos”. Se a água ficar parada por muitos dias, plante em montinhos (camalhões).',add:['jucara','taioba','heliconia','inga','cara'].filter(i=>!S.sel.includes(i))});
+    out.push({k:'tip',t:'Com solo úmido, veja o grupo “Beira d’água e nascentes”: ele separa as plantas pela parte da margem em que cada uma vive. Se a água ficar parada por muitos dias, plante as outras em montinhos (camalhões).',add:['jucara','taioba','heliconia','inga','cara'].filter(i=>!S.sel.includes(i))});
     if(secas.length)out.push({k:'warn',t:`${names(secas)} ${secas.length>1?'preferem':'prefere'} solo que drena bem. Plante em camalhão alto ou na parte mais seca do terreno.`});
   }
   if(S.solo==='seco'){
-    const molhadas=sel.filter(s=>UMIDO[s.id]&&!SECO[s.id]);
+    const molhadas=sel.filter(s=>(UMIDO[s.id]&&!SECO[s.id])||(BEIRA_Z1.has(s.id)&&!UMIDO[s.id]));
     out.push({k:'tip',t:'Com solo seco ou pedregoso, prefira as plantas da seleção rápida “Solo seco ou pedregoso”.',add:['feijaoporco','candeia','assapeixe','carqueja','gabiroba'].filter(i=>!S.sel.includes(i))});
     if(molhadas.length)out.push({k:'warn',t:`${names(molhadas)} ${molhadas.length>1?'preferem':'prefere'} umidade constante. Em solo seco, plante só onde der para regar ou na parte mais baixa e úmida do terreno.`});
   }
@@ -1629,7 +1678,7 @@ const CROWN_TXT={round:'arredondada',oval:'ovalada',umbrella:'em guarda-chuva',c
 const CROWN_D={round:.8,oval:.55,umbrella:1.1,conical:.5,vase:.8,open:.75,candelabro:.65,palm:.55,banana:.6,papaya:.4,allspice:.75,citrus:.9,bush:.95,psidium:.9,dome:1,coffee:.7,jabuti:.9};
 const CROWN_MAX={allspice:4.5,citrus:3.5,bush:3.5,psidium:4.5,dome:8,coffee:2,jabuti:5,round:6,oval:5,umbrella:6,conical:3,vase:4,open:5,candelabro:4,palm:3.5,banana:2.6,papaya:1.8};
 const TREEFORM={a_pimentadioica:{f:'allspice'},lixeira:{f:'oval',fl:'fl-w'},banana:{f:'banana'},mamao:{f:'papaya'},jucara:{f:'palm',fr:'fr-p'},guariroba:{f:'palm'},embauba:{f:'candelabro'},jabuticaba:{f:'jabuti',trunkfr:1},pitanga:{f:'bush',fr:'fl-r'},araca:{f:'psidium',fr:'fl-y'},acerola:{f:'bush',fr:'fl-r'},limao:{f:'citrus',fr:'fl-y'},mexerica:{f:'citrus',fr:'fr-o'},nespera:{f:'round',fr:'fr-o'},cafe:{f:'coffee',fr:'fl-r'},cambuci:{f:'round',fr:'fl-y'},grumixama:{f:'oval',fr:'fr-p'},uvaia:{f:'oval',fr:'fl-y'},cereja:{f:'oval',fr:'fl-r'},cabeludinha:{f:'bush',fr:'fl-y'},castanha:{f:'oval'},dedaleira:{f:'oval'},candeia:{f:'open',fl:'fl-w'},sangra:{f:'round'},crindiuva:{f:'umbrella'},patadevaca:{f:'vase',fl:'fl-w'},aroeira:{f:'round',fr:'fl-r'},inga:{f:'umbrella'},abacate:{f:'round'},goiaba:{f:'psidium',fr:'fl-y'},manga:{f:'dome',fr:'fr-o'},caqui:{f:'oval',fr:'fr-o'},espinheira:{f:'round'},urucum:{f:'round',fr:'fl-r'}};
-const GENFORM=[[/^(Handroanthus|Tabebuia|Zeyheria|Cybistax)/,'open'],[/^(Inga|Poincianella|Libidibia|Peltophorum|Tipuana|Albizia|Samanea|Jacaranda|Machaerium|Dalbergia|Platypodium|Pterocarpus|Holocalyx|Myrocarpus|Myroxylon|Lonchocarpus|Bowdichia|Pterodon|Andira|Ormosia|Tachigali|Copaifera|Cariniana|Cassia|Poecilanthe)/,'umbrella'],[/^(Calophyllum|Lophanthera|Michelia)/,'conical'],[/^Pimenta/,'oval'],[/^(Lagerstroemia|Bauhinia|Dictyoloma)/,'vase'],[/^(Eugenia|Plinia|Psidium|Myrcia|Myrcianthes|Campomanesia|Pouteria|Tibouchina|Allophylus|Casearia|Erythroxylum|Licania|Sapindus|Koelreuteria)/,'round']];
+const GENFORM=[[/^(Schizolobium|Parapiptadenia|Pterogyne|Dahlstedtia|Erythrina|Ceiba|Senna)/,'umbrella'],[/^(Lecythis|Ficus)/,'dome'],[/^(Handroanthus|Tabebuia|Zeyheria|Cybistax)/,'open'],[/^(Inga|Poincianella|Libidibia|Peltophorum|Tipuana|Albizia|Samanea|Jacaranda|Machaerium|Dalbergia|Platypodium|Pterocarpus|Holocalyx|Myrocarpus|Myroxylon|Lonchocarpus|Bowdichia|Pterodon|Andira|Ormosia|Tachigali|Copaifera|Cariniana|Cassia|Poecilanthe)/,'umbrella'],[/^(Calophyllum|Lophanthera|Michelia)/,'conical'],[/^Pimenta/,'oval'],[/^(Lagerstroemia|Bauhinia|Dictyoloma)/,'vase'],[/^(Eugenia|Plinia|Psidium|Myrcia|Myrcianthes|Campomanesia|Pouteria|Tibouchina|Allophylus|Casearia|Erythroxylum|Licania|Sapindus|Koelreuteria)/,'round']];
 const GENFL=[[/^Handroanthus (chrysotrichus|umbellatus|albus|ochraceus|vellosoi)|^(Zeyheria|Poincianella|Peltophorum|Tipuana|Pterocarpus|Cassia|Vochysia|Lophanthera|Koelreuteria|Michelia|Libidibia)/,'fl','fl-y'],[/^Handroanthus (heptaphyllus|impetiginosus)|^(Jacaranda|Tibouchina|Bowdichia|Pterodon|Lagerstroemia|Bauhinia blakeana|Bauhinia purpurea)/,'fl','fr-p'],[/^(Physocalymma)/,'fl','fl-r'],[/^(Tabebuia roseoalba|Bauhinia variegata|Bauhinia longifolia|Citharexylum)/,'fl','fl-w'],[/^(Campomanesia|Myrcianthes|Plinia|Pouteria|Eugenia dysenterica)/,'fr','fl-y'],[/^(Pimenta)/,'fr','fr-p']];
 // tom natural da folhagem (1 verde-escuro brilhante, 2 oliva, 3 verde-azulado, 4 verde-vivo) e fruto de cada árvore [classe, tamanho]
 const FOLT={limao:1,mexerica:1,manga:1,abacate:1,jabuticaba:1,a_pimentadioica:1,grumixama:1,a_myrcianthespungens:3,goiaba:2,araca:2,caqui:2,cagaita:2,a_eugeniadysenterica:2,nespera:3,a_pouteriatorta:3,pitanga:4,acerola:4,cereja:4,uvaia:4,cambuci:4,cabeludinha:4,a_pliniaedulis:4,a_campomanesiaxanthocarpa:4};
@@ -1781,7 +1830,7 @@ function herbSVG(f,s,cx,base,w,h,opt,key){
   return o;
 }
 // forma e largura real (m) das plantas de adubo verde e biomassa
-const FORM={peixinho:['rosette',.3],tuna:['cactus',.8],gabiroba:['herb',.8,{fr:['fl-y',6,'top']}],chanana:['mint',.4,{fr:['fl-y',6,'top']}],gervao:['lavender',.6,{spike:'fr-p'}],oficialsala:['herb',.5,{fr:['fl-r',8,'top']}],perpetua:['herb',.4,{fr:['fr-p',8,'top']}],vedelia:['mint',.5,{fr:['fl-y',6,'top']}],arnicacampo:['herb',.4,{fr:['fr-p',3,'top']}],ruelia:['fruitshrub',.3,{fruit:['fl-r','chili',6]}],falsairis:['spiky',.5,{fr:['fr-p',3,'top']}],salviavermelha:['lavender',.4,{spike:'fl-r'}],salviaazul:['lavender',.6,{spike:'fr-p'}],esponjinha:['herb',1.5,{fr:['fl-r',8,'top']}],jacobinia:['herb',.8,{big:1,fr:['fl-pk',8,'top']}],alamanda:['herb',1.5,{big:1,fr:['fl-y',6,'top']}],ciposaojoao:['trellis',1.4,{fr:['fr-o',8,'top']}],dipladenia:['trellis',1,{fr:['fl-r',5,'top']}],guandu:['herb',1.1,{fr:['fl-y',6,'top']}],margaridao:['herb',1.5,{big:1,daisy:1,fr:['fl-y',6,'top']}],assapeixe:['herb',1.6,{big:1,fr:['fl-w',8,'top']}],maravilha:['herb',.8,{fr:['fl-pk',6,'top']}],feijaoporco:['fruitshrub',.7,{big:1,fruit:['pl-3','long',4]}],feijaocorda:['groundvine',.8,{fruit:'pl-3'}],begonia:['rosette',.35,{fl:'fl-pk'}],mandioca:['cassava',1.1],crotalaria:['herb',.35,{fr:['fl-y',5,'top']}],canaacucar:['cane',.6],canaindia:['leafy',.7],heliconia:['leafy',.9],amendoim:['mint',.5,{fr:['fl-y',6,'top']}],samambaia:['frond',.7],dyckia:['spiky',.45,{stalk:1}],
+const FORM={canademacaco:['stalkleaves',.6],marantacinza:['leafy',.55],peixinho:['rosette',.3],tuna:['cactus',.8],gabiroba:['herb',.8,{fr:['fl-y',6,'top']}],chanana:['mint',.4,{fr:['fl-y',6,'top']}],gervao:['lavender',.6,{spike:'fr-p'}],oficialsala:['herb',.5,{fr:['fl-r',8,'top']}],perpetua:['herb',.4,{fr:['fr-p',8,'top']}],vedelia:['mint',.5,{fr:['fl-y',6,'top']}],arnicacampo:['herb',.4,{fr:['fr-p',3,'top']}],ruelia:['fruitshrub',.3,{fruit:['fl-r','chili',6]}],falsairis:['spiky',.5,{fr:['fr-p',3,'top']}],salviavermelha:['lavender',.4,{spike:'fl-r'}],salviaazul:['lavender',.6,{spike:'fr-p'}],esponjinha:['herb',1.5,{fr:['fl-r',8,'top']}],jacobinia:['herb',.8,{big:1,fr:['fl-pk',8,'top']}],alamanda:['herb',1.5,{big:1,fr:['fl-y',6,'top']}],ciposaojoao:['trellis',1.4,{fr:['fr-o',8,'top']}],dipladenia:['trellis',1,{fr:['fl-r',5,'top']}],guandu:['herb',1.1,{fr:['fl-y',6,'top']}],margaridao:['herb',1.5,{big:1,daisy:1,fr:['fl-y',6,'top']}],assapeixe:['herb',1.6,{big:1,fr:['fl-w',8,'top']}],maravilha:['herb',.8,{fr:['fl-pk',6,'top']}],feijaoporco:['fruitshrub',.7,{big:1,fruit:['pl-3','long',4]}],feijaocorda:['groundvine',.8,{fruit:'pl-3'}],begonia:['rosette',.35,{fl:'fl-pk'}],mandioca:['cassava',1.1],crotalaria:['herb',.35,{fr:['fl-y',5,'top']}],canaacucar:['cane',.6],canaindia:['leafy',.7],heliconia:['leafy',.9],amendoim:['mint',.5,{fr:['fl-y',6,'top']}],samambaia:['frond',.7],dyckia:['spiky',.45,{stalk:1}],
  // hortaliças
  alface:['lettuce',.28],rucula:['tuft',.18],cenoura:['feather',.12,{fr:['fr-o',1,'ground']}],beterraba:['tuft',.2,{fr:['fl-r',1,'ground']}],couve:['kale',.55],tomate:['tomato',.55],berinjela:['fruitshrub',.6,{big:1,fruit:['fr-p','long',3]}],pimenta:['fruitshrub',.5,{fruit:['fl-r','chili',8]}],quiabo:['stalkleaves',.5,{fr:['fl-y',2,'top']}],feijao:['tripod',.6],abobora:['groundvine',2,{big:1,flower:1,fruit:'fr-o'}],batatadoce:['groundvine',.7],milho:['cane',.35,{tassel:1}],taioba:['elephant',.8],cara:['trellis',.45,{nofl:1}],orapronobis:['trellis',1.1],
  // aromáticas
@@ -2564,7 +2613,7 @@ function potDims(it){
 }
 const rankOf=it=>Math.min(...it.sp.map(s=>s.arv?0:({E:0,A:0,M:1,B:2,R:3})[s.e]));
 // altura mínima e máxima (cm) que cada planta costuma alcançar em vaso
-const POTH={peixinho:[20,40],chanana:[20,40],gervao:[40,100],oficialsala:[40,90],perpetua:[30,60],vedelia:[15,30],arnicacampo:[40,100],ruelia:[20,40],falsairis:[40,80],salviavermelha:[30,80],salviaazul:[60,150],esponjinha:[100,200],jacobinia:[60,150],lixeira:[150,300],alamanda:[100,250],ciposaojoao:[200,400],dipladenia:[100,300],maracuja:[200,400],manjericao:[30,60],cebolinha:[20,40],salsinha:[20,30],hortela:[20,40],alecrim:[40,100],capimsanto:[60,120],carqueja:[30,80],macela:[30,60],alecrimcampo:[100,200],lantana:[50,120],boldo:[60,120],boldinho:[20,40],cidreira:[60,150],hibisco:[100,200],lavanda:[30,60],guaco:[150,300],pariparoba:[60,150],alecrimpimenta:[60,150],cipoalho:[150,300],mastruz:[40,100],alfavacacravo:[60,150],baleeira:[100,200],espinheira:[100,250],urucum:[150,300],
+const POTH={canademacaco:[40,80],marantacinza:[30,50],peixinho:[20,40],chanana:[20,40],gervao:[40,100],oficialsala:[40,90],perpetua:[30,60],vedelia:[15,30],arnicacampo:[40,100],ruelia:[20,40],falsairis:[40,80],salviavermelha:[30,80],salviaazul:[60,150],esponjinha:[100,200],jacobinia:[60,150],lixeira:[150,300],alamanda:[100,250],ciposaojoao:[200,400],dipladenia:[100,300],maracuja:[200,400],manjericao:[30,60],cebolinha:[20,40],salsinha:[20,30],hortela:[20,40],alecrim:[40,100],capimsanto:[60,120],carqueja:[30,80],macela:[30,60],alecrimcampo:[100,200],lantana:[50,120],boldo:[60,120],boldinho:[20,40],cidreira:[60,150],hibisco:[100,200],lavanda:[30,60],guaco:[150,300],pariparoba:[60,150],alecrimpimenta:[60,150],cipoalho:[150,300],mastruz:[40,100],alfavacacravo:[60,150],baleeira:[100,200],espinheira:[100,250],urucum:[150,300],
  alface:[15,30],rucula:[20,40],cenoura:[20,40],beterraba:[25,40],couve:[50,100],tomate:[100,180],berinjela:[60,120],pimenta:[40,80],quiabo:[100,180],batatadoce:[20,40],taioba:[60,120],orapronobis:[100,200],majorgomes:[30,60],cariru:[30,60],jambu:[20,40],mangarito:[30,50],araruta:[60,120],coentropara:[15,30],physalis:[50,100],jurubeba:[100,200],mandioca:[150,250],caruru:[40,100],
  begonia:[20,40],samambaia:[30,60],canaindia:[80,150],heliconia:[80,150],dyckia:[20,40],amendoim:[10,20],maravilha:[50,100],assapeixe:[100,200],
  acerola:[150,250],limao:[150,250],mexerica:[150,250],pitanga:[150,250],araca:[150,250],jabuticaba:[150,250],goiaba:[150,250],cafe:[100,200],cereja:[150,250],cabeludinha:[150,200],nespera:[150,250],caqui:[150,250],abacaxi:[60,100]};
