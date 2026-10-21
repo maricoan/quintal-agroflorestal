@@ -1245,8 +1245,8 @@ function renderCats(){
       wHtml=head+b+`</details>`;return;}
     h+=head+`<div class="chips">`+items.map(chip).join('')+`</div></details>`;
   });
-  // Beira d'água: no topo quando o solo é úmido, senão logo depois de Flores para polinizadores
-  if(wHtml){if(S.solo==='umido'||(S.modo!=='vaso'&&(S.curso==='rio'||S.curso==='lago')))h=wHtml+h;else{const i=h.indexOf('<details class="cat" data-k="g"');h=i>=0?h.slice(0,i)+wHtml+h.slice(i):h+wHtml;}}
+  // Beira d'água vem logo depois de Grandes árvores
+  if(wHtml){const i=h.indexOf('<details class="cat" data-k="x"');h=i>=0?h.slice(0,i)+wHtml+h.slice(i):h+wHtml;}
   // Parceiras fica no topo da lista
   const hCats=h;h='';
   {const cons=consorcios().filter(c=>!q||c.sp.some(i=>BYID[i]&&BYID[i].n.toLowerCase().includes(q)));
