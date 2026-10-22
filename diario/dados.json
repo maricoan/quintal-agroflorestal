@@ -1,5 +1,5 @@
 {
- "atualizado": "20/10/2026",
+ "atualizado": "21/10/2026",
  "entradas": [
   {
    "area": "a1",
@@ -85,6 +85,48 @@
    "tipo": "observacao",
    "titulo": "Antes do plantio",
    "_id": "antes-a6"
+  },
+  {
+   "area": "a5",
+   "criado": 1792634000005,
+   "data": "2026-10-21",
+   "especies": [],
+   "fotos": [
+    "1a84bc3f725f5ece5ea035f0568b9487",
+    "ea3e9dda112e52c3a20b39d7a622d609"
+   ],
+   "texto": "A faixa ao longo do muro já plantada, com as mudas novas e a borda de manilhas separando o canteiro do caminho.",
+   "tipo": "observacao",
+   "titulo": "Canteiro de aromáticas plantado",
+   "_id": "depois-a5-20261021"
+  },
+  {
+   "area": "a6",
+   "criado": 1792634000006,
+   "data": "2026-10-21",
+   "especies": [],
+   "fotos": [
+    "f9f61f199e5000fe7a237bbc86c9c201"
+   ],
+   "texto": "O canto do cano branco já plantado, com a pitangueira tutorada e o chão coberto de palha de bananeira.",
+   "tipo": "observacao",
+   "titulo": "Área 6 plantada",
+   "_id": "depois-a6-20261021"
+  },
+  {
+   "area": "a7",
+   "criado": 1792634000007,
+   "data": "2026-10-21",
+   "especies": [],
+   "fotos": [
+    "ffe38af5cc6dc6f413192394a2a837b7",
+    "a0a96b499836ca468a753059f3b270fe",
+    "f6e5e2bbf9ae1065c92472435fc49f0f"
+   ],
+   "texto": "As mudas já no chão, tutoradas e cobertas com palha de bananeira, junto aos muros e perto da touceira de bananeira.",
+   "tipo": "observacao",
+   "titulo": "Área 7 plantada",
+   "_id": "depois-a7-20261021"
   },
   {
    "area": "a5",
@@ -317,6 +359,7 @@
   "a2": "c347d6f174f904ba7d4ee896e5874c89",
   "a3": "84ac33ce1eab7ca4f452a64afdf8eb2b",
   "a4": "f55f6a19b657c702c23328cc66282b17",
+  "a5": "1a84bc3f725f5ece5ea035f0568b9487",
   "a6": "4c9c51da4008cc7ac0e43415398e1981",
   "a7": "50bc557b696cece4e64b48ee7160b562"
  },
