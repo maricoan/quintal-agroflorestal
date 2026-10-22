@@ -1311,7 +1311,7 @@ function plan(){
   // As da linha vão para as pontas; as menores sobram e vão para o meio dos canteiros, nos vãos entre elas
   // (primeiro o canteiro do sul, que fica embaixo no desenho). Nunca com árvores altas ou emergentes.
   let TRI=null;
-  if(!isCirc()&&lines.length===1&&beds.length&&trees.length>=3&&trees.every(t=>t.e==='M'||t.e==='B')){
+  if(!isCirc()&&!aguaGeo()&&lines.length===1&&beds.length&&trees.length>=3&&trees.every(t=>t.e==='M'||t.e==='B')){
     const [x0,x1]=chord(lines[0].y+lines[0].h/2),sp=Math.max(...trees.map(t=>Math.max(t.ep,1)));
     const slots=Math.floor((x1-x0)/sp+1e-6)+1;
     if(slots>=2&&trees.length>slots){
@@ -1329,7 +1329,7 @@ function plan(){
   }
   const pts=[];const count={};
   const add=(s,x,yy,kind,cell)=>{pts.push({s,x,y:yy,kind,cell});count[s.id]=(count[s.id]||0)+1;};
-  let dropped=[];
+  let dropped=[],longeAgua=[];
   if(lines.length){
     const useN={};
     let useL={};
@@ -1362,9 +1362,14 @@ function plan(){
       lineTrees.forEach((lt,i)=>{if(!lt.length)lineTrees[i]=trees.filter(t=>RK[t.e]>0).length?trees.filter(t=>RK[t.e]>0):trees.slice();});
     }
     // perto de curso d'água: as árvores de solo encharcado ficam na linha mais próxima da água (embaixo no desenho)
-    if(aguaGeo()&&lines.length>1){const near=lines.reduce((bi,ln,i)=>ln.y>lines[bi].y?i:bi,0);const z1=trees.filter(t=>BEIRA_Z1.has(t.id));
-      if(z1.length){lineTrees.forEach((lt,i)=>{if(i===near)return;const rest=lt.filter(t=>!BEIRA_Z1.has(t.id));if(rest.length)lineTrees[i]=rest;});
-        z1.forEach(t=>{if(!lineTrees[near].includes(t))lineTrees[near].push(t);});}}
+    // a linha mais perto nunca recebe árvores de solo sem excesso de água (faixa de cima); sem árvores de brejo, fica só com adubadeiras
+    if(aguaGeo()&&lines.length&&!TRI){const near=lines.reduce((bi,ln,i)=>ln.y>lines[bi].y?i:bi,0);const z1=trees.filter(t=>BEIRA_Z1.has(t.id)),secas=trees.filter(t=>!BEIRA_Z1.has(t.id));
+      lineTrees.forEach((lt,i)=>{if(i===near)return;const rest=lt.filter(t=>!BEIRA_Z1.has(t.id));lineTrees[i]=rest.length?rest:(secas.length?secas.slice():z1.slice());});
+      lineTrees[near]=z1.slice();
+      if(lines.length===1)longeAgua=secas.slice();
+      else{const usadas=new Set(lineTrees.filter((lt,i)=>i!==near).flat());const sobra=secas.filter(t=>!usadas.has(t));
+        // as que sobraram vão para a linha mais longe da água
+        const far=lines.reduce((bi,ln,i)=>ln.y<lines[bi].y?i:bi,0);sobra.forEach(t=>lineTrees[far].push(t));}}
     lines.forEach((ln,li)=>{
       const cy=ln.y+ln.h/2;let prev=null,prevT=null;useL={};useLS={};
       if(TRI){
@@ -1372,7 +1377,7 @@ function plan(){
         TRI.inLine.forEach((T,i)=>{const x=TRI.x0+i*TRI.gap;add(T,x,cy,'tree');prev=T;
           if(meds.length&&i<TRI.inLine.length-1)for(let k=1;k<TRI.gap-.5;k++){const M=pick(meds,[prev,T]);add(M,x+k,cy,'med');prev=M;}});
       }
-      else if(trees.length){
+      else if(trees.length&&lineTrees[li].length){
         const [x0,x1]=chord(cy);
         let x=x0+(li%2&&x1-x0>2?.5:0);
         while(x<=x1){
@@ -1382,7 +1387,7 @@ function plan(){
           if(meds.length)for(let k=1;k<sp-.01&&x+k<=x1;k++){const M=pick(meds,[prev,T]);add(M,x+k,cy,'med');prev=M;}
           x+=sp;
         }
-      }else{
+      }else if(meds.length){
         const [x0,x1]=chord(cy);for(let x=x0;x<=x1;x+=1){const M=pick(meds,[prev]);add(M,x,cy,'med');prev=M;}
       }
     });
@@ -1396,14 +1401,16 @@ function plan(){
   const shadeOk=sel.filter(o=>isBed(o)&&!o.bed&&!UNDER.includes(o.id)&&(o.sol.includes('M')||o.sol.includes('S'))&&o.ep<=.6);
   const useF={};let fi=0;
   if(lines.length){let ui=0;const tp={};
-    lines.forEach(ln=>{const cy=ln.y+ln.h/2;
+    // perto do rio, os vãos da linha mais próxima da água só recebem plantas de borda úmida
+    const Ag=aguaGeo(),nearLn=Ag&&Ag.t==='rio'?lines.reduce((b,l)=>l.y>b.y?l:b,lines[0]):null,JCs=new Set(BEIRA.find(b=>b[0]==='jc')[3].split(' '));
+    lines.forEach(ln=>{const cy=ln.y+ln.h/2;const soBorda=ln===nearLn;
       const ts=pts.filter(q=>q.kind==='tree'&&Math.abs(q.y-cy)<1e-6);
       const occ=new Set(pts.filter(q=>Math.abs(q.y-cy)<1e-6).map(q=>q.x.toFixed(2)));
       for(let x=1;x<=L-.3;x+=.5){if(occ.has(x.toFixed(2)))continue;
         const t=ts.find(q=>Math.abs(q.x-x)<=.55);
-        const parts=t?sel.filter(o=>!isTree(o)&&docCoop(t.s,o)):[];
+        const parts=t?sel.filter(o=>!isTree(o)&&docCoop(t.s,o)&&(!soBorda||JCs.has(o.id))):[];
         if(parts.length){const k=t.s.id;tp[k]=(tp[k]||0)+1;const o=parts[tp[k]%parts.length];add(o,x,cy,'bed',.35);if(!nearTree.some(n=>n[0]===t.s&&n[1]===o))nearTree.push([t.s,o]);}
-        else{const pool=under.length&&Math.abs(x-Math.round(x))<1e-6?under:shadeOk;
+        else{let pool=under.length&&Math.abs(x-Math.round(x))<1e-6?under:shadeOk;if(soBorda)pool=sel.filter(o=>JCs.has(o.id)&&!isTree(o)&&isBed(o));
           if(pool.length){const nb=pts.filter(q=>Math.abs(q.y-cy)<1e-6&&Math.abs(q.x-x)<=1.01).map(q=>q.s);
             let best=null,bv=-1e9;pool.forEach(o=>{let v=-(useF[o.id]||0)*.5;nb.forEach(n=>{v+=cs(o,n);});if(v>bv){bv=v;best=o;}});
             if(best&&bv>-5){useF[best.id]=(useF[best.id]||0)+1;add(best,x,cy,'bed',Math.min(.4,Math.max(best.ep,.2)));if(pool===under)ui++;else lineFill.add(best);fi++;}}}
@@ -1456,6 +1463,15 @@ function plan(){
   if(TRI)TRI.inBed.forEach(b=>{for(let i=pts.length-1;i>=0;i--){const q=pts[i];if(q.kind==='bed'&&Math.hypot(q.x-b.x,q.y-b.y)<.5){count[q.s.id]--;if(!count[q.s.id])delete count[q.s.id];pts.splice(i,1);}}
     pts.forEach(q=>{if(q.kind==='bed'&&Math.hypot(q.x-b.x,q.y-b.y)<1)q.cell=Math.min(q.cell,Math.min(q.s.ep,q.s.el));});
     add(b.t,b.x,b.y,'tree');});
+  // rio: o canteiro mais perto da água fica só com as plantas de jardim de chuva e bordas úmidas escolhidas
+  {const A=aguaGeo();const JC=new Set(BEIRA.find(b=>b[0]==='jc')[3].split(' '));const borda=sel.filter(s=>JC.has(s.id)&&!isTree(s));
+    const last=strips.filter(x=>x.t!=='path').slice(-1)[0];
+    if(A&&A.t==='rio'&&borda.length&&last&&last.t==='bed'){
+      for(let i=pts.length-1;i>=0;i--){const q=pts[i];if(q.y>=last.y-1e-6||(q.kind==='bed'&&JC.has(q.s.id))){count[q.s.id]--;if(!count[q.s.id])delete count[q.s.id];pts.splice(i,1);}}
+      const rowGap=Math.max(...borda.map(m=>m.el)),rows=Math.max(1,Math.floor(last.h/rowGap+.001)),y0=last.y+(last.h-(rows-1)*rowGap)/2;
+      for(let r=0;r<rows;r++){let k=r%borda.length,x=.3+borda[k].ep/2;const yy=rows>1?y0+r*rowGap:last.y+last.h/2;
+        while(x<L-.2){const m=borda[k%borda.length],nx=borda[(k+1)%borda.length],st=(m.ep+nx.ep)/2;add(m,x,yy,'bed',Math.min(st,rowGap));x+=st;k++;}}
+      last.borda=1;}}
   // vizinhanças reais no desenho
   if(isCirc()){const R=L/2;
     for(let i=pts.length-1;i>=0;i--){const q=pts[i];const m=q.kind==='tree'?.3:.12;
@@ -1481,7 +1497,7 @@ function plan(){
     for(let i=1;i<row.length;i++)note(row[i-1].s,row[i].s,'linha de árvores');});
   groups.forEach(g=>{for(let i=0;i<g.length;i++)for(let j=i+1;j<g.length;j++)note(g[i],g[j],'mesmo canteiro');});
   for(let i=1;i<groups.length;i++)groups[i-1].forEach(a=>groups[i].forEach(b=>note(a,b,'trechos vizinhos do canteiro')));
-  return {sel,strips,beds,lines,pts,count,dropped,trees,meds,bedSp,groups,interc,under,nearTree,lineFill:[...lineFill],naoCoube,tri:TRI,removed,adj:[...adj.values()]};
+  return {sel,strips,beds,lines,pts,count,dropped,trees,meds,bedSp,groups,interc,under,nearTree,lineFill:[...lineFill],naoCoube,longeAgua,tri:TRI,removed,adj:[...adj.values()]};
 }
 
 // ---------- plantio em volta de um lago: anéis concêntricos (linha de árvores, rua, canteiro, rua…) ----------
@@ -1511,10 +1527,12 @@ function planLago(sel,A){
   const pts=[];const count={};
   const add=(s,x,y,kind,cell)=>{pts.push({s,x,y,kind,cell});count[s.id]=(count[s.id]||0)+1;};
   const dropped=lines.length?[]:trees.slice();
+  const longeAgua=lines.length===1?trees.filter(t=>!BEIRA_Z1.has(t.id)):[];
   // árvores: a linha mais perto da água leva as de solo encharcado
   const z1=trees.filter(t=>BEIRA_Z1.has(t.id)),outras=trees.filter(t=>!BEIRA_Z1.has(t.id));
   lines.forEach((ln,li)=>{
-    let lst=trees;if(z1.length&&lines.length>1)lst=li===0?z1:(outras.length?outras:z1);else if(z1.length)lst=z1.concat(outras);
+    // anel mais perto da água: só árvores de solo encharcado; as de solo sem excesso de água vão para os anéis de fora
+    let lst=li===0?z1:(outras.length?outras:z1);
     const rm=(ln.r0+ln.r1)/2,n=Math.max(3,Math.round(2*Math.PI*rm)),a0=li*.37;
     const stepT=lst.length?Math.max(2,Math.round(Math.max(...lst.map(t=>Math.max(t.ep,1))))):0;
     let ti=0,mi=0;
@@ -1570,7 +1588,7 @@ function planLago(sel,A){
     for(let i=1;i<row.length;i++)note(row[i-1].s,row[i].s,'linha de árvores');});
   groups.forEach(g=>{for(let i=0;i<g.length;i++)for(let j=i+1;j<g.length;j++)note(g[i],g[j],'mesmo canteiro');});
   for(let i=1;i<groups.length;i++)groups[i-1].forEach(a=>groups[i].forEach(b=>note(a,b,'trechos vizinhos do canteiro')));
-  return {sel,strips:RG,rings:RG,lago:A,beds,lines,pts,count,dropped,trees,meds,bedSp,groups,interc,under:[],nearTree:[],lineFill:[],naoCoube,tri:null,removed,adj:[...adj.values()]};
+  return {sel,strips:RG,rings:RG,lago:A,beds,lines,pts,count,dropped,trees,meds,bedSp,groups,interc,under:[],nearTree:[],lineFill:[],naoCoube,longeAgua,tri:null,removed,adj:[...adj.values()]};
 }
 
 // ---------- avisos ----------
@@ -1594,6 +1612,10 @@ function advice(p){
       const faixa=A.t==='rio'?`${app} m de cada margem para rios de ${A.real<10?'até 10 m':'mais de '+(A.real<50?10:A.real<200?50:A.real<600?200:600)+' m'} de largura`:'50 m em volta de nascentes e 30 m em volta de lagos naturais em área urbana';
       const dentro=A.t==='rio'?A.dist<app:A.dist<50;
       out.push({k:'',t:`Margem de curso d’água é Área de Preservação Permanente (APP) pelo Código Florestal: ${faixa}. Em cidades, o município pode definir outra faixa. ${dentro?`A ${fmt(A.dist)} m da água, seu terreno provavelmente está dentro dessa faixa: ali vale recompor a vegetação com nativas, sem cortar a mata existente nem fazer canteiros que deixem o solo exposto na beira.`:'Seu terreno parece estar fora dessa faixa, mas a parte mais perto da água continua sendo a mais importante para a proteção.'}`});
+      if((p.longeAgua||[]).length){const la=p.longeAgua;out.push({k:'warn',t:`${names(la)} ${la.length>1?'são árvores':'é árvore'} de solo sem excesso de água e não ${la.length>1?'vão':'vai'} para a linha mais perto da água, onde o solo encharca. Neste terreno só cabe essa linha: aumente a área para abrir outra linha mais longe da água, ou troque por árvores de solo encharcado.`,add:['inga','salgueiro','embauba','guapuruvu'].filter(i=>!S.sel.includes(i))});}
+      if(A.t==='rio'){const JC=BEIRA.find(b=>b[0]==='jc')[3].split(' ');const bj=sel.filter(s=>JC.includes(s.id));
+        if(bj.length&&p.strips.some(x=>x.borda))out.push({k:'tip',t:`${names(bj)} ${bj.length>1?'ficam':'fica'} no canteiro mais perto do rio: são plantas de jardim de chuva e bordas úmidas.`});
+        else if(!bj.length)out.push({k:'tip',t:'Para a faixa mais perto do rio, escolha plantas de jardim de chuva e bordas úmidas: elas seguram o barranco e filtram a enxurrada.',add:['canademacaco','falsairis','marantacinza','taioba'].filter(i=>!S.sel.includes(i))});}
       if(A.t==='lago'){const JC=BEIRA.find(b=>b[0]==='jc')[3].split(' ');const bj=sel.filter(s=>JC.includes(s.id));
         out.push({k:'tip',t:bj.length?`${names(bj)} ${bj.length>1?'ficam':'fica'} na borda do lago, o anel mais perto da água: são plantas de jardim de chuva e bordas úmidas, que seguram a margem e filtram a enxurrada.`:'Para a borda do lago, o anel mais perto da água, escolha plantas de jardim de chuva e bordas úmidas: elas seguram a margem e filtram a enxurrada antes de chegar à água.',add:bj.length?[]:['canademacaco','falsairis','marantacinza','taioba'].filter(i=>!S.sel.includes(i))});}
       const z1=sel.filter(s=>BEIRA_Z1.has(s.id));
