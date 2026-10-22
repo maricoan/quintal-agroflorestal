@@ -117,12 +117,16 @@
    "area": "a7",
    "criado": 1792634000007,
    "data": "2026-10-21",
-   "especies": [],
+   "especies": [
+    "dedaleira",
+    "pitanga",
+    "cereja-do-rio-grande"
+   ],
    "fotos": [
     "ffe38af5cc6dc6f413192394a2a837b7",
     "a0a96b499836ca468a753059f3b270fe"
    ],
-   "texto": "As mudas já no chão, tutoradas e cobertas com palha de bananeira, junto aos muros e perto da touceira de bananeira.",
+   "texto": "As mudas já no chão, tutoradas e cobertas com palha de bananeira, junto aos muros e perto da touceira de bananeira. Mudas de árvores plantadas: um dedaleiro ao fundo, uma pitangueira e uma cereja-do-rio-grande.",
    "tipo": "observacao",
    "titulo": "Área 7 plantada",
    "_id": "depois-a7-20261021"
