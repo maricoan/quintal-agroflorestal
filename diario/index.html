@@ -622,7 +622,7 @@ function entradaEl(e){
     (e.especies||[]).length ? h("div",{class:"especies"},...e.especies.map(s=>h("span",{class:"especie"},s))) : null,
     (e.fotos||[]).length ? h("div",{class:"fotos"},...e.fotos.map(id=>h("button",{onclick:()=>abrirFoto(id),"aria-label":"Ampliar foto"},h("img",{src:"fotos/"+id+".jpg",alt:e.titulo||"Foto do registro",loading:"lazy"})))) : null,
   );
-  if (st.edit){
+  if (false){
     const del = h("button",{class:"btn perigo small",type:"button"},"Excluir");
     let armado=false, t;
     del.addEventListener("click", async ()=>{
