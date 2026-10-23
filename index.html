@@ -281,6 +281,7 @@ a.sm-i:hover{border-color:var(--leaf)}
 .credit b{color:var(--ink);font-weight:700}
 .credit a{color:var(--leaf);text-decoration:none;font-weight:700}
 .credit a:hover{text-decoration:underline}
+.credit>.credit-ga{flex-basis:100%;order:3;text-align:center;margin:10px 0 0;font-size:12px;color:var(--muted)}.credit>.credit-ga::before{content:none}.credit-ga a{color:var(--muted);text-decoration:underline}
 .credit>.credit-note{flex-basis:100%;text-align:center;margin:12px 0 0;font-size:16px;color:var(--ink)}
 .credit-note>span{display:inline-block;padding:7px 16px;border:1px solid var(--line);border-radius:10px;background:var(--leaf-soft)}
 .hero-free{margin:2px 0 0;color:var(--ink)}.hero-free strong{color:var(--leaf);font-weight:700}
@@ -663,6 +664,7 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
     <span>Desenvolvido por <b>Mariana Coan</b> em outubro de 2026</span>
     <a href="https://www.marianacoan.com" target="_blank" rel="noopener">www.marianacoan.com</a>
     <a href="https://www.instagram.com/mariana_coan/" target="_blank" rel="noopener">@mariana_coan</a>
+    <p class="credit-ga">Este site usa o <a href="https://policies.google.com/technologies/partner-sites?hl=pt-BR" target="_blank" rel="noopener">Google Analytics</a> para contar as visitas.</p>
     <p class="credit-note"><span>Este é um aplicativo de uso <strong>público</strong> e <strong>gratuito</strong><span class="cn-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect class="cn-f" x="8.2" y="15" width="7.6" height="8" rx="1.2"/><rect class="cn-f" x="4.8" y="5" width="14.4" height="11.2" rx="3"/><path class="cn-l" d="M8.4 5.4V9.6M12 5.4V9.6M15.6 5.4V9.6M4.8 10.6H13.2Q14.6 10.6 14.6 12"/></svg><svg viewBox="0 0 24 24"><path class="cn-s" d="M12 22V11"/><path class="cn-f" d="M12 15C7 15 4 12 4 7.5C9 7.5 12 10.5 12 15Z"/><path class="cn-f" d="M12 12C12 7 15 3.5 20.5 3.5C20.5 9 17 12 12 12Z"/><path class="cn-s" d="M6.5 22H17.5"/></svg></span></span></p>
   </footer>
 </div>
@@ -1116,6 +1118,9 @@ S.sel=S.sel.filter(i=>BYID[i]);
 // site público (GitHub Pages e quintal.marianacoan.com): toda visita começa limpa, sem plantas, no topo da página inicial
 const PUBLICO=/github\.io$|marianacoan\.com$/i.test(location.hostname);
 try{if(PUBLICO){history.scrollRestoration='manual';window.scrollTo(0,0);}}catch(e){}
+// contador de visitas (Google Analytics 4): só no site público, nunca na versão do Claude
+try{if(PUBLICO){window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments);};gtag('js',new Date());gtag('config','G-RHSN1Z265E');
+  const ga=document.createElement('script');ga.async=true;ga.src='https://www.googletagmanager.com/gtag/js?id=G-RHSN1Z265E';document.head.appendChild(ga);}}catch(e){}
 try{if(PUBLICO||new URLSearchParams(location.search).has('limpo')){const c=S.custom;S=JSON.parse(JSON.stringify(DEFAULT));S.custom=c;S.sel=[];S.mtab='espaco';}}catch(e){}
 function save(){try{localStorage.setItem('quintal-saf-v2',JSON.stringify(S));}catch(e){}}
 
