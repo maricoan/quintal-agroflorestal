@@ -191,7 +191,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .cc-both td{background:var(--leaf-soft)}
 .cat-parc{border-color:var(--pc-bd);background:var(--pc-bg)}
 .wz{padding:4px 0 2px}.wz+.wz{border-top:1px dashed var(--line);margin-top:6px;padding-top:8px}.wz-t{margin:0 0 6px;font-size:12.5px;color:var(--muted)}.wz-t b{color:var(--ink)}.wz-n{margin:8px 0 2px;font-size:12.5px;color:var(--muted)}.wz-n a{color:var(--leaf)}
-.nasc{margin:10px 0 2px;border:1px solid var(--line);border-radius:8px;padding:0 10px;font-size:12.5px;background:var(--surface)}.nasc summary{cursor:pointer;font-weight:700;padding:7px 0;font-size:13px}.nasc ol{margin:0 0 6px;padding-left:18px}.nasc li{margin:3px 0}.nasc p{margin:4px 0 8px;color:var(--muted)}.nasc a{color:var(--leaf)}
+.nasc{margin:12px 0 2px;border:1px solid var(--line);border-radius:8px;padding:0 10px;font-size:12.5px;background:var(--surface)}.nasc summary{cursor:pointer;font-weight:700;padding:7px 0;font-size:13px}.nasc ol{margin:0 0 6px;padding-left:18px}.nasc li{margin:3px 0}.nasc p{margin:4px 0 8px;color:var(--muted)}.nasc a{color:var(--leaf)}
 .cat-sub{font-weight:400;font-size:12px;color:var(--muted);margin-left:4px}
 .pc-list{list-style:none;margin:0;padding:0 12px 12px;display:flex;flex-direction:column;gap:8px}
 .pc{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 10px;display:flex;flex-direction:column;gap:5px;align-items:flex-start}
@@ -1384,16 +1384,6 @@ function renderCats(){
       const R=REFS.MBP;let b='';
       BEIRA.forEach(([z,t,sub,ids])=>{const L=ids.split(' ');const its=items.filter(s=>L.includes(s.id));if(!its.length)return;
         b+=`<div class="wz"><p class="wz-t"><b>${t}</b> · ${sub}</p><div class="chips">${its.map(chip).join('')}</div></div>`;});
-      const R2=REFS.ID38;
-      b+=`<details class="nasc"><summary>Como recuperar uma nascente com agrofloresta</summary><ol>
-<li><b>Cerque a área</b> para os animais domésticos não pisotearem nem comerem as mudas.</li>
-<li><b>Marque as nativas</b> que já nasceram ali, arbustos e árvores, para não cortar nem pisar no preparo. Se der, plante mais delas.</li>
-<li><b>Roce o capim exótico</b> e junte a palha em volta das mudas: ajuda as plantas a pegar e evita que o fogo entre.</li>
-<li><b>Plante em ilhas, núcleos ou sulcos</b>, em círculos em volta da nascente ou em curva de nível, aproveitando o que já nasceu sozinho.</li>
-<li><b>Enriqueça onde há pouca planta nativa</b>: mudas, sementes, estacas (cana-do-brejo) ou rizomas (taioba). Se a nascente puder produzir, use hortaliças, medicinais e ornamentais que aguentam solo encharcado, como taioba, inhame e gengibre.</li>
-<li><b>Monte núcleos de fertilidade</b>: mudas de árvores, bananeira, estacas e sementes junto com plantas de comer. Com pouca mão de obra, basta semear as árvores junto com rizomas ou estacas.</li>
-<li><b>Manejo contínuo</b>: capina seletiva, cortando sempre o capim, sobretudo o exótico que pega fogo fácil. Pode as árvores que já existem só o bastante para as novas se firmarem. Deixe o material roçado e podado em leiras ou em volta das mudas. Abra aceiros; se possível, um aceiro vivo com plantas que seguram o fogo.</li></ol>
-<details class="ind-d nasc-d"><summary>Plantas citadas e fonte</summary><p>Plantas citadas para nascentes, todas nesta lista: ingá, juçara, jenipapo, buriti, capororoca, pinha-do-brejo, landim (guanandi), sangra-d’água, quaresmeira e pau-pombo (peito-de-pombo), além de bananeira, taioba, inhame, gengibre e cana-do-brejo (cana-de-macaco). A quaresmeira do app é a da Mata Atlântica; a fonte não diz qual espécie usou. A experiência é do Cerrado, com solo encharcado, pouco aerado e às vezes muito ácido. Fonte: <a href="${R2.u}" target="_blank" rel="noopener">Embrapa Cerrados, a partir de Miccolis et al., 2016</a>.</p></details></details>`;
       wHtml=head+b+`</details>`;return;}
     h+=head+`<div class="chips">`+items.map(chip).join('')+`</div></details>`;
   });
@@ -1733,6 +1723,15 @@ function planLago(sel,A){
 }
 
 // ---------- avisos ----------
+function nascBox(){return `<details class="nasc"><summary>Como recuperar uma nascente com agrofloresta</summary><ol>
+<li><b>Cerque a área</b> para os animais domésticos não pisotearem nem comerem as mudas.</li>
+<li><b>Marque as nativas</b> que já nasceram ali, arbustos e árvores, para não cortar nem pisar no preparo. Se der, plante mais delas.</li>
+<li><b>Roce o capim exótico</b> e junte a palha em volta das mudas: ajuda as plantas a pegar e evita que o fogo entre.</li>
+<li><b>Plante em ilhas, núcleos ou sulcos</b>, em círculos em volta da nascente ou em curva de nível, aproveitando o que já nasceu sozinho.</li>
+<li><b>Enriqueça onde há pouca planta nativa</b>: mudas, sementes, estacas (cana-do-brejo) ou rizomas (taioba). Se a nascente puder produzir, use hortaliças, medicinais e ornamentais que aguentam solo encharcado, como taioba, inhame e gengibre.</li>
+<li><b>Monte núcleos de fertilidade</b>: mudas de árvores, bananeira, estacas e sementes junto com plantas de comer. Com pouca mão de obra, basta semear as árvores junto com rizomas ou estacas.</li>
+<li><b>Manejo contínuo</b>: capina seletiva, cortando sempre o capim, sobretudo o exótico que pega fogo fácil. Pode as árvores que já existem só o bastante para as novas se firmarem. Deixe o material roçado e podado em leiras ou em volta das mudas. Abra aceiros; se possível, um aceiro vivo com plantas que seguram o fogo.</li></ol>
+<details class="ind-d nasc-d"><summary>Plantas citadas e fonte</summary><p>Plantas citadas para nascentes, todas no grupo “Beira d’água e nascentes”: ingá, juçara, jenipapo, buriti, capororoca, pinha-do-brejo, landim (guanandi), sangra-d’água, quaresmeira e pau-pombo (peito-de-pombo), além de bananeira, taioba, inhame, gengibre e cana-do-brejo (cana-de-macaco). A quaresmeira do app é a da Mata Atlântica; a fonte não diz qual espécie usou. A experiência é do Cerrado, com solo encharcado, pouco aerado e às vezes muito ácido. Fonte: <a href="${REFS.ID38.u}" target="_blank" rel="noopener">Embrapa Cerrados, a partir de Miccolis et al., 2016</a>.</p></details></details>`;}
 function advice(p){
   const out=[];const sel=p.sel;const area=areaM2();
   const has=f=>sel.some(f);
@@ -1758,7 +1757,6 @@ function advice(p){
         if(bj.length&&p.strips.some(x=>x.borda))out.push({k:'tip',t:`${names(bj)} ${bj.length>1?'ficam':'fica'} no canteiro mais perto do rio: são plantas de jardim de chuva e bordas úmidas.`});
         else if(!bj.length)out.push({k:'tip',t:'Para a faixa mais perto do rio, escolha plantas de jardim de chuva e bordas úmidas: elas seguram o barranco e filtram a enxurrada.',add:['canademacaco','falsairis','marantacinza','taioba'].filter(i=>!S.sel.includes(i))});}
       if(A.t==='lago'){const JC=BEIRA.find(b=>b[0]==='jc')[3].split(' ');const bj=sel.filter(s=>JC.includes(s.id));
-        out.push({k:'tip',t:'Se for uma nascente: cerque a área, marque as nativas que já nasceram, roce o capim e use a palha em volta das mudas. Plante em núcleos ou círculos em volta do olho d’água, com árvores de solo encharcado e rizomas como a taioba. O passo a passo está no grupo “Beira d’água e nascentes” (Embrapa Cerrados).',add:['inga','jucara','jenipapo','taioba','banana'].filter(i=>!S.sel.includes(i))});
         out.push({k:'tip',t:bj.length?`${names(bj)} ${bj.length>1?'ficam':'fica'} na borda do lago, o anel mais perto da água: são plantas de jardim de chuva e bordas úmidas, que seguram a margem e filtram a enxurrada.`:'Para a borda do lago, o anel mais perto da água, escolha plantas de jardim de chuva e bordas úmidas: elas seguram a margem e filtram a enxurrada antes de chegar à água.',add:bj.length?[]:['canademacaco','falsairis','marantacinza','taioba'].filter(i=>!S.sel.includes(i))});}
       const z1=sel.filter(s=>BEIRA_Z1.has(s.id));
       out.push({k:'tip',t:z1.length?`${names(z1)} ${z1.length>1?'ficam':'fica'} na linha de árvores mais perto da água, onde o solo é mais úmido. Na beira, deixe o capim e as ervas nativas crescerem: eles freiam a enxurrada e seguram o barranco.`:'Perto da água, a linha de árvores mais próxima deve ter espécies que aguentam solo encharcado. Veja o grupo “Beira d’água e nascentes”.',add:z1.length?[]:['inga','salgueiro','embauba','guapuruvu'].filter(i=>!S.sel.includes(i))});
@@ -3327,6 +3325,7 @@ function update(fromInput){
     h+=`<section class="panel" aria-labelledby="t-av"><h2 id="t-av">Ajustes e sugestões</h2>`;
     if(agora.length)h+=`<div class="field"><h3>Bom para plantar em ${MESES_L[cm-1]}</h3><div class="now">${agora.map(s=>`<span>${esc(s.n)}</span>`).join('')}</div></div>`;
     if(adv.length)h+=`<ul class="notes">`+adv.map(a=>`<li class="note ${a.k}"><span class="tag">${a.k==='warn'?'Atenção':a.k==='tip'?'Sugestão':'Observe'}</span><div class="body"><span>${esc(a.t)}</span>${a.add&&a.add.length?`<div class="acts">${a.add.map(i=>`<button type="button" data-addsp="${i}">+ ${esc(BYID[i].n)}</button>`).join('')}</div>`:''}</div></li>`).join('')+`</ul>`;
+    if(S.modo==='chao'&&aguaGeo())h+=nascBox();
     h+=`</section>`;
   }
   if(p.sel.length){
