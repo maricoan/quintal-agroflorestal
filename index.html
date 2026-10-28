@@ -218,6 +218,16 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .tray-l button{font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:5px;border:1px solid var(--leaf);background:var(--leaf-soft);color:var(--ink);border-radius:999px;padding:3px 8px 3px 6px;cursor:pointer}
 .tray-l button:hover{border-color:var(--warn)}
 .tray-x{color:var(--warn);font-size:14px;line-height:1}
+.indic{border:1px solid var(--line);border-radius:8px;padding:0 10px}
+.indic summary{cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;padding:9px 0;list-style:none}
+.indic summary::-webkit-details-marker{display:none}
+.indic[open]{padding-bottom:10px}.indic .hint{margin:0 0 8px}
+.ind-r{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.ind-c{border-left:3px solid var(--leaf);padding:4px 0 4px 10px;font-size:13.5px}.ind-c b{display:block;font-size:14px}
+.ind-c.k-acido{border-color:var(--warn)}.ind-c.k-encharcado{border-color:var(--water-ln)}.ind-c.k-compactado{border-color:var(--soil)}.ind-c.k-pobre{border-color:var(--sun)}
+.ind-c button{font:inherit;font-size:13px;margin-top:6px;border:1px solid var(--leaf);background:var(--leaf-soft);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+.ind-who{font-weight:400;color:var(--muted);font-size:13px}.ind-l{margin:0;padding-left:18px;font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:2px}.ind-l b{color:var(--ink)}
+.ind-n{font-size:12.5px;color:var(--muted);margin:2px 0 0}.ind-n a{color:var(--leaf)}
 .legend-box{border:1px solid var(--line);border-radius:8px;padding:0 10px}
 .legend-box summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--leaf);padding:8px 0;list-style:none}
 .legend-box summary::-webkit-details-marker{display:none}
@@ -620,6 +630,11 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
             <button type="button" data-v="umido">Úmido</button>
           </div>
         </div>
+        <details class="indic" id="indicBox"><summary><svg class="cat-ico" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 16 V8 M9 11 q-4 0 -5 -4 q4 0 5 4 M9 9 q3 -1 4 -4 q-3 0 -4 4 M3 16 h12"/></svg><span>O que nasce aí? <span class="cat-sub">plantas que indicam o solo</span></span></summary>
+          <p class="hint">Marque as plantas espontâneas que aparecem em quantidade no seu terreno. Elas dão pistas de como está o solo.</p>
+          <div class="chips" id="indicList"></div>
+          <div id="indicRes" aria-live="polite"></div>
+        </details>
         <button type="button" class="mt-next" data-mt="plantas">Escolher as plantas →</button>
       </section>
 
@@ -683,6 +698,66 @@ const ALL=r(1,12);
 const EST={E:'Emergente',A:'Alto',M:'Médio',B:'Baixo',R:'Rasteiro'};
 const CAT_ICO={w:'<path d="M9 2.5 C6.5 6.5 4.5 9 4.5 11.5 a4.5 4.5 0 0 0 9 0 C13.5 9 11.5 6.5 9 2.5 Z"/><path d="M7 12.5 q1 1.6 3 1.4"/>',p:'<circle cx="9" cy="9" r="1.8"/><circle cx="9" cy="4.6" r="2.6"/><circle cx="13.2" cy="7.6" r="2.6"/><circle cx="11.6" cy="12.8" r="2.6"/><circle cx="6.4" cy="12.8" r="2.6"/><circle cx="4.8" cy="7.6" r="2.6"/>',f:'<circle cx="9" cy="11" r="5"/><path d="M9 6 q2 -4 6 -3 q-1 4 -6 3"/>',a:'<path d="M9 16 V9 M9 11 q-5 0 -6 -5 q5 0 6 5 M9 9 q4 -1 5 -5 q-4 0 -5 5"/>',t:'<path d="M5 16 L13 3 M7.4 12.2 l-3 -.8 M9.2 9.3 l-3 -.8 M11 6.4 l-3 -.8 M8.3 13.8 l3 .8 M10.1 10.9 l3 .8 M11.9 8 l3 .8"/>',h:'<path d="M4 14 Q4 4 14 4 Q14 14 4 14 Z M4 14 L11 7"/>',g:'<circle cx="9" cy="7" r="5"/><path d="M9 12 V17 M6 17 h6"/>',x:'<path d="M9 4 v10 M4 9 h10"/>',parc:'<path d="M3 14 Q3 6 9 6 Q9 14 3 14Z M15 14 Q15 6 9 6 Q9 14 15 14Z"/>'};
 const catIco=k=>`<svg class="cat-ico" viewBox="0 0 18 18" aria-hidden="true">${CAT_ICO[k]||''}</svg>`;
+// Plantas espontâneas (ruderais) que indicam condições do solo. Fontes: Embrapa Hortaliças, Circular Técnica 62 (2008) [16];
+// Oficinas Agroecológicas UFSC, a partir de Embrapa, Cultivo do café orgânico [17]
+const INDIC=[
+ ['samambaia-i','Samambaia','Pteridium aquilinum','muito alumínio tóxico no solo',['acido'],16],
+ ['sape','Sapé','Imperata sp.','solo ácido, com pouco magnésio',['acido'],16],
+ ['tiririca','Tiririca','Cyperus rotundus','solo ácido, adensado e com pouco ar; falta magnésio. Não gosta de sombra',['acido','compactado'],16],
+ ['azedinha','Azedinha','Oxalis sp.','solo argiloso e ácido, com pouco cálcio',['acido'],16],
+ ['cavalinha','Cavalinha','Equisetum sp.','acidez média a alta',['acido'],16],
+ ['rabodeburro','Capim-rabo-de-burro','Andropogon sp.','solo ácido, com pouco cálcio e uma camada dura abaixo da superfície',['acido','compactado'],16],
+ ['caraguata','Caraguatá','Eryngium sp.','área que sofreu queimadas, com húmus ácido',['acido'],16],
+ ['carrapichocarneiro','Carrapicho-de-carneiro','Acanthospermum hispidum','falta de cálcio',['acido'],16],
+ ['guanxuma','Guanxuma','Sida spp.','solo adensado ou erodido na superfície; se cresce viçosa, o solo é fértil; se fica pequena, é pobre',['compactado'],17],
+ ['tanchagem','Tanchagem','Plantago major','solo compactado e com pouca aeração',['compactado'],17],
+ ['linguavaca','Língua-de-vaca','Rumex obtusifolius','solo compactado e úmido, muito pisoteado',['compactado','encharcado'],17],
+ ['capimcarrapicho','Capim-carrapicho','Cenchrus echinatus','solo degradado, erodido e compactado, pobre em cálcio',['compactado','pobre'],16],
+ ['cabeloporco','Cabelo-de-porco','Carex sp.','solo compactado, com pouco cálcio',['compactado'],17],
+ ['mariamole','Maria-mole','Senecio brasiliensis','camada adensada entre 40 e 120 cm de profundidade',['compactado'],17],
+ ['capimcaninha','Capim-caninha','Andropogon sp.','solo que encharca de vez em quando; falta fósforo; queimadas',['encharcado','pobre'],16],
+ ['carqueja-i','Carqueja','Baccharis sp.','solo pobre, compactado na superfície, com água parada na época de chuva',['encharcado','pobre','compactado'],17],
+ ['capimamargoso','Capim-amargoso','Digitaria insularis','baixa fertilidade',['pobre'],16],
+ ['barbabode','Barba-de-bode','Aristida sp.','solo pobre em fósforo, cálcio e potássio, com pouca água; queimadas',['pobre'],16],
+ ['papua','Capim-papuã (marmelada)','Urochloa plantaginea','solo muito revolvido (arado e gradeado), com falta de zinco',['compactado','desequilibrio'],16],
+ ['leiteiro','Leiteiro (amendoim-bravo)','Euphorbia heterophylla','desequilíbrio entre nitrogênio e micronutrientes',['desequilibrio'],16],
+ ['picaobranco','Picão-branco','Galinsoga parviflora','excesso de nitrogênio e falta de micronutrientes, como cobre',['desequilibrio'],16],
+ ['urtiga','Urtiga','Urtica urens','muita matéria orgânica (nitrogênio) e falta de cobre',['desequilibrio','fertil'],17],
+ ['nabobravo','Nabo-bravo','Raphanus raphanistrum','falta de boro e manganês',['desequilibrio'],16],
+ ['beldroega','Beldroega','Portulaca oleracea','solo fértil; protege o solo e não atrapalha a horta',['fertil'],16],
+ ['denteleao','Dente-de-leão','Taraxacum officinale','solo fértil',['fertil'],16]];
+const INDIC_TXT={
+ acido:['Solo ácido','Antes de corrigir, faça uma análise de solo: ela diz se precisa de calcário e quanto. Enquanto isso, composto, palha e adubação verde ajudam a equilibrar.'],
+ compactado:['Solo compactado ou adensado','Falta ar para as raízes. Plantas de raiz forte abrem caminho: feijão-guandu, crotalária, feijão-de-porco e mandioca. Não pise nos canteiros e mantenha o solo sempre coberto de palha.','compactado'],
+ encharcado:['Solo que encharca','Prefira plantas que aguentam solo úmido (grupo “Beira d’água e nascentes”) ou faça canteiros altos, em camalhão.','encharcado'],
+ pobre:['Solo pobre','Comece com adubação verde, composto e bastante palha. Pioneiras e adubadeiras vêm primeiro; as exigentes, depois.','pobre'],
+ desequilibrio:['Nutrientes desequilibrados','Costuma ser excesso de nitrogênio ou falta de micronutrientes. Varie os adubos (composto de vários materiais) e diversifique as plantas.'],
+ fertil:['Solo fértil e vivo','Bom sinal. Mantenha o solo coberto e evite revolver demais.']};
+const INDIC_ADD={compactado:['guandu','crotalaria','feijaoporco','mandioca'],pobre:['guandu','crotalaria','feijaoporco','margaridao']};
+function renderIndic(){
+  const on=new Set(S.indic||[]);
+  $('indicList').innerHTML=INDIC.map(([id,n,sci])=>`<button type="button" class="chip" data-ind="${id}" aria-pressed="${on.has(id)}" title="${esc(sci)}">${esc(n)}</button>`).join('');
+  const sel=INDIC.filter(x=>on.has(x[0]));
+  if(!sel.length){$('indicRes').innerHTML='';return;}
+  const tags={};sel.forEach(x=>x[4].forEach(t=>{(tags[t]=tags[t]||[]).push(x);}));
+  const ord=['acido','compactado','encharcado','pobre','desequilibrio','fertil'].filter(t=>tags[t]);
+  let h='<div class="ind-r">';
+  ord.forEach(t=>{const [tit,tx]=INDIC_TXT[t];const L=tags[t];
+    const add=(INDIC_ADD[t]||[]).filter(i=>BYID[i]&&!S.sel.includes(i));
+    h+=`<div class="ind-c k-${t}"><b>${tit} <span class="ind-who">· ${L.map(x=>esc(x[1])).join(', ')}</span></b>${tx}`;
+    if(t==='encharcado'&&S.solo!=='umido')h+=`<br><button type="button" data-indset="umido">Marcar umidade do solo: Úmido</button>`;
+    if(add.length)h+=`<br><button type="button" data-indadd="${add.join(',')}">+ Incluir ${add.map(i=>esc(BYID[i].n)).join(', ')}</button>`;
+    h+=`</div>`;});
+  h+=`<ul class="ind-l">${sel.map(x=>`<li><b>${esc(x[1])}</b> <i>${esc(x[2])}</i>: ${esc(x[3])}.</li>`).join('')}</ul>`;
+  const R1=REFS.EC62,R2=REFS.UFSC;
+  h+=`<p class="ind-n">São pistas, não diagnóstico: valem quando a planta aparece em quantidade e espalhada. Para ter certeza, faça uma análise de solo. Fontes: <a href="${R1.u}" target="_blank" rel="noopener">Embrapa Hortaliças, 2008</a> e <a href="${R2.u}" target="_blank" rel="noopener">Oficinas Agroecológicas UFSC/Embrapa</a>.</p></div>`;
+  $('indicRes').innerHTML=h;
+}
+document.getElementById('indicBox').addEventListener('click',e=>{
+  const c=e.target.closest('[data-ind]');if(c){const id=c.dataset.ind;S.indic=S.indic||[];S.indic=S.indic.includes(id)?S.indic.filter(i=>i!==id):S.indic.concat([id]);save();renderIndic();return;}
+  const u=e.target.closest('[data-indset]');if(u){S.solo=u.dataset.indset;S.exemplo=false;update();return;}
+  const a=e.target.closest('[data-indadd]');if(a){a.dataset.indadd.split(',').forEach(i=>{if(!S.sel.includes(i))S.sel.push(i);});S.exemplo=false;update();}
+});
 const CATS=[['f','Frutíferas'],['a','Adubo verde e biomassa'],['t','Aromáticas'],['h','Hortaliças'],['p','Flores para polinizadores'],['w','Beira d’água e nascentes'],['g','Grandes árvores'],['x','Minhas plantas']];
 const REFS={
  E47:{n:1,t:'Embrapa Hortaliças. Recomendações técnicas para o cultivo de hortaliças em agricultura familiar. Circular Técnica 47, 2007.',u:'https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/781607/1/ct47.pdf'},
@@ -700,6 +775,8 @@ const REFS={
  L:{n:0,t:'Suas listas de boas companhias.'},
  C7:{n:12,t:'Anjos, J. L. et al. Adubação verde e produtividade de citrus em Sergipe. Embrapa Tabuleiros Costeiros, Comunicado Técnico 59, 2006.',u:'https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/372655/1/cot59.pdf'},
  C8:{n:13,t:'Miranda, E. M.; Pereira, R. C. A.; Bergo, C. L. Comportamento de seis linhagens de café em condições de sombreamento e a pleno sol no Acre. Ciência e Agrotecnologia 23(1), 1999.',u:'https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/492536/1/1249.pdf'},
+ EC62:{n:16,t:'Pereira, W.; Melo, W. F. Manejo de plantas espontâneas no sistema de produção orgânica de hortaliças. Embrapa Hortaliças, Circular Técnica 62, 2008.',u:'https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/780759/4/ct62.pdf'},
+ UFSC:{n:17,t:'Prado, C. P. et al. Plantas indicadoras. Oficinas Agroecológicas, UFSC Curitibanos, a partir de Embrapa, Cultivo do café orgânico.',u:'https://conevajr.ufsc.br/files/2015/01/Folder-Plantas-Indicadoras.pdf'},
  MBP:{n:15,t:'Pinheiro, M. B. Plantas para Infraestrutura Verde e o papel da vegetação no tratamento das águas urbanas de São Paulo: identificação de critérios para seleção de espécies. Dissertação, FAU-USP, 2017.',u:'https://www.teses.usp.br/teses/disponiveis/16/16139/tde-24072017-104105/pt-br.php'},
  C9:{n:14,t:'Ushimaru, T. Influência do sombreamento sobre a fisiologia, crescimento e qualidade das mudas de juçara. Dissertação, UFV, 2021.',u:'https://locus.ufv.br//handle/123456789/29143'}
 };
@@ -3143,7 +3220,7 @@ function update(fromInput){
   {const on=S.modo!=='vaso'&&(S.curso==='rio'||S.curso==='lago');$('cursoMed').hidden=!on;
     $('inAgL').textContent=S.curso==='lago'?'Diâmetro do lago':'Largura do rio';$('inAgDL').textContent=S.curso==='lago'?'Beira livre até as plantas':'Distância até o terreno';$('cursoHint').textContent=S.curso==='lago'?'O lago fica no meio do terreno e o plantio se organiza em anéis em volta dele. A linha de árvores mais perto da água recebe as que gostam de solo encharcado.':'No desenho, o rio fica do lado de baixo do terreno. As árvores que gostam de solo encharcado vão para a linha mais perto dele.';
     if(!fromInput){$('inAg').value=S.curso==='lago'?(S.agD||4):(S.agW||3);$('inAgD').value=S.agDist??1;}}
-  renderCats();
+  renderCats();renderIndic();
   const p=plan();
   const adv=advice(p);
   const cm=new Date().getMonth()+1;
