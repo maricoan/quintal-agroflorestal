@@ -1661,6 +1661,7 @@ function planLago(sel,A){
   const longeAgua=lines.length===1?trees.filter(t=>!BEIRA_Z1.has(t.id)):[];
   // árvores: a linha mais perto da água leva as de solo encharcado
   const z1=trees.filter(t=>BEIRA_Z1.has(t.id)),outras=trees.filter(t=>!BEIRA_Z1.has(t.id));
+  const underL=sel.filter(s=>UNDER.includes(s.id)),shadeL=sel.filter(o=>isBed(o)&&!o.bed&&!UNDER.includes(o.id)&&!JC.has(o.id)&&(o.sol.includes('M')||o.sol.includes('S'))&&o.ep<=.6);
   lines.forEach((ln,li)=>{
     // anel mais perto da água: só árvores de solo encharcado; as de solo sem excesso de água vão para os anéis de fora
     let lst=li===0?z1:(outras.length?outras:z1);
@@ -1670,6 +1671,11 @@ function planLago(sel,A){
     for(let i=0;i<n;i++){const a=a0+i/n*Math.PI*2,x=cx+Math.cos(a)*rm,y=cy+Math.sin(a)*rm;
       if(lst.length&&i%stepT===0){if(!inside(x,y,.3))continue;add(lst[ti++%lst.length],x,y,'tree');}
       else if(meds.length){if(!inside(x,y,.25))continue;add(meds[mi++%meds.length],x,y,'med');}}
+    // cobertura entre as árvores (como no terreno comum); no anel mais perto da água, só plantas de borda úmida
+    const pool=li===0?sel.filter(o=>JC.has(o.id)&&!isTree(o)&&o.ep<=.6):(underL.length?underL:shadeL);
+    if(lst.length&&pool.length){let ui=li;const meio=2*rm*Math.sin(Math.PI/(2*n)),cabe=pool.filter(o=>meio>Math.min(o.el,o.ep)/2+.22);
+      for(let i=0;i<n;i++)for(const h of [0,.5]){if(h===0&&(i%stepT===0||meds.length))continue;const P=h?cabe:pool;if(!P.length)continue;
+        const a=a0+(i+h)/n*Math.PI*2,x=cx+Math.cos(a)*rm,y=cy+Math.sin(a)*rm;if(inside(x,y,.2))add(P[ui++%P.length],x,y,'bed',.35);}}
   });
   if(!trees.length&&meds.length)lines.forEach(ln=>{const rm=(ln.r0+ln.r1)/2,n=Math.max(3,Math.round(2*Math.PI*rm));let mi=0;
     for(let i=0;i<n;i++){const a=i/n*Math.PI*2,x=cx+Math.cos(a)*rm,y=cy+Math.sin(a)*rm;if(inside(x,y,.25))add(meds[mi++%meds.length],x,y,'med');}});
