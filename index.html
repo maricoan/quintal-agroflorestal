@@ -223,7 +223,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .indic summary{cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;padding:9px 0;list-style:none}
 .indic summary::-webkit-details-marker{display:none}
 .indic[open]{padding-bottom:10px}.indic .hint{margin:0 0 8px}
-.ind-d{margin-top:8px;font-size:12.5px}.ind-d summary{cursor:pointer;color:var(--leaf);font-weight:700}.ind-d .ind-n{margin:4px 0 0}
+.ind-d{margin-top:8px;font-size:12.5px}.ind-d summary{cursor:pointer;color:var(--leaf);font-weight:700}.ind-d .ind-n{margin:4px 0 0}.nasc-d{margin:2px 0 8px}.nasc .nasc-d summary{padding:2px 0;font-size:12.5px}
 .ifoto{position:fixed;z-index:60;width:216px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(20,25,10,.22);padding:8px;font-size:12.5px;line-height:1.35;pointer-events:none}
 .ifoto .if-img{width:200px;height:150px;border-radius:6px;background:var(--leaf-soft);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--muted);text-align:center;padding:0 10px;box-sizing:border-box}
 .ifoto .if-img img{width:100%;height:100%;object-fit:cover;display:block}
@@ -1394,7 +1394,7 @@ function renderCats(){
 <li><b>Enriqueça onde há pouca planta nativa</b>: mudas, sementes, estacas (cana-do-brejo) ou rizomas (taioba). Se a nascente puder produzir, use hortaliças, medicinais e ornamentais que aguentam solo encharcado, como taioba, inhame e gengibre.</li>
 <li><b>Monte núcleos de fertilidade</b>: mudas de árvores, bananeira, estacas e sementes junto com plantas de comer. Com pouca mão de obra, basta semear as árvores junto com rizomas ou estacas.</li>
 <li><b>Manejo contínuo</b>: capina seletiva, cortando sempre o capim, sobretudo o exótico que pega fogo fácil. Pode as árvores que já existem só o bastante para as novas se firmarem. Deixe o material roçado e podado em leiras ou em volta das mudas. Abra aceiros; se possível, um aceiro vivo com plantas que seguram o fogo.</li></ol>
-<p>Plantas citadas para nascentes, todas nesta lista: ingá, juçara, jenipapo, buriti, capororoca, pinha-do-brejo, landim (guanandi), sangra-d’água, quaresmeira e pau-pombo (peito-de-pombo), além de bananeira, taioba, inhame, gengibre e cana-do-brejo (cana-de-macaco). A quaresmeira do app é a da Mata Atlântica; a fonte não diz qual espécie usou. A experiência é do Cerrado, com solo encharcado, pouco aerado e às vezes muito ácido. Fonte: <a href="${R2.u}" target="_blank" rel="noopener">Embrapa Cerrados, a partir de Miccolis et al., 2016</a>.</p></details>`;
+<details class="ind-d nasc-d"><summary>Plantas citadas e fonte</summary><p>Plantas citadas para nascentes, todas nesta lista: ingá, juçara, jenipapo, buriti, capororoca, pinha-do-brejo, landim (guanandi), sangra-d’água, quaresmeira e pau-pombo (peito-de-pombo), além de bananeira, taioba, inhame, gengibre e cana-do-brejo (cana-de-macaco). A quaresmeira do app é a da Mata Atlântica; a fonte não diz qual espécie usou. A experiência é do Cerrado, com solo encharcado, pouco aerado e às vezes muito ácido. Fonte: <a href="${R2.u}" target="_blank" rel="noopener">Embrapa Cerrados, a partir de Miccolis et al., 2016</a>.</p></details></details>`;
       wHtml=head+b+`</details>`;return;}
     h+=head+`<div class="chips">`+items.map(chip).join('')+`</div></details>`;
   });
