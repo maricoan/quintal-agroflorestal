@@ -222,6 +222,11 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .indic summary{cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;padding:9px 0;list-style:none}
 .indic summary::-webkit-details-marker{display:none}
 .indic[open]{padding-bottom:10px}.indic .hint{margin:0 0 8px}
+.ifoto{position:fixed;z-index:60;width:216px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(20,25,10,.22);padding:8px;font-size:12.5px;line-height:1.35;pointer-events:none}
+.ifoto .if-img{width:200px;height:150px;border-radius:6px;background:var(--leaf-soft);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--muted);text-align:center;padding:0 10px;box-sizing:border-box}
+.ifoto .if-img img{width:100%;height:100%;object-fit:cover;display:block}
+.ifoto b{display:block;margin-top:6px;font-size:13.5px}.ifoto i{color:var(--muted)}
+.ifoto .if-c{display:block;margin-top:3px;font-size:11px;color:var(--muted)}
 .ind-r{margin-top:10px;display:flex;flex-direction:column;gap:8px}
 .ind-c{border-left:3px solid var(--leaf);padding:4px 0 4px 10px;font-size:13.5px}.ind-c b{display:block;font-size:14px}
 .ind-c.k-acido{border-color:var(--warn)}.ind-c.k-encharcado{border-color:var(--water-ln)}.ind-c.k-compactado{border-color:var(--soil)}.ind-c.k-pobre{border-color:var(--sun)}
@@ -736,7 +741,7 @@ const INDIC_TXT={
 const INDIC_ADD={compactado:['guandu','crotalaria','feijaoporco','mandioca'],pobre:['guandu','crotalaria','feijaoporco','margaridao']};
 function renderIndic(){
   const on=new Set(S.indic||[]);
-  $('indicList').innerHTML=INDIC.map(([id,n,sci])=>`<button type="button" class="chip" data-ind="${id}" aria-pressed="${on.has(id)}" title="${esc(sci)}">${esc(n)}</button>`).join('');
+  $('indicList').innerHTML=INDIC.map(([id,n,sci])=>`<button type="button" class="chip" data-ind="${id}" aria-pressed="${on.has(id)}">${esc(n)}</button>`).join('');
   const sel=INDIC.filter(x=>on.has(x[0]));
   if(!sel.length){$('indicRes').innerHTML='';return;}
   const tags={};sel.forEach(x=>x[4].forEach(t=>{(tags[t]=tags[t]||[]).push(x);}));
@@ -753,6 +758,40 @@ function renderIndic(){
   h+=`<p class="ind-n">São pistas, não diagnóstico: valem quando a planta aparece em quantidade e espalhada. Para ter certeza, faça uma análise de solo. Fontes: <a href="${R1.u}" target="_blank" rel="noopener">Embrapa Hortaliças, 2008</a> e <a href="${R2.u}" target="_blank" rel="noopener">Oficinas Agroecológicas UFSC/Embrapa</a>.</p></div>`;
   $('indicRes').innerHTML=h;
 }
+// Foto ao passar o mouse: miniatura da Wikipédia (pt, depois en), buscada só quando pedida.
+const FOTO=new Map();
+const FOTO_NOME={'Sida spp.':'Sida rhombifolia','Imperata sp.':'Imperata brasiliensis'};
+function fotoBusca(sci){
+  if(FOTO.has(sci))return FOTO.get(sci);
+  const nomes=[FOTO_NOME[sci]||sci.replace(/\s+spp?\.$/,'')];const g=sci.split(' ')[0];if(nomes[0]!==g)nomes.push(g);
+  const tent=[];nomes.forEach(n=>['pt','en'].forEach(l=>tent.push([l,n])));
+  const pr=(async()=>{for(const [l,n] of tent){try{const r=await fetch(`https://${l}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(n.replace(/ /g,'_'))}`);
+    if(!r.ok)continue;const j=await r.json();if(j.type!=='disambiguation'&&j.thumbnail&&j.thumbnail.source)return {src:j.thumbnail.source,wiki:l};}catch(e){return null;}}return null;})();
+  FOTO.set(sci,pr);return pr;
+}
+let fotoEl=null,fotoAt=null;
+function fotoMostra(btn){
+  const x=INDIC.find(i=>i[0]===btn.dataset.ind);if(!x)return;
+  if(!fotoEl){fotoEl=document.createElement('div');fotoEl.className='ifoto';fotoEl.setAttribute('role','tooltip');document.body.appendChild(fotoEl);}
+  fotoAt=btn;
+  fotoEl.innerHTML=`<div class="if-img">carregando foto…</div><b>${esc(x[1])}</b><i>${esc(x[2])}</i>`;
+  fotoEl.hidden=false;
+  const b=btn.getBoundingClientRect(),w=216,h=fotoEl.offsetHeight||210;
+  let left=Math.min(Math.max(8,b.left+b.width/2-w/2),innerWidth-w-8);
+  let top=b.top-h-8;if(top<8)top=b.bottom+8;
+  fotoEl.style.left=left+'px';fotoEl.style.top=top+'px';
+  fotoBusca(x[2]).then(f=>{if(fotoAt!==btn||!fotoEl)return;const box=fotoEl.querySelector('.if-img');
+    if(f){box.innerHTML=`<img alt="Foto de ${esc(x[1])}" src="${esc(f.src)}">`;fotoEl.insertAdjacentHTML('beforeend',`<span class="if-c">Foto: Wikipédia / Wikimedia Commons</span>`);}
+    else box.textContent='Foto indisponível aqui. Veja em quintal.marianacoan.com';});
+}
+function fotoEsconde(){fotoAt=null;if(fotoEl)fotoEl.hidden=true;}
+const IB=document.getElementById('indicBox');
+IB.addEventListener('pointerover',e=>{const c=e.target.closest('[data-ind]');if(c&&c!==fotoAt)fotoMostra(c);});
+IB.addEventListener('pointerout',e=>{const c=e.target.closest('[data-ind]');if(c&&!c.contains(e.relatedTarget))fotoEsconde();});
+IB.addEventListener('focusin',e=>{const c=e.target.closest('[data-ind]');if(c)fotoMostra(c);});
+IB.addEventListener('focusout',fotoEsconde);
+addEventListener('scroll',fotoEsconde,{passive:true});
+document.addEventListener('pointerdown',e=>{if(!e.target.closest('[data-ind]'))fotoEsconde();});
 document.getElementById('indicBox').addEventListener('click',e=>{
   const c=e.target.closest('[data-ind]');if(c){const id=c.dataset.ind;S.indic=S.indic||[];S.indic=S.indic.includes(id)?S.indic.filter(i=>i!==id):S.indic.concat([id]);save();renderIndic();return;}
   const u=e.target.closest('[data-indset]');if(u){S.solo=u.dataset.indset;S.exemplo=false;update();return;}
