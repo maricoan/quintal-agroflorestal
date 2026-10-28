@@ -191,7 +191,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .cc-both td{background:var(--leaf-soft)}
 .cat-parc{border-color:var(--pc-bd);background:var(--pc-bg)}
 .wz{padding:4px 0 2px}.wz+.wz{border-top:1px dashed var(--line);margin-top:6px;padding-top:8px}.wz-t{margin:0 0 6px;font-size:12.5px;color:var(--muted)}.wz-t b{color:var(--ink)}.wz-n{margin:8px 0 2px;font-size:12.5px;color:var(--muted)}.wz-n a{color:var(--leaf)}
-.nasc{margin:12px 0 2px;border:1px solid var(--line);border-radius:8px;padding:0 10px;font-size:12.5px;background:var(--surface)}.nasc summary{cursor:pointer;font-weight:700;padding:7px 0;font-size:13px}.nasc ol{margin:0 0 6px;padding-left:18px}.nasc li{margin:3px 0}.nasc p{margin:4px 0 8px;color:var(--muted)}.nasc a{color:var(--leaf)}
+.nasc{margin:14px 0 2px;border:1px solid var(--water-ln);border-left-width:5px;border-radius:10px;padding:0 14px;font-size:13px;background:color-mix(in srgb,var(--water) 22%,var(--surface))}.nasc>summary{cursor:pointer;font-weight:700;padding:11px 0;font-size:15px;color:var(--water-ln);display:flex;align-items:center;gap:8px}.nasc-ic{width:26px;height:26px;flex:none;fill:none;stroke:var(--water-ln);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.nasc[open]{padding-bottom:4px}.nasc ol{margin:0 0 6px;padding-left:18px}.nasc li{margin:3px 0}.nasc p{margin:4px 0 8px;color:var(--muted)}.nasc a{color:var(--leaf)}
 .cat-sub{font-weight:400;font-size:12px;color:var(--muted);margin-left:4px}
 .pc-list{list-style:none;margin:0;padding:0 12px 12px;display:flex;flex-direction:column;gap:8px}
 .pc{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 10px;display:flex;flex-direction:column;gap:5px;align-items:flex-start}
@@ -1723,7 +1723,7 @@ function planLago(sel,A){
 }
 
 // ---------- avisos ----------
-function nascBox(){return `<details class="nasc"><summary>Como recuperar uma nascente com agrofloresta</summary><ol>
+function nascBox(){return `<details class="nasc"><summary><svg class="nasc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 C9 7.5 6.5 10.5 6.5 13.8 a5.5 5.5 0 0 0 11 0 C17.5 10.5 15 7.5 12 3 Z"/><path d="M12 18 V13.5 M12 15.5 q-2.6 0 -3 -2.6 q2.6 0 3 2.6 M12 14.4 q2.2 -.3 2.6 -2.5 q-2.2 0 -2.6 2.5"/></svg><span>Como recuperar uma nascente com agrofloresta</span></summary><ol>
 <li><b>Cerque a área</b> para os animais domésticos não pisotearem nem comerem as mudas.</li>
 <li><b>Marque as nativas</b> que já nasceram ali, arbustos e árvores, para não cortar nem pisar no preparo. Se der, plante mais delas.</li>
 <li><b>Roce o capim exótico</b> e junte a palha em volta das mudas: ajuda as plantas a pegar e evita que o fogo entre.</li>
