@@ -958,6 +958,7 @@ const DATA=[
  {id:'macela',n:'Macela',a:'Ml',c:'s',e:'B',el:.5,ep:.4,src:'PR',sol:'P',pl:r(9,3),col:'flores no outono',d:0,v:10,nat:1,h:.6},
  {id:'maracuja',n:'Maracujá',a:'Mc',c:'s',e:'M',el:3,ep:3,src:'PR',sol:'P',pl:r(9,12),col:'6–9 meses',d:240,v:50,nat:1,h:2.5},
  {id:'dyckia',n:'Bromélias (Dyckia)',a:'Dy',c:'s',e:'R',el:.3,ep:.3,src:'PR',sol:'P',pl:r(9,3),col:'flores na primavera',d:0,v:3,nat:1,h:.3},
+ {id:'maravilha',n:'Maravilha',sci:'Mirabilis jalapa',a:'Mv',c:'v',e:'B',el:.6,ep:.5,src:'PR',sol:'PM',pl:r(9,3),col:'flores em 2–3 meses; abrem no fim da tarde e atraem mariposas',d:0,v:10,h:.8},
  {id:'margaridao',n:'Margaridão',sci:'Tithonia diversifolia',a:'Mg',c:'a',e:'M',el:1,ep:1,src:'PR',sol:'P',pl:r(9,3),col:'poda a cada 2–3 meses (biomassa)',d:0,v:0,h:2.5,bio:1,adubo:1},
  {id:'canaacucar',n:'Cana-de-açúcar',a:'Cn',c:'a',e:'M',el:1.4,ep:.5,src:'PR',sol:'P',pl:r(9,3),col:'12–18 meses',d:450,v:0,h:3,bio:1},
  {id:'boldo',n:'Boldo',a:'Bo',c:'t',e:'B',el:.8,ep:.6,src:'PR',sol:'PM',pl:r(9,3),col:'folhas em 3–4 meses',d:100,v:20,h:1.2},
@@ -1260,7 +1261,7 @@ const GRUPO={
  a:'margaridao canaacucar guandu crotalaria feijaoporco feijaocorda mandioca amendoim canaindia heliconia begonia begoniaprateada samambaia dyckia',
  t:'boldo boldinho cidreira hibisco lavanda manjericao cebolinha salsinha hortela alecrim capimsanto carqueja macela alecrimcampo lantana',
  h:'alface rucula peixinho cenoura beterraba couve tomate berinjela pimenta quiabo feijao abobora batatadoce milho taioba cara orapronobis',
- p:'chanana gervao oficialsala perpetua vedelia arnicacampo ruelia falsairis salviavermelha salviaazul esponjinha jacobinia lixeira alamanda ciposaojoao',
+ p:'chanana gervao oficialsala perpetua vedelia arnicacampo ruelia falsairis salviavermelha salviaazul esponjinha jacobinia lixeira alamanda ciposaojoao maravilha',
  g:'inga embauba jucara castanha dedaleira candeia sangra crindiuva patadevaca guariroba'
 };
 const ORIG={N:'chanana gervao oficialsala perpetua vedelia arnicacampo ruelia falsairis salviavermelha salviaazul esponjinha jacobinia lixeira alamanda ciposaojoao cidreira pimenta taioba cara orapronobis carqueja macela alecrimcampo lantana mandioca canaindia heliconia begonia begoniaprateada samambaia dyckia tuna assapeixe pitanga araca uvaia cereja gabiroba maracuja inga embauba aroeira jucara castanha dedaleira candeia sangra crindiuva patadevaca guariroba',
@@ -1920,7 +1921,7 @@ function advice(p){
     if(p.dropped.length)out.push({k:'warn',t:`${names(p.dropped)} ${p.dropped.length>1?'precisam':'precisa'} de uma linha própria de árvores, e isso pede pelo menos 2,4 m de largura. Neste espaço, prefira plantas menores ou plante em vaso grande.`});
     const grandes=sel.filter(s=>(s.pt||0)>=8&&!p.dropped.includes(s));
     if(grandes.length&&area<60)out.push({k:'',t:`${names(grandes)} ${grandes.length>1?'chegam':'chega'} a ${Math.max(...grandes.map(s=>s.pt))} m ou mais. Em ${fmt(area)} m², mantenha com poda anual ou troque por pitanga, araçá ou acerola, que ficam menores.`,add:['pitanga','araca','acerola'].filter(i=>!S.sel.includes(i))});
-    {const inv=sel.filter(s=>INVASORA[s.id]);if(inv.length)out.push({k:'warn',t:`${names(inv)} ${inv.length>1?'são exóticas invasoras':'é exótica invasora'} em São Paulo (Prefeitura, 2025): as sementes escapam do quintal e competem com as nativas. Se quiser uma adubadeira no lugar, guandu, crotalária e ingá fazem a mesma função.`,add:['guandu','crotalaria','inga'].filter(i=>!S.sel.includes(i))});}
+    {const inv=sel.filter(s=>INVASORA[s.id]);if(inv.length){const TROCA={margaridao:['guandu','crotalaria','inga'],maravilha:['chanana','perpetua','vedelia'],goiaba:['araca','pitanga'],inhame:['taioba'],cafe:[]};const add=[...new Set([].concat(...inv.map(s=>TROCA[s.id]||[])))].filter(i=>BYID[i]&&!S.sel.includes(i));out.push({k:'warn',t:`${names(inv)} ${inv.length>1?'são exóticas invasoras':'é exótica invasora'} em São Paulo (Prefeitura, 2025): as sementes escapam do quintal e competem com as nativas.${add.length?' Se quiser trocar, estas nativas têm uso parecido:':''}`,add});}}
     if(p.lines.length&&!has(s=>s.adubo))out.push({k:'tip',t:'Inclua uma adubadeira. O feijão-guandu e a crotalária fixam nitrogênio no solo, e a poda deles vira adubo para os canteiros.',add:['guandu','crotalaria']});
     if(has(s=>s.nat&&isTree(s))&&!has(s=>s.bio))out.push({k:'tip',t:'Árvores nativas jovens crescem melhor com sombra provisória. Banana e mandioca fazem essa proteção nos primeiros anos e ainda dão comida e palha.',add:['banana','mandioca']});
     if(p.tri&&p.tri.inBed.length){const nb=p.tri.inBed.map(b=>b.t.n);out.push({k:'tip',t:`Para caber ${nb.length>1?'mais árvores':'mais uma árvore'}, ${nb.join(' e ')} ${nb.length>1?'foram':'foi'} para o meio ${nb.length>1?'dos canteiros':'do canteiro'}, formando um triângulo com as árvores das pontas da linha, a cerca de 2 m de cada uma. Deixe uma roda de 50 cm sem hortaliças em volta do tronco e pode a copa toda vez que ela passar de 2 m de altura ou começar a sombrear demais as hortaliças.`});}
