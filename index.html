@@ -763,7 +763,10 @@ function renderIndic(){
 }
 // Foto ao passar o mouse: miniatura da Wikipédia (pt, depois en), buscada só quando pedida.
 const FOTO=new Map();
-const FOTO_NOME={'Sida spp.':'Sida rhombifolia','Imperata sp.':'Imperata brasiliensis'};
+const FOTO_NOME={'Sida spp.':'Sida rhombifolia','Imperata sp.':'Imperata brasiliensis','Aristida sp.':'Aristida purpurea'};
+// fotos escolhidas no Wikimedia Commons que mostram a planta inteira; se não carregarem, volta para a da Wikipédia
+const FOTO_ARQ={'Equisetum sp.':'Equisetum giganteum (Hacienda Les Vaux de Pitunilla, Ayacucho-Pérou, 2005).JPG','Baccharis sp.':'Baccharis trimera.jpg','Raphanus raphanistrum':'Raphanus raphanistrum habitat.jpg','Portulaca oleracea':'Portulaca oleracea plant.jpg','Taraxacum officinale':'Taraxacum officinale plant10 (16189311200).jpg'};
+const fotoArqUrl=n=>`https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(n)}?width=440`;
 function fotoBusca(sci){
   if(FOTO.has(sci))return FOTO.get(sci);
   const nomes=[FOTO_NOME[sci]||sci.replace(/\s+spp?\.$/,'')];const g=sci.split(' ')[0];if(nomes[0]!==g)nomes.push(g);
@@ -784,8 +787,11 @@ function fotoMostra(btn){
   let top=b.top-h-8;if(top<8)top=b.bottom+8;
   fotoEl.style.left=left+'px';fotoEl.style.top=top+'px';
   fotoBusca(x[2]).then(f=>{if(fotoAt!==btn||!fotoEl)return;const box=fotoEl.querySelector('.if-img');
-    if(f){box.innerHTML=`<img alt="Foto de ${esc(x[1])}" src="${esc(f.src)}">`;fotoEl.insertAdjacentHTML('beforeend',`<span class="if-c">Foto: Wikipédia / Wikimedia Commons</span>`);}
-    else box.textContent='Foto indisponível aqui. Veja em quintal.marianacoan.com';});
+    const semFoto=()=>{box.textContent='Foto indisponível aqui. Veja em quintal.marianacoan.com';};
+    const poe=src=>{box.innerHTML=`<img alt="Foto de ${esc(x[1])}" src="${esc(src)}">`;if(!fotoEl.querySelector('.if-c'))fotoEl.insertAdjacentHTML('beforeend',`<span class="if-c">Foto: Wikipédia / Wikimedia Commons</span>`);return box.querySelector('img');};
+    const arq=FOTO_ARQ[x[2]];
+    if(arq){const im=poe(fotoArqUrl(arq));im.onerror=()=>{im.onerror=null;f?poe(f.src):semFoto();};return;}
+    if(f)poe(f.src);else semFoto();});
 }
 function fotoEsconde(){fotoAt=null;if(fotoEl)fotoEl.hidden=true;}
 const IB=document.getElementById('indicBox');
