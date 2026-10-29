@@ -908,7 +908,6 @@ const DATA=[
  {id:'castanha',n:'Castanha-do-maranhão',a:'Ct',c:'v',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'PM',pl:r(10,3),col:'3–5 anos',d:1500,v:80,pt:8,nat:1},
  {id:'dedaleira',msp:'G',sci:'Lafoensia pacari',n:'Dedaleiro',a:'Dd',c:'v',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'sem colheita; flores e sombra',d:0,v:0,pt:8,nat:1},
  {id:'candeia',n:'Candeia',a:'Ca',c:'v',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'sem colheita; pioneira e melífera',d:0,v:0,pt:7,nat:1},
- {id:'assapeixe',n:'Assa-peixe',a:'Ap',c:'v',e:'M',el:1,ep:1,src:'PR',sol:'P',pl:r(9,3),col:'flores em 1 ano; melífera',d:0,v:40,nat:1,h:2.5,bio:1},
  {id:'lantana',n:'Lantana-roxa',a:'Lr',c:'v',e:'B',el:.8,ep:.6,src:'PR',sol:'P',pl:r(9,3),col:'flores em 3–4 meses',d:0,v:20,nat:1,h:.8},
  {id:'canaindia',n:'Biri (cana-da-índia)',a:'Ci',c:'v',e:'B',el:.8,ep:.5,src:'PR',sol:'PM',pl:r(9,3),col:'flores em 4–6 meses; rizomas comestíveis',d:0,v:20,nat:1,h:1.5,bio:1},
  {id:'maravilha',n:'Maravilha',a:'Mv',c:'v',e:'B',el:.6,ep:.5,src:'PR',sol:'PM',pl:r(9,3),col:'flores em 2–3 meses',d:0,v:10,h:.8},
@@ -1111,7 +1110,7 @@ const DATA=[
  {id:'inhame',n:'Inhame',sci:'Colocasia esculenta',a:'Ih',c:'h',e:'B',el:.8,ep:.4,src:'ID38',sol:'PM',pl:r(8,11),col:'7–9 meses (rizomas)',d:240,v:30,h:1.2},
  {id:'gengibre',n:'Gengibre',sci:'Zingiber officinale',a:'Gg',c:'t',e:'B',el:.4,ep:.3,src:'ID38',sol:'PM',pl:r(8,11),col:'8–10 meses (rizomas)',d:270,v:30,h:.9}
 ];
-const VIELA=['pitanga','grumixama','orapronobis','cereja','cabeludinha','castanha','dedaleira','candeia','assapeixe','lantana','canaindia','maravilha','amendoim'];
+const VIELA=['pitanga','grumixama','orapronobis','cereja','cabeludinha','castanha','dedaleira','candeia','lantana','canaindia','maravilha','amendoim'];
 // Solos mais úmidos: ciclo e boas companhias
 const UMIDO={
  banana:['Temporária (sai conforme o sistema fecha)',['jucara','taioba','cambuci','heliconia','jabuticaba']],
@@ -1230,7 +1229,7 @@ function compOf(id){
 // grupo de cada planta e origem: N nativa, Z naturalizada, E endêmica, '' exótica cultivada
 const GRUPO={
  f:'banana mamao aroeira acerola limao cafe pitanga araca cambuci jabuticaba grumixama uvaia cereja cabeludinha gabiroba maracuja',
- a:'margaridao canaacucar guandu crotalaria feijaoporco feijaocorda mandioca amendoim maravilha canaindia heliconia assapeixe begonia begoniaprateada samambaia dyckia',
+ a:'margaridao canaacucar guandu crotalaria feijaoporco feijaocorda mandioca amendoim maravilha canaindia heliconia begonia begoniaprateada samambaia dyckia',
  t:'boldo boldinho cidreira hibisco lavanda manjericao cebolinha salsinha hortela alecrim capimsanto carqueja macela alecrimcampo lantana',
  h:'alface rucula peixinho cenoura beterraba couve tomate berinjela pimenta quiabo feijao abobora batatadoce milho taioba cara orapronobis',
  p:'chanana gervao oficialsala perpetua vedelia arnicacampo ruelia falsairis salviavermelha salviaazul esponjinha jacobinia lixeira alamanda ciposaojoao',
@@ -1345,7 +1344,7 @@ $('quick').addEventListener('click',e=>{
   const q=b.dataset.q;
 
   const ids=q==='viela'?VIELA:q==='umido'?Object.keys(UMIDO):Object.keys(SECO).concat(['maracuja','dyckia']);
-  ids.forEach(i=>{if(!S.sel.includes(i))S.sel.push(i);});
+  ids.forEach(i=>{if(BYID[i]&&!S.sel.includes(i))S.sel.push(i);});
   if(q!=='viela')S.solo=q;
   S.exemplo=false;update();
 });
@@ -1829,7 +1828,7 @@ function advice(p){
   }
   if(S.solo==='seco'){
     const molhadas=sel.filter(s=>(UMIDO[s.id]&&!SECO[s.id])||(BEIRA_Z1.has(s.id)&&!UMIDO[s.id]));
-    out.push({k:'tip',t:'Com solo seco ou pedregoso, prefira as plantas da seleção rápida “Solo seco ou pedregoso”.',add:['feijaoporco','candeia','assapeixe','carqueja','gabiroba'].filter(i=>!S.sel.includes(i))});
+    out.push({k:'tip',t:'Com solo seco ou pedregoso, prefira as plantas da seleção rápida “Solo seco ou pedregoso”.',add:['feijaoporco','candeia','carqueja','gabiroba'].filter(i=>!S.sel.includes(i))});
     if(molhadas.length)out.push({k:'warn',t:`${names(molhadas)} ${molhadas.length>1?'preferem':'prefere'} umidade constante. Em solo seco, plante só onde der para regar ou na parte mais baixa e úmida do terreno.`});
   }
   if(sel.some(x=>x.id==='mastruz'))out.push({k:'warn',t:'O mastruz é medicinal, mas é tóxico em doses altas. Use só com orientação de um profissional de saúde e mantenha longe de crianças e animais.'});
@@ -3380,7 +3379,7 @@ function update(fromInput){
     const comp=p.sel.filter(s=>compOf(s.id));
     if(comp.length){
       const selIds=new Set(S.sel);
-      h+=`<section class="panel" aria-labelledby="t-comp"><h2 id="t-comp">Boas companhias</h2><div class="tbl"><table class="cards"><thead><tr><th>Planta</th><th style="text-align:left">Ciclo</th><th style="text-align:left">Vai bem com</th></tr></thead><tbody>`+comp.map(s=>`<tr><td>${esc(s.n)}</td><td class="src" data-l="Ciclo">${esc(compOf(s.id)[0])}</td><td class="src blk" data-l="Vai bem com">${compOf(s.id)[1].map(i=>selIds.has(i)?`<strong style="color:var(--leaf)">${esc(BYID[i].n)}</strong>`:esc(BYID[i].n)).join(', ')}</td></tr>`).join('')+`</tbody></table></div><p class="hint">Em verde, as companheiras que já estão no seu plantio.</p></section>`;
+      h+=`<section class="panel" aria-labelledby="t-comp"><h2 id="t-comp">Boas companhias</h2><div class="tbl"><table class="cards"><thead><tr><th>Planta</th><th style="text-align:left">Ciclo</th><th style="text-align:left">Vai bem com</th></tr></thead><tbody>`+comp.map(s=>`<tr><td>${esc(s.n)}</td><td class="src" data-l="Ciclo">${esc(compOf(s.id)[0])}</td><td class="src blk" data-l="Vai bem com">${compOf(s.id)[1].filter(i=>BYID[i]).map(i=>selIds.has(i)?`<strong style="color:var(--leaf)">${esc(BYID[i].n)}</strong>`:esc(BYID[i].n)).join(', ')}</td></tr>`).join('')+`</tbody></table></div><p class="hint">Em verde, as companheiras que já estão no seu plantio.</p></section>`;
     }
     h+=`<section class="panel" aria-labelledby="t-cal"><h2 id="t-cal">Calendário de plantio</h2>${calendar(p.sel)}</section>`;
     h+=`<section class="panel" aria-labelledby="t-man"><h2 id="t-man">Cuidados ao longo do tempo</h2>${manejo(p)}</section>`;
