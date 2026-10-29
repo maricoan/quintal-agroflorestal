@@ -764,34 +764,50 @@ function renderIndic(){
 // Foto ao passar o mouse: miniatura da Wikipédia (pt, depois en), buscada só quando pedida.
 const FOTO=new Map();
 const FOTO_NOME={'Sida spp.':'Sida rhombifolia','Imperata sp.':'Imperata brasiliensis','Aristida sp.':'Aristida purpurea'};
-// fotos escolhidas no Wikimedia Commons que mostram a planta inteira; se não carregarem, volta para a da Wikipédia
-const FOTO_ARQ={'Equisetum sp.':'Equisetum giganteum (Hacienda Les Vaux de Pitunilla, Ayacucho-Pérou, 2005).JPG','Baccharis sp.':'Baccharis trimera.jpg','Raphanus raphanistrum':'Raphanus raphanistrum habitat.jpg','Portulaca oleracea':'Portulaca oleracea plant.jpg','Taraxacum officinale':'Taraxacum officinale plant10 (16189311200).jpg'};
+// fotos escolhidas no Wikimedia Commons (planta inteira, um indivíduo); tenta na ordem e, se nenhuma carregar, usa a da Wikipédia
+const FOTO_ARQ={'Equisetum sp.':['Illustration Equisetum hyemale0.jpg','Illustration Equisetum arvense0.jpg'],'Baccharis sp.':['Baccharis trimera.jpg'],'Raphanus raphanistrum':['Raphanus raphanistrum habitat.jpg'],'Portulaca oleracea':['Portulaca oleracea plant.jpg'],'Taraxacum officinale':['Taraxacum officinale plant10 (16189311200).jpg']};
 const fotoArqUrl=n=>`https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(n)}?width=440`;
-function fotoBusca(sci){
-  if(FOTO.has(sci))return FOTO.get(sci);
-  const nomes=[FOTO_NOME[sci]||sci.replace(/\s+spp?\.$/,'')];const g=sci.split(' ')[0];if(nomes[0]!==g)nomes.push(g);
-  const tent=[];nomes.forEach(n=>['pt','en'].forEach(l=>tent.push([l,n])));
+// frutíferas: artigos cuja foto principal é o fruto
+const FRUTA_FOTO={banana:['en:Banana'],mamao:['en:Papaya'],acerola:['en:Malpighia emarginata'],limao:['en:Persian lime','pt:Limão'],cafe:['en:Coffea arabica'],pitanga:['en:Eugenia uniflora'],araca:['en:Psidium cattleyanum'],cambuci:['en:Campomanesia phaea'],jabuticaba:['en:Jabuticaba'],grumixama:['en:Eugenia brasiliensis'],uvaia:['en:Eugenia pyriformis'],cereja:['en:Eugenia involucrata'],cabeludinha:['en:Myrciaria glazioviana'],gabiroba:['en:Campomanesia adamantium','pt:Gabiroba'],maracuja:['en:Passiflora edulis'],tuna:['en:Cereus hildmannianus'],a_eugeniadysenterica:['en:Eugenia dysenterica'],a_pimentadioica:['en:Allspice'],a_pliniaedulis:['en:Plinia edulis'],a_pouteriatorta:['en:Pouteria torta'],a_campomanesiaxanthocarpa:['en:Campomanesia xanthocarpa'],a_myrcianthespungens:['en:Myrcianthes pungens'],mexerica:['en:Mandarin orange'],abacate:['en:Avocado'],goiaba:['en:Guava'],manga:['en:Mango'],caqui:['en:Diospyros kaki'],melancia:['en:Watermelon'],abacaxi:['en:Pineapple']};
+function fotoWiki(chave,tent){
+  if(FOTO.has(chave))return FOTO.get(chave);
   const pr=(async()=>{for(const [l,n] of tent){try{const r=await fetch(`https://${l}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(n.replace(/ /g,'_'))}`);
     if(!r.ok)continue;const j=await r.json();if(j.type!=='disambiguation'&&j.thumbnail&&j.thumbnail.source)return {src:j.thumbnail.source,wiki:l};}catch(e){return null;}}return null;})();
-  FOTO.set(sci,pr);return pr;
+  FOTO.set(chave,pr);return pr;
+}
+function fotoBusca(sci){
+  const nomes=[FOTO_NOME[sci]||sci.replace(/\s+spp?\.$/,'')];const g=sci.split(' ')[0];if(nomes[0]!==g)nomes.push(g);
+  const tent=[];nomes.forEach(n=>['pt','en'].forEach(l=>tent.push([l,n])));
+  return fotoWiki(sci,tent);
+}
+function fotoFruta(s){
+  const tent=(FRUTA_FOTO[s.id]||[]).map(t=>t.split(':'));if(s.sci)tent.push(['pt',s.sci],['en',s.sci]);
+  return fotoWiki('fruta:'+s.id,tent);
 }
 let fotoEl=null,fotoAt=null;
-function fotoMostra(btn){
-  const x=INDIC.find(i=>i[0]===btn.dataset.ind);if(!x)return;
+function fotoCard(btn,nome,sub,busca,arqs){
   if(!fotoEl){fotoEl=document.createElement('div');fotoEl.className='ifoto';fotoEl.setAttribute('role','tooltip');document.body.appendChild(fotoEl);}
   fotoAt=btn;
-  fotoEl.innerHTML=`<div class="if-img">carregando foto…</div><b>${esc(x[1])}</b><i>${esc(x[2])}</i>`;
+  fotoEl.innerHTML=`<div class="if-img">carregando foto…</div><b>${esc(nome)}</b>${sub?`<i>${esc(sub)}</i>`:''}`;
   fotoEl.hidden=false;
   const b=btn.getBoundingClientRect(),w=216,h=fotoEl.offsetHeight||210;
   let left=Math.min(Math.max(8,b.left+b.width/2-w/2),innerWidth-w-8);
   let top=b.top-h-8;if(top<8)top=b.bottom+8;
   fotoEl.style.left=left+'px';fotoEl.style.top=top+'px';
-  fotoBusca(x[2]).then(f=>{if(fotoAt!==btn||!fotoEl)return;const box=fotoEl.querySelector('.if-img');
+  busca.then(f=>{if(fotoAt!==btn||!fotoEl)return;const box=fotoEl.querySelector('.if-img');
     const semFoto=()=>{box.textContent='Foto indisponível aqui. Veja em quintal.marianacoan.com';};
-    const poe=src=>{box.innerHTML=`<img alt="Foto de ${esc(x[1])}" src="${esc(src)}">`;if(!fotoEl.querySelector('.if-c'))fotoEl.insertAdjacentHTML('beforeend',`<span class="if-c">Foto: Wikipédia / Wikimedia Commons</span>`);return box.querySelector('img');};
-    const arq=FOTO_ARQ[x[2]];
-    if(arq){const im=poe(fotoArqUrl(arq));im.onerror=()=>{im.onerror=null;f?poe(f.src):semFoto();};return;}
-    if(f)poe(f.src);else semFoto();});
+    const poe=src=>{box.innerHTML=`<img alt="Foto de ${esc(nome)}" src="${esc(src)}">`;if(!fotoEl.querySelector('.if-c'))fotoEl.insertAdjacentHTML('beforeend',`<span class="if-c">Foto: Wikipédia / Wikimedia Commons</span>`);return box.querySelector('img');};
+    const L=(arqs||[]).slice();
+    const prox=()=>{if(fotoAt!==btn)return;const n=L.shift();if(!n){f?poe(f.src):semFoto();return;}const im=poe(fotoArqUrl(n));im.onerror=()=>{im.onerror=null;prox();};};
+    if(L.length)prox();else if(f)poe(f.src);else semFoto();});
+}
+function fotoMostra(btn){
+  const x=INDIC.find(i=>i[0]===btn.dataset.ind);if(!x)return;
+  fotoCard(btn,x[1],x[2],fotoBusca(x[2]),FOTO_ARQ[x[2]]);
+}
+function fotoMostraFruta(btn){
+  const s=BYID[btn.dataset.id];if(!s||!FRUTA_FOTO[s.id])return;
+  fotoCard(btn,s.n,s.sci||'',fotoFruta(s));
 }
 function fotoEsconde(){fotoAt=null;if(fotoEl)fotoEl.hidden=true;}
 const IB=document.getElementById('indicBox');
@@ -799,8 +815,14 @@ IB.addEventListener('pointerover',e=>{const c=e.target.closest('[data-ind]');if(
 IB.addEventListener('pointerout',e=>{const c=e.target.closest('[data-ind]');if(c&&!c.contains(e.relatedTarget))fotoEsconde();});
 IB.addEventListener('focusin',e=>{const c=e.target.closest('[data-ind]');if(c)fotoMostra(c);});
 IB.addEventListener('focusout',fotoEsconde);
+// frutíferas na lista de plantas
+const CATSEL=document.getElementById('cats');
+CATSEL.addEventListener('pointerover',e=>{const c=e.target.closest('.chip[data-id]');if(c&&c!==fotoAt&&FRUTA_FOTO[c.dataset.id])fotoMostraFruta(c);});
+CATSEL.addEventListener('pointerout',e=>{const c=e.target.closest('.chip[data-id]');if(c&&c===fotoAt&&!c.contains(e.relatedTarget))fotoEsconde();});
+CATSEL.addEventListener('focusin',e=>{const c=e.target.closest('.chip[data-id]');if(c&&FRUTA_FOTO[c.dataset.id])fotoMostraFruta(c);});
+CATSEL.addEventListener('focusout',fotoEsconde);
 addEventListener('scroll',fotoEsconde,{passive:true});
-document.addEventListener('pointerdown',e=>{if(!e.target.closest('[data-ind]'))fotoEsconde();});
+document.addEventListener('pointerdown',e=>{if(!e.target.closest('[data-ind],#cats .chip[data-id]'))fotoEsconde();});
 document.getElementById('indicBox').addEventListener('click',e=>{
   const c=e.target.closest('[data-ind]');if(c){const id=c.dataset.ind;S.indic=S.indic||[];S.indic=S.indic.includes(id)?S.indic.filter(i=>i!==id):S.indic.concat([id]);save();renderIndic();return;}
   const u=e.target.closest('[data-indset]');if(u){S.solo=u.dataset.indset;S.exemplo=false;update();return;}
