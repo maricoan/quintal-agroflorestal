@@ -223,6 +223,21 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .indic{border:1px solid var(--line);border-radius:8px;padding:0 10px}
 .indic summary{cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;padding:9px 0;list-style:none}
 .indic summary::-webkit-details-marker{display:none}
+.inv{border:1px solid var(--warn);border-radius:8px;padding:0 10px;background:var(--warn-soft);margin-top:12px}
+.inv summary{cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;padding:9px 0;list-style:none;color:var(--warn)}
+.inv summary::-webkit-details-marker{display:none}.inv summary .cat-sub{font-weight:400;color:var(--ink)}
+.inv[open]{padding-bottom:10px}.inv .hint{margin:0 0 8px}
+.inv-ic{width:20px;height:20px;flex:none;fill:none;stroke:var(--warn);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.inv-g{margin:8px 0 4px;font-size:12.5px;font-weight:700;color:var(--warn)}
+.inv .chip{border-color:var(--warn);background:var(--surface)}.inv .chip[aria-pressed="true"]{background:var(--warn);color:var(--surface)}
+.inv .chip .inv-ic{width:14px;height:14px;margin-right:3px;vertical-align:-2px}.inv .chip[aria-pressed="true"] .inv-ic{stroke:var(--surface)}
+.inv-c{margin-top:10px;background:var(--surface);border:1px solid var(--warn);border-radius:8px;padding:10px 12px;font-size:13px}
+.inv-c b{font-size:14px}.inv-c i{color:var(--muted)}
+.inv-p{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;border-radius:4px;padding:0 5px;margin-left:6px;border:1px solid var(--warn);color:var(--warn)}.inv-p.A{background:var(--warn);color:var(--surface)}
+.inv-c .acts{margin-top:6px;display:flex;flex-wrap:wrap;gap:6px}.inv-c .acts button{font:inherit;font-size:12.5px;border:1px solid var(--leaf);color:var(--leaf);background:transparent;border-radius:999px;padding:3px 10px;cursor:pointer}
+.inv-n{margin:10px 0 0;font-size:12px;color:var(--muted)}.inv-n a{color:var(--warn)}
+.inv-busca{margin-top:6px;border:1px solid var(--warn);background:var(--warn-soft);border-radius:8px;padding:8px 10px;font-size:13px}
+.inv-busca b{color:var(--warn)}.inv-busca .acts{margin-top:5px;display:flex;flex-wrap:wrap;gap:6px}.inv-busca .acts button{font:inherit;font-size:12.5px;border:1px solid var(--leaf);color:var(--leaf);background:var(--surface);border-radius:999px;padding:3px 10px;cursor:pointer}
 .indic summary .cat-sub{font-weight:400}.indic[open]{padding-bottom:10px}.indic .hint{margin:0 0 8px}
 .ind-d{margin-top:8px;font-size:12.5px}.ind-d summary{cursor:pointer;color:var(--leaf);font-weight:700}.ind-d .ind-n{margin:4px 0 0}.nasc-d{margin:2px 0 8px}.wz-d{margin-top:8px}.wz-d .wz-n{margin-top:4px}.nasc .nasc-d summary{padding:2px 0;font-size:12.5px}
 .ifoto{position:fixed;z-index:60;width:216px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(20,25,10,.22);padding:8px;font-size:12.5px;line-height:1.35;pointer-events:none}
@@ -651,6 +666,7 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
           <span class="hint" id="nsel"></span>
         </div>
         <div><label class="sr" for="busca">Buscar planta</label><input id="busca" type="text" placeholder="Buscar: alface, pitanga, café…"></div>
+        <div class="inv-busca" id="invBusca" aria-live="polite" hidden></div>
         <div class="tray" id="tray" aria-live="polite"></div>
         <details class="legend-box" id="legbox"><summary>Como ler os ícones</summary>
         <ul class="oleg" aria-label="Legenda de origem">
@@ -676,6 +692,12 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
         </div>
         <p class="chipinfo" id="chipinfo" aria-live="polite"><span class="ci-d">Passe o mouse ou toque numa planta para ver o estrato, a luz e a origem.</span></p>
         <div class="cats" id="cats"></div>
+        <details class="inv" id="invBox"><summary><svg class="inv-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 18v-6M12 13.5c-3 0-4.6-1.8-4.8-4.5 3 0 4.6 1.7 4.8 4.5zM12 12c.2-2.6 1.8-4.3 4.6-4.3-.2 2.7-1.8 4.3-4.6 4.3z"/><path d="M5.3 5.3l13.4 13.4"/></svg><span>Evite plantar <span class="cat-sub">invasoras comuns em jardins de São Paulo</span></span></summary>
+          <p class="hint">Estas plantas são vendidas e usadas em paisagismo, mas escapam dos jardins e invadem matas, beiras de rio e terrenos. Toque numa delas para ver onde invade e uma nativa para plantar no lugar.</p>
+          <div id="invList"></div>
+          <div id="invRes" aria-live="polite"></div>
+          <p class="inv-n" id="invFonte"></p>
+        </details>
         <button type="button" class="mt-next" data-mt="plano">Ver o plano →</button>
       </section>
     </div>
@@ -837,7 +859,7 @@ CATSEL.addEventListener('pointerout',e=>{const c=e.target.closest('.chip[data-id
 CATSEL.addEventListener('focusin',e=>{const c=e.target.closest('.chip[data-id]');if(c&&FRUTA_FOTO[c.dataset.id])fotoMostraFruta(c);});
 CATSEL.addEventListener('focusout',fotoEsconde);
 addEventListener('scroll',fotoEsconde,{passive:true});
-document.addEventListener('pointerdown',e=>{if(!e.target.closest('[data-ind],#cats .chip[data-id]'))fotoEsconde();});
+document.addEventListener('pointerdown',e=>{if(!e.target.closest('[data-ind],#cats .chip[data-id],[data-inv]'))fotoEsconde();});
 document.getElementById('indicBox').addEventListener('click',e=>{
   const c=e.target.closest('[data-ind]');if(c){const id=c.dataset.ind;S.indic=S.indic||[];S.indic=S.indic.includes(id)?S.indic.filter(i=>i!==id):S.indic.concat([id]);save();renderIndic();return;}
   const u=e.target.closest('[data-indset]');if(u){S.solo=u.dataset.indset;S.exemplo=false;update();return;}
@@ -864,6 +886,7 @@ const REFS={
  UFSC:{n:17,t:'Prado, C. P. et al. Plantas indicadoras. Oficinas Agroecológicas, UFSC Curitibanos, a partir de Embrapa, Cultivo do café orgânico.',u:'https://conevajr.ufsc.br/files/2015/01/Folder-Plantas-Indicadoras.pdf'},
  MBP:{n:15,t:'Pinheiro, M. B. Plantas para Infraestrutura Verde e o papel da vegetação no tratamento das águas urbanas de São Paulo: identificação de critérios para seleção de espécies. Dissertação, FAU-USP, 2017.',u:'https://www.teses.usp.br/teses/disponiveis/16/16139/tde-24072017-104105/pt-br.php'},
  ID38:{n:18,t:'Ribeiro, J. F. (Embrapa Cerrados). Proteção e restauração de nascentes com agroflorestas. Experiências em Recuperação Ambiental, a partir de Miccolis, A. et al. Restauração ecológica com Sistemas Agroflorestais. ISPN/ICRAF, 2016.',u:'https://www.embrapa.br/documents/10180/13310826/ID38.pdf'},
+ SPINV:{n:19,t:'Prefeitura de São Paulo. Portaria Conjunta SVMA/SMSUB nº 1, de 28 de janeiro de 2025. Anexo I: Lista de Flora Exótica Invasora do município de São Paulo.',u:'https://legislacao.prefeitura.sp.gov.br/portaria-conjunta-secretaria-municipal-do-verde-e-do-meio-ambiente-svma-secretaria-municipal-das-subprefeituras-smsub-1-de-28-de-janeiro-de-2025'},
  C9:{n:14,t:'Ushimaru, T. Influência do sombreamento sobre a fisiologia, crescimento e qualidade das mudas de juçara. Dissertação, UFV, 2021.',u:'https://locus.ufv.br//handle/123456789/29143'}
 };
 // el = entre linhas (m); ep = entre plantas (m); src = referência; sol = luz tolerada (P pleno, M meia-sombra, S sombra)
@@ -1335,7 +1358,13 @@ $('inD').addEventListener('input',e=>{const v=parseFloat(e.target.value);if(!isF
 ['inL','inW'].forEach(id=>{$(id).addEventListener('input',e=>{const v=parseFloat(e.target.value);if(!isFinite(v))return;S[id==='inL'?'L':'W']=Math.min(40,Math.max(.5,v));S.exemplo=false;update(true);});});
 document.querySelectorAll('[data-ico]').forEach(el=>{el.innerHTML=ICON[el.dataset.ico];});
 document.querySelectorAll('[data-sig]').forEach(el=>{el.outerHTML=sig(el.dataset.sig);});
-$('busca').addEventListener('input',renderCats);
+$('busca').addEventListener('input',()=>{renderCats();invBusca();});
+document.getElementById('invBox').addEventListener('click',e=>{const c=e.target.closest('[data-inv]');if(c){invSel=invSel===c.dataset.inv?null:c.dataset.inv;renderInv();return;}});
+{const IV=document.getElementById('invBox');
+ const mostra=c=>{const x=INV_ALL.find(i=>i[0]===c.dataset.inv);if(!x)return;const sci=x[2].split(' ').slice(0,2).join(' ').replace(/[,(]/g,'');fotoCard(c,x[1],x[2],fotoWiki('inv:'+x[0],[['en',sci],['pt',sci]]));};
+ IV.addEventListener('pointerover',e=>{const c=e.target.closest('[data-inv]');if(c&&c!==fotoAt)mostra(c);});
+ IV.addEventListener('pointerout',e=>{const c=e.target.closest('[data-inv]');if(c&&c===fotoAt&&!c.contains(e.relatedTarget))fotoEsconde();});}
+document.addEventListener('click',e=>{const a=e.target.closest('[data-invadd]');if(!a)return;const i=a.dataset.invadd;if(BYID[i]&&!S.sel.includes(i)){S.sel.push(i);S.exemplo=false;update();}a.disabled=true;a.textContent='✓ '+BYID[i].n;});
 $('tray').addEventListener('click',e=>{const b=e.target.closest('[data-rmsel]');if(!b)return;S.sel=S.sel.filter(i=>i!==b.dataset.rmsel);S.exemplo=false;update();});
 try{$('legbox').open=!!(S.legOpen);}catch(e){}
 $('legbox').addEventListener('toggle',()=>{S.legOpen=$('legbox').open;save();});
@@ -1355,7 +1384,84 @@ $('quick').addEventListener('click',e=>{
   S.exemplo=false;update();
 });
 // Exóticas invasoras no município de São Paulo (Anexo I da Portaria Conjunta SVMA/SMSUB nº 1/2025)
-const INVASORA={margaridao:'Invasora em São Paulo: potencial alto de invasão em áreas urbanas e médio em bosques e cerrado (Prefeitura de SP, 2025). As sementes se espalham para fora do quintal.'};
+const INVASORA={goiaba:'Invasora em São Paulo: potencial médio em áreas urbanas e no cerrado (Prefeitura de SP, 2025). Pássaros espalham as sementes.',inhame:'Invasora em São Paulo: potencial baixo, mas invade beiras de rio e várzeas (Prefeitura de SP, 2025). Não plante perto da água.',maravilha:'Invasora em São Paulo: potencial baixo em áreas urbanas e bosques (Prefeitura de SP, 2025). Ressemeia sozinha.',cafe:'Invasora em São Paulo: potencial baixo em áreas urbanas, bosques e mata (Prefeitura de SP, 2025). Pássaros espalham as sementes.',margaridao:'Invasora em São Paulo: potencial alto de invasão em áreas urbanas e médio em bosques e cerrado (Prefeitura de SP, 2025). As sementes se espalham para fora do quintal.'};
+
+// Lista de invasoras usadas em paisagismo (Anexo I da Portaria Conjunta SVMA/SMSUB nº 1/2025, Prefeitura de São Paulo).
+// [id, nome, científico, potencial mais alto (A/M/B), onde invade, nativas para plantar no lugar]
+const INV_AMB={AA:'áreas urbanas e jardins',BH:'bosques',FOM:'mata atlântica de encosta',FV:'matas de beira de rio',CV:'várzeas e campos úmidos',CCE:'campos e cerrado',CAM:'campos de altitude',AQ:'lagos e represas'};
+const INV_GRUPOS=[
+ ['Folhagens de vaso e jardim',[
+  ['jiboia','Jiboia','Epipremnum pinnatum','M','AA BH FOM',['marantacinza','begonia']],
+  ['costela','Costela-de-adão','Monstera deliciosa','M','AA BH FOM',['marantacinza','heliconia']],
+  ['singonio','Singônio','Syngonium podophyllum e S. angustatum','A','AA BH FOM',['marantacinza','begonia']],
+  ['filodendro','Filodendro-pendente','Philodendron hederaceum','A','AA BH FOM',['begonia','samambaia']],
+  ['espada','Espada-de-são-jorge','Sansevieria trifasciata','B','AA BH',['dyckia','falsairis']],
+  ['piteira','Piteira','Furcraea selloa','B','AA BH',['dyckia']],
+  ['aspargo','Aspargo-samambaia','Asparagus setaceus','B','AA BH FOM',['samambaia']],
+  ['samametro','Samambaia-de-metro','Nephrolepis cordifolia','A','AA BH FOM',['samambaia']],
+  ['aluminio','Alumínio','Pilea cadierei','A','AA BH FOM',['begoniaprateada','begonia']],
+  ['brilhantina','Brilhantina','Pilea microphylla','B','AA BH',['amendoim']],
+  ['lambari','Lambari','Tradescantia zebrina','A','AA BH FOM',['amendoim','vedelia']],
+  ['curculigo','Curcúligo','Curculigo capitulata','B','AA BH',['marantacinza']]]],
+ ['Flores e forrações',[
+  ['mariasv','Maria-sem-vergonha','Impatiens walleriana','M','AA BH FOM',['begonia','begoniaprateada']],
+  ['crocosmia','Crocosmia','Crocosmia × crocosmiiflora','M','AA CCE CAM',['falsairis']],
+  ['liriof','Lírio','Lilium formosanum','M','AA CCE',['falsairis']],
+  ['tapete','Tapete-inglês','Persicaria capitata (Polygonum capitatum)','M','AA BH CCE',['vedelia','amendoim']],
+  ['jalapa','Jalapa (maravilha)','Mirabilis jalapa','B','AA BH',['chanana','perpetua']]]],
+ ['Trepadeiras',[
+  ['tumbergia','Tumbérgia-azul','Thunbergia grandiflora','M','AA BH',['ciposaojoao']]]],
+ ['Beira d’água',[
+  ['hedychium','Lírios-do-brejo e gengibre-de-kahili','Hedychium coronarium, H. coccineum, H. flavescens e H. gardnerianum','A','AA BH FOM FV CV',['canademacaco','heliconia']],
+  ['ninfeia','Ninfeias','Nymphaea caerulea e N. mexicana','A','AQ',[]],
+  ['bananaorn','Bananeira-ornamental','Musa ornata','A','AA BH FV',['heliconia']]]],
+ ['Árvores, arbustos e palmeiras',[
+  ['seafortia','Palmeira-seafórtia','Archontophoenix cunninghamiana','A','AA BH FOM',['jucara','guariroba']],
+  ['livistona','Palmeira-de-leque-da-china','Livistona chinensis','M','AA BH FOM',['jucara']],
+  ['cheflera','Árvore-polvo (cheflera)','Heptapleurum actinophyllum','M','AA BH',['a_caseariasylvestris']],
+  ['tetrapanax','Árvore-do-papel-de-arroz','Tetrapanax papyrifer','A','AA BH',[]],
+  ['ipejardim','Ipê-de-jardim','Tecoma stans','A','AA BH FOM CCE',['a_handroanthuschrysotrichus','ciposaojoao']],
+  ['espatodea','Espatódea','Spathodea campanulata','B','AA BH',['mulungu']],
+  ['ligustro','Alfeneiro (ligustro)','Ligustrum lucidum','B','AA BH',['a_caseariasylvestris']],
+  ['leucena','Leucena','Leucaena leucocephala','A','AA BH FOM FV',['guandu','inga']],
+  ['pauincenso','Pau-incenso','Pittosporum undulatum','A','AA BH FOM',['cambui']],
+  ['uvajaponesa','Uva-japonesa','Hovenia dulcis','M','AA BH FOM',['grumixama','pitanga']],
+  ['lacerdinha','Figueira-lacerdinha','Ficus microcarpa','B','AA BH',['figueirabranca']],
+  ['cinamomo','Cinamomo','Melia azedarach','B','AA BH',['a_cedrelafissilis']],
+  ['jambolao','Jambolão','Syzygium cumini','B','AA BH FOM FV',['jabuticaba','grumixama']],
+  ['amoreira','Amoreira-preta','Morus nigra','B','AA BH',['pitanga','grumixama']],
+  ['nespereira','Nespereira','Eriobotrya japonica','M','AA BH FOM',['uvaia','cambuci']],
+  ['ocna','Ocna','Ochna serrulata','M','AA BH FOM',['pitanga']],
+  ['mamona','Mamona','Ricinus communis','A','AA BH FV CV CCE',['guandu','fedegoso']],
+  ['pinus','Pínus','Pinus elliottii','A','AA BH FOM FAM FV CV CCE CAM',[]]]],
+ ['Capins e bambus',[
+  ['bambu','Bambu-japonês (bambu-dourado)','Phyllostachys aurea','A','AA BH FOM FV CV CCE',[]],
+  ['capimelefante','Capim-elefante','Cenchrus purpureus','A','AA BH CV CCE',['guandu','crotalaria']],
+  ['capimgordura','Capim-gordura','Melinis minutiflora','A','AA BH CCE CAM',['amendoim']],
+  ['braquiaria','Braquiárias','Urochloa spp.','A','AA BH FV CV CCE AQ',['amendoim']]]]];
+const INV_ALL=[].concat(...INV_GRUPOS.map(g=>g[1]));
+const INV_NIVEL={A:'potencial alto',M:'potencial médio',B:'potencial baixo'};
+const INV_IC='<svg class="inv-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 18v-6M12 13.5c-3 0-4.6-1.8-4.8-4.5 3 0 4.6 1.7 4.8 4.5zM12 12c.2-2.6 1.8-4.3 4.6-4.3-.2 2.7-1.8 4.3-4.6 4.3z"/><path d="M5.3 5.3l13.4 13.4"/></svg>';
+const invOnde=c=>{const L=c.split(' ').map(k=>INV_AMB[k]);return L.length>1?L.slice(0,-1).join(', ')+' e '+L[L.length-1]:L[0];};
+function invCard(x){
+  const tr=x[5].filter(i=>BYID[i]);
+  return `<div class="inv-c"><b>${esc(x[1])}</b><span class="inv-p ${x[3]}">${INV_NIVEL[x[3]]}</span><br><i>${esc(x[2])}</i><br>Invade ${invOnde(x[4])}.`+
+    (tr.length?`<div class="acts"><span>Plante no lugar:</span>${tr.map(i=>`<button type="button" data-invadd="${i}">+ ${esc(BYID[i].n)}</button>`).join('')}</div>`:'<div class="acts"><span>Sem nativa equivalente na lista do app: prefira não plantar.</span></div>')+`</div>`;
+}
+let invSel=null;
+function renderInv(){
+  $('invList').innerHTML=INV_GRUPOS.map(([g,L])=>`<p class="inv-g">${g}</p><div class="chips">${L.map(x=>`<button type="button" class="chip" data-inv="${x[0]}" aria-pressed="${invSel===x[0]}">${INV_IC}${esc(x[1])}</button>`).join('')}</div>`).join('');
+  const x=INV_ALL.find(i=>i[0]===invSel);$('invRes').innerHTML=x?invCard(x):'';
+  $('invFonte').innerHTML=`Fonte: <a href="${REFS.SPINV.u}" target="_blank" rel="noopener">Prefeitura de São Paulo, Portaria Conjunta SVMA/SMSUB nº 1/2025, Anexo I</a>. A Portaria proíbe essas espécies em plantios e compensações da prefeitura; em jardins particulares, é uma recomendação. Potencial de invasão segundo a lista.`;
+}
+function invBusca(){
+  const q=$('busca').value.trim().toLowerCase();const el=$('invBusca');
+  const norm=t=>t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const hit=q.length>=4?INV_ALL.filter(x=>norm(x[1]+' '+x[2]).includes(norm(q))):[];
+  if(!hit.length){el.hidden=true;el.innerHTML='';return;}
+  el.hidden=false;
+  el.innerHTML=hit.slice(0,3).map(x=>{const tr=x[5].filter(i=>BYID[i]);return `<div><b>${esc(x[1])} é invasora em São Paulo</b> (${INV_NIVEL[x[3]]}). Invade ${invOnde(x[4])}.${tr.length?`<div class="acts">${tr.map(i=>`<button type="button" data-invadd="${i}">+ ${esc(BYID[i].n)}</button>`).join('')}</div>`:''}</div>`;}).join('');
+}
 function showInfo(id){
   const s=BYID[id];if(!s)return;
   const luz=s.sol.split('').map(x=>solTxt[x]).join(' ou ');
@@ -3330,7 +3436,7 @@ function update(fromInput){
   {const on=S.modo!=='vaso'&&(S.curso==='rio'||S.curso==='lago');$('cursoMed').hidden=!on;
     $('inAgL').textContent=S.curso==='lago'?'Diâmetro do lago':'Largura do rio';$('inAgDL').textContent=S.curso==='lago'?'Beira livre até as plantas':'Distância até o terreno';$('cursoHint').textContent=S.curso==='lago'?'O lago fica no meio do terreno e o plantio se organiza em anéis em volta dele. A linha de árvores mais perto da água recebe as que gostam de solo encharcado.':'No desenho, o rio fica do lado de baixo do terreno. As árvores que gostam de solo encharcado vão para a linha mais perto dele.';
     if(!fromInput){$('inAg').value=S.curso==='lago'?(S.agD||4):(S.agW||3);$('inAgD').value=S.agDist??1;}}
-  renderCats();renderIndic();
+  renderCats();renderIndic();if(!window.__inv){window.__inv=1;renderInv();}
   const p=plan();
   const adv=advice(p);
   const cm=new Date().getMonth()+1;
