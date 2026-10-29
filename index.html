@@ -223,7 +223,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .indic{border:1px solid var(--line);border-radius:8px;padding:0 10px}
 .indic summary{cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;padding:9px 0;list-style:none}
 .indic summary::-webkit-details-marker{display:none}
-.indic[open]{padding-bottom:10px}.indic .hint{margin:0 0 8px}
+.indic summary .cat-sub{font-weight:400}.indic[open]{padding-bottom:10px}.indic .hint{margin:0 0 8px}
 .ind-d{margin-top:8px;font-size:12.5px}.ind-d summary{cursor:pointer;color:var(--leaf);font-weight:700}.ind-d .ind-n{margin:4px 0 0}.nasc-d{margin:2px 0 8px}.wz-d{margin-top:8px}.wz-d .wz-n{margin-top:4px}.nasc .nasc-d summary{padding:2px 0;font-size:12.5px}
 .ifoto{position:fixed;z-index:60;width:216px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(20,25,10,.22);padding:8px;font-size:12.5px;line-height:1.35;pointer-events:none}
 .ifoto .if-img{width:200px;height:150px;border-radius:6px;background:var(--leaf-soft);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--muted);text-align:center;padding:0 10px;box-sizing:border-box}
@@ -638,8 +638,7 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
             <button type="button" data-v="umido">Úmido</button>
           </div>
         </div>
-        <details class="indic" id="indicBox"><summary><svg class="cat-ico" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 16 V8 M9 11 q-4 0 -5 -4 q4 0 5 4 M9 9 q3 -1 4 -4 q-3 0 -4 4 M3 16 h12"/></svg><span>O que nasce aí? <span class="cat-sub">plantas que indicam o solo</span></span></summary>
-          <p class="hint">Marque as plantas espontâneas que aparecem em quantidade no seu terreno. Elas dão pistas de como está o solo.</p>
+        <details class="indic" id="indicBox"><summary><svg class="cat-ico" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 16 V8 M9 11 q-4 0 -5 -4 q4 0 5 4 M9 9 q3 -1 4 -4 q-3 0 -4 4 M3 16 h12"/></svg><span>O que nasce aí? <span class="cat-sub">Marque as plantas espontâneas que aparecem em quantidade no seu terreno. Elas dão pistas de como está o solo.</span></span></summary>
           <div class="chips" id="indicList"></div>
           <div id="indicRes" aria-live="polite"></div>
         </details>
