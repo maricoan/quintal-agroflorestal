@@ -773,7 +773,7 @@ const FRUTA_FOTO={banana:['en:Banana'],mamao:['en:Papaya'],acerola:['en:Malpighi
 // frutas com foto escolhida no Wikimedia Commons (tenta na ordem; se nenhuma abrir, usa a da Wikipédia)
 const FRUTA_ARQ={aroeira:['Schinus terebinthifolius fruits.JPG','Starr 041018-0009 Schinus terebinthifolius.jpg'],cafe:['Coffee Berries.jpg','Coffee arabica cherry.jpg','Coffee Cherries.jpeg']};
 // adubo verde e biomassa: artigos cuja foto principal mostra a planta
-Object.assign(FRUTA_FOTO,{margaridao:['en:Tithonia diversifolia'],canaacucar:['en:Sugarcane'],guandu:['en:Pigeon pea'],crotalaria:['en:Crotalaria juncea'],feijaoporco:['en:Canavalia ensiformis'],feijaocorda:['en:Cowpea'],mandioca:['en:Cassava'],amendoim:['en:Arachis pintoi'],maravilha:['en:Mirabilis jalapa'],canaindia:['en:Canna indica'],heliconia:['en:Heliconia rostrata','pt:Heliconia'],assapeixe:['en:Vernonanthura polyanthes','pt:Assa-peixe'],begonia:['pt:Begonia','en:Begonia'],samambaia:['pt:Samambaia'],dyckia:['en:Dyckia']});
+Object.assign(FRUTA_FOTO,{margaridao:['en:Tithonia diversifolia'],canaacucar:['en:Sugarcane'],guandu:['en:Pigeon pea'],crotalaria:['en:Crotalaria juncea'],feijaoporco:['en:Canavalia ensiformis'],feijaocorda:['en:Cowpea'],mandioca:['en:Cassava'],amendoim:['en:Arachis pintoi'],maravilha:['en:Mirabilis jalapa'],canaindia:['en:Canna indica'],heliconia:['en:Heliconia rostrata','pt:Heliconia'],assapeixe:['en:Vernonanthura polyanthes','pt:Assa-peixe'],begonia:['en:Begonia maculata'],begoniaprateada:['en:Begonia venosa'],samambaia:['pt:Samambaia'],dyckia:['en:Dyckia']});
 function fotoWiki(chave,tent){
   if(FOTO.has(chave))return FOTO.get(chave);
   const pr=(async()=>{for(const [l,n] of tent){try{const r=await fetch(`https://${l}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(n.replace(/ /g,'_'))}`);
@@ -918,7 +918,8 @@ const DATA=[
  {id:'sangra',n:'Sangra-d’água',a:'Sd',c:'u',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'sem colheita; pioneira',d:0,v:0,pt:8,nat:1,bio:1},
  {id:'crindiuva',n:'Crindiúva',a:'Cv',c:'u',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'sem colheita; pioneira',d:0,v:0,pt:8,nat:1,bio:1},
  {id:'heliconia',n:'Helicônia nativa',a:'He',c:'u',e:'B',el:1,ep:1,src:'PR',sol:'PMS',pl:r(9,3),col:'flores em 1 ano',d:0,v:30,nat:1,h:1.5},
- {id:'begonia',n:'Begônias nativas',a:'Bg',c:'u',e:'R',el:.3,ep:.3,src:'PR',sol:'MS',pl:r(9,3),col:'flores em 4–6 meses',d:0,v:5,nat:1,h:.4},
+ {id:'begonia',n:'Begônia-de-bolinhas',sci:'Begonia maculata',a:'Bg',c:'u',e:'B',el:.4,ep:.4,src:'PR',sol:'MS',pl:r(9,3),col:'folhas pintadas de branco; flores na primavera',d:0,v:10,nat:1,h:.8},
+ {id:'begoniaprateada',n:'Begônia-prateada',sci:'Begonia venosa',a:'Bp',c:'u',e:'R',el:.4,ep:.4,src:'PR',sol:'MS',pl:r(9,3),col:'folhas grossas cobertas de pelos prateados; flores na primavera e no verão',d:0,v:10,nat:1,h:.6},
  {id:'samambaia',n:'Samambaias nativas',a:'Sm',c:'u',e:'B',el:.5,ep:.5,src:'PR',sol:'MS',pl:r(9,3),col:'folhagem perene',d:0,v:10,nat:1,h:.6},
  {id:'feijaoporco',n:'Feijão-de-porco',a:'Fp',c:'s',e:'B',el:.5,ep:.2,src:'E16',sol:'P',pl:r(9,1),col:'corte em 4–8 meses (adubo verde)',d:0,v:0,adubo:1,h:.8},
  {id:'feijaocorda',n:'Feijão-de-corda',a:'Fc',c:'s',e:'B',el:.5,ep:.1,src:'E16',sol:'P',pl:r(9,2),col:'≈ 3 meses',d:90,v:0,adubo:1,h:.6},
@@ -1131,6 +1132,7 @@ const UMIDO={
  canaindia:['Perene',['heliconia','taioba','sangra','amendoim']],
  amendoim:['Perene rasteira',['jabuticaba','pitanga','cambuci','canaindia']],
  begonia:['Perene de sombra',['jucara','jabuticaba','heliconia','taioba']],
+ begoniaprateada:['Perene de sombra',['jucara','jabuticaba','heliconia','taioba']],
  samambaia:['Perene de sombra',['jucara','jabuticaba','heliconia','taioba']]
 };
 // Solos secos e pobres: ciclo e boas companhias
@@ -1228,13 +1230,13 @@ function compOf(id){
 // grupo de cada planta e origem: N nativa, Z naturalizada, E endêmica, '' exótica cultivada
 const GRUPO={
  f:'banana mamao aroeira acerola limao cafe pitanga araca cambuci jabuticaba grumixama uvaia cereja cabeludinha gabiroba maracuja',
- a:'margaridao canaacucar guandu crotalaria feijaoporco feijaocorda mandioca amendoim maravilha canaindia heliconia assapeixe begonia samambaia dyckia',
+ a:'margaridao canaacucar guandu crotalaria feijaoporco feijaocorda mandioca amendoim maravilha canaindia heliconia assapeixe begonia begoniaprateada samambaia dyckia',
  t:'boldo boldinho cidreira hibisco lavanda manjericao cebolinha salsinha hortela alecrim capimsanto carqueja macela alecrimcampo lantana',
  h:'alface rucula peixinho cenoura beterraba couve tomate berinjela pimenta quiabo feijao abobora batatadoce milho taioba cara orapronobis',
  p:'chanana gervao oficialsala perpetua vedelia arnicacampo ruelia falsairis salviavermelha salviaazul esponjinha jacobinia lixeira alamanda ciposaojoao',
  g:'inga embauba jucara castanha dedaleira candeia sangra crindiuva patadevaca guariroba'
 };
-const ORIG={N:'chanana gervao oficialsala perpetua vedelia arnicacampo ruelia falsairis salviavermelha salviaazul esponjinha jacobinia lixeira alamanda ciposaojoao cidreira pimenta taioba cara orapronobis carqueja macela alecrimcampo lantana mandioca canaindia heliconia begonia samambaia dyckia tuna assapeixe pitanga araca uvaia cereja gabiroba maracuja inga embauba aroeira jucara castanha dedaleira candeia sangra crindiuva patadevaca guariroba',
+const ORIG={N:'chanana gervao oficialsala perpetua vedelia arnicacampo ruelia falsairis salviavermelha salviaazul esponjinha jacobinia lixeira alamanda ciposaojoao cidreira pimenta taioba cara orapronobis carqueja macela alecrimcampo lantana mandioca canaindia heliconia begonia begoniaprateada samambaia dyckia tuna assapeixe pitanga araca uvaia cereja gabiroba maracuja inga embauba aroeira jucara castanha dedaleira candeia sangra crindiuva patadevaca guariroba',
  Z:'margaridao capimsanto guandu maravilha mamao cafe',
  E:'dipladenia amendoim cambuci jabuticaba grumixama cabeludinha'};
 // plantas que aparecem também em um segundo grupo
@@ -2218,7 +2220,7 @@ function herbSVG(f,s,cx,base,w,h,opt,key){
   return o;
 }
 // forma e largura real (m) das plantas de adubo verde e biomassa
-const FORM={canademacaco:['stalkleaves',.6,{cone:1}],marantacinza:['leafy',.55],peixinho:['rosette',.3],tuna:['cactus',.8],gabiroba:['herb',.8,{fr:['fl-y',6,'top']}],chanana:['mint',.4,{fr:['fl-y',6,'top']}],gervao:['lavender',.6,{spike:'fr-p'}],oficialsala:['herb',.5,{fr:['fl-r',8,'top']}],perpetua:['herb',.4,{fr:['fr-p',8,'top']}],vedelia:['mint',.5,{fr:['fl-y',6,'top']}],arnicacampo:['herb',.4,{fr:['fr-p',3,'top']}],ruelia:['fruitshrub',.3,{fruit:['fl-r','chili',6]}],falsairis:['spiky',.5,{fr:['fr-p',3,'top']}],salviavermelha:['lavender',.4,{spike:'fl-r'}],salviaazul:['lavender',.6,{spike:'fr-p'}],esponjinha:['herb',1.5,{fr:['fl-r',8,'top']}],jacobinia:['herb',.8,{big:1,fr:['fl-pk',8,'top']}],alamanda:['herb',1.5,{big:1,fr:['fl-y',6,'top']}],ciposaojoao:['trellis',1.4,{fr:['fr-o',8,'top']}],dipladenia:['trellis',1,{fr:['fl-r',5,'top']}],guandu:['herb',1.1,{fr:['fl-y',6,'top']}],margaridao:['herb',1.5,{big:1,daisy:1,fr:['fl-y',6,'top']}],assapeixe:['herb',1.6,{big:1,fr:['fl-w',8,'top']}],maravilha:['herb',.8,{fr:['fl-pk',6,'top']}],feijaoporco:['fruitshrub',.7,{big:1,fruit:['pl-3','long',4]}],feijaocorda:['groundvine',.8,{fruit:'pl-3'}],begonia:['rosette',.35,{fl:'fl-pk'}],mandioca:['cassava',1.1],crotalaria:['herb',.35,{fr:['fl-y',5,'top']}],canaacucar:['cane',.6],canaindia:['leafy',.7],heliconia:['leafy',.9],amendoim:['mint',.5,{fr:['fl-y',6,'top']}],samambaia:['frond',.7],dyckia:['spiky',.45,{stalk:1}],
+const FORM={canademacaco:['stalkleaves',.6,{cone:1}],marantacinza:['leafy',.55],peixinho:['rosette',.3],tuna:['cactus',.8],gabiroba:['herb',.8,{fr:['fl-y',6,'top']}],chanana:['mint',.4,{fr:['fl-y',6,'top']}],gervao:['lavender',.6,{spike:'fr-p'}],oficialsala:['herb',.5,{fr:['fl-r',8,'top']}],perpetua:['herb',.4,{fr:['fr-p',8,'top']}],vedelia:['mint',.5,{fr:['fl-y',6,'top']}],arnicacampo:['herb',.4,{fr:['fr-p',3,'top']}],ruelia:['fruitshrub',.3,{fruit:['fl-r','chili',6]}],falsairis:['spiky',.5,{fr:['fr-p',3,'top']}],salviavermelha:['lavender',.4,{spike:'fl-r'}],salviaazul:['lavender',.6,{spike:'fr-p'}],esponjinha:['herb',1.5,{fr:['fl-r',8,'top']}],jacobinia:['herb',.8,{big:1,fr:['fl-pk',8,'top']}],alamanda:['herb',1.5,{big:1,fr:['fl-y',6,'top']}],ciposaojoao:['trellis',1.4,{fr:['fr-o',8,'top']}],dipladenia:['trellis',1,{fr:['fl-r',5,'top']}],guandu:['herb',1.1,{fr:['fl-y',6,'top']}],margaridao:['herb',1.5,{big:1,daisy:1,fr:['fl-y',6,'top']}],assapeixe:['herb',1.6,{big:1,fr:['fl-w',8,'top']}],maravilha:['herb',.8,{fr:['fl-pk',6,'top']}],feijaoporco:['fruitshrub',.7,{big:1,fruit:['pl-3','long',4]}],feijaocorda:['groundvine',.8,{fruit:'pl-3'}],begonia:['rosette',.4,{fl:'fl-pk'}],begoniaprateada:['rosette',.35,{fl:'fl-pk'}],mandioca:['cassava',1.1],crotalaria:['herb',.35,{fr:['fl-y',5,'top']}],canaacucar:['cane',.6],canaindia:['leafy',.7],heliconia:['leafy',.9],amendoim:['mint',.5,{fr:['fl-y',6,'top']}],samambaia:['frond',.7],dyckia:['spiky',.45,{stalk:1}],
  // hortaliças
  alface:['lettuce',.28],rucula:['tuft',.18],cenoura:['feather',.12,{fr:['fr-o',1,'ground']}],beterraba:['tuft',.2,{fr:['fl-r',1,'ground']}],couve:['kale',.55],tomate:['tomato',.55],berinjela:['fruitshrub',.6,{big:1,fruit:['fr-p','long',3]}],pimenta:['fruitshrub',.5,{fruit:['fl-r','chili',8]}],quiabo:['stalkleaves',.5,{fr:['fl-y',2,'top']}],feijao:['tripod',.6],abobora:['groundvine',2,{big:1,flower:1,fruit:'fr-o'}],batatadoce:['groundvine',.7],milho:['cane',.35,{tassel:1}],taioba:['elephant',.8],inhame:['elephant',.7],gengibre:['stalkleaves',.45],cara:['trellis',.45,{nofl:1}],orapronobis:['trellis',1.1],
  // aromáticas
@@ -3025,7 +3027,7 @@ const rankOf=it=>Math.min(...it.sp.map(s=>s.arv?0:({E:0,A:0,M:1,B:2,R:3})[s.e]))
 // altura mínima e máxima (cm) que cada planta costuma alcançar em vaso
 const POTH={inhame:[60,120],gengibre:[50,100],canademacaco:[40,80],marantacinza:[30,50],peixinho:[20,40],chanana:[20,40],gervao:[40,100],oficialsala:[40,90],perpetua:[30,60],vedelia:[15,30],arnicacampo:[40,100],ruelia:[20,40],falsairis:[40,80],salviavermelha:[30,80],salviaazul:[60,150],esponjinha:[100,200],jacobinia:[60,150],lixeira:[150,300],alamanda:[100,250],ciposaojoao:[200,400],dipladenia:[100,300],maracuja:[200,400],manjericao:[30,60],cebolinha:[20,40],salsinha:[20,30],hortela:[20,40],alecrim:[40,100],capimsanto:[60,120],carqueja:[30,80],macela:[30,60],alecrimcampo:[100,200],lantana:[50,120],boldo:[60,120],boldinho:[20,40],cidreira:[60,150],hibisco:[100,200],lavanda:[30,60],guaco:[150,300],pariparoba:[60,150],alecrimpimenta:[60,150],cipoalho:[150,300],mastruz:[40,100],alfavacacravo:[60,150],baleeira:[100,200],espinheira:[100,250],urucum:[150,300],
  alface:[15,30],rucula:[20,40],cenoura:[20,40],beterraba:[25,40],couve:[50,100],tomate:[100,180],berinjela:[60,120],pimenta:[40,80],quiabo:[100,180],batatadoce:[20,40],taioba:[60,120],orapronobis:[100,200],majorgomes:[30,60],cariru:[30,60],jambu:[20,40],mangarito:[30,50],araruta:[60,120],coentropara:[15,30],physalis:[50,100],jurubeba:[100,200],mandioca:[150,250],caruru:[40,100],
- begonia:[20,40],samambaia:[30,60],canaindia:[80,150],heliconia:[80,150],dyckia:[20,40],amendoim:[10,20],maravilha:[50,100],assapeixe:[100,200],
+ begonia:[40,80],begoniaprateada:[30,60],samambaia:[30,60],canaindia:[80,150],heliconia:[80,150],dyckia:[20,40],amendoim:[10,20],maravilha:[50,100],assapeixe:[100,200],
  acerola:[150,250],limao:[150,250],mexerica:[150,250],pitanga:[150,250],araca:[150,250],jabuticaba:[150,250],goiaba:[150,250],cafe:[100,200],cereja:[150,250],cabeludinha:[150,200],nespera:[150,250],caqui:[150,250],abacaxi:[60,100]};
 function potRange(s){if(POTH[s.id])return POTH[s.id];if(s.arv)return [100,Math.min(250,Math.round((s.pt||4)*40))];const h=Math.round((s.h||DEF_SP[s.e].h)*100);return [Math.max(10,Math.round(h*.5)),h];}
 const cmTxt=r=>`${r[0]}–${r[1]} cm`;
