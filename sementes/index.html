@@ -280,7 +280,8 @@ async function commons(t){const u='https://commons.wikimedia.org/w/api.php?actio
 async function wiki(n,k){for(const l of ['pt','en']){try{const r=await fetch(`https://${l}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(n.replace(/ /g,'_'))}`);if(!r.ok)continue;const j=await r.json();if(j.type==='disambiguation'||!j.thumbnail)continue;
   const o=j.originalimage;const src=(o&&o.width<=1600&&/\.(jpe?g|png|webp)$/i.test(o.source))?o.source:j.thumbnail.source;
   return {src,href:(j.content_urls&&j.content_urls.desktop.page)||'',k,cred:'Wikipédia'};}catch(e){}}return null;}
-async function buscar(d,pular){let c=null;try{c=JSON.parse(localStorage.getItem('sem-img2-'+d.id)||'null')}catch(e){}if(c)return c;
+const FIXA={banana:{src:'fotos/banana.jpg',k:'P',lab:'Bananeira',cred:'Foto enviada por Mariana Coan',via:'fixa'}};
+async function buscar(d,pular){if(FIXA[d.id]&&!(pular&&pular.has('fixa')))return FIXA[d.id];let c=null;try{c=JSON.parse(localStorage.getItem('sem-img2-'+d.id)||'null')}catch(e){}if(c)return c;
   let res=null;for(const t of plano(d)){if(pular&&pular.has(t.q||t.wiki))continue;try{res=t.wiki?await wiki(t.wiki,t.k):await commons(t);}catch(e){res=null}if(res){res.via=t.q||t.wiki;break;}}
   res=res||{none:1};try{localStorage.setItem('sem-img2-'+d.id,JSON.stringify(res))}catch(e){}return res;}
 function pedir(id){if(IMG[id])return IMG[id];const d=DATA.find(x=>x.id===id);IMG[id]=new Promise(ok=>{FILA.push(()=>buscar(d).then(ok,()=>ok({none:1})));rodar();});return IMG[id];}
@@ -291,7 +292,7 @@ function falhou(id,r){const s=RUINS[id]||(RUINS[id]=new Set());if(r&&r.via)s.add
   document.querySelectorAll(`[data-k="${id}"]`).forEach(el=>{delete el.dataset.ok;pintar(el);});}
 function pintar(el){const id=el.dataset.k;if(el.dataset.ok)return;el.dataset.ok=1;pedir(id).then(r=>{if(r&&!r.none&&RUINS[id]&&RUINS[id].has(r.via))return;if(!r||r.none){if(el.tagName==='FIGURE')el.innerHTML='';else el.innerHTML=SEMENTE_IC;return;}
   const d=DATA.find(x=>x.id===id);
-  if(el.tagName==='FIGURE')el.innerHTML=`<img src="${esc(r.src)}" alt="${esc(KIND_TXT[r.k]+' de '+d.n)}" loading="lazy"><figcaption><b>${KIND_TXT[r.k]}</b>${esc(r.cred||'')}${r.href?` · <a href="${esc(r.href)}" target="_blank" rel="noopener">${r.cred==='Wikipédia'?'ver na Wikipédia':'Wikimedia Commons'}</a>`:''}</figcaption>`;
+  if(el.tagName==='FIGURE')el.innerHTML=`<img src="${esc(r.src)}" alt="${esc(KIND_TXT[r.k]+' de '+d.n)}" loading="lazy"><figcaption><b>${r.lab||KIND_TXT[r.k]}</b>${esc(r.cred||'')}${r.href?` · <a href="${esc(r.href)}" target="_blank" rel="noopener">${r.cred==='Wikipédia'?'ver na Wikipédia':'Wikimedia Commons'}</a>`:''}</figcaption>`;
   else el.innerHTML=`<img src="${esc(r.src)}" alt="" loading="lazy">`;
   const im=el.querySelector('img');if(im)im.addEventListener('error',()=>{if(el.tagName==='FIGURE')el.innerHTML='';else el.innerHTML=SEMENTE_IC;falhou(id,r);},{once:true});});}
 const OBS='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){OBS.unobserve(e.target);pintar(e.target);}}),{rootMargin:'300px'}):null;
