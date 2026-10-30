@@ -129,9 +129,23 @@ details.ficha>summary{grid-template-columns:64px minmax(0,1fr) auto}
 .fig:empty{display:none}
 @media (max-width:520px){details.ficha>summary{grid-template-columns:56px minmax(0,1fr)}.foto{width:56px;height:56px;grid-row:1/4}.germ{text-align:left;grid-column:2}.germ b{display:inline;margin-right:6px}}
 @media (prefers-reduced-motion:no-preference){details.ficha{transition:border-color .15s}}
+.credit{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 0;border-top:1px solid var(--line);padding:20px 0 8px;font-size:14px;color:var(--muted)}
+.credit>*+*::before{content:"/";margin:0 10px;color:var(--line)}
+.credit b{color:var(--ink);font-weight:700}
+.credit a{color:var(--leaf);text-decoration:none;font-weight:700}
+.credit a:hover{text-decoration:underline}
+.credit>.credit-ga{flex-basis:100%;order:3;text-align:center;margin:10px 0 0;font-size:12px;color:var(--muted)}.credit>.credit-ga::before{content:none}.credit-ga a{color:var(--muted);text-decoration:underline}
+.credit>.credit-note{flex-basis:100%;text-align:center;margin:12px 0 0;font-size:16px;color:var(--ink)}
+.credit-note>span{display:inline-block;padding:7px 16px;border:1px solid var(--line);border-radius:10px;background:var(--leaf-soft)}
+.cn-ic{display:inline-flex;gap:3px;margin-left:8px;vertical-align:-4px}.cn-ic svg{width:20px;height:20px}.cn-f{fill:var(--leaf)}.cn-l{fill:none;stroke:var(--bg);stroke-width:1.3;stroke-linecap:round}.cn-s{fill:none;stroke:var(--leaf);stroke-width:2;stroke-linecap:round}
+.credit-note strong{color:var(--leaf);font-weight:700}
+.credit>.credit-note::before{content:none}
+@media (max-width:640px){.credit{flex-direction:column;gap:4px}.credit>*+*::before{content:none}}
+.credit p{margin:0}
 </style>
 
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style>
+<script>try{if(/github\.io$|marianacoan\.com$/i.test(location.hostname)){window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments);};gtag('js',new Date());gtag('config','G-RHSN1Z265E');const ga=document.createElement('script');ga.async=true;ga.src='https://www.googletagmanager.com/gtag/js?id=G-RHSN1Z265E';document.head.appendChild(ga);}}catch(e){}</script>
 </head>
 <body>
 <div class="wrap">
@@ -222,7 +236,13 @@ details.ficha>summary{grid-template-columns:64px minmax(0,1fr) auto}
     <li>Prefeitura de São Paulo. <a href="https://legislacao.prefeitura.sp.gov.br/portaria-conjunta-secretaria-municipal-do-verde-e-do-meio-ambiente-svma-secretaria-municipal-das-subprefeituras-smsub-1-de-28-de-janeiro-de-2025">Lista de flora exótica invasora do município</a>, 2025.</li>
   </ol>
   </details>
-  <p class="assina">Criado por Mariana Coan · <a href="https://www.marianacoan.com">www.marianacoan.com</a> · <a href="https://instagram.com/mariana_coan">@mariana_coan</a></p>
+  <div class="credit">
+    <span>Desenvolvido por <b>Mariana Coan</b> em outubro de 2026</span>
+    <a href="https://www.marianacoan.com" target="_blank" rel="noopener">www.marianacoan.com</a>
+    <a href="https://www.instagram.com/mariana_coan/" target="_blank" rel="noopener">@mariana_coan</a>
+    <p class="credit-ga">Este site usa o <a href="https://policies.google.com/technologies/partner-sites?hl=pt-BR" target="_blank" rel="noopener">Google Analytics</a> para contar as visitas.</p>
+    <p class="credit-note"><span>Este é um aplicativo de uso <strong>público</strong> e <strong>gratuito</strong><span class="cn-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect class="cn-f" x="8.2" y="15" width="7.6" height="8" rx="1.2"/><rect class="cn-f" x="4.8" y="5" width="14.4" height="11.2" rx="3"/><path class="cn-l" d="M8.4 5.4V9.6M12 5.4V9.6M15.6 5.4V9.6M4.8 10.6H13.2Q14.6 10.6 14.6 12"/></svg><svg viewBox="0 0 24 24"><path class="cn-s" d="M12 22V11"/><path class="cn-f" d="M12 15C7 15 4 12 4 7.5C9 7.5 12 10.5 12 15Z"/><path class="cn-f" d="M12 12C12 7 15 3.5 20.5 3.5C20.5 9 17 12 12 12Z"/><path class="cn-s" d="M6.5 22H17.5"/></svg></span></span></p>
+  </div>
 </footer>
 </div>
 
