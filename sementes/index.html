@@ -110,6 +110,12 @@ summary::-webkit-details-marker{display:none}
 .vazio{padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:10px}
 footer{display:flex;flex-direction:column;gap:10px;font-size:.9rem;color:var(--muted);border-top:1px solid var(--line);padding-top:18px}
 footer ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.fontes{border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.fontes>summary{display:flex;align-items:center;gap:8px;padding:10px 14px;font-family:var(--f-display);font-size:1.1rem;color:var(--ink);grid-template-columns:none}
+.fontes>summary span{font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+.fontes>summary::after{content:"";margin-left:auto;width:8px;height:8px;border-right:2px solid var(--leaf);border-bottom:2px solid var(--leaf);transform:rotate(45deg);transition:transform .15s}
+.fontes[open]>summary::after{transform:rotate(-135deg)}
+.fontes ol{padding:0 14px 14px 34px}
 .assina{font-family:var(--f-mono);font-size:.82rem}
 @media (max-width:520px){summary{grid-template-columns:1fr}.germ{text-align:left}.germ b{display:inline;margin-right:6px}}
 @media (prefers-reduced-motion:no-preference){details.ficha{transition:border-color .15s}}
@@ -192,7 +198,7 @@ footer ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
 
 <footer>
   <p>Os tempos de germinação variam com a temperatura, a umidade e a idade da semente; use-os como ordem de grandeza. As fichas resumem a literatura técnica e a prática de viveiro e podem ser conferidas nas fontes abaixo. Confira a identificação da planta antes de colher. As plantas que a Prefeitura de São Paulo classifica como invasoras não estão aqui: veja a seção "Evite plantar" no <a href="https://quintal.marianacoan.com/">Quintal</a>.</p>
-  <h3>Fontes</h3>
+  <details class="fontes"><summary>Fontes <span>(10)</span></summary>
   <ol>
     <li>Carvalho, P. E. R. <a href="https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/1139728/1/Especies-Arboreas-Brasileiras-vol-1-Carvalho-Brasileiro.pdf">Espécies arbóreas brasileiras</a>, vols. 1 a 5. Embrapa Florestas, 2003–2014.</li>
     <li>Lorenzi, H. Árvores brasileiras, vols. 1 a 3. Instituto Plantarum.</li>
@@ -205,6 +211,7 @@ footer ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
     <li>Pinheiro, M. B. <a href="https://www.teses.usp.br/teses/disponiveis/16/16139/tde-24072017-104105/pt-br.php">Plantas para Infraestrutura Verde</a>. Dissertação, FAU-USP, 2017.</li>
     <li>Prefeitura de São Paulo. <a href="https://legislacao.prefeitura.sp.gov.br/portaria-conjunta-secretaria-municipal-do-verde-e-do-meio-ambiente-svma-secretaria-municipal-das-subprefeituras-smsub-1-de-28-de-janeiro-de-2025">Lista de flora exótica invasora do município</a>, 2025.</li>
   </ol>
+  </details>
   <p class="assina">Criado por Mariana Coan · <a href="https://www.marianacoan.com">www.marianacoan.com</a> · <a href="https://instagram.com/mariana_coan">@mariana_coan</a></p>
 </footer>
 </div>
