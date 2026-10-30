@@ -61,6 +61,13 @@ header{display:flex;flex-direction:column;gap:10px}
 /* guia */
 .guia{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
 .guia section{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.guia h2{display:flex;align-items:center;gap:10px}
+.gi{flex:none;width:36px;height:36px;padding:4px;border-radius:50%;background:var(--surface);color:var(--gc-ink)}
+.gc1{--gc-bg:var(--fresh-soft);--gc-ink:var(--fresh)}
+.gc2{--gc-bg:var(--seed-soft);--gc-ink:var(--seed)}
+.gc3{--gc-bg:var(--leaf-soft);--gc-ink:var(--leaf)}
+.gc4{--gc-bg:var(--soil-soft);--gc-ink:var(--soil)}
+.guia section.gc{background:color-mix(in srgb,var(--gc-bg) 70%,var(--surface));border-color:color-mix(in srgb,var(--gc-ink) 22%,var(--line))}
 .guia p,.guia ul{margin:0;font-size:.95rem}
 .guia ul{padding-left:18px;display:flex;flex-direction:column;gap:3px}
 .tag{display:inline-flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:.74rem;padding:2px 8px;border-radius:999px;white-space:nowrap;border:1px solid transparent}
@@ -174,23 +181,23 @@ details.ficha>summary{grid-template-columns:64px minmax(0,1fr) auto}
 </header>
 
 <div class="guia">
-  <section>
-    <h2>Semente fresca ou semente que guarda?</h2>
+  <section class="gc gc1">
+    <h2><svg class="gi" viewBox="0 0 32 32" aria-hidden="true"><path d="M13 27c-5 0-8-4-8-9s4-10 8-10 8 5 8 10-3 9-8 9Z" fill="currentColor"/><path d="M13 12c-1.5 2-2 4-2 6" stroke="var(--bg)" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M24 4c2 3 4 5.2 4 7.2a4 4 0 0 1-8 0C20 9.2 22 7 24 4Z" fill="currentColor" opacity=".6"/></svg><span>Semente fresca ou semente que guarda?</span></h2>
     <p><span class="tag t-R">semeie fresca</span> Recalcitrante: morre se secar. Pitanga, jabuticaba, juçara, ingá, canelas. Despolpe e semeie no mesmo dia ou na mesma semana.</p>
     <p><span class="tag t-O">guarda seca</span> Ortodoxa: seque à sombra e guarde em pote fechado, de preferência na geladeira.</p>
     <p><span class="tag t-C">vida curta</span> Aguenta secar, mas perde a força em poucos meses. Ipês, perobas, candeia, angico.</p>
   </section>
-  <section>
-    <h2>Casca dura</h2>
+  <section class="gc gc2">
+    <h2><svg class="gi" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="14" cy="17" rx="8" ry="10" fill="none" stroke="currentColor" stroke-width="3"/><path d="M11 13l3 2-2 3 3 2" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M23 6l5 5M21 9l5 5M25 4l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".6"/></svg><span>Casca dura</span></h2>
     <p>Muitas leguminosas (guapuruvu, pau-ferro, jatobá, mulungu) têm a casca impermeável e demoram meses para nascer se nada for feito.</p>
     <ul><li><b>Lixa:</b> esfregue um lado da semente, longe do "olhinho", até aparecer a parte clara.</li><li><b>Água quente:</b> despeje água a cerca de 80 °C (logo depois de parar de ferver) e deixe de molho até esfriar.</li></ul>
   </section>
-  <section>
-    <h2>Galhos, touceiras e rizomas</h2>
+  <section class="gc gc3">
+    <h2><svg class="gi" viewBox="0 0 32 32" aria-hidden="true"><path d="M9 28L22 6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M16 16c-4-1-6-4-6-8 4 1 6 4 6 8Z M19 11c1-4 4-6 8-6-1 4-4 6-8 6Z" fill="currentColor"/><path d="M4 28h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".6"/></svg><span>Galhos, touceiras e rizomas</span></h2>
     <ul><li><b>Estaca:</b> pedaço de ramo de 10 a 30 cm, sem as folhas de baixo, com metade enterrada em substrato úmido e à meia-sombra.</li><li><b>Divisão:</b> separe a touceira em partes que tenham raiz e broto.</li><li><b>Rizoma, rama, rebento:</b> pedaços da parte subterrânea ou filhotes da planta-mãe.</li></ul>
   </section>
-  <section>
-    <h2>Do recipiente ao chão</h2>
+  <section class="gc gc4">
+    <h2><svg class="gi" viewBox="0 0 32 32" aria-hidden="true"><path d="M8 17h14l-2 11H10Z" fill="currentColor"/><path d="M15 17V9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M15 11c-3 0-5-2-5-5 3 0 5 2 5 5Z M15 9c0-3 2-5 5-5 0 3-2 5-5 5Z" fill="currentColor"/><path d="M25 12v10m-3-3 3 3 3-3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/></svg><span>Do recipiente ao chão</span></h2>
     <p>Substrato: 2 partes de terra para 1 de composto curtido. Árvores vão ao chão com 30 a 60 cm, de preferência no começo das chuvas (outubro a março). No solo raso e pedregoso, cave a cova que der, encha com terra e composto e cubra com palha.</p>
     <p>Nunca tire mudas ou sementes de toda a mata: deixe frutos para a fauna e colha de várias árvores.</p>
   </section>
