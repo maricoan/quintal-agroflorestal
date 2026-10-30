@@ -51,6 +51,13 @@ header{display:flex;flex-direction:column;gap:10px}
 .brand-t{display:flex;flex-direction:column;gap:6px;min-width:0}
 .hero-logo{width:120px;height:120px;flex:none;max-width:100%}
 @media (max-width:520px){.brand{gap:12px}.hero-logo{width:76px;height:76px}}
+.hero-free{margin:0;color:var(--ink)}
+.hero-free strong{color:var(--leaf);font-weight:700}
+.cn-ic{display:inline-flex;gap:3px;margin-left:8px;vertical-align:-4px}
+.cn-ic svg{width:20px;height:20px}
+.cn-f{fill:var(--leaf)}
+.cn-l{fill:none;stroke:var(--bg);stroke-width:1.3;stroke-linecap:round}
+.cn-s{fill:none;stroke:var(--leaf);stroke-width:2;stroke-linecap:round}
 /* guia */
 .guia{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
 .guia section{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
@@ -144,6 +151,7 @@ footer ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
   </div>
   </div>
   <p class="lede">Como multiplicar cada planta do Quintal: onde conseguir a semente ou o galho, como preparar, quanto tempo leva para nascer e como plantar. As fichas cobrem todas as espécies do aplicativo, das hortaliças às grandes árvores nativas.</p>
+  <p class="hero-free">Aplicativo de uso <strong>público</strong> e <strong>gratuito</strong>.<span class="cn-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect class="cn-f" x="8.2" y="15" width="7.6" height="8" rx="1.2"/><rect class="cn-f" x="4.8" y="5" width="14.4" height="11.2" rx="3"/><path class="cn-l" d="M8.4 5.4V9.6M12 5.4V9.6M15.6 5.4V9.6M4.8 10.6H13.2Q14.6 10.6 14.6 12"/></svg><svg viewBox="0 0 24 24"><path class="cn-s" d="M12 22V11"/><path class="cn-f" d="M12 15C7 15 4 12 4 7.5C9 7.5 12 10.5 12 15Z"/><path class="cn-f" d="M12 12C12 7 15 3.5 20.5 3.5C20.5 9 17 12 12 12Z"/><path class="cn-s" d="M6.5 22H17.5"/></svg></span></p>
   <div class="stats" id="stats"></div>
 </header>
 
