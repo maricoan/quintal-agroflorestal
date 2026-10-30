@@ -218,7 +218,7 @@ const VIA={S:'semente',E:'estaca',D:'divisão',R:'rizoma ou rama',B:'rebento',A:
 const TIPO={R:['semeie fresca','Recalcitrante: não deixe secar'],O:['guarda seca','Ortodoxa: pode secar e guardar'],C:['vida curta','Seca, mas perde a força em poucos meses'],I:['intermediária','Guarda pouco tempo']};
 const ORIG={N:'nativa',E:'endêmica do Brasil',Z:'naturalizada',X:'exótica'};
 const M='JFMAMJJASOND';
-const FILT=[['vi','Na viela'],['R','Semeie fresca'],['S','Por semente'],['E','Por estaca'],['DR','Divisão, rizoma ou rebento'],['dura','Casca dura']];
+const FILT=[['R','Semeie fresca'],['S','Por semente'],['E','Por estaca'],['DR','Divisão, rizoma ou rebento'],['dura','Casca dura']];
 let gsel='', fsel=new Set(), q='';
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
