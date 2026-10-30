@@ -14,3 +14,7 @@ O site fica em `https://maricoan.github.io/quintal-agroflorestal/`.
 ## Diário da Viela
 
 Cópia pública, só de leitura, do diário da agrofloresta da Viela Estevam Garcia: [quintal.marianacoan.com/diario](https://quintal.marianacoan.com/diario/). Os dados ficam em `diario/dados.json` e as fotos em `diario/fotos/`.
+
+## Sementes do Quintal
+
+Como propagar e plantar cada planta do app (sementes, estacas, divisão e plantio): [quintal.marianacoan.com/sementes](https://quintal.marianacoan.com/sementes/). Página única em `sementes/index.html`, com os dados embutidos.
