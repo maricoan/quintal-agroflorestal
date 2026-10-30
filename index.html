@@ -318,12 +318,8 @@ a.sm-i:hover{border-color:var(--leaf)}
 .credit>.credit-ga{flex-basis:100%;order:3;text-align:center;margin:10px 0 0;font-size:12px;color:var(--muted)}.credit>.credit-ga::before{content:none}.credit-ga a{color:var(--muted);text-decoration:underline}
 .credit>.credit-note{flex-basis:100%;text-align:center;margin:12px 0 0;font-size:16px;color:var(--ink)}
 .credit-note>span{display:inline-block;padding:7px 16px;border:1px solid var(--line);border-radius:10px;background:var(--leaf-soft)}
-.hero-free{margin:2px 0 0;color:var(--ink)}.hero-link{display:inline-flex;align-items:center;gap:6px;margin-left:12px;font-weight:700;font-size:14px;text-decoration:none;color:var(--leaf);border:1px solid var(--leaf);border-radius:999px;padding:4px 12px 4px 8px;vertical-align:middle;white-space:nowrap}
-.hero-link svg{width:18px;height:18px}
-.hero-link:hover{background:var(--leaf-soft)}
-.hero-link:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}
-@media (max-width:640px){.hero-link{margin:8px 0 0;display:flex;width:max-content}}
-.hero-free strong{color:var(--leaf);font-weight:700}
+.topnav{display:flex;justify-content:flex-end;padding:10px 0 0}.topnav a{font-size:13px;font-weight:700;letter-spacing:.12em;color:var(--leaf);text-decoration:none;border-bottom:1px solid transparent}.topnav a:hover,.topnav a:focus-visible{border-bottom-color:var(--leaf);outline:none}
+.hero-free{margin:2px 0 0;color:var(--ink)}.hero-free strong{color:var(--leaf);font-weight:700}
 .cn-ic{display:inline-flex;gap:3px;margin-left:8px;vertical-align:-4px}.cn-ic svg{width:20px;height:20px}.cn-f{fill:var(--leaf)}.cn-l{fill:none;stroke:var(--bg);stroke-width:1.3;stroke-linecap:round}.cn-s{fill:none;stroke:var(--leaf);stroke-width:2;stroke-linecap:round}
 .credit-note strong{color:var(--leaf);font-weight:700}
 .credit>.credit-note::before{content:none}
@@ -542,6 +538,7 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
 </style>
 
 <div class="wrap">
+  <nav class="topnav" aria-label="Outras páginas"><a href="https://quintal.marianacoan.com/sementes/">SEMENTES</a></nav>
   <header class="hero">
     <div class="hero-t">
       <div class="brand"><svg class="hero-logo" viewBox="0 0 200 200" aria-hidden="true">
@@ -573,7 +570,7 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
       <h1>Quintal Agroflorestal</h1></div></div>
       <p>Informe as medidas, luz, rega e tipo de solo e escolha o que quer plantar. O app sugere espaçamento necessário entre plantas com base na agricultura sintrópica e monta o desenho, calendário para plantio e cuidados para cada fase do crescimento das espécies.</p>
       <p class="hero-short">Monte seu plantio com espaçamentos de base técnica.</p>
-      <p class="hero-free">Aplicativo de uso <strong>público</strong> e <strong>gratuito</strong>.<span class="cn-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect class="cn-f" x="8.2" y="15" width="7.6" height="8" rx="1.2"/><rect class="cn-f" x="4.8" y="5" width="14.4" height="11.2" rx="3"/><path class="cn-l" d="M8.4 5.4V9.6M12 5.4V9.6M15.6 5.4V9.6M4.8 10.6H13.2Q14.6 10.6 14.6 12"/></svg><svg viewBox="0 0 24 24"><path class="cn-s" d="M12 22V11"/><path class="cn-f" d="M12 15C7 15 4 12 4 7.5C9 7.5 12 10.5 12 15Z"/><path class="cn-f" d="M12 12C12 7 15 3.5 20.5 3.5C20.5 9 17 12 12 12Z"/><path class="cn-s" d="M6.5 22H17.5"/></svg></span> <a class="hero-link" href="/sementes/"><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="19" rx="4" ry="2.6" fill="currentColor"/><path d="M12 17V9" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M12 10C8.5 10 6 8 5.5 4.5C9 4.5 11.5 6.5 12 10Z M12 10C12.5 6.5 15 4.5 18.5 4.5C18 8 15.5 10 12 10Z" fill="currentColor"/></svg>Sementes e propagação</a></p>
+      <p class="hero-free">Aplicativo de uso <strong>público</strong> e <strong>gratuito</strong>.<span class="cn-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect class="cn-f" x="8.2" y="15" width="7.6" height="8" rx="1.2"/><rect class="cn-f" x="4.8" y="5" width="14.4" height="11.2" rx="3"/><path class="cn-l" d="M8.4 5.4V9.6M12 5.4V9.6M15.6 5.4V9.6M4.8 10.6H13.2Q14.6 10.6 14.6 12"/></svg><svg viewBox="0 0 24 24"><path class="cn-s" d="M12 22V11"/><path class="cn-f" d="M12 15C7 15 4 12 4 7.5C9 7.5 12 10.5 12 15Z"/><path class="cn-f" d="M12 12C12 7 15 3.5 20.5 3.5C20.5 9 17 12 12 12Z"/><path class="cn-s" d="M6.5 22H17.5"/></svg></span></p>
     </div>
 
   </header>
