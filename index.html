@@ -139,9 +139,10 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .cats{gap:8px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{font:inherit;font-size:13.5px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:5px 11px 5px 8px;cursor:pointer}
-.ci-luz{font-weight:700}
+.ci-luz{font-weight:400}
 .chipinfo{margin:0;font-size:13.5px;background:var(--ci-bg);color:var(--ci-fg);border-radius:10px;padding:8px 14px;height:76px;box-sizing:border-box;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:3px;position:sticky;top:calc(env(safe-area-inset-top, 0px) + 8px);z-index:5;box-shadow:0 6px 16px rgba(60,40,20,.14)}
-.chipinfo b{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.chipinfo .ci-top b{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.chipinfo .ci-d b{font-size:inherit;font-weight:400;white-space:normal}
 .ci-top{display:flex;align-items:center;gap:8px;min-width:0}
 .ci-d{display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12.5px;line-height:1.35}
 .chipinfo i{font-style:italic;opacity:.9}
@@ -1479,8 +1480,8 @@ function showInfo(id){
   const det=`${s.sci?`<i>${esc(s.sci)}</i> · `:''}Estrato ${EST[s.e].toLowerCase()} · ${luz} · ${s.o?ORIG_TXT[s.o].toLowerCase():'origem não informada'}${s.msp?` · Manual de Arb. de SP, porte ${PORTE[s.msp]}`:''}${s.tox?' · tóxica se ingerida':''}`;
   const mot=luzMotivo(s);
   const inv=INVASORA[s.id];
-  $('chipinfo').innerHTML=`<span class="ci-top">${sig(s.e)}${s.o?`<span class="ico-w">${ICON[s.o]}</span>`:''}<b>${esc(s.n)}</b></span><span class="ci-d">${inv?`<b class="ci-inv">Invasora em SP.</b> `:''}${mot?`<b class="ci-luz">${esc(mot)}</b> `:''}${det}</span>`;
-  $('chipinfo').title=(inv?inv+' ':'')+det.replace(/<[^>]+>/g,'');
+  $('chipinfo').innerHTML=`<span class="ci-top">${sig(s.e)}${s.o?`<span class="ico-w">${ICON[s.o]}</span>`:''}<b>${esc(s.n)}</b></span><span class="ci-d">${inv?`<b class="ci-inv">Invasora em SP.</b> `:''}${det}${mot?`. <b class="ci-luz">${esc(mot)}</b>`:''}</span>`;
+  $('chipinfo').title=(inv?inv+' ':'')+det.replace(/<[^>]+>/g,'')+(mot?'. '+mot:'');
 }
 $('cats').addEventListener('mouseover',e=>{const b=e.target.closest('.chip');if(b)showInfo(b.dataset.id);});
 $('cats').addEventListener('focusin',e=>{const b=e.target.closest('.chip');if(b)showInfo(b.dataset.id);});
