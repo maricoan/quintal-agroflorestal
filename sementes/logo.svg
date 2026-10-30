@@ -1,0 +1,26 @@
+<svg viewBox="0 0 200 200" role="img" aria-label="Logo Sementes do Quintal: uma semente na terra que germina e cresce até virar árvore" xmlns="http://www.w3.org/2000/svg">
+<circle cx="100" cy="100" r="96" fill="#55621F"/>
+<path d="M12.7 140 H187.3 A96 96 0 0 1 12.7 140 Z" fill="#A4471F"/>
+<ellipse cx="38" cy="157" rx="7" ry="4.6" transform="rotate(-20 38 157)" fill="#F1DE97"/>
+<ellipse cx="70" cy="155" rx="6.5" ry="4.4" transform="rotate(-20 70 155)" fill="#F1DE97"/>
+<path d="M68 158 C67 164 70 168 68 174" fill="none" stroke="#F1DE97" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M72 152 C74 146 74 141 70 137 C68 135 65 136 65 138" fill="none" stroke="#F1DE97" stroke-width="3.2" stroke-linecap="round"/>
+<path d="M102 140 V114" stroke="#F1DE97" stroke-width="4" stroke-linecap="round"/>
+<path d="M102 141 C101 150 104 156 101 166 M102 150 L96 157 M102 152 L108 159" fill="none" stroke="#F1DE97" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M102 116 C96 110 88 109 84 113 C90 118 96 119 102 116 Z" fill="#F1DE97"/>
+<path d="M102 116 C108 110 116 109 120 113 C114 118 108 119 102 116 Z" fill="#F1DE97"/>
+<path d="M136 140 V88" stroke="#F1DE97" stroke-width="4.5" stroke-linecap="round"/>
+<path d="M136 120 C129 120 124 115 123 108 C130 108 135 113 136 120 Z" fill="#F1DE97"/>
+<path d="M136 112 C137 105 142 100 149 100 C148 107 143 112 136 112 Z" fill="#F1DE97"/>
+<path d="M136 98 C130 96 127 90 128 84 C134 86 137 92 136 98 Z" fill="#F1DE97"/>
+<path d="M136 92 C137 85 141 81 146 80 C145 87 141 91 136 92 Z" fill="#F1DE97"/>
+<path d="M168 140 V70" stroke="#F1DE97" stroke-width="5" stroke-linecap="round"/>
+<path d="M168 92 L159 82 M168 86 L177 77" stroke="#F1DE97" stroke-width="3" stroke-linecap="round"/>
+<ellipse cx="168" cy="62" rx="15" ry="13" fill="#F1DE97"/>
+<g transform="rotate(25 100 46)">
+<path d="M100 46 C104 38 114 33 124 34 C118 40 110 45 100 46 Z" fill="#F1DE97" opacity=".75"/>
+<ellipse cx="100" cy="46" rx="4.2" ry="3.2" fill="#F1DE97"/>
+</g>
+<circle cx="30" cy="30" r="13.2" fill="#E3B23C"/>
+<path d="M30 8.4 V2.4 M30 51.6 V57.6 M8.4 30 H2.4 M51.6 30 H57.6 M14.7 14.7 L10.5 10.5 M45.3 14.7 L49.5 10.5 M14.7 45.3 L10.5 49.5 M45.3 45.3 L49.5 49.5" stroke="#E3B23C" stroke-width="3.6" stroke-linecap="round"/>
+</svg>
