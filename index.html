@@ -1664,7 +1664,12 @@ function plan(){
       extra.forEach(q=>{
         const cand=pool.filter(o=>q.kind==='tree'?isTree(o):q.kind==='med'?isMed(o)&&!isTree(o):!isTree(o)&&isBed(o)&&Math.abs(foot(o)-foot(s))<=.1+1e-6&&q.kind!=='bed');
         if(cand.length){const o=cand[k++%cand.length];p.count[s.id]--;q.s=o;if(q.cell!=null)q.cell=Math.min(q.cell,foot(o));p.count[o.id]=(p.count[o.id]||0)+1;}
-        else{const i=p.pts.indexOf(q);p.pts.splice(i,1);p.count[s.id]--;}
+        else{
+          // na linha de árvores, o lugar da que sobrou fica com a planta de cobertura da própria linha (mantém o ritmo)
+          const viz=q.kind!=='bed'?p.pts.filter(o=>o.kind==='bed'&&Math.abs(o.y-q.y)<1e-6&&o.s!==s&&!(S.tenho[o.s.id]&&S.tenho[o.s.id].n!=null)).sort((a,b)=>Math.abs(a.x-q.x)-Math.abs(b.x-q.x))[0]:null;
+          p.count[s.id]--;
+          if(viz){const o=viz.s;q.s=o;q.kind='bed';q.cell=viz.cell;p.count[o.id]=(p.count[o.id]||0)+1;}
+          else{const i=p.pts.indexOf(q);p.pts.splice(i,1);}}
       });
       if(!p.count[s.id])delete p.count[s.id];
       info.no=max;
@@ -1857,7 +1862,7 @@ function planBase(){
           for(let r=0;r<rows;r++){
             const yy=rows>1?y0+r*rowGap:bd.y+bd.h/2;
             let k=r%g.length,x=x0+g[k].ep/2;
-            while(x<x1-.001){const m=g[k%g.length];if(x+Math.min(m.ep,step(k))/2<=L+.02)add(m,x,yy,'bed',Math.min(step(k),rowGap,m.ep*2));x+=step(k);k++;}
+            while(x<x1-.001){const m=g[k%g.length];if(x+Math.min(m.ep,step(k))/2<=L+.02)add(m,x,yy,'bed',Math.min(step(k),rowGap,m.ep));x+=step(k);k++;}
           }
         }
         interc.push({g,rowGap,steps:g.map((m,k)=>[m,g[(k+1)%g.length],step(k)])});
