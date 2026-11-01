@@ -1644,7 +1644,7 @@ function plan(){
       let k=0;
       extra.forEach(q=>{
         const cand=pool.filter(o=>q.kind==='tree'?isTree(o):q.kind==='med'?isMed(o)&&!isTree(o):!isTree(o)&&isBed(o)&&foot(o)<=foot(s)+1e-6);
-        if(cand.length){const o=cand[k++%cand.length];p.count[s.id]--;q.s=o;p.count[o.id]=(p.count[o.id]||0)+1;}
+        if(cand.length){const o=cand[k++%cand.length];p.count[s.id]--;q.s=o;if(q.cell!=null)q.cell=Math.min(q.cell,foot(o));p.count[o.id]=(p.count[o.id]||0)+1;}
         else{const i=p.pts.indexOf(q);p.pts.splice(i,1);p.count[s.id]--;}
       });
       if(!p.count[s.id])delete p.count[s.id];
@@ -1653,7 +1653,7 @@ function plan(){
       // prioridade para o que você já tem: ocupa lugares de plantas sem limite, do mesmo tipo e de tamanho igual ou maior
       const kind=have.length?have[0].kind:(isTree(s)?'tree':isMed(s)?'med':'bed');
       const cands=p.pts.filter(q=>q.kind===kind&&q.s!==s&&!S.tenho[q.s.id]&&(kind==='tree'?isTree(q.s):foot(q.s)>=foot(s)-1e-6));
-      for(const q of cands){if((p.count[s.id]||0)>=max)break;const o=q.s;p.count[o.id]--;if(!p.count[o.id])delete p.count[o.id];q.s=s;p.count[s.id]=(p.count[s.id]||0)+1;}
+      for(const q of cands){if((p.count[s.id]||0)>=max)break;const o=q.s;p.count[o.id]--;if(!p.count[o.id])delete p.count[o.id];q.s=s;if(q.cell!=null)q.cell=Math.min(q.cell,foot(s));p.count[s.id]=(p.count[s.id]||0)+1;}
       info.no=p.count[s.id]||0;
     }
     p.tenho.push(info);
