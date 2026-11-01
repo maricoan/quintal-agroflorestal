@@ -699,7 +699,7 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
           </div>
           <p class="tenho-msg" id="tnMsg" aria-live="polite"></p>
           <ul class="tenho-l" id="tnList"></ul>
-          <p class="hint">Mudas e estacas entram no desenho só até a quantidade que você tem; o espaço que sobra fica para as outras plantas. Sementes ocupam o espaço que o app calcular. Esta lista não fica salva: some quando você fecha a página.</p>
+          <p class="hint">Mudas e estacas entram no desenho só até a quantidade que você tem; o espaço que sobra fica para as outras plantas. Com sementes, informe quantas tem; se deixar a quantidade em branco, o app conta que há sementes de sobra. Esta lista não fica salva: some quando você fecha a página.</p>
         </details>
         <div><label class="sr" for="busca">Buscar planta</label><input id="busca" type="text" placeholder="Buscar: alface, pitanga, café…"></div>
         <div class="inv-busca" id="invBusca" aria-live="polite" hidden></div>
@@ -1402,27 +1402,28 @@ document.querySelectorAll('[data-ico]').forEach(el=>{el.innerHTML=ICON[el.datase
 document.querySelectorAll('[data-sig]').forEach(el=>{el.outerHTML=sig(el.dataset.sig);});
 $('busca').addEventListener('input',()=>{renderCats();invBusca();});
 // ---- O que você já tem ----
-const TIPO_TXT={muda:['muda','mudas'],estaca:['estaca','estacas'],semente:['sementes','sementes']};
+const TIPO_TXT={muda:['muda','mudas'],estaca:['estaca','estacas'],semente:['semente','sementes']};
 const normN=t=>t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
 function renderTenho(){
   const all=DATA.concat(S.custom);
   $('tnLista').innerHTML=all.map(s=>`<option value="${esc(s.n)}">`).join('');
-  $('tnList').innerHTML=Object.entries(S.tenho).filter(([id])=>BYID[id]).map(([id,t])=>`<li>${t.n!=null?`<b>${t.n}</b> ${TIPO_TXT[t.tipo][t.n===1?0:1]} de`:'Sementes de'} ${esc(BYID[id].n)}<button type="button" data-tnrm="${id}" aria-label="Tirar ${esc(BYID[id].n)}">×</button></li>`).join('');
+  $('tnList').innerHTML=Object.entries(S.tenho).filter(([id])=>BYID[id]).map(([id,t])=>`<li>${t.n!=null?`<b>${t.n}</b> ${TIPO_TXT[t.tipo][t.n===1?0:1]} de`:'Sementes de sobra de'} ${esc(BYID[id].n)}<button type="button" data-tnrm="${id}" aria-label="Tirar ${esc(BYID[id].n)}">×</button></li>`).join('');
 }
-$('tnTipo').addEventListener('change',()=>{$('tnQtd').disabled=$('tnTipo').value==='semente';});
+$('tnTipo').addEventListener('change',()=>{const q=$('tnQtd'),sem=$('tnTipo').value==='semente';q.disabled=false;q.placeholder=sem?'qtd.':'';if(sem&&q.value==='1')q.value='';if(!sem&&!q.value)q.value=1;});
 function tnAdd(){
   const q=normN($('tnPlanta').value);if(!q){$('tnMsg').textContent='Escreva o nome da planta.';return;}
   const all=DATA.concat(S.custom);
   const s=all.find(x=>normN(x.n)===q)||all.find(x=>normN(x.n).startsWith(q))||all.find(x=>normN(x.n).includes(q));
   if(!s){$('tnMsg').textContent='Não encontrei essa planta na lista do app. Escolha uma das sugestões.';return;}
-  const tipo=$('tnTipo').value,n=tipo==='semente'?null:Math.max(1,Math.round(+$('tnQtd').value||1));
-  S.tenho[s.id]={tipo,n};
+  const tipo=$('tnTipo').value,qv=$('tnQtd').value.trim(),n=tipo==='semente'&&!(+qv>0)?null:Math.max(1,Math.round(+qv||1));
+  const auto=S.tenho[s.id]?S.tenho[s.id].auto:!S.sel.includes(s.id);
+  S.tenho[s.id]={tipo,n,auto};
   if(!S.sel.includes(s.id))S.sel.push(s.id);
-  $('tnMsg').textContent='';$('tnPlanta').value='';$('tnQtd').value=1;S.exemplo=false;update();
+  $('tnMsg').textContent='';$('tnPlanta').value='';$('tnQtd').value=$('tnTipo').value==='semente'?'':1;S.exemplo=false;update();
 }
 $('tnAdd').addEventListener('click',tnAdd);
 $('tnPlanta').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();tnAdd();}});
-$('tnList').addEventListener('click',e=>{const b=e.target.closest('[data-tnrm]');if(!b)return;delete S.tenho[b.dataset.tnrm];update();});
+$('tnList').addEventListener('click',e=>{const b=e.target.closest('[data-tnrm]');if(!b)return;const id=b.dataset.tnrm;if(S.tenho[id]&&S.tenho[id].auto)S.sel=S.sel.filter(i=>i!==id);delete S.tenho[id];update();});
 document.getElementById('invBox').addEventListener('click',e=>{const c=e.target.closest('[data-inv]');if(c){invSel=invSel===c.dataset.inv?null:c.dataset.inv;renderInv();return;}});
 {const IV=document.getElementById('invBox');
  const mostra=c=>{const x=INV_ALL.find(i=>i[0]===c.dataset.inv);if(!x)return;const loc=FOTO_LOCAL['inv:'+x[0]];if(loc){fotoCard(c,x[1],x[2],new Promise(()=>{}));fotoEl.querySelector('.if-img').innerHTML=`<img alt="Foto de ${esc(x[1])}" src="${loc[0]}">`;fotoEl.insertAdjacentHTML('beforeend',`<span class="if-c">Foto: ${esc(loc[1])}</span>`);return;}const sci=x[2].split(' ').slice(0,2).join(' ').replace(/[,(]/g,'');fotoCard(c,x[1],x[2],fotoWiki('inv:'+x[0],[['en',sci],['pt',sci]]));};
@@ -1653,7 +1654,17 @@ function plan(){
       // prioridade para o que você já tem: ocupa lugares de plantas sem limite, do mesmo tipo e de tamanho igual ou maior
       const kind=have.length?have[0].kind:(isTree(s)?'tree':isMed(s)?'med':'bed');
       const cands=p.pts.filter(q=>q.kind===kind&&q.s!==s&&!S.tenho[q.s.id]&&(kind==='tree'?isTree(q.s):foot(q.s)>=foot(s)-1e-6));
-      for(const q of cands){if((p.count[s.id]||0)>=max)break;const o=q.s;p.count[o.id]--;if(!p.count[o.id])delete p.count[o.id];q.s=s;if(q.cell!=null)q.cell=Math.min(q.cell,foot(s));p.count[s.id]=(p.count[s.id]||0)+1;}
+      for(const q of cands){if((p.count[s.id]||0)>=max)break;const o=q.s;p.count[o.id]--;if(!p.count[o.id])delete p.count[o.id];
+        const fs=foot(s),c0=q.cell!=null?q.cell:fs;q.s=s;p.count[s.id]=(p.count[s.id]||0)+1;
+        // no lugar de uma planta maior cabem várias menores: preenche o quadrado dela no espaçamento certo
+        const k=kind==='bed'&&fs>0?Math.max(1,Math.floor(c0/fs+1e-6)):1;
+        if(q.cell!=null)q.cell=Math.min(c0,fs);
+        if(k>1&&(p.count[s.id]||0)<max){const x0=q.x-(k-1)*fs/2,y0=q.y-(k-1)*fs/2;let first=true;
+          for(let i=0;i<k;i++)for(let j=0;j<k;j++){const x=x0+i*fs,y=y0+j*fs;
+            if(first){q.x=x;q.y=y;first=false;continue;}
+            if((p.count[s.id]||0)>=max)break;
+            p.pts.push({s,x,y,kind:q.kind,cell:Math.min(c0,fs)});p.count[s.id]++;}}
+      }
       info.no=p.count[s.id]||0;
     }
     p.tenho.push(info);
@@ -3531,12 +3542,12 @@ function comprasPanel(p){
   const order='EAMBR';ids.sort((a,b)=>order.indexOf(BYID[a].e)-order.indexOf(BYID[b].e)||BYID[a].n.localeCompare(BYID[b].n));
   const rows=ids.map(id=>{const s=BYID[id],t=S.tenho[id],no=p.count[id]||0;
     let tem='—',falta=no;
-    if(t&&t.tipo==='semente'){tem='sementes';falta=0;}
+    if(t&&t.n==null){tem='sementes';falta=0;}
     else if(t){tem=`${t.n} ${TIPO_TXT[t.tipo][t.n===1?0:1]}`;falta=Math.max(0,no-t.n);}
     return `<tr><td>${esc(s.n)}</td><td class="n">${no}</td><td class="n">${tem}</td><td class="n ${falta?'falta':'ok'}">${falta?falta:'✓'}</td></tr>`;}).join('');
   const sobra=tn.filter(x=>x.t.n!=null&&(p.count[x.s.id]||0)<x.t.n);
   const aviso=sobra.map(x=>{const c=p.count[x.s.id]||0;return `<li class="note warn"><span class="tag">Atenção</span><div class="body"><span>${c?`Cabem ${c} das ${x.t.n} ${TIPO_TXT[x.t.tipo][1]} de ${esc(x.s.n)} neste espaço.`:`Não coube nenhuma das ${x.t.n} ${TIPO_TXT[x.t.tipo][1]} de ${esc(x.s.n)} neste espaço.`} Para caber mais, tire outras plantas de canteiro da lista ou aumente a área; senão, plante ${x.t.n-c>1?'as que sobraram':'a que sobrou'} em outro canto, num vaso ou doe para alguém.</span></div></li>`;}).join('');
-  const nFalta=ids.reduce((a,id)=>{const t=S.tenho[id];const no=p.count[id]||0;return a+(t?(t.tipo==='semente'?0:Math.max(0,no-t.n)):no);},0);
+  const nFalta=ids.reduce((a,id)=>{const t=S.tenho[id];const no=p.count[id]||0;return a+(t?(t.n==null?0:Math.max(0,no-t.n)):no);},0);
   return `<section class="panel" aria-labelledby="t-compra"><h2 id="t-compra">Já tenho e falta conseguir</h2>
     ${aviso?`<ul class="notes">${aviso}</ul>`:''}
     <div class="tbl"><table class="compra"><thead><tr><th>Planta</th><th>No plano</th><th>Já tenho</th><th>Falta</th></tr></thead><tbody>${rows}</tbody></table></div>
