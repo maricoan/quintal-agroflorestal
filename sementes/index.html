@@ -60,7 +60,8 @@ header{display:flex;flex-direction:column;gap:10px}
 .cn-l{fill:none;stroke:var(--bg);stroke-width:1.3;stroke-linecap:round}
 .cn-s{fill:none;stroke:var(--leaf);stroke-width:2;stroke-linecap:round}
 /* guia */
-.guia{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.guia{display:grid;grid-template-columns:1fr;gap:12px}
+@media (min-width:700px){.guia{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .guia section{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
 .guia h2{display:flex;align-items:center;gap:10px}
 .gi{flex:none;width:36px;height:36px;padding:4px;border-radius:50%;background:var(--surface);color:var(--gc-ink)}
@@ -86,7 +87,10 @@ header{display:flex;flex-direction:column;gap:10px}
 .lupa{position:absolute;left:11px;top:50%;width:20px;height:20px;transform:translateY(-50%);color:var(--leaf);pointer-events:none}
 .busca{width:100%;font:inherit;padding:9px 12px 9px 40px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
 .busca:focus-visible,.chip:focus-visible,summary:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}
-.linha{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:thin}
+.linha{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:thin;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);padding-right:28px}
+@media (min-width:700px){.linha{flex-wrap:wrap;overflow:visible;-webkit-mask-image:none;mask-image:none;padding-right:0}}
+@media (max-width:699px){.filtros{position:static}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .chip{flex:none;font:inherit;font-size:.86rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
 .chip{--c:var(--ink);color:var(--c);background:color-mix(in srgb,var(--c) 10%,var(--surface));border-color:color-mix(in srgb,var(--c) 40%,var(--line))}
 .chip:hover{background:color-mix(in srgb,var(--c) 18%,var(--surface))}
@@ -104,7 +108,8 @@ header{display:flex;flex-direction:column;gap:10px}
 /* fichas */
 .lista{display:flex;flex-direction:column;gap:22px}
 .grupo{display:flex;flex-direction:column;gap:8px}
-.grupo>h2{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.grupo>h2{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding-top:6px}
+.grupo>h2::before{content:"";align-self:center;width:12px;height:12px;border-radius:50%;background:var(--c);flex:none}
 .grupo>h2 small{font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
 details.ficha{scroll-margin-top:230px;background:var(--surface);border:1px solid var(--line);border-radius:10px;min-width:0}
 details.ficha[open]{border-color:color-mix(in srgb,var(--leaf) 50%,var(--line))}
@@ -222,7 +227,7 @@ details.ficha>summary{grid-template-columns:64px minmax(0,1fr) auto}
 </div>
 
 <nav class="filtros" aria-label="Filtrar fichas">
-  <label class="eyebrow" for="q">Buscar planta</label>
+  <label class="sr" for="q">Buscar planta</label>
   <div class="busca-w"><svg class="lupa" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><input id="q" class="busca" type="search" placeholder="nome popular ou científico" autocomplete="off"></div>
   <div class="linha" id="grupos" role="group" aria-label="Grupo"></div>
   <div class="linha" id="filtros" role="group" aria-label="Como propaga"></div>
@@ -318,7 +323,7 @@ for(const [i,e] of Object.entries(APPT))if(e.loc&&!FIXA[i])FIXA[i]={src:e.loc,k:
 async function buscar(d,pular){if(FIXA[d.id]&&!(pular&&pular.has('fixa')))return FIXA[d.id];let c=null;try{c=JSON.parse(localStorage.getItem('sem-img8-'+d.id)||'null')}catch(e){}if(c)return c;
   let res=null;for(const t of plano(d)){if(pular&&pular.has(t.q||t.wiki||t.arq||t.wl))continue;try{res=t.arq?{src:'https://commons.wikimedia.org/wiki/Special:FilePath/'+encodeURIComponent(t.arq)+'?width=640',href:'https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(t.arq.replace(/ /g,'_')),k:t.k,cred:'Wikimedia Commons'}:t.wl?await wiki(t.wl.slice(3),t.k,t.wl.slice(0,2)):t.wiki?await wiki(t.wiki,t.k):await commons(t);if(res&&d.gr==='f')res.lab='Fruto';}catch(e){res=null}if(res){res.via=t.q||t.wiki||t.arq||t.wl;break;}}
   res=res||{none:1};try{localStorage.setItem('sem-img8-'+d.id,JSON.stringify(res))}catch(e){}return res;}
-function pedir(id){if(IMG[id])return IMG[id];const d=DATA.find(x=>x.id===id);IMG[id]=new Promise(ok=>{FILA.push(()=>buscar(d).then(ok,()=>ok({none:1})));rodar();});return IMG[id];}
+function pedir(id){if(IMG[id])return IMG[id];const d=DATA.find(x=>x.id===id);if(FIXA[id])return IMG[id]=Promise.resolve(FIXA[id]);IMG[id]=new Promise(ok=>{FILA.push(()=>buscar(d).then(ok,()=>ok({none:1})));rodar();});return IMG[id];}
 function rodar(){while(ativos<3&&FILA.length){const f=FILA.shift();ativos++;f().finally(()=>{ativos--;rodar();});}}
 const RUINS={};
 function falhou(id,r){const s=RUINS[id]||(RUINS[id]=new Set());if(r&&r.via)s.add(r.via);try{localStorage.removeItem('sem-img8-'+id)}catch(e){}
@@ -353,7 +358,7 @@ function ficha(d){
 }
 function render(){
   const vis=DATA.filter(ok); let h='';
-  GR.forEach(([k,l])=>{const it=vis.filter(d=>d.gr===k);if(!it.length)return;h+=`<section class="grupo"><h2>${l}<small>${it.length} ${it.length>1?'espécies':'espécie'}</small></h2>${it.map(ficha).join('')}</section>`});
+  GR.forEach(([k,l])=>{const it=vis.filter(d=>d.gr===k);if(!it.length)return;h+=`<section class="grupo c-${k}"><h2>${l}<small>${it.length} ${it.length>1?'espécies':'espécie'}</small></h2>${it.map(ficha).join('')}</section>`});
   const L=document.getElementById('lista');L.innerHTML=h||'<p class="vazio">Nenhuma planta com esses filtros. Tire um filtro ou mude a busca.</p>';
   observar();document.getElementById('contagem').textContent=vis.length===DATA.length?`Mostrando todas as ${DATA.length} espécies`:`Mostrando ${vis.length} de ${DATA.length} espécies`;
 }
