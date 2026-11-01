@@ -90,6 +90,12 @@ header{display:flex;flex-direction:column;gap:10px}
 .chip{flex:none;font:inherit;font-size:.86rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
 .chip{--c:var(--ink);color:var(--c);background:color-mix(in srgb,var(--c) 10%,var(--surface));border-color:color-mix(in srgb,var(--c) 40%,var(--line))}
 .chip:hover{background:color-mix(in srgb,var(--c) 18%,var(--surface))}
+#grupos .chip{background:color-mix(in srgb,var(--c) 50%,transparent);border-color:var(--c);color:var(--ink)}
+#filtros .chip{background:color-mix(in srgb,var(--c) 25%,transparent);border-color:color-mix(in srgb,var(--c) 60%,transparent);color:var(--ink)}
+#grupos .chip:hover{background:color-mix(in srgb,var(--c) 62%,transparent)}
+#filtros .chip:hover{background:color-mix(in srgb,var(--c) 37%,transparent)}
+#grupos .chip[aria-pressed="true"],#filtros .chip[aria-pressed="true"]{background:var(--c);color:var(--bg);border-color:var(--c);font-weight:700}
+#filtros{border-top:1px solid var(--line);padding-top:8px}
 .chip[aria-pressed="true"]{background:var(--c);color:var(--bg);border-color:var(--c)}
 .c-h,.c-E{--c:var(--leaf)} .c-t,.c-R{--c:var(--fresh)} .c-a{--c:var(--moss)} .c-f{--c:var(--berry)}
 .c-p,.c-dura{--c:var(--warn)} .c-n,.c-S{--c:var(--seed)} .c-w{--c:var(--water)} .c-g,.c-DR{--c:var(--soil)}
