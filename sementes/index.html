@@ -16,7 +16,7 @@
   --bg:#F3F2E5; --surface:#FFFEF7; --ink:#23251A; --muted:#62644F; --line:#DFDDC6;
   --leaf:#55621F; --leaf-soft:#E8EBD0; --soil:#7B5A2C; --soil-soft:#F2EAD5;
   --seed:#94661C; --seed-soft:#F7EBCF; --fresh:#2E7A57; --fresh-soft:#DDEFE3;
-  --warn:#A4471F; --warn-soft:#F8E7DD; --month-on:#55621F; --month-off:#E6E4CF;
+  --warn:#A4471F; --warn-soft:#F8E7DD; --berry:#7E3A64; --water:#2F6A85; --moss:#4F7A1E; --month-on:#55621F; --month-off:#E6E4CF;
   --f-display:"Young Serif", Georgia, "Times New Roman", serif;
   --f-body:"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
   --f-mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
@@ -25,12 +25,12 @@
   --bg:#16170F; --surface:#1F2117; --ink:#E9E8D6; --muted:#A6A68C; --line:#34362A;
   --leaf:#BCC86E; --leaf-soft:#2B3019; --soil:#D7A47E; --soil-soft:#2E2A1D;
   --seed:#E5B54C; --seed-soft:#3A3016; --fresh:#7FCFA2; --fresh-soft:#1D3327;
-  --warn:#F2A077; --warn-soft:#3A2419; --month-on:#BCC86E; --month-off:#2F3124; color-scheme:dark}}
+  --warn:#F2A077; --warn-soft:#3A2419; --berry:#CC8DB4; --water:#8EC6DC; --moss:#AECB6B; --month-on:#BCC86E; --month-off:#2F3124; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#16170F; --surface:#1F2117; --ink:#E9E8D6; --muted:#A6A68C; --line:#34362A;
   --leaf:#BCC86E; --leaf-soft:#2B3019; --soil:#D7A47E; --soil-soft:#2E2A1D;
   --seed:#E5B54C; --seed-soft:#3A3016; --fresh:#7FCFA2; --fresh-soft:#1D3327;
-  --warn:#F2A077; --warn-soft:#3A2419; --month-on:#BCC86E; --month-off:#2F3124; color-scheme:dark}
+  --warn:#F2A077; --warn-soft:#3A2419; --berry:#CC8DB4; --water:#8EC6DC; --moss:#AECB6B; --month-on:#BCC86E; --month-off:#2F3124; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;margin:0}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
@@ -87,7 +87,11 @@ header{display:flex;flex-direction:column;gap:10px}
 .busca:focus-visible,.chip:focus-visible,summary:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}
 .linha{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:thin}
 .chip{flex:none;font:inherit;font-size:.86rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
-.chip[aria-pressed="true"]{background:var(--leaf);color:var(--bg);border-color:var(--leaf)}
+.chip{--c:var(--ink);color:var(--c);background:color-mix(in srgb,var(--c) 10%,var(--surface));border-color:color-mix(in srgb,var(--c) 40%,var(--line))}
+.chip:hover{background:color-mix(in srgb,var(--c) 18%,var(--surface))}
+.chip[aria-pressed="true"]{background:var(--c);color:var(--bg);border-color:var(--c)}
+.c-h,.c-E{--c:var(--leaf)} .c-t,.c-R{--c:var(--fresh)} .c-a{--c:var(--moss)} .c-f{--c:var(--berry)}
+.c-p,.c-dura{--c:var(--warn)} .c-n,.c-S{--c:var(--seed)} .c-w{--c:var(--water)} .c-g,.c-DR{--c:var(--soil)}
 .contagem{font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
 
 /* fichas */
@@ -249,9 +253,9 @@ const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 DATA.forEach(d=>{d._q=norm(d.n+' '+d.sci);d._dura=/lixe|lixa|80 °C/.test(d.pr)});
 document.getElementById('stats').innerHTML=`<span><b>${DATA.length}</b> espécies</span><span><b>${DATA.filter(d=>d.t==='R').length}</b> com semente que não guarda</span><span><b>${DATA.filter(d=>d.v.includes('E')).length}</b> que pegam de estaca</span>`;
 const gEl=document.getElementById('grupos');
-gEl.innerHTML=`<button class="chip" id="g-todos" aria-pressed="true" data-g="">Todas</button>`+GR.map(([k,l])=>`<button class="chip" id="g-${k}" aria-pressed="false" data-g="${k}">${l}</button>`).join('');
+gEl.innerHTML=`<button class="chip" id="g-todos" aria-pressed="true" data-g="">Todas</button>`+GR.map(([k,l])=>`<button class="chip c-${k}" id="g-${k}" aria-pressed="false" data-g="${k}">${l}</button>`).join('');
 const fEl=document.getElementById('filtros');
-fEl.innerHTML=FILT.map(([k,l])=>`<button class="chip" id="f-${k}" aria-pressed="false" data-f="${k}">${l}</button>`).join('');
+fEl.innerHTML=FILT.map(([k,l])=>`<button class="chip c-${k}" id="f-${k}" aria-pressed="false" data-f="${k}">${l}</button>`).join('');
 gEl.addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b)return;gsel=b.dataset.g;gEl.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',c===b));render()});
 fEl.addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(!b)return;const k=b.dataset.f;fsel.has(k)?fsel.delete(k):fsel.add(k);b.setAttribute('aria-pressed',fsel.has(k));render()});
 document.getElementById('q').addEventListener('input',e=>{q=norm(e.target.value.trim());render()});
