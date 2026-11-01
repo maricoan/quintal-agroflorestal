@@ -261,7 +261,12 @@ const SEMENTE_IC='<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" c
 const IMG={}, FILA=[]; let ativos=0;
 const KIND_TXT={S:'Semente',F:'Fruto, onde ficam as sementes',R:'Rizoma, tubérculo ou rama',T:'Touceira',E:'Ramo para estaca',P:'Planta'};
 function nomeSci(d){const s=(d.sci||'').replace(/\(.*?\)/g,'').replace(/×/g,'').replace(/\bvar\..*$/,'').trim();if(!/^[A-Z][a-z]+/.test(s))return '';const w=s.split(/\s+/);return (w[1]&&!/^spp?\.?$/.test(w[1]))?w[0]+' '+w[1]:w[0];}
-function plano(d){const n=nomeSci(d);if(!n)return [];const g=n.split(' ')[0];const out=[];
+const FRUTO={"abacate": ["en:Avocado"], "abacaxi": ["en:Pineapple"], "a-pouteriatorta": ["en:Pouteria torta"], "acerola": ["en:Malpighia emarginata"], "araca": ["en:Psidium cattleyanum"], "banana": ["en:Banana"], "cabeludinha": ["en:Myrciaria glazioviana"], "cafe": ["arq:Coffee Berries.jpg", "arq:Coffee arabica cherry.jpg", "arq:Coffee Cherries.jpeg", "en:Coffea arabica"], "a-eugeniadysenterica": ["en:Eugenia dysenterica"], "cambuci": ["en:Campomanesia phaea"], "a-pliniaedulis": ["en:Plinia edulis"], "caqui": ["en:Diospyros kaki"], "cereja": ["en:Eugenia involucrata"], "gabiroba": ["en:Campomanesia adamantium", "pt:Gabiroba"], "goiaba": ["en:Guava"], "grumixama": ["en:Eugenia brasiliensis"], "a-myrcianthespungens": ["en:Myrcianthes pungens"], "a-campomanesiaxanthocarpa": ["en:Campomanesia xanthocarpa"], "jabuticaba": ["en:Jabuticaba"], "limao": ["en:Persian lime", "pt:Limão"], "mamao": ["en:Papaya"], "manga": ["en:Mango"], "maracuja": ["en:Passiflora edulis"], "melancia": ["en:Watermelon"], "mexerica": ["en:Mandarin orange"], "aroeira": ["arq:Schinus terebinthifolius fruits.JPG", "arq:Starr 041018-0009 Schinus terebinthifolius.jpg", "en:Schinus terebinthifolia"], "pitanga": ["en:Eugenia uniflora"], "tuna": ["en:Cereus hildmannianus"], "uvaia": ["en:Eugenia pyriformis"]};
+function plano(d){if(d.gr==='f'){const n=nomeSci(d),g=n.split(' ')[0],fr=(FRUTO[d.id]||[]).map(x=>x.startsWith('arq:')?{k:'F',arq:x.slice(4)}:{k:'F',wl:x});
+  const cien=fr.filter(t=>t.wl&&g&&t.wl.slice(3).startsWith(g)),prim=fr.filter(t=>!cien.includes(t));
+  if(n)prim.push({k:'F',q:`"${n}" (fruit OR fruits OR fruto OR frutos)`,re:/fruit|fruto|fruta|frucht|fructus|berr|baga/i,g});return prim.concat(cien);}
+return plano0(d);}
+function plano0(d){const n=nomeSci(d);if(!n)return [];const g=n.split(' ')[0];const out=[];
   const seed=[['S','(seed OR seeds OR semente OR sementes OR semilla)',/seed|semente|semilla|samen|graine/i],['F','(fruit OR fruits OR fruto OR pod)',/fruit|fruto|fruta|frucht|fructus|pod|vagem|capsule/i]];
   const riz=[['R','(rhizome OR rhizomes OR tuber OR tubers OR root OR roots OR stem OR sucker OR crown)',/rhizom|rizoma|tuber|tubérculo|root|raiz|corm|batata|maniva|stem|cutting|sucker|crown|coroa/i]];
   const v=d.v;
@@ -277,17 +282,17 @@ async function commons(t){const u='https://commons.wikimedia.org/w/api.php?actio
     const m=ii.extmetadata||{};const tx=s=>(s&&s.value||'').replace(/<[^>]+>/g,'').trim();
     return {src:ii.thumburl,href:ii.descriptionurl,k:t.k,cred:[tx(m.Artist),tx(m.LicenseShortName)].filter(Boolean).join(' · ')};}
   return null;}
-async function wiki(n,k){for(const l of ['pt','en']){try{const r=await fetch(`https://${l}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(n.replace(/ /g,'_'))}`);if(!r.ok)continue;const j=await r.json();if(j.type==='disambiguation'||!j.thumbnail)continue;
+async function wiki(n,k,so){for(const l of (so?[so]:['pt','en'])){try{const r=await fetch(`https://${l}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(n.replace(/ /g,'_'))}`);if(!r.ok)continue;const j=await r.json();if(j.type==='disambiguation'||!j.thumbnail)continue;
   const o=j.originalimage;const src=(o&&o.width<=1600&&/\.(jpe?g|png|webp)$/i.test(o.source))?o.source:j.thumbnail.source;
   return {src,href:(j.content_urls&&j.content_urls.desktop.page)||'',k,cred:'Wikipédia'};}catch(e){}}return null;}
 const FIXA={banana:{src:'fotos/banana.jpg',k:'P',lab:'Bananeira',cred:'Foto enviada por Mariana Coan',via:'fixa'}};
-async function buscar(d,pular){if(FIXA[d.id]&&!(pular&&pular.has('fixa')))return FIXA[d.id];let c=null;try{c=JSON.parse(localStorage.getItem('sem-img2-'+d.id)||'null')}catch(e){}if(c)return c;
-  let res=null;for(const t of plano(d)){if(pular&&pular.has(t.q||t.wiki))continue;try{res=t.wiki?await wiki(t.wiki,t.k):await commons(t);}catch(e){res=null}if(res){res.via=t.q||t.wiki;break;}}
-  res=res||{none:1};try{localStorage.setItem('sem-img2-'+d.id,JSON.stringify(res))}catch(e){}return res;}
+async function buscar(d,pular){if(FIXA[d.id]&&!(pular&&pular.has('fixa')))return FIXA[d.id];let c=null;try{c=JSON.parse(localStorage.getItem('sem-img3-'+d.id)||'null')}catch(e){}if(c)return c;
+  let res=null;for(const t of plano(d)){if(pular&&pular.has(t.q||t.wiki||t.arq||t.wl))continue;try{res=t.arq?{src:'https://commons.wikimedia.org/wiki/Special:FilePath/'+encodeURIComponent(t.arq)+'?width=640',href:'https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(t.arq.replace(/ /g,'_')),k:'F',cred:'Wikimedia Commons'}:t.wl?await wiki(t.wl.slice(3),t.k,t.wl.slice(0,2)):t.wiki?await wiki(t.wiki,t.k):await commons(t);if(res&&d.gr==='f')res.lab='Fruto';}catch(e){res=null}if(res){res.via=t.q||t.wiki||t.arq||t.wl;break;}}
+  res=res||{none:1};try{localStorage.setItem('sem-img3-'+d.id,JSON.stringify(res))}catch(e){}return res;}
 function pedir(id){if(IMG[id])return IMG[id];const d=DATA.find(x=>x.id===id);IMG[id]=new Promise(ok=>{FILA.push(()=>buscar(d).then(ok,()=>ok({none:1})));rodar();});return IMG[id];}
 function rodar(){while(ativos<3&&FILA.length){const f=FILA.shift();ativos++;f().finally(()=>{ativos--;rodar();});}}
 const RUINS={};
-function falhou(id,r){const s=RUINS[id]||(RUINS[id]=new Set());if(r&&r.via)s.add(r.via);try{localStorage.removeItem('sem-img2-'+id)}catch(e){}
+function falhou(id,r){const s=RUINS[id]||(RUINS[id]=new Set());if(r&&r.via)s.add(r.via);try{localStorage.removeItem('sem-img3-'+id)}catch(e){}
   const d=DATA.find(x=>x.id===id);IMG[id]=new Promise(ok=>{FILA.push(()=>(s.size>4?Promise.resolve({none:1}):buscar(d,s)).then(ok,()=>ok({none:1})));rodar();});
   document.querySelectorAll(`[data-k="${id}"]`).forEach(el=>{delete el.dataset.ok;pintar(el);});}
 function pintar(el){const id=el.dataset.k;if(el.dataset.ok)return;el.dataset.ok=1;pedir(id).then(r=>{if(r&&!r.none&&RUINS[id]&&RUINS[id].has(r.via))return;if(!r||r.none){if(el.tagName==='FIGURE')el.innerHTML='';else el.innerHTML=SEMENTE_IC;return;}
