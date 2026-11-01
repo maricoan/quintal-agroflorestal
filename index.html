@@ -239,6 +239,25 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .inv-d{margin-top:10px}.inv .inv-d summary{color:var(--warn);font-size:12.5px;padding:0;display:list-item;list-style:revert}.inv-d .inv-n{margin-top:4px}.inv-n{margin:10px 0 0;font-size:12px;color:var(--muted)}.inv-n a{color:var(--warn)}
 .inv-busca{margin-top:6px;border:1px solid var(--warn);background:var(--warn-soft);border-radius:8px;padding:8px 10px;font-size:13px}
 .inv-busca b{color:var(--warn)}.inv-busca .acts{margin-top:5px;display:flex;flex-wrap:wrap;gap:6px}.inv-busca .acts button{font:inherit;font-size:12.5px;border:1px solid var(--leaf);color:var(--leaf);background:var(--surface);border-radius:999px;padding:3px 10px;cursor:pointer}
+.tenho{border:1px solid var(--leaf);border-radius:8px;padding:0 10px;background:var(--leaf-soft);margin-bottom:10px}
+.tenho summary{cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;padding:9px 0;list-style:none;color:var(--leaf)}
+.tenho summary::-webkit-details-marker{display:none}.tenho summary .cat-sub{font-weight:400;color:var(--ink)}
+.tenho[open]{padding-bottom:10px}.tenho .hint{margin:8px 0 0;font-size:12.5px}
+.tenho-f{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tenho-f input,.tenho-f select{font:inherit;font-size:14px;border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:var(--surface);color:var(--ink);min-width:0}
+.tenho-f #tnPlanta{flex:1 1 170px}.tenho-f #tnQtd{width:70px}
+.tenho-f button{font:inherit;font-size:14px;font-weight:700;border:0;border-radius:6px;padding:7px 14px;background:var(--leaf);color:var(--surface);cursor:pointer}
+.tenho-msg{margin:6px 0 0;font-size:12.5px;color:var(--warn)}.tenho-msg:empty{display:none}
+.tenho-l{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}.tenho-l:empty{display:none}
+.tenho-l li{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--leaf);border-radius:999px;padding:3px 4px 3px 10px;font-size:13px}
+.tenho-l button{border:0;background:transparent;color:var(--muted);font-size:16px;line-height:1;cursor:pointer;padding:0 4px}
+.tem-tag{font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--leaf);border:1px solid var(--leaf);border-radius:4px;padding:0 4px;line-height:1.5}
+.compra td.n{text-align:right;font-variant-numeric:tabular-nums}.compra .ok{color:var(--leaf);font-weight:700}.compra .falta{color:var(--warn);font-weight:700}
+.share{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.share button{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:14px;font-weight:700;border:1px solid var(--leaf);border-radius:999px;padding:6px 14px;background:var(--surface);color:var(--leaf);cursor:pointer}
+.share button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.share .wa{border-color:#1F8A4C;color:#1F8A4C}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .share .wa{border-color:#5CC98A;color:#5CC98A}}:root[data-theme="dark"] .share .wa{border-color:#5CC98A;color:#5CC98A}.share-msg{font-size:12.5px;color:var(--muted)}
 .indic summary .cat-sub{font-weight:400}.indic[open]{padding-bottom:10px}.indic .hint{margin:0 0 8px}
 .ind-d{margin-top:8px;font-size:12.5px}.ind-d summary{cursor:pointer;color:var(--leaf);font-weight:700}.ind-d .ind-n{margin:4px 0 0}.nasc-d{margin:2px 0 8px}.wz-d{margin-top:8px}.wz-d .wz-n{margin-top:4px}.nasc .nasc-d summary{padding:2px 0;font-size:12.5px}
 .ifoto{position:fixed;z-index:60;width:216px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(20,25,10,.22);padding:8px;font-size:12.5px;line-height:1.35;pointer-events:none}
@@ -668,6 +687,18 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
           <h2 id="t-plantas">O que quer plantar</h2>
           <span class="hint" id="nsel"></span>
         </div>
+        <details class="tenho" id="tenhoBox"><summary><svg class="cat-ico" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 10.5h12l-1.4 5H4.4z"/><path d="M9 10.5V6M9 7.5c-2.2 0-3.4-1.2-3.6-3.2 2.2 0 3.4 1.2 3.6 3.2zM9 6.6c.2-2 1.4-3.1 3.4-3.1-.2 2-1.4 3.1-3.4 3.1z"/></svg><span>O que você já tem? <span class="cat-sub">Mudas, sementes ou estacas em mãos: o desenho começa por elas.</span></span></summary>
+          <div class="tenho-f">
+            <label class="sr" for="tnPlanta">Planta</label><input id="tnPlanta" list="tnLista" type="text" placeholder="Planta (ex.: helicônia)" autocomplete="off">
+            <datalist id="tnLista"></datalist>
+            <label class="sr" for="tnTipo">Tipo</label><select id="tnTipo"><option value="muda">mudas</option><option value="estaca">estacas ou rizomas</option><option value="semente">sementes</option></select>
+            <label class="sr" for="tnQtd">Quantidade</label><input id="tnQtd" type="number" min="1" step="1" value="1" inputmode="numeric">
+            <button type="button" id="tnAdd">Adicionar</button>
+          </div>
+          <p class="tenho-msg" id="tnMsg" aria-live="polite"></p>
+          <ul class="tenho-l" id="tnList"></ul>
+          <p class="hint">Mudas e estacas entram no desenho só até a quantidade que você tem; o espaço que sobra fica para as outras plantas. Sementes ocupam o espaço que o app calcular. Esta lista não fica salva: some quando você fecha a página.</p>
+        </details>
         <div><label class="sr" for="busca">Buscar planta</label><input id="busca" type="text" placeholder="Buscar: alface, pitanga, café…"></div>
         <div class="inv-busca" id="invBusca" aria-live="polite" hidden></div>
         <div class="tray" id="tray" aria-live="polite"></div>
@@ -1313,6 +1344,7 @@ try{S=JSON.parse(localStorage.getItem('quintal-saf-v2')||'null');}catch(e){S=nul
 if(!S||!Array.isArray(S.sel))S=JSON.parse(JSON.stringify(DEFAULT));
 S.custom=(S.custom||[]).filter(c=>c&&c.el);S.vista=S.vista||'planta';
 S.custom.forEach(c=>BYID[c.id]=c);
+S.tenho={};
 S.sel=S.sel.filter(i=>BYID[i]);
 // no site do GitHub (ou com ?limpo no endereço), o app sempre abre no exemplo do quintal de 6 × 3 m, sem plantas escolhidas
 // site público (GitHub Pages e quintal.marianacoan.com): toda visita começa limpa, sem plantas, no topo da página inicial
@@ -1367,6 +1399,28 @@ $('inD').addEventListener('input',e=>{const v=parseFloat(e.target.value);if(!isF
 document.querySelectorAll('[data-ico]').forEach(el=>{el.innerHTML=ICON[el.dataset.ico];});
 document.querySelectorAll('[data-sig]').forEach(el=>{el.outerHTML=sig(el.dataset.sig);});
 $('busca').addEventListener('input',()=>{renderCats();invBusca();});
+// ---- O que você já tem ----
+const TIPO_TXT={muda:['muda','mudas'],estaca:['estaca','estacas'],semente:['sementes','sementes']};
+const normN=t=>t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+function renderTenho(){
+  const all=DATA.concat(S.custom);
+  $('tnLista').innerHTML=all.map(s=>`<option value="${esc(s.n)}">`).join('');
+  $('tnList').innerHTML=Object.entries(S.tenho).filter(([id])=>BYID[id]).map(([id,t])=>`<li>${t.n!=null?`<b>${t.n}</b> ${TIPO_TXT[t.tipo][t.n===1?0:1]} de`:'Sementes de'} ${esc(BYID[id].n)}<button type="button" data-tnrm="${id}" aria-label="Tirar ${esc(BYID[id].n)}">×</button></li>`).join('');
+}
+$('tnTipo').addEventListener('change',()=>{$('tnQtd').disabled=$('tnTipo').value==='semente';});
+function tnAdd(){
+  const q=normN($('tnPlanta').value);if(!q){$('tnMsg').textContent='Escreva o nome da planta.';return;}
+  const all=DATA.concat(S.custom);
+  const s=all.find(x=>normN(x.n)===q)||all.find(x=>normN(x.n).startsWith(q))||all.find(x=>normN(x.n).includes(q));
+  if(!s){$('tnMsg').textContent='Não encontrei essa planta na lista do app. Escolha uma das sugestões.';return;}
+  const tipo=$('tnTipo').value,n=tipo==='semente'?null:Math.max(1,Math.round(+$('tnQtd').value||1));
+  S.tenho[s.id]={tipo,n};
+  if(!S.sel.includes(s.id))S.sel.push(s.id);
+  $('tnMsg').textContent='';$('tnPlanta').value='';$('tnQtd').value=1;S.exemplo=false;update();
+}
+$('tnAdd').addEventListener('click',tnAdd);
+$('tnPlanta').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();tnAdd();}});
+$('tnList').addEventListener('click',e=>{const b=e.target.closest('[data-tnrm]');if(!b)return;delete S.tenho[b.dataset.tnrm];update();});
 document.getElementById('invBox').addEventListener('click',e=>{const c=e.target.closest('[data-inv]');if(c){invSel=invSel===c.dataset.inv?null:c.dataset.inv;renderInv();return;}});
 {const IV=document.getElementById('invBox');
  const mostra=c=>{const x=INV_ALL.find(i=>i[0]===c.dataset.inv);if(!x)return;const loc=FOTO_LOCAL['inv:'+x[0]];if(loc){fotoCard(c,x[1],x[2],new Promise(()=>{}));fotoEl.querySelector('.if-img').innerHTML=`<img alt="Foto de ${esc(x[1])}" src="${loc[0]}">`;fotoEl.insertAdjacentHTML('beforeend',`<span class="if-c">Foto: ${esc(loc[1])}</span>`);return;}const sci=x[2].split(' ').slice(0,2).join(' ').replace(/[,(]/g,'');fotoCard(c,x[1],x[2],fotoWiki('inv:'+x[0],[['en',sci],['pt',sci]]));};
@@ -1543,7 +1597,7 @@ function renderCats(){
     const chip=s=>{
       const on=S.sel.includes(s.id);
       const off=!s.sol.includes(S.sol);
-      return `<button type="button" class="chip${off?' off':''}" data-id="${s.id}" aria-pressed="${on}"${off?` title="${esc(luzMotivo(s))}"`:''}>${sig(s.e)}${esc(s.n)}${INVASORA[s.id]?` <span class="inv-tag" title="${esc(INVASORA[s.id])}">invasora</span>`:''}${s.o?` <span class="ico-w" role="img" aria-label="${ORIG_TXT[s.o]}">${ICON[s.o]}</span>`:''}${s.custom?` <span class="x" data-rm="${s.id}" role="button" aria-label="Remover ${esc(s.n)}">×</span>`:''}</button>`;
+      return `<button type="button" class="chip${off?' off':''}" data-id="${s.id}" aria-pressed="${on}"${off?` title="${esc(luzMotivo(s))}"`:''}>${sig(s.e)}${esc(s.n)}${S.tenho&&S.tenho[s.id]?` <span class="tem-tag">já tenho</span>`:''}${INVASORA[s.id]?` <span class="inv-tag" title="${esc(INVASORA[s.id])}">invasora</span>`:''}${s.o?` <span class="ico-w" role="img" aria-label="${ORIG_TXT[s.o]}">${ICON[s.o]}</span>`:''}${s.custom?` <span class="x" data-rm="${s.id}" role="button" aria-label="Remover ${esc(s.n)}">×</span>`:''}</button>`;
     };
     const head=`<details class="cat${k==='w'?' cat-w':''}" data-k="${k}"${open?' open':''}><summary>${catIco(k)}<span class="cat-t">${lab}${k==='w'&&molhado?` <span class="cat-sub">${S.solo==='umido'?'bom para solo úmido':'bom para perto da água'}</span>`:''}</span><span class="cat-n">${nOn?`${nOn} de ${items.length}`:items.length}</span></summary>`;
     if(k==='w'){
@@ -1571,7 +1625,40 @@ function renderCats(){
 }
 
 // ---------- plano ----------
+// "O que você já tem": mudas e estacas entram só até a quantidade informada; o espaço liberado vai para outras plantas
 function plan(){
+  const p=planBase();
+  p.tenho=[];
+  if(S.modo!=='chao'||!S.tenho)return p;
+  const foot=s=>Math.min(s.el,s.ep);
+  Object.entries(S.tenho).forEach(([id,t])=>{
+    const s=BYID[id];if(!s||!p.sel.includes(s))return;
+    const have=p.pts.filter(q=>q.s.id===id),max=t.n;
+    const info={s,t,no:have.length};
+    if(max!=null&&have.length>max){
+      const extra=have.slice(max);
+      // substitutas: plantas do mesmo tipo de lugar, sem limite, que não sejam maiores que a retirada
+      const pool=p.sel.filter(o=>o!==s&&!(S.tenho[o.id]&&S.tenho[o.id].n!=null));
+      let k=0;
+      extra.forEach(q=>{
+        const cand=pool.filter(o=>q.kind==='tree'?isTree(o):q.kind==='med'?isMed(o)&&!isTree(o):!isTree(o)&&isBed(o)&&foot(o)<=foot(s)+1e-6);
+        if(cand.length){const o=cand[k++%cand.length];p.count[s.id]--;q.s=o;p.count[o.id]=(p.count[o.id]||0)+1;}
+        else{const i=p.pts.indexOf(q);p.pts.splice(i,1);p.count[s.id]--;}
+      });
+      if(!p.count[s.id])delete p.count[s.id];
+      info.no=max;
+    }else if(max!=null&&have.length<max){
+      // prioridade para o que você já tem: ocupa lugares de plantas sem limite, do mesmo tipo e de tamanho igual ou maior
+      const kind=have.length?have[0].kind:(isTree(s)?'tree':isMed(s)?'med':'bed');
+      const cands=p.pts.filter(q=>q.kind===kind&&q.s!==s&&!S.tenho[q.s.id]&&(kind==='tree'?isTree(q.s):foot(q.s)>=foot(s)-1e-6));
+      for(const q of cands){if((p.count[s.id]||0)>=max)break;const o=q.s;p.count[o.id]--;if(!p.count[o.id])delete p.count[o.id];q.s=s;p.count[s.id]=(p.count[s.id]||0)+1;}
+      info.no=p.count[s.id]||0;
+    }
+    p.tenho.push(info);
+  });
+  return p;
+}
+function planBase(){
   const sel=S.sel.map(i=>BYID[i]).filter(Boolean);
   {const A=aguaGeo();if(A&&A.t==='lago')return planLago(sel,A);}
   const [L,W]=LW();
@@ -3433,6 +3520,78 @@ function manejo(p){
 }
 
 // ---------- render ----------
+// lista "Já tenho / Falta conseguir"
+function comprasPanel(p){
+  const ids=Object.keys(p.count).filter(i=>BYID[i]);
+  const tn=p.tenho||[];
+  tn.forEach(x=>{if(!ids.includes(x.s.id))ids.push(x.s.id);});
+  if(!ids.length)return '';
+  const order='EAMBR';ids.sort((a,b)=>order.indexOf(BYID[a].e)-order.indexOf(BYID[b].e)||BYID[a].n.localeCompare(BYID[b].n));
+  const rows=ids.map(id=>{const s=BYID[id],t=S.tenho[id],no=p.count[id]||0;
+    let tem='—',falta=no;
+    if(t&&t.tipo==='semente'){tem='sementes';falta=0;}
+    else if(t){tem=`${t.n} ${TIPO_TXT[t.tipo][t.n===1?0:1]}`;falta=Math.max(0,no-t.n);}
+    return `<tr><td>${esc(s.n)}</td><td class="n">${no}</td><td class="n">${tem}</td><td class="n ${falta?'falta':'ok'}">${falta?falta:'✓'}</td></tr>`;}).join('');
+  const sobra=tn.filter(x=>x.t.n!=null&&(p.count[x.s.id]||0)<x.t.n);
+  const aviso=sobra.map(x=>{const c=p.count[x.s.id]||0;return `<li class="note warn"><span class="tag">Atenção</span><div class="body"><span>${c?`Cabem ${c} das ${x.t.n} ${TIPO_TXT[x.t.tipo][1]} de ${esc(x.s.n)} neste espaço.`:`Não coube nenhuma das ${x.t.n} ${TIPO_TXT[x.t.tipo][1]} de ${esc(x.s.n)} neste espaço.`} Para caber mais, tire outras plantas de canteiro da lista ou aumente a área; senão, plante ${x.t.n-c>1?'as que sobraram':'a que sobrou'} em outro canto, num vaso ou doe para alguém.</span></div></li>`;}).join('');
+  const nFalta=ids.reduce((a,id)=>{const t=S.tenho[id];const no=p.count[id]||0;return a+(t?(t.tipo==='semente'?0:Math.max(0,no-t.n)):no);},0);
+  return `<section class="panel" aria-labelledby="t-compra"><h2 id="t-compra">Já tenho e falta conseguir</h2>
+    ${aviso?`<ul class="notes">${aviso}</ul>`:''}
+    <div class="tbl"><table class="compra"><thead><tr><th>Planta</th><th>No plano</th><th>Já tenho</th><th>Falta</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <p class="hint">${nFalta?`Faltam ${nFalta} mudas ou plantas. `:'Você já tem tudo o que o desenho pede. '}Para produzir as mudas que faltam, veja <a href="https://quintal.marianacoan.com/sementes/" target="_blank" rel="noopener">Sementes do Quintal</a>.</p></section>`;
+}
+// salvar ou enviar a imagem do desenho
+const ehCelular=()=>{try{return matchMedia('(pointer:coarse)').matches&&innerWidth<900;}catch(e){return false;}};
+function shareBar(){
+  const ic=ehCelular()?'<svg viewBox="0 0 24 24"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.3-1.8-1-.8.7c-1-.4-2-1.4-2.4-2.4l.7-.8-1-1.8z"/></svg>':'<svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>';
+  return `<div class="share">${ehCelular()?`<button type="button" class="wa" data-share="wa">${ic}Enviar pelo WhatsApp</button><button type="button" data-share="png"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Salvar imagem</button>`:`<button type="button" data-share="png">${ic}Salvar imagem do plantio</button>`}<span class="share-msg" id="shareMsg" aria-live="polite"></span></div>`;
+}
+const SVG_PROPS=['fill','fill-opacity','stroke','stroke-width','stroke-opacity','stroke-dasharray','stroke-linecap','stroke-linejoin','opacity','font-family','font-size','font-weight','font-style','text-anchor','dominant-baseline','letter-spacing','visibility','display','paint-order','filter'];
+function svgParaPng(svg,p){
+  return new Promise((ok,erro)=>{
+    const vb=svg.viewBox&&svg.viewBox.baseVal&&svg.viewBox.baseVal.width?svg.viewBox.baseVal:{width:svg.clientWidth,height:svg.clientHeight};
+    const cl=svg.cloneNode(true);
+    const a=[svg,...svg.querySelectorAll('*')],b=[cl,...cl.querySelectorAll('*')];
+    a.forEach((el,i)=>{const cs=getComputedStyle(el);b[i].setAttribute('style',SVG_PROPS.map(k=>`${k}:${cs.getPropertyValue(k)}`).join(';'));});
+    const W=1600,dw=W-120,dh=Math.round(dw*vb.height/vb.width);
+    cl.setAttribute('width',dw);cl.setAttribute('height',dh);cl.setAttribute('xmlns','http://www.w3.org/2000/svg');
+    const css=getComputedStyle(document.body),cor=k=>getComputedStyle(document.documentElement).getPropertyValue(k).trim()||'#222';
+    const ids=Object.keys(p.count).filter(i=>BYID[i]);
+    const colN=3,linhas=Math.ceil(ids.length/colN),H=140+dh+40+linhas*34+70;
+    const cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');
+    c.fillStyle=cor('--bg');c.fillRect(0,0,W,H);
+    c.fillStyle=cor('--leaf');c.font='bold 46px Georgia, serif';c.fillText('Meu plantio',60,78);
+    c.fillStyle=cor('--muted');c.font='24px system-ui, sans-serif';
+    c.fillText(`${fmt(areaM2())} m² · ${ids.length} espécies · ${Object.values(p.count).reduce((x,y)=>x+y,0)} mudas`,60,118);
+    const img=new Image();
+    img.onload=()=>{c.drawImage(img,60,140,dw,dh);
+      let y=140+dh+50;c.font='22px system-ui, sans-serif';
+      ids.forEach((id,i)=>{const s=BYID[id],x=60+(i%colN)*((W-120)/colN),yy=y+Math.floor(i/colN)*34;
+        c.fillStyle=cor('--ink');c.font='bold 20px ui-monospace, monospace';c.fillText(s.a||'',x,yy);
+        c.font='22px system-ui, sans-serif';c.fillText(`${s.n} (${p.count[id]})`,x+48,yy);});
+      c.fillStyle=cor('--muted');c.font='20px system-ui, sans-serif';c.fillText('Feito no Quintal Agroflorestal · quintal.marianacoan.com',60,H-30);
+      cv.toBlob(bl=>bl?ok(bl):erro(new Error('blob')),'image/png');};
+    img.onerror=()=>erro(new Error('svg'));
+    img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(cl));
+  });
+}
+let ultimoPlano=null;
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('[data-share]');if(!b)return;
+  const svg=document.querySelector('#out .drawing svg');const msg=$('shareMsg');
+  if(!svg||!ultimoPlano){if(msg)msg.textContent='Escolha as plantas para gerar o desenho.';return;}
+  msg.textContent='Gerando a imagem…';
+  try{
+    const blob=await svgParaPng(svg,ultimoPlano);
+    const nome='plantio-quintal-agroflorestal.png',file=new File([blob],nome,{type:'image/png'});
+    if(b.dataset.share==='wa'){
+      if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'Meu plantio',text:'Meu plantio no Quintal Agroflorestal: https://quintal.marianacoan.com'});msg.textContent='';return;}
+      msg.textContent='Este navegador não envia imagens direto. A imagem foi salva: anexe no WhatsApp.';
+    }
+    const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=nome;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);
+    if(b.dataset.share!=='wa')msg.textContent='Imagem salva na pasta de downloads.';
+  }catch(err){if(err&&err.name==='AbortError'){msg.textContent='';return;}msg.textContent='Não consegui gerar a imagem neste navegador.';}
+});
 function update(fromInput){
   save();
   if(!fromInput){$('inL').value=S.L;$('inW').value=S.W;$('inD').value=S.D||4;}
@@ -3451,8 +3610,8 @@ function update(fromInput){
   {const on=S.modo!=='vaso'&&(S.curso==='rio'||S.curso==='lago');$('cursoMed').hidden=!on;
     $('inAgL').textContent=S.curso==='lago'?'Diâmetro do lago':'Largura do rio';$('inAgDL').textContent=S.curso==='lago'?'Beira livre até as plantas':'Distância até o terreno';$('cursoHint').textContent=S.curso==='lago'?'O lago fica no meio do terreno e o plantio se organiza em anéis em volta dele. A linha de árvores mais perto da água recebe as que gostam de solo encharcado.':'No desenho, o rio fica do lado de baixo do terreno. As árvores que gostam de solo encharcado vão para a linha mais perto dele.';
     if(!fromInput){$('inAg').value=S.curso==='lago'?(S.agD||4):(S.agW||3);$('inAgD').value=S.agDist??1;}}
-  renderCats();renderIndic();if(!window.__inv){window.__inv=1;renderInv();}
-  const p=plan();
+  renderCats();renderIndic();renderTenho();if(!window.__inv){window.__inv=1;renderInv();}
+  const p=plan();ultimoPlano=p;
   const adv=advice(p);
   const cm=new Date().getMonth()+1;
   const agora=p.sel.filter(s=>s.pl.includes(cm));
@@ -3479,7 +3638,8 @@ function update(fromInput){
       ${p.sel.length?`<div class="zoom" role="group" aria-label="Tamanho do desenho"><button type="button" data-zoom="-1" aria-label="Diminuir desenho">−</button><span>${Math.round((S.zoom||1)*100)}%</span><button type="button" data-zoom="1" aria-label="Ampliar desenho">+</button></div><div class="drawing"${isMob()&&(S.zoom||1)>1?` style="--zw:${(S.zoom||1)*100}%"`:''}>${v3?draw3D(p):vr?draw3D(p,true):drawPlan(p)}</div>${!v3&&isMob()?stripList(p):''}`:emptyState("Escolha as plantas na lista ao lado: o app monta aqui o desenho do plantio, com as distâncias de cada uma.")}
       ${capAlert(p)}
       ${p.sel.length?`<p class="hint">`:'<p class="hint" hidden>'}${p.rings?'Com o lago, o plantio forma anéis em volta da água: primeiro a borda úmida (com as plantas de jardim de chuva e bordas úmidas, se escolhidas; senão, capim), depois a linha de árvores (com as que aguentam solo encharcado), uma rua, um canteiro, outra rua e assim por diante até o limite do terreno. ':''}${vr?'Mesma posição da vista 3D, mas no lugar de cada planta aparece o círculo que ela ocupa no chão, com a sigla no centro (veja a legenda abaixo). Nas árvores, a linha tracejada mostra a área de cada uma na linha, metade da distância até a próxima árvore.':v3?'Alturas aproximadas das plantas adultas, na mesma escala do terreno. Cada árvore aparece com o formato típico da copa adulta (arredondada, ovalada, em guarda-chuva, cônica, em taça, aberta, de palmeira) e, quando é o caso, com flores ou frutos. Adubo verde, hortaliças e aromáticas aparecem com a forma, a largura e as flores ou frutos típicos: cabeça da alface, folhagem da cenoura, tomate no tutor, touceira da cebolinha, espigas da lavanda, guarda-chuva da mandioca e tapete do amendoim-forrageiro. Passe o dedo ou o mouse sobre uma planta para ver nome, altura e largura.':(p.rings?'Cada quadrado = 1 m². Nos canteiros, as plantas que cooperam ficam intercaladas na mesma fileira circular. Anéis de árvores com palha grossa; canteiros de 1,2 m com ruas de 40 cm.':'Cada quadrado = 1 m². Plantas que cooperam ficam intercaladas na mesma fileira, e as fileiras vizinhas ficam desencontradas. As cotas mostram, em um exemplo de cada planta, a distância ideal até a vizinha da mesma fileira (horizontal) e até a fileira seguinte (vertical). Canteiros de 1,2 m com corredores de 40 cm. Linhas de árvores (faixa escura) com palha grossa. Se puder, deixe as linhas no sentido norte–sul para os dois lados receberem sol.')+(p.rings?'':(p.lines.length>1&&p.sel.filter(isTree).length>1?' Cada linha de árvores mistura os estratos (alto e médio se repetem em todas as linhas) e os pares com cooperação documentada ficam juntos. As emergentes vão primeiro para as linhas do lado sul, embaixo no desenho: com as linhas no sentido leste–oeste, a sombra delas cai menos sobre os canteiros.':''))+''}</p>
-      ${legend(p)}</section>`;
+      ${legend(p)}${p.sel.length?shareBar():''}</section>`;
+    h+=comprasPanel(p);
     h+=coopPanel(p);
   }else{
     if(S.potmode==='meu'){h+=myPotPanel(p.sel);}else{
@@ -3514,7 +3674,7 @@ function update(fromInput){
   const tab=S.rtab==='parceiras'?'parceiras':'plano';
   const tabs=`<div class="rtabs" role="tablist"><button type="button" role="tab" data-rtab="plano" aria-selected="${tab==='plano'}">Plano</button><button type="button" role="tab" data-rtab="parceiras" aria-selected="${tab==='parceiras'}">Parceiras</button></div>`;
   // barra de atalhos para as seções do plano
-  const secs=[['t-des','Desenho'],['t-vas','Vasos'],['t-mine','Seu vaso'],['t-coop','Consórcios'],['t-av','Ajustes'],['t-esp','Espaçamento'],['t-comp','Companhias'],['t-cal','Calendário'],['t-man','Cuidados']].filter(([id])=>h.includes(`id="${id}"`));
+  const secs=[['t-des','Desenho'],['t-vas','Vasos'],['t-mine','Seu vaso'],['t-compra','Já tenho'],['t-coop','Consórcios'],['t-av','Ajustes'],['t-esp','Espaçamento'],['t-comp','Companhias'],['t-cal','Calendário'],['t-man','Cuidados']].filter(([id])=>h.includes(`id="${id}"`));
   const nav=`<nav class="secnav" aria-label="Seções do plano">${secs.map(([id,l])=>`<a href="#" data-go="${id}">${l}</a>`).join('')}</nav>`;
   $('out').innerHTML=nav+h;
   spy();
