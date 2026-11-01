@@ -17,7 +17,7 @@
   --leaf:#55621F; --leaf-soft:#E8EBD0; --soil:#7B5A2C; --soil-soft:#F2EAD5;
   --seed:#94661C; --seed-soft:#F7EBCF; --fresh:#2E7A57; --fresh-soft:#DDEFE3;
   --warn:#A4471F; --warn-soft:#F8E7DD; --berry:#7E3A64; --water:#2F6A85; --moss:#4F7A1E;
-  --st-e:#123A26; --st-a:#2E8540; --st-m:#9CB83A; --st-b:#E3A72F; --st-r:#A8521C; --month-on:#55621F; --month-off:#E6E4CF;
+  --st-e:#123A26; --st-a:#2E8540; --st-m:#9CB83A; --st-b:#E3A72F; --st-r:#A8521C; --chip-dk:0%; --chip-sh:rgba(0,0,0,.35); --month-on:#55621F; --month-off:#E6E4CF;
   --f-display:"Young Serif", Georgia, "Times New Roman", serif;
   --f-body:"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
   --f-mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
@@ -26,12 +26,12 @@
   --bg:#16170F; --surface:#1F2117; --ink:#E9E8D6; --muted:#A6A68C; --line:#34362A;
   --leaf:#BCC86E; --leaf-soft:#2B3019; --soil:#D7A47E; --soil-soft:#2E2A1D;
   --seed:#E5B54C; --seed-soft:#3A3016; --fresh:#7FCFA2; --fresh-soft:#1D3327;
-  --warn:#F2A077; --warn-soft:#3A2419; --berry:#CC8DB4; --water:#8EC6DC; --moss:#AECB6B; --st-e:#2C7A52; --st-a:#3F9E4F; --st-m:#B5D35A; --st-b:#F2C14E; --st-r:#D27A3E; --month-on:#BCC86E; --month-off:#2F3124; color-scheme:dark}}
+  --warn:#F2A077; --warn-soft:#3A2419; --berry:#CC8DB4; --water:#8EC6DC; --moss:#AECB6B; --st-e:#2C7A52; --st-a:#3F9E4F; --st-m:#B5D35A; --st-b:#F2C14E; --st-r:#D27A3E; --chip-dk:45%; --chip-sh:rgba(0,0,0,.6); --month-on:#BCC86E; --month-off:#2F3124; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#16170F; --surface:#1F2117; --ink:#E9E8D6; --muted:#A6A68C; --line:#34362A;
   --leaf:#BCC86E; --leaf-soft:#2B3019; --soil:#D7A47E; --soil-soft:#2E2A1D;
   --seed:#E5B54C; --seed-soft:#3A3016; --fresh:#7FCFA2; --fresh-soft:#1D3327;
-  --warn:#F2A077; --warn-soft:#3A2419; --berry:#CC8DB4; --water:#8EC6DC; --moss:#AECB6B; --st-e:#2C7A52; --st-a:#3F9E4F; --st-m:#B5D35A; --st-b:#F2C14E; --st-r:#D27A3E; --month-on:#BCC86E; --month-off:#2F3124; color-scheme:dark}
+  --warn:#F2A077; --warn-soft:#3A2419; --berry:#CC8DB4; --water:#8EC6DC; --moss:#AECB6B; --st-e:#2C7A52; --st-a:#3F9E4F; --st-m:#B5D35A; --st-b:#F2C14E; --st-r:#D27A3E; --chip-dk:45%; --chip-sh:rgba(0,0,0,.6); --month-on:#BCC86E; --month-off:#2F3124; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;margin:0}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
@@ -93,11 +93,12 @@ header{display:flex;flex-direction:column;gap:10px}
 .chip{flex:none;font:inherit;font-size:.86rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
 .chip{--c:var(--ink);color:var(--c);background:color-mix(in srgb,var(--c) 10%,var(--surface));border-color:color-mix(in srgb,var(--c) 40%,var(--line))}
 .chip:hover{background:color-mix(in srgb,var(--c) 18%,var(--surface))}
-#grupos .chip{background:color-mix(in srgb,var(--c) 50%,transparent);border-color:var(--c);color:var(--ink)}
+#grupos .chip{background:color-mix(in srgb,color-mix(in srgb,var(--c),#000 var(--chip-dk)) 50%,transparent);border-color:var(--c);color:#fff;text-shadow:0 1px 2px var(--chip-sh)}
 #filtros .chip{background:color-mix(in srgb,var(--c) 25%,transparent);border-color:color-mix(in srgb,var(--c) 60%,transparent);color:var(--ink)}
 #grupos .chip:hover{background:color-mix(in srgb,var(--c) 62%,transparent)}
 #filtros .chip:hover{background:color-mix(in srgb,var(--c) 37%,transparent)}
-#grupos .chip[aria-pressed="true"],#filtros .chip[aria-pressed="true"]{background:var(--c);color:var(--bg);border-color:var(--c);font-weight:700}
+#grupos .chip[aria-pressed="true"]{background:color-mix(in srgb,var(--c),#000 var(--chip-dk));color:#fff;border-color:var(--c);font-weight:700}
+#filtros .chip[aria-pressed="true"]{background:var(--c);color:var(--bg);border-color:var(--c);font-weight:700}
 #filtros{border-top:2px solid color-mix(in srgb,var(--soil) 55%,var(--line));padding-top:12px;margin-top:4px}
 .chip[aria-pressed="true"]{background:var(--c);color:var(--bg);border-color:var(--c)}
 .c-h,.c-E{--c:var(--leaf)} .c-t,.c-R{--c:var(--fresh)} .c-a{--c:var(--moss)} .c-f{--c:var(--berry)}
