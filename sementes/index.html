@@ -106,10 +106,25 @@ header{display:flex;flex-direction:column;gap:10px}
 
 /* fichas */
 .lista{display:flex;flex-direction:column;gap:22px}
-.grupo{display:flex;flex-direction:column;gap:8px}
-.grupo>h2{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.grupo>h2::before{content:"";align-self:center;width:12px;height:12px;border-radius:50%;background:var(--c);flex:none}
-.grupo>h2 small{font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+.lista{gap:10px}
+.grupo{border:1px solid color-mix(in srgb,var(--c) 30%,var(--line));border-radius:12px;background:color-mix(in srgb,var(--c) 6%,var(--bg))}
+.grupo>summary.gsum{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;list-style:none}
+.grupo>summary.gsum::-webkit-details-marker{display:none}
+.gsum h2{margin:0}
+.gsum small{font-family:var(--f-mono);font-size:.78rem;color:var(--muted);white-space:nowrap}
+.gsum .gico{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 18%,var(--surface))}
+.gsum .gico .cat-ico{width:22px;height:22px;stroke:var(--c)}
+.gsum::after{content:"";margin-left:auto;flex:none;width:9px;height:9px;border-right:2px solid var(--c);border-bottom:2px solid var(--c);transform:rotate(45deg);transition:transform .15s}
+.grupo[open]>.gsum::after{transform:rotate(-135deg)}
+.gsum:focus-visible{outline:2px solid var(--c);outline-offset:2px;border-radius:12px}
+.gbody{display:flex;flex-direction:column;gap:8px;padding:0 10px 10px}
+.cat-ico{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.chip{display:inline-flex;align-items:center;gap:6px}
+.foto .cat-ico{width:30px;height:30px;stroke:var(--c);opacity:.75}
+.topo{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:8;display:none;align-items:center;gap:8px;font:inherit;font-weight:700;font-size:.9rem;padding:10px 16px 10px 12px;border-radius:999px;border:1px solid var(--leaf);background:var(--leaf);color:var(--bg);box-shadow:0 6px 18px rgba(20,30,10,.22);cursor:pointer}
+.topo svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.topo:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+@media (max-width:699px){.topo.on{display:inline-flex}}
 details.ficha{scroll-margin-top:230px;background:var(--surface);border:1px solid var(--line);border-radius:10px;min-width:0}
 details.ficha[open]{border-color:color-mix(in srgb,var(--leaf) 50%,var(--line))}
 summary{list-style:none;cursor:pointer;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:6px 14px;align-items:start}
@@ -155,7 +170,7 @@ details.ficha>summary{grid-template-columns:64px minmax(0,1fr) auto}
 .fig figcaption b{display:block;color:var(--ink);font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500;margin-bottom:2px}
 .fig figcaption a{color:var(--muted)}
 .fig:empty{display:none}
-@media (max-width:520px){details.ficha>summary{grid-template-columns:56px minmax(0,1fr)}.foto{width:56px;height:56px;grid-row:1/4}.germ{text-align:left;grid-column:2}.germ b{display:inline;margin-right:6px}}
+@media (max-width:520px){details.ficha>summary{grid-template-columns:56px minmax(0,1fr)}.foto{width:56px;height:56px;grid-row:1/4}.germ{text-align:left;grid-column:2;white-space:normal}.germ b{display:inline;margin-right:6px}}
 @media (prefers-reduced-motion:no-preference){details.ficha{transition:border-color .15s}}
 </style>
 
@@ -234,6 +249,7 @@ details.ficha>summary{grid-template-columns:64px minmax(0,1fr) auto}
 </nav>
 
 <main class="lista" id="lista"></main>
+<button type="button" class="topo" id="topo" aria-label="Voltar para a busca e os filtros"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></svg>Buscar e filtrar</button>
 
 <footer>
   <p>Os tempos de germinação variam com a temperatura, a umidade e a idade da semente; use-os como ordem de grandeza. As fichas resumem a literatura técnica e a prática de viveiro e podem ser conferidas nas fontes abaixo. Confira a identificação da planta antes de colher. As plantas que a Prefeitura de São Paulo classifica como invasoras não estão aqui: veja a seção "Evite plantar" no <a href="https://quintal.marianacoan.com/">Quintal</a>.</p>
@@ -259,6 +275,9 @@ details.ficha>summary{grid-template-columns:64px minmax(0,1fr) auto}
 <script>
 (function(){
 const DATA=JSON.parse(document.getElementById('dados').textContent);
+const CAT_ICO={w:'<path d="M9 2.5 C6.5 6.5 4.5 9 4.5 11.5 a4.5 4.5 0 0 0 9 0 C13.5 9 11.5 6.5 9 2.5 Z"/><path d="M7 12.5 q1 1.6 3 1.4"/>',p:'<circle cx="9" cy="9" r="1.8"/><circle cx="9" cy="4.6" r="2.6"/><circle cx="13.2" cy="7.6" r="2.6"/><circle cx="11.6" cy="12.8" r="2.6"/><circle cx="6.4" cy="12.8" r="2.6"/><circle cx="4.8" cy="7.6" r="2.6"/>',f:'<circle cx="9" cy="11" r="5"/><path d="M9 6 q2 -4 6 -3 q-1 4 -6 3"/>',a:'<path d="M9 16 V9 M9 11 q-5 0 -6 -5 q5 0 6 5 M9 9 q4 -1 5 -5 q-4 0 -5 5"/>',t:'<path d="M5 16 L13 3 M7.4 12.2 l-3 -.8 M9.2 9.3 l-3 -.8 M11 6.4 l-3 -.8 M8.3 13.8 l3 .8 M10.1 10.9 l3 .8 M11.9 8 l3 .8"/>',h:'<path d="M4 14 Q4 4 14 4 Q14 14 4 14 Z M4 14 L11 7"/>',g:'<circle cx="9" cy="7" r="5"/><path d="M9 12 V17 M6 17 h6"/>',n:'<path d="M9 17 V9"/><path d="M9 10 C5 10 3.5 7.5 3.5 4.5 C7 4.5 9 7 9 10 Z M9 8 C9 5 10.5 2.5 14.5 2.5 C14.5 6 12.5 8 9 8 Z"/><path d="M5.5 17 h7"/>'};
+const catIco=k=>`<svg class="cat-ico" viewBox="0 0 18 18" aria-hidden="true">${CAT_ICO[k]||''}</svg>`;
+const grDe=id=>(DATA.find(x=>x.id===id)||{}).gr;
 const GR=[['h','Hortaliças'],['t','Temperos e medicinais'],['a','Adubo verde e forração'],['f','Frutíferas'],['p','Flores para polinizadores'],['n','Nativas pioneiras e pequenas'],['w','Beira d’água e nascentes'],['g','Grandes árvores']];
 const VIA={S:'semente',E:'estaca',D:'divisão',R:'rizoma ou rama',B:'rebento',A:'mergulhia',X:'enxerto',F:'esporos'};
 const TIPO={R:['semeie fresca','Recalcitrante: não deixe secar'],O:['guarda seca','Ortodoxa: pode secar e guardar'],C:['vida curta','Seca, mas perde a força em poucos meses'],I:['intermediária','Guarda pouco tempo']};
@@ -274,7 +293,7 @@ const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 DATA.forEach(d=>{d._q=norm(d.n+' '+d.sci);d._dura=/lixe|lixa|80 °C/.test(d.pr)});
 document.getElementById('stats').innerHTML=`<span><b>${DATA.length}</b> espécies</span><span><b>${DATA.filter(d=>d.t==='R').length}</b> com semente que não guarda</span><span><b>${DATA.filter(d=>d.v.includes('E')).length}</b> que pegam de estaca</span>`;
 const gEl=document.getElementById('grupos');
-gEl.innerHTML=`<button class="chip" id="g-todos" aria-pressed="true" data-g="">Todas</button>`+GR.map(([k,l])=>`<button class="chip c-${k}" id="g-${k}" aria-pressed="false" data-g="${k}">${l}</button>`).join('');
+gEl.innerHTML=`<button class="chip" id="g-todos" aria-pressed="true" data-g="">Todas</button>`+GR.map(([k,l])=>`<button class="chip c-${k}" id="g-${k}" aria-pressed="false" data-g="${k}">${catIco(k)}${l}</button>`).join('');
 const fEl=document.getElementById('filtros');
 fEl.innerHTML=FILT.map(([k,l])=>`<button class="chip c-${k}" id="f-${k}" aria-pressed="false" data-f="${k}">${l}</button>`).join('');
 gEl.addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b)return;gsel=b.dataset.g;gEl.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',c===b));render()});
@@ -328,11 +347,11 @@ const RUINS={};
 function falhou(id,r){const s=RUINS[id]||(RUINS[id]=new Set());if(r&&r.via)s.add(r.via);try{localStorage.removeItem('sem-img8-'+id)}catch(e){}
   const d=DATA.find(x=>x.id===id);IMG[id]=new Promise(ok=>{FILA.push(()=>(s.size>4?Promise.resolve({none:1}):buscar(d,s)).then(ok,()=>ok({none:1})));rodar();});
   document.querySelectorAll(`[data-k="${id}"]`).forEach(el=>{delete el.dataset.ok;pintar(el);});}
-function pintar(el){const id=el.dataset.k;if(el.dataset.ok)return;el.dataset.ok=1;pedir(id).then(r=>{if(r&&!r.none&&RUINS[id]&&RUINS[id].has(r.via))return;if(!r||r.none){if(el.tagName==='FIGURE')el.innerHTML='';else el.innerHTML=SEMENTE_IC;return;}
+function pintar(el){const id=el.dataset.k;if(el.dataset.ok)return;el.dataset.ok=1;pedir(id).then(r=>{if(r&&!r.none&&RUINS[id]&&RUINS[id].has(r.via))return;if(!r||r.none){if(el.tagName==='FIGURE')el.innerHTML='';else el.innerHTML=catIco(grDe(id));return;}
   const d=DATA.find(x=>x.id===id);
   if(el.tagName==='FIGURE')el.innerHTML=`<img src="${esc(r.src)}" alt="${esc(KIND_TXT[r.k]+' de '+d.n)}" loading="lazy"><figcaption><b>${r.lab||KIND_TXT[r.k]}</b>${esc(r.cred||'')}${r.href?` · <a href="${esc(r.href)}" target="_blank" rel="noopener">${r.cred==='Wikipédia'?'ver na Wikipédia':'Wikimedia Commons'}</a>`:''}</figcaption>`;
   else el.innerHTML=`<img src="${esc(r.src)}" alt="" loading="lazy">`;
-  const im=el.querySelector('img');if(im)im.addEventListener('error',()=>{if(el.tagName==='FIGURE')el.innerHTML='';else el.innerHTML=SEMENTE_IC;falhou(id,r);},{once:true});});}
+  const im=el.querySelector('img');if(im)im.addEventListener('error',()=>{if(el.tagName==='FIGURE')el.innerHTML='';else el.innerHTML=catIco(grDe(id));falhou(id,r);},{once:true});});}
 const OBS='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){OBS.unobserve(e.target);pintar(e.target);}}),{rootMargin:'300px'}):null;
 function observar(){document.querySelectorAll('.foto[data-k]').forEach(el=>OBS?OBS.observe(el):pintar(el));}
 document.addEventListener('toggle',e=>{const t=e.target;if(t.classList&&t.classList.contains('ficha')&&t.open){const f=t.querySelector('.fig');if(f)pintar(f);}},true);
@@ -353,16 +372,22 @@ function ficha(d){
   const tags=d.v.map(v=>`<span class="tag via">${VIA[v]}</span>`).join('')+(d.t?`<span class="tag t-${d.t}" title="${TIPO[d.t][1]}">${TIPO[d.t][0]}</span>`:'')+(d.inv?'<span class="tag inv">invasora em SP</span>':'')+(d.o==='X'?'<span class="tag">exótica</span>':'');
   const meses=d.m&&d.m.length?`<div><h3>Melhor época para plantar</h3><div class="meses" aria-label="Meses de plantio">${[...M].map((l,i)=>`<span class="${d.m.includes(i+1)?'on':''}" title="${['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'][i]}">${l}</span>`).join('')}</div></div>`:'';
   const gl=d.g==='—'?'':`<span class="germ"><b>${esc(d.g)}</b>dias para nascer</span>`;
-  return `<details class="ficha" id="${d.id}"><summary><span class="foto" data-k="${d.id}">${SEMENTE_IC}</span><span class="nome"><b>${d.e?sig(d.e):''}${esc(d.n)}</b><i>${esc(d.sci)}${d.o&&d.o!=='X'?' · '+ORIG[d.o]:''}</i></span>${gl}<span class="tags">${tags}</span></summary><div class="corpo"><figure class="fig" data-k="${d.id}"></figure><div><h3>Onde conseguir</h3><p>${esc(d.ob)}</p></div><div><h3>Como preparar</h3><p>${esc(d.pr)}</p></div><div><h3>Como plantar</h3><p>${esc(d.pl)}</p></div>${meses}${d.d?`<p class="dica">${esc(d.d)}</p>`:''}</div></details>`;
+  return `<details class="ficha" id="${d.id}"><summary><span class="foto" data-k="${d.id}">${catIco(d.gr)}</span><span class="nome"><b>${d.e?sig(d.e):''}${esc(d.n)}</b><i>${esc(d.sci)}${d.o&&d.o!=='X'?' · '+ORIG[d.o]:''}</i></span>${gl}<span class="tags">${tags}</span></summary><div class="corpo"><figure class="fig" data-k="${d.id}"></figure><div><h3>Onde conseguir</h3><p>${esc(d.ob)}</p></div><div><h3>Como preparar</h3><p>${esc(d.pr)}</p></div><div><h3>Como plantar</h3><p>${esc(d.pl)}</p></div>${meses}${d.d?`<p class="dica">${esc(d.d)}</p>`:''}</div></details>`;
 }
+const ABERTOS=new Set();
+document.addEventListener('toggle',e=>{const t=e.target;if(t.classList&&t.classList.contains('grupo')&&!(q||fsel.size||gsel)){t.open?ABERTOS.add(t.dataset.g):ABERTOS.delete(t.dataset.g);}},true);
 function render(){
   const vis=DATA.filter(ok); let h='';
-  GR.forEach(([k,l])=>{const it=vis.filter(d=>d.gr===k);if(!it.length)return;h+=`<section class="grupo c-${k}"><h2>${l}<small>${it.length} ${it.length>1?'espécies':'espécie'}</small></h2>${it.map(ficha).join('')}</section>`});
+  const ativo=!!(q||fsel.size||gsel);
+  GR.forEach(([k,l])=>{const it=vis.filter(d=>d.gr===k);if(!it.length)return;const ab=ativo||ABERTOS.has(k);h+=`<details class="grupo c-${k}" data-g="${k}"${ab?' open':''}><summary class="gsum"><span class="gico">${catIco(k)}</span><h2>${l}</h2><small>${it.length} ${it.length>1?'espécies':'espécie'}</small></summary><div class="gbody">${it.map(ficha).join('')}</div></details>`});
   const L=document.getElementById('lista');L.innerHTML=h||'<p class="vazio">Nenhuma planta com esses filtros. Tire um filtro ou mude a busca.</p>';
   observar();document.getElementById('contagem').textContent=vis.length===DATA.length?`Mostrando todas as ${DATA.length} espécies`:`Mostrando ${vis.length} de ${DATA.length} espécies`;
 }
 render();
-function abrir(){const id=location.hash.slice(1);if(!id)return;const el=document.getElementById(id);if(el&&el.tagName==='DETAILS'){el.open=true;el.scrollIntoView({block:'start'})}}
+function abrir(){const id=location.hash.slice(1);if(!id)return;const el=document.getElementById(id);if(el&&el.tagName==='DETAILS'){const g=el.closest('details.grupo');if(g)g.open=true;el.open=true;el.scrollIntoView({block:'start'})}}
+const TOPO=document.getElementById('topo'),NAV=document.querySelector('.filtros');
+if('IntersectionObserver' in window)new IntersectionObserver(es=>es.forEach(e=>TOPO.classList.toggle('on',!e.isIntersecting&&e.boundingClientRect.top<0))).observe(NAV);
+TOPO.addEventListener('click',()=>{NAV.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});setTimeout(()=>document.getElementById('q').focus({preventScroll:true}),400);});
 window.addEventListener('hashchange',abrir);abrir();
 })();
 </script>
