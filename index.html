@@ -1434,12 +1434,12 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-invadd]');
 $('tray').addEventListener('click',e=>{const b=e.target.closest('[data-rmsel]');if(!b)return;S.sel=S.sel.filter(i=>i!==b.dataset.rmsel);S.exemplo=false;update();});
 try{$('legbox').open=!!(S.legOpen);}catch(e){}
 $('legbox').addEventListener('toggle',()=>{S.legOpen=$('legbox').open;save();});
-$('limpar').addEventListener('click',()=>{if(!S.sel.length)return;const prev={sel:S.sel.slice(),consSel:(S.consSel||[]).slice(),exemplo:S.exemplo};
-  S.sel=[];S.consSel=[];S.exemplo=false;update();
+$('limpar').addEventListener('click',()=>{if(!S.sel.length)return;const prev={sel:S.sel.slice(),consSel:(S.consSel||[]).slice(),exemplo:S.exemplo,tenho:Object.assign({},S.tenho)};
+  S.sel=[];S.consSel=[];S.exemplo=false;S.tenho={};$('tnPlanta').value='';$('tnMsg').textContent='';update();
   let t=document.getElementById('toast');if(t)t.remove();t=document.createElement('div');t.id='toast';t.className='toast';t.setAttribute('role','status');
   t.innerHTML=`<span>Seleção limpa (${prev.sel.length} ${prev.sel.length===1?'planta':'plantas'}).</span><button type="button">Desfazer</button>`;document.body.appendChild(t);
   const tm=setTimeout(()=>t.remove(),7000);
-  t.querySelector('button').addEventListener('click',()=>{clearTimeout(tm);t.remove();S.sel=prev.sel;S.consSel=prev.consSel;S.exemplo=prev.exemplo;update();});});
+  t.querySelector('button').addEventListener('click',()=>{clearTimeout(tm);t.remove();S.sel=prev.sel;S.consSel=prev.consSel;S.exemplo=prev.exemplo;S.tenho=prev.tenho;update();});});
 $('quick').addEventListener('click',e=>{
   const b=e.target.closest('[data-q]');if(!b)return;
   const q=b.dataset.q;
