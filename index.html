@@ -1629,8 +1629,26 @@ function renderCats(){
 
 // ---------- plano ----------
 // "O que você já tem": mudas e estacas entram só até a quantidade informada; o espaço liberado vai para outras plantas
+// O que você já tem: o canteiro é redistribuído (cada planta ganha mais ou menos trecho) até a quantidade bater;
+// assim o espaçamento continua o certo. Só o ajuste fino final troca ou tira pontos.
+let WMUL=null;
+function planPeso(){
+  const lim=S.modo==='chao'&&S.tenho?Object.entries(S.tenho).filter(([id,t])=>t.n!=null&&BYID[id]&&S.sel.includes(id)):[];
+  WMUL=null;if(!lim.length)return planBase();
+  WMUL={};let p;
+  try{for(let it=0;it<10;it++){p=planBase();let ok=true;
+    lim.forEach(([id,t])=>{const all=p.pts.filter(q=>q.s.id===id),bed=all.filter(q=>q.kind==='bed').length,target=t.n-(all.length-bed);
+      const w=WMUL[id]??1;if(bed===target)return;
+      if(target<=0){if(w!==0){WMUL[id]=0;ok=false;}return;}
+      if(bed>target){WMUL[id]=Math.max(.002,w*Math.max(.05,Math.min(.95,target/Math.max(1,bed))));ok=false;}
+      else if(w<500){WMUL[id]=Math.min(500,w*Math.min(20,Math.max(1.05,(target+.5)/Math.max(.5,bed))));ok=false;}});
+    if(ok)break;}
+    p=planBase();}
+  finally{WMUL=null;}
+  return p;
+}
 function plan(){
-  const p=planBase();
+  const p=planPeso();
   p.tenho=[];
   if(S.modo!=='chao'||!S.tenho)return p;
   const foot=s=>Math.min(s.el,s.ep);
@@ -1644,7 +1662,7 @@ function plan(){
       const pool=p.sel.filter(o=>o!==s&&!(S.tenho[o.id]&&S.tenho[o.id].n!=null));
       let k=0;
       extra.forEach(q=>{
-        const cand=pool.filter(o=>q.kind==='tree'?isTree(o):q.kind==='med'?isMed(o)&&!isTree(o):!isTree(o)&&isBed(o)&&foot(o)<=foot(s)+1e-6);
+        const cand=pool.filter(o=>q.kind==='tree'?isTree(o):q.kind==='med'?isMed(o)&&!isTree(o):!isTree(o)&&isBed(o)&&Math.abs(foot(o)-foot(s))<=.1+1e-6&&q.kind!=='bed');
         if(cand.length){const o=cand[k++%cand.length];p.count[s.id]--;q.s=o;if(q.cell!=null)q.cell=Math.min(q.cell,foot(o));p.count[o.id]=(p.count[o.id]||0)+1;}
         else{const i=p.pts.indexOf(q);p.pts.splice(i,1);p.count[s.id]--;}
       });
@@ -1789,7 +1807,7 @@ function planBase(){
       }
     });
   }else{dropped=trees.slice();}
-  let bedSp=sel.filter(isBed);
+  let bedSp=sel.filter(isBed).filter(s=>!(WMUL&&WMUL[s.id]===0));
   if(!lines.length)bedSp=bedSp.concat(meds);
   // sub-bosque: plantas de sombra ou cobertura nos espaços entre árvores e adubadeiras
   const under=lines.length?sel.filter(s=>UNDER.includes(s.id)):[];
@@ -1817,7 +1835,7 @@ function planBase(){
     groups=makeGroups(bedSp);
     const total=beds.length*L;
     const wt=s=>Math.max(1,Math.sqrt((s.el*s.ep)/.0625));
-    const w=groups.map(g=>g.reduce((a,s)=>a+wt(s),0)/Math.sqrt(g.length));
+    const w=groups.map(g=>g.reduce((a,s)=>a+wt(s)*((WMUL&&WMUL[s.id])||1),0)/Math.sqrt(g.length));
     const sw=w.reduce((a,b)=>a+b,0);
     const rowsFor=(bd,g)=>{
       const rows=[{s:g[0],y:0}];let k=0;
@@ -1839,7 +1857,7 @@ function planBase(){
           for(let r=0;r<rows;r++){
             const yy=rows>1?y0+r*rowGap:bd.y+bd.h/2;
             let k=r%g.length,x=x0+g[k].ep/2;
-            while(x<x1-.001){const m=g[k%g.length];add(m,x,yy,'bed',Math.min(step(k),rowGap,m.ep*2));x+=step(k);k++;}
+            while(x<x1-.001){const m=g[k%g.length];if(x+Math.min(m.ep,step(k))/2<=L+.02)add(m,x,yy,'bed',Math.min(step(k),rowGap,m.ep*2));x+=step(k);k++;}
           }
         }
         interc.push({g,rowGap,steps:g.map((m,k)=>[m,g[(k+1)%g.length],step(k)])});
@@ -1848,7 +1866,9 @@ function planBase(){
         const xs=[];
         if(s1-s0<m.ep)xs.push((s0+s1)/2);else for(let x=s0+m.ep/2;x<s1-.001;x+=m.ep)xs.push(x);
         xs.forEach(x=>{
-          const bi=Math.min(beds.length-1,Math.floor(x/L));const xi=x-bi*L;const bd=beds[bi];
+          const bi=Math.min(beds.length-1,Math.floor(x/L));const bd=beds[bi];
+          // nunca passa da ponta do canteiro (o trecho de uma planta pode atravessar de um canteiro para o outro)
+          const hw=Math.min(m.ep,L)/2,xi=Math.max(hw,Math.min(L-hw,x-bi*L));
           const rows=Math.max(1,Math.floor(bd.h/m.el+.001)),y0=bd.y+(bd.h-(rows-1)*m.el)/2;
           for(let r=0;r<rows;r++)add(m,xi,rows>1?y0+r*m.el:bd.y+bd.h/2,'bed',Math.min(m.ep,m.el));
         });
