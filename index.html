@@ -243,6 +243,8 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 :root[data-theme="dark"] .indic,:root[data-theme="dark"] .tenho{background:rgba(70,150,60,.3);border-color:rgba(160,225,135,.85)}
 .indic summary{cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;padding:9px 0;list-style:none}
 .indic summary::-webkit-details-marker{display:none}
+.indic>summary::after,.tenho>summary::after{content:"";flex:none;margin-left:auto;width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .2s;opacity:.75}
+.indic[open]>summary::after,.tenho[open]>summary::after{transform:translateY(2px) rotate(-135deg)}
 .inv{border:1px solid var(--warn);border-radius:8px;padding:0 10px;background:var(--warn-soft);margin-top:12px}
 .inv summary{cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;padding:9px 0;list-style:none;color:var(--warn)}
 .inv summary::-webkit-details-marker{display:none}.inv summary .cat-sub{font-weight:400;color:var(--ink)}
