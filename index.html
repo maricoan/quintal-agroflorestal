@@ -103,6 +103,7 @@ h2{font-family:var(--f-display);font-weight:400;font-size:22px;margin:0;text-wra
 #out .panel.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 1px 0 rgba(40,50,30,.04),0 10px 24px -18px rgba(40,50,30,.35)}
 #out .panel .note{background:transparent;border-radius:0;padding:8px 0 8px 12px}
 #out section[hidden]{display:none!important}
+.tbl.estreita{max-width:600px}
 #out .panel .note.warn{background:var(--warn-soft);border-radius:0 8px 8px 0;padding:10px 12px}
 h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0;font-weight:700}
 a{color:var(--leaf)}
@@ -270,7 +271,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .tenho-l li{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--leaf);border-radius:999px;padding:3px 4px 3px 10px;font-size:13px}
 .tenho-l button{border:0;background:transparent;color:var(--muted);font-size:16px;line-height:1;cursor:pointer;padding:0 4px}
 .tem-tag{font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--leaf);border:1px solid var(--leaf);border-radius:4px;padding:0 4px;line-height:1.5}
-.compra td.n{text-align:right;font-variant-numeric:tabular-nums}.compra .ok{color:var(--leaf);font-weight:700}.compra .falta{color:var(--warn);font-weight:700}
+.compra th:not(:first-child){text-align:right}.compra td.n{text-align:right;font-variant-numeric:tabular-nums}.compra .ok{color:var(--leaf);font-weight:700}.compra .falta{color:var(--warn);font-weight:700}
 .share{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
 .share button{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:14px;font-weight:700;border:1px solid var(--leaf);border-radius:999px;padding:6px 14px;background:var(--surface);color:var(--leaf);cursor:pointer}
 .share button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -3534,7 +3535,7 @@ function spacing(sel){
   }).join('');
   const refs=Object.entries(REFS).filter(([k,v])=>v.n&&used.has(k)).sort((a,b)=>a[1].n-b[1].n)
     .map(([k,v])=>`<li value="${v.n}">${esc(v.t)} <a href="${v.u}" target="_blank" rel="noopener">Abrir</a></li>`).join('');
-  return `<div class="tbl"><table class="cards"><thead><tr><th>Planta</th><th class="num">Entre linhas</th><th class="num">Entre plantas</th><th class="num">Plantas/m²</th><th style="text-align:left">Fonte</th></tr></thead><tbody>${rows}</tbody></table></div>
+  return `<div class="tbl estreita"><table class="cards"><thead><tr><th>Planta</th><th class="num">Entre linhas</th><th class="num">Entre plantas</th><th class="num">Plantas/m²</th><th style="text-align:left">Fonte</th></tr></thead><tbody>${rows}</tbody></table></div>
   <p class="hint">Nos canteiros, as hortaliças seguem o espaçamento das publicações. Nas linhas de árvores, frutíferas e nativas ficam a 2 m uma da outra e as adubadeiras ocupam os espaços entre elas, como nos sistemas agroflorestais testados. Onde não encontrei estudo específico, o app usa a prática comum de horta, marcada como “prática”.</p>
   ${refs?`<details class="refs-d"><summary>Ver fontes (${(refs.match(/<li/g)||[]).length})</summary><ol class="refs">${refs}</ol></details>`:''}`;
 }
@@ -3598,7 +3599,7 @@ function comprasPanel(p){
   const nFalta=ids.reduce((a,id)=>{const t=S.tenho[id];const no=p.count[id]||0;return a+(t?(t.n==null?0:Math.max(0,no-t.n)):no);},0);
   return `<section class="panel" aria-labelledby="t-compra"><h2 id="t-compra">Já tenho e falta conseguir</h2>
     ${aviso?`<ul class="notes">${aviso}</ul>`:''}
-    <div class="tbl"><table class="compra"><thead><tr><th>Planta</th><th>No plano</th><th>Já tenho</th><th>Falta</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <div class="tbl estreita"><table class="compra"><thead><tr><th>Planta</th><th>No plano</th><th>Já tenho</th><th>Falta</th></tr></thead><tbody>${rows}</tbody></table></div>
     <p class="hint">${nFalta?`Faltam ${nFalta} mudas ou plantas. `:'Você já tem tudo o que o desenho pede. '}Para produzir as mudas que faltam, veja <a href="https://quintal.marianacoan.com/sementes/" target="_blank" rel="noopener">Sementes do Quintal</a>.</p></section>`;
 }
 // salvar ou enviar a imagem do desenho
