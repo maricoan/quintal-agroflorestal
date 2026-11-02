@@ -103,6 +103,23 @@ h2{font-family:var(--f-display);font-weight:400;font-size:22px;margin:0;text-wra
 #out .panel.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 1px 0 rgba(40,50,30,.04),0 10px 24px -18px rgba(40,50,30,.35)}
 #out .panel .note{background:transparent;border-radius:0;padding:8px 0 8px 12px}
 #out section[hidden]{display:none!important}
+.guia{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:0 0 14px;padding:8px 10px 8px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-size:14px}
+.guia[hidden]{display:none}
+.guia-t{color:var(--muted);font-weight:700;margin-right:2px}
+.guia button{font:inherit;display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;color:var(--ink);font-weight:700;cursor:pointer;padding:4px 6px;border-radius:8px}
+.guia button:hover{background:var(--leaf-soft)}
+.guia b{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--leaf);color:var(--surface);font-size:12.5px}
+.guia-s{color:var(--muted)}
+.guia .guia-x{margin-left:auto;color:var(--muted);font-size:20px;line-height:1;padding:2px 8px}
+@media (max-width:880px){.guia-t{display:none}.guia{font-size:13px;padding:4px 4px 4px 6px;gap:2px;flex-wrap:nowrap}.guia button{min-height:36px;padding:2px 4px;gap:5px;white-space:nowrap}.guia b{width:20px;height:20px;font-size:12px}.guia .guia-x{padding:2px 8px}}
+
+/* destaque de espécie: ao passar o mouse numa planta ou na legenda, as da mesma espécie acendem */
+#out.hl-on svg [data-sp]{transition:opacity .15s}
+#out.hl-on svg [data-sp]:not(.hl){opacity:.18}
+#out.hl-on .legend .lg[data-sp]:not(.hl){opacity:.45}
+#out .legend .lg[data-sp]{cursor:default;border-radius:6px}
+#out .legend .lg.hl{background:var(--leaf-soft)}
+
 .tbl.estreita{max-width:600px}
 #out .panel .note.warn{background:var(--warn-soft);border-radius:0 8px 8px 0;padding:10px 12px}
 h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0;font-weight:700}
@@ -571,7 +588,10 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
   /* áreas de toque de pelo menos 44 px */
   button,.btn,.secnav a,summary,input,select{min-height:44px}
   .seg button,.tray-l button,.secnav a,.quick button,.note .acts button,.cons-add{display:inline-flex;align-items:center;justify-content:center}
-  .tray-l{gap:8px}
+  /* sua seleção numa linha só, que rola para o lado, com botões menores */
+  .tray-l{gap:6px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:-10px;padding:0 10px 2px;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 10px,#000 calc(100% - 24px),transparent);mask-image:linear-gradient(90deg,transparent 0,#000 10px,#000 calc(100% - 24px),transparent)}
+  .tray-l::-webkit-scrollbar{display:none}
+  .tray-l button{flex:none;min-height:34px;font-size:13px;padding:2px 9px 2px 7px}
   .refs a{display:inline-block;padding:10px 6px;margin:-10px 0}
   .secnav a{padding:0 14px}
 }
@@ -614,6 +634,14 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
     </div>
 
   </header>
+
+  <nav class="guia" id="guia" aria-label="Como usar" hidden>
+    <span class="guia-t">Como usar:</span>
+    <button type="button" data-guia="espaco"><b>1</b> Seu espaço</button><span class="guia-s" aria-hidden="true">→</span>
+    <button type="button" data-guia="plantas"><b>2</b> Plantas</button><span class="guia-s" aria-hidden="true">→</span>
+    <button type="button" data-guia="plano"><b>3</b> Plano</button>
+    <button type="button" class="guia-x" data-guia="fechar" aria-label="Fechar">×</button>
+  </nav>
 
   <div class="grid">
     <div class="col">
@@ -2267,10 +2295,10 @@ function drawPlan(p){
     else rr=Math.min(q.cell*.45,.5)*K;
     rr=Math.max(1,Math.min(rr,nn(q)*K*.46,Math.min(q.x,L-q.x,q.y,W-q.y)*K*.95));
     if(q.kind!=='bed'&&rr>6)g+=`<circle class="shd" cx="${(q.x*K+rr*.18).toFixed(1)}" cy="${(q.y*K+rr*.22).toFixed(1)}" r="${(rr*.98).toFixed(1)}"/>`;
-    g+=`<circle class="p-${q.s.e}" cx="${(q.x*K).toFixed(1)}" cy="${(q.y*K).toFixed(1)}" r="${rr.toFixed(1)}"><title>${esc(q.s.n)}</title></circle>`;
+    g+=`<circle class="p-${q.s.e}" data-sp="${q.s.id}" cx="${(q.x*K).toFixed(1)}" cy="${(q.y*K).toFixed(1)}" r="${rr.toFixed(1)}"><title>${esc(q.s.n)}</title></circle>`;
     // sigla sempre dentro da esfera: nas plantas pequenas a letra encolhe junto com o círculo (use o zoom para ler)
     {const f0=9.5*FZ,fs=Math.min(f0,Math.max(2.4,rr*1.25));
-     g+=`<text class="lab ${darkLab(q.s.e)}"${fs<f0?` style="font-size:${fs.toFixed(1)}px"`:''} x="${(q.x*K).toFixed(1)}" y="${(q.y*K).toFixed(1)}">${esc(q.s.a)}</text>`;}
+     g+=`<text class="lab ${darkLab(q.s.e)}" data-sp="${q.s.id}"${fs<f0?` style="font-size:${fs.toFixed(1)}px"`:''} x="${(q.x*K).toFixed(1)}" y="${(q.y*K).toFixed(1)}">${esc(q.s.a)}</text>`;}
   });
   if(circ)g+=`</g>`;
   g+=dims(p,K);
@@ -2683,7 +2711,7 @@ function draw3D(p,raio){
       let r=q.kind==='tree'?.34:q.kind==='med'?.28:Math.min(q.cell*.45,.5);
       r=Math.max(.04,Math.min(r,nn(q)*.46,circ?9:Math.min(q.x,L-q.x,q.y,W-q.y)*.95));
       const [bx,by]=iso(q.x,q.y,gz),rx=r*K*c*Math.SQRT2,ry=r*K*sn*Math.SQRT2;
-      g+=`<g><title>${esc(s.n)} · raio de ${cm_(r)} no desenho</title>`;
+      g+=`<g data-sp="${s.id}"><title>${esc(s.n)} · raio de ${cm_(r)} no desenho</title>`;
       if(q.kind==='tree'){const rt=Math.max(s.ep,1)/2;rings+=`<ellipse class="r-tree" cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" rx="${(rt*K*c*Math.SQRT2).toFixed(1)}" ry="${(rt*K*sn*Math.SQRT2).toFixed(1)}"/>`;}
       g+=`<ellipse class="p-${s.e} r-pl" cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}"/>`;
       // sigla sempre visível: nas plantas pequenas, a letra diminui até 6,5 px
@@ -2936,7 +2964,7 @@ function legend(p){
   const strips=p.strips||[];const ruas=strips.filter(x=>x.t==='path'),cant=strips.filter(x=>x.t==='bed'),lin=strips.filter(x=>x.t==='line');
   const ruaTxt=[ruas.length?`ruas de ${[...new Set(ruas.map(r=>cm_(r.h)))].join(' e ')}`:'',cant.length?`canteiros de ${[...new Set(cant.map(r=>cm_(r.h)))].join(' e ')}`:'',lin.length?`linhas de árvores de ${cm_(lin[0].h)}`:''].filter(Boolean).join(' · ');
   const ic=(p.interc||[]).map(x=>`${x.steps.slice(0,x.g.length===2?1:x.g.length).map(([a,b,d])=>`${esc(a.n)} ↔ ${esc(b.n)} ${cm_(d)}`).join(', ')} (fileiras a ${cm_(x.rowGap)})`);
-  return `<div class="legend">`+ids.map(i=>{const s=BYID[i];return `<div class="lg"><span class="ab d-${s.e} ${darkLab(s.e)}">${esc(s.a)}</span><span class="nm">${esc(s.n)}<small class="sp">${spTxt(s)}</small></span><span class="q">${p.count[i]} ${p.count[i]>1?'plantas':'planta'}</span></div>`}).join('')+`</div>`
+  return `<div class="legend">`+ids.map(i=>{const s=BYID[i];return `<div class="lg" data-sp="${s.id}"><span class="ab d-${s.e} ${darkLab(s.e)}">${esc(s.a)}</span><span class="nm">${esc(s.n)}<small class="sp">${spTxt(s)}</small></span><span class="q">${p.count[i]} ${p.count[i]>1?'plantas':'planta'}</span></div>`}).join('')+`</div>`
    +`<div class="sp-sum">${ruaTxt?`<p><b>Espaçamento entre ruas e faixas:</b> ${ruaTxt}.</p>`:''}${ic.length?`<p><b>Intercaladas na mesma fileira:</b> ${ic.join(' · ')}.</p>`:''}</div>`;
 }
 
@@ -3763,6 +3791,28 @@ $('out').addEventListener('click',e=>{
   const pv=e.target.closest('#potvista button');if(pv){S.potview=pv.dataset.v;update();return;}
   const b=e.target.closest('[data-addsp]');if(!b)return;const id=b.dataset.addsp;if(!S.sel.includes(id))S.sel.push(id);S.exemplo=false;update();
 });
+
+
+// faixa "Como usar": aparece só na primeira visita e some no primeiro clique
+{const G=$('guia');let visto=false;try{visto=localStorage.getItem('quintal-guia-ok')==='1';}catch(e){}
+  const fecha=()=>{if(G.hidden)return;G.hidden=true;try{localStorage.setItem('quintal-guia-ok','1');}catch(e){}};
+  if(!visto)G.hidden=false;
+  const mob=()=>matchMedia('(max-width:880px)').matches;
+  G.addEventListener('click',e=>{const b=e.target.closest('[data-guia]');if(!b)return;const k=b.dataset.guia;fecha();if(k==='fechar')return;
+    if(mob()){S.mtab=k;save();mtabSync();window.scrollTo(0,0);update();return;}
+    const el=k==='espaco'?$('sec-espaco'):k==='plantas'?$('sec-plantas'):$('out');
+    if(k==='plantas'){const c=document.querySelector('.grid>.col:first-child');if(c)c.scrollTo({top:el.offsetTop-c.offsetTop,behavior:'smooth'});}
+    el.scrollIntoView({behavior:'smooth',block:'start'});});
+  document.querySelector('.grid').addEventListener('click',fecha);
+  const mt=$('mtabs');if(mt)mt.addEventListener('click',fecha);}
+// destaque de espécie no desenho
+{const O=$('out');let cur=null;
+  const set=id=>{if(id===cur)return;cur=id;O.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));
+    if(!id){O.classList.remove('hl-on');return;}O.classList.add('hl-on');O.querySelectorAll(`[data-sp="${id}"]`).forEach(e=>e.classList.add('hl'));};
+  O.addEventListener('pointerover',e=>{if(e.pointerType==='touch')return;const t=e.target.closest('svg [data-sp], .legend [data-sp]');set(t?t.dataset.sp:null);});
+  O.addEventListener('pointerleave',()=>set(null));
+  O.addEventListener('click',e=>{const t=e.target.closest('svg [data-sp], .legend [data-sp]');if(t){set(cur===t.dataset.sp?null:t.dataset.sp);}else if(cur&&!e.target.closest('button,a'))set(null);});
+  new MutationObserver(()=>{if(cur){const id=cur;cur=null;set(id);}}).observe(O,{childList:true});}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-mt]');if(!b)return;S.mtab=b.dataset.mt;save();mtabSync();window.scrollTo(0,0);update();});
 try{matchMedia(MQ).addEventListener('change',()=>update());}catch(e){}
 update();
