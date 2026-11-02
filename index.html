@@ -2268,7 +2268,9 @@ function drawPlan(p){
     rr=Math.max(1,Math.min(rr,nn(q)*K*.46,Math.min(q.x,L-q.x,q.y,W-q.y)*K*.95));
     if(q.kind!=='bed'&&rr>6)g+=`<circle class="shd" cx="${(q.x*K+rr*.18).toFixed(1)}" cy="${(q.y*K+rr*.22).toFixed(1)}" r="${(rr*.98).toFixed(1)}"/>`;
     g+=`<circle class="p-${q.s.e}" cx="${(q.x*K).toFixed(1)}" cy="${(q.y*K).toFixed(1)}" r="${rr.toFixed(1)}"><title>${esc(q.s.n)}</title></circle>`;
-    if(rr>=8*Math.max(1,FZ*.8))g+=`<text class="lab ${darkLab(q.s.e)}" x="${(q.x*K).toFixed(1)}" y="${(q.y*K).toFixed(1)}">${esc(q.s.a)}</text>`;
+    // sigla sempre dentro da esfera: nas plantas pequenas a letra encolhe junto com o círculo (use o zoom para ler)
+    {const f0=9.5*FZ,fs=Math.min(f0,Math.max(2.4,rr*1.25));
+     g+=`<text class="lab ${darkLab(q.s.e)}"${fs<f0?` style="font-size:${fs.toFixed(1)}px"`:''} x="${(q.x*K).toFixed(1)}" y="${(q.y*K).toFixed(1)}">${esc(q.s.a)}</text>`;}
   });
   if(circ)g+=`</g>`;
   g+=dims(p,K);
@@ -2685,7 +2687,7 @@ function draw3D(p,raio){
       if(q.kind==='tree'){const rt=Math.max(s.ep,1)/2;rings+=`<ellipse class="r-tree" cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" rx="${(rt*K*c*Math.SQRT2).toFixed(1)}" ry="${(rt*K*sn*Math.SQRT2).toFixed(1)}"/>`;}
       g+=`<ellipse class="p-${s.e} r-pl" cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}"/>`;
       // sigla sempre visível: nas plantas pequenas, a letra diminui até 6,5 px
-      const fs=Math.max(6.5,Math.min(9.5,rx*.62));
+      const fs=Math.max(2.4,Math.min(9.5,rx*.62,ry*1.25));
       g+=`<text class="lab ${darkLab(s.e)}" style="font-size:${fs.toFixed(1)}px" x="${bx.toFixed(1)}" y="${by.toFixed(1)}">${esc(s.a)}</text>`;
       g+=`</g>`;});
     if(DM){
