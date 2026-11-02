@@ -87,6 +87,16 @@ header p{margin:0;color:var(--muted);max-width:62ch}
   .hero-t>p:not(.hero-short):not(.hero-free){grid-column:2;grid-row:1;align-self:end}
   .hero-t>p.hero-free{grid-column:2;grid-row:2;align-self:start}
 }
+/* celular: topo compacto, só logo, nome e "uso público e gratuito" */
+@media (max-width:880px){
+  .hero{padding-block:6px 10px;gap:6px}
+  .hero .eyebrow,.hero-t>p:not(.hero-free){display:none}
+  .hero .brand{gap:10px;margin:0}
+  .hero .hero-logo{width:46px;height:46px}
+  .hero h1{font-size:22px;line-height:1.1}
+  .hero-t>p.hero-free{font-size:12px;margin-top:2px}
+  .hero-free .cn-ic svg{width:14px;height:14px}
+}
 h2{font-family:var(--f-display);font-weight:400;font-size:22px;margin:0;text-wrap:balance}
 #out .panel{background:transparent;border:none;border-top:1px solid var(--line);border-radius:0;padding:22px 0 4px}
 #out .panel>h2,#out .panel>.head>h2{font-size:25px}
