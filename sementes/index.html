@@ -365,8 +365,10 @@ function pintar(el){const id=el.dataset.k;if(el.dataset.ok)return;el.dataset.ok=
 const OBS='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){OBS.unobserve(e.target);pintar(e.target);}}),{rootMargin:'300px'}):null;
 function observar(){document.querySelectorAll('.foto[data-k]').forEach(el=>OBS?OBS.observe(el):pintar(el));}
 document.addEventListener('toggle',e=>{const t=e.target;if(t.classList&&t.classList.contains('ficha')&&t.open){const f=t.querySelector('.fig');if(f)pintar(f);}},true);
+const EXTRA={w:["inga", "embauba", "jucara", "urucum", "patadevaca", "a-cedrelafissilis", "a-cabraleacanjerana", "a-handroanthusimpetiginosus", "a-handroanthusochraceus", "a-zeyheriatuberculosa", "a-nectandramegapotamica", "falsairis", "vedelia", "alamanda", "heliconia", "taioba", "sangra", "a-calophyllumbrasiliense", "a-tibouchinagranulosa", "banana", "inhame", "gengibre"]};
+const inG=(d,k)=>d.gr===k||(EXTRA[k]||[]).includes(d.id);
 function ok(d){
-  if(gsel&&d.gr!==gsel)return false;
+  if(gsel&&!inG(d,gsel))return false;
   if(q&&!d._q.includes(q))return false;
   for(const k of fsel){
     if(k==='vi'&&!d.vi)return false;
@@ -378,18 +380,18 @@ function ok(d){
   }
   return true;
 }
-function ficha(d){
+function ficha(d,k){
   const tags=d.v.map(v=>`<span class="tag via">${VIA[v]}</span>`).join('')+(d.t?`<span class="tag t-${d.t}" title="${TIPO[d.t][1]}">${TIPO[d.t][0]}</span>`:'')+(d.inv?'<span class="tag inv">invasora em SP</span>':'')+(d.o==='X'?'<span class="tag">exótica</span>':'');
   const meses=d.m&&d.m.length?`<div><h3>Melhor época para plantar</h3><div class="meses" aria-label="Meses de plantio">${[...M].map((l,i)=>`<span class="${d.m.includes(i+1)?'on':''}" title="${['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'][i]}">${l}</span>`).join('')}</div></div>`:'';
   const gl=d.g==='—'?'':`<span class="germ"><b>${esc(d.g)}</b>dias para nascer</span>`;
-  return `<details class="ficha" id="${d.id}"><summary><span class="foto" data-k="${d.id}">${catIco(d.gr)}</span><span class="nome"><b>${d.e?sig(d.e):''}${esc(d.n)}</b><i>${esc(d.sci)}${d.o&&d.o!=='X'?' · '+ORIG[d.o]:''}</i></span>${gl}<span class="tags">${tags}</span></summary><div class="corpo"><figure class="fig" data-k="${d.id}"></figure><div><h3>Onde conseguir</h3><p>${esc(d.ob)}</p></div><div><h3>Como preparar</h3><p>${esc(d.pr)}</p></div><div><h3>Como plantar</h3><p>${esc(d.pl)}</p></div>${meses}${d.d?`<p class="dica">${esc(d.d)}</p>`:''}</div></details>`;
+  return `<details class="ficha"${k&&k!==d.gr?'':` id="${d.id}"`}><summary><span class="foto" data-k="${d.id}">${catIco(d.gr)}</span><span class="nome"><b>${d.e?sig(d.e):''}${esc(d.n)}</b><i>${esc(d.sci)}${d.o&&d.o!=='X'?' · '+ORIG[d.o]:''}</i></span>${gl}<span class="tags">${tags}</span></summary><div class="corpo"><figure class="fig" data-k="${d.id}"></figure><div><h3>Onde conseguir</h3><p>${esc(d.ob)}</p></div><div><h3>Como preparar</h3><p>${esc(d.pr)}</p></div><div><h3>Como plantar</h3><p>${esc(d.pl)}</p></div>${meses}${d.d?`<p class="dica">${esc(d.d)}</p>`:''}</div></details>`;
 }
 const ABERTOS=new Set();
 document.addEventListener('toggle',e=>{const t=e.target;if(t.classList&&t.classList.contains('grupo')&&!(q||fsel.size||gsel)){t.open?ABERTOS.add(t.dataset.g):ABERTOS.delete(t.dataset.g);}},true);
 function render(){
   const vis=DATA.filter(ok); let h='';
   const ativo=!!(q||fsel.size||gsel);
-  GR.forEach(([k,l])=>{const it=vis.filter(d=>d.gr===k);if(!it.length)return;const ab=ativo||ABERTOS.has(k);h+=`<details class="grupo c-${k}" data-g="${k}"${ab?' open':''}><summary class="gsum"><span class="gico">${catIco(k)}</span><h2>${l}</h2><small>${it.length} ${it.length>1?'espécies':'espécie'}</small></summary><div class="gbody">${it.map(ficha).join('')}</div></details>`});
+  GR.forEach(([k,l])=>{const it=vis.filter(d=>inG(d,k));if(!it.length)return;const ab=ativo||ABERTOS.has(k);h+=`<details class="grupo c-${k}" data-g="${k}"${ab?' open':''}><summary class="gsum"><span class="gico">${catIco(k)}</span><h2>${l}</h2><small>${it.length} ${it.length>1?'espécies':'espécie'}</small></summary><div class="gbody">${it.map(d=>ficha(d,k)).join('')}</div></details>`});
   const L=document.getElementById('lista');L.innerHTML=h||'<p class="vazio">Nenhuma planta com esses filtros. Tire um filtro ou mude a busca.</p>';
   observar();document.getElementById('contagem').textContent=vis.length===DATA.length?`Mostrando todas as ${DATA.length} espécies`:`Mostrando ${vis.length} de ${DATA.length} espécies`;
 }
