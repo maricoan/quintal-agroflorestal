@@ -100,6 +100,10 @@ header{display:flex;flex-direction:column;gap:10px}
 .filtros .c-h,.filtros .c-E{--c:var(--cv-leaf)} .filtros .c-t,.filtros .c-R{--c:var(--cv-fresh)} .filtros .c-a{--c:var(--cv-moss)} .filtros .c-f{--c:var(--cv-berry)}
 .filtros .c-p,.filtros .c-dura{--c:var(--cv-warn)} .filtros .c-n,.filtros .c-S{--c:var(--cv-seed)} .filtros .c-w{--c:var(--cv-water)} .filtros .c-g,.filtros .c-DR{--c:var(--cv-soil)}
 #grupos .chip .cat-ico{stroke:#000}
+#grupos .chip.todas{font-weight:700;font-size:.95rem;padding:6px 16px 6px 12px;border:2px solid var(--ink);background:var(--surface);color:var(--ink);text-shadow:none;box-shadow:0 2px 0 color-mix(in srgb,var(--ink) 25%,transparent)}
+#grupos .chip.todas .cat-ico{stroke:currentColor}
+#grupos .chip.todas:hover{background:color-mix(in srgb,var(--ink) 10%,var(--surface))}
+#grupos .chip.todas[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 #grupos .chip[aria-pressed="true"]{background:color-mix(in srgb,var(--c),#000 var(--chip-dk));color:#fff;border-color:var(--c);font-weight:700}
 #filtros .chip[aria-pressed="true"]{background:var(--c);color:var(--bg);border-color:var(--c);font-weight:700}
 #filtros{border-top:2px solid color-mix(in srgb,var(--soil) 55%,var(--line));padding-top:12px;margin-top:4px}
@@ -297,7 +301,7 @@ const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 DATA.forEach(d=>{d._q=norm(d.n+' '+d.sci);d._dura=/lixe|lixa|80 °C/.test(d.pr)});
 document.getElementById('stats').innerHTML=`<span><b>${DATA.length}</b> espécies</span><span><b>${DATA.filter(d=>d.t==='R').length}</b> com semente que não guarda</span><span><b>${DATA.filter(d=>d.v.includes('E')).length}</b> que pegam de estaca</span>`;
 const gEl=document.getElementById('grupos');
-gEl.innerHTML=`<button class="chip" id="g-todos" aria-pressed="true" data-g="">Todas</button>`+GR.map(([k,l])=>`<button class="chip c-${k}" id="g-${k}" aria-pressed="false" data-g="${k}">${catIco(k)}${l}</button>`).join('');
+gEl.innerHTML=`<button class="chip todas" id="g-todos" aria-pressed="true" data-g=""><svg class="cat-ico" viewBox="0 0 18 18" aria-hidden="true"><rect x="2.5" y="2.5" width="5" height="5" rx="1"/><rect x="10.5" y="2.5" width="5" height="5" rx="1"/><rect x="2.5" y="10.5" width="5" height="5" rx="1"/><rect x="10.5" y="10.5" width="5" height="5" rx="1"/></svg>Todas</button>`+GR.map(([k,l])=>`<button class="chip c-${k}" id="g-${k}" aria-pressed="false" data-g="${k}">${catIco(k)}${l}</button>`).join('');
 const fEl=document.getElementById('filtros');
 fEl.innerHTML=FILT.map(([k,l])=>`<button class="chip c-${k}" id="f-${k}" aria-pressed="false" data-f="${k}">${l}</button>`).join('');
 gEl.addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b)return;gsel=b.dataset.g;gEl.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',c===b));render()});
