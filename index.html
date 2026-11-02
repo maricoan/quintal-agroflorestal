@@ -221,9 +221,9 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .tray-l button{font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:5px;border:1px solid var(--leaf);background:var(--leaf-soft);color:var(--ink);border-radius:999px;padding:3px 8px 3px 6px;cursor:pointer}
 .tray-l button:hover{border-color:var(--warn)}
 .tray-x{color:var(--warn);font-size:14px;line-height:1}
-.indic{border:1px solid rgba(30,70,35,.35);border-radius:8px;padding:0 10px;background:rgba(30,70,35,.14)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .indic{background:rgba(40,95,50,.32);border-color:rgba(120,170,110,.4)}}
-:root[data-theme="dark"] .indic{background:rgba(40,95,50,.32);border-color:rgba(120,170,110,.4)}
+.indic{border:1.5px solid rgba(30,70,35,.8);border-radius:8px;padding:0 10px;background:rgba(30,70,35,.14)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .indic{background:rgba(40,95,50,.32);border-color:rgba(150,200,140,.8)}}
+:root[data-theme="dark"] .indic{background:rgba(40,95,50,.32);border-color:rgba(150,200,140,.8)}
 .indic summary{cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;padding:9px 0;list-style:none}
 .indic summary::-webkit-details-marker{display:none}
 .inv{border:1px solid var(--warn);border-radius:8px;padding:0 10px;background:var(--warn-soft);margin-top:12px}
@@ -677,7 +677,7 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
             <button type="button" data-v="umido">Úmido</button>
           </div>
         </div>
-        <details class="indic" id="indicBox"><summary><svg class="cat-ico" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 16 V8 M9 11 q-4 0 -5 -4 q4 0 5 4 M9 9 q3 -1 4 -4 q-3 0 -4 4 M3 16 h12"/></svg><span>O que já existe no solo? <span class="cat-sub">Marque as plantas espontâneas que aparecem no seu terreno. Elas dão pistas de como está o solo.</span></span></summary>
+        <details class="indic" id="indicBox"><summary><svg class="cat-ico" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 .8V4.6M7.3 3 9 4.7 10.7 3"/><path transform="translate(2.25 4) scale(.75)" vector-effect="non-scaling-stroke" d="M9 16 V8 M9 11 q-4 0 -5 -4 q4 0 5 4 M9 9 q3 -1 4 -4 q-3 0 -4 4 M3 16 h12"/></svg><span>O que já existe no solo? <span class="cat-sub">Marque as plantas espontâneas que aparecem no seu terreno. Elas dão pistas de como está o solo.</span></span></summary>
           <div class="chips" id="indicList"></div>
           <div id="indicRes" aria-live="polite"></div>
         </details>
