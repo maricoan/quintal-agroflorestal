@@ -116,6 +116,9 @@ a{color:var(--leaf)}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 label.lbl,.lbl{font-size:13px;font-weight:700}
 input[type=number],input[type=text],select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;width:100%;min-width:0}
+.busca-w{position:relative}.busca-w #busca{padding-left:34px}
+.busca-ico{position:absolute;left:11px;top:50%;width:16px;height:16px;transform:translateY(-50%);fill:none;stroke:var(--muted);stroke-width:1.8;stroke-linecap:round;pointer-events:none;opacity:.85}
+#busca::placeholder{color:var(--muted);opacity:.85}
 input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}
 .unit{position:relative}
 .unit input{padding-right:30px;font-family:var(--f-body);font-variant-numeric:tabular-nums}
@@ -701,7 +704,7 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
           <ul class="tenho-l" id="tnList"></ul>
           <p class="hint">Mudas e estacas entram no desenho só até a quantidade que você tem; o espaço que sobra fica para as outras plantas. Com sementes, informe quantas tem; se deixar a quantidade em branco, o app conta que há sementes de sobra. Esta lista não fica salva: some quando você fecha a página.</p>
         </details>
-        <div><label class="sr" for="busca">Buscar planta</label><input id="busca" type="text" placeholder="Buscar: alface, pitanga, café…"></div>
+        <div class="busca-w"><label class="sr" for="busca">Buscar planta</label><svg class="busca-ico" viewBox="0 0 18 18" aria-hidden="true"><circle cx="7.5" cy="7.5" r="5"/><path d="M11.2 11.2 16 16"/></svg><input id="busca" type="text" placeholder="Buscar"></div>
         <div class="inv-busca" id="invBusca" aria-live="polite" hidden></div>
         <div class="tray" id="tray" aria-live="polite"></div>
         <details class="legend-box" id="legbox"><summary>Como ler os ícones</summary>
