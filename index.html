@@ -927,20 +927,23 @@ const REFS={
  MBP:{n:15,t:'Pinheiro, M. B. Plantas para Infraestrutura Verde e o papel da vegetação no tratamento das águas urbanas de São Paulo: identificação de critérios para seleção de espécies. Dissertação, FAU-USP, 2017.',u:'https://www.teses.usp.br/teses/disponiveis/16/16139/tde-24072017-104105/pt-br.php'},
  ID38:{n:18,t:'Ribeiro, J. F. (Embrapa Cerrados). Proteção e restauração de nascentes com agroflorestas. Experiências em Recuperação Ambiental, a partir de Miccolis, A. et al. Restauração ecológica com Sistemas Agroflorestais. ISPN/ICRAF, 2016.',u:'https://www.embrapa.br/documents/10180/13310826/ID38.pdf'},
  SPINV:{n:19,t:'Prefeitura de São Paulo. Portaria Conjunta SVMA/SMSUB nº 1, de 28 de janeiro de 2025. Anexo I: Lista de Flora Exótica Invasora do município de São Paulo.',u:'https://legislacao.prefeitura.sp.gov.br/portaria-conjunta-secretaria-municipal-do-verde-e-do-meio-ambiente-svma-secretaria-municipal-das-subprefeituras-smsub-1-de-28-de-janeiro-de-2025'},
+ D1:{n:20,t:'Resende, G. M.; Yuri, J. E.; Costa, N. D. Recomendação de espaçamento no plantio de cenoura no Submédio do Vale do São Francisco. Embrapa Semiárido, Instruções Técnicas 128, 2016.',u:'https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1054103/1/INT128.pdf'},
+ D2:{n:21,t:'Corrêa, C. V. et al. Produção de beterraba em função do espaçamento. Horticultura Brasileira 32(1), 2014.',u:'https://acervodigital.unesp.br/handle/11449/110126'},
+ D3:{n:22,t:'Freitas, K. K. C. et al. Desempenho agronômico de rúcula sob diferentes espaçamentos e épocas de plantio. Revista Ciência Agronômica 40(3), 2009.',u:'https://www.periodicos.ufc.br/revistacienciaagronomica/article/download/83954/228106/320409'},
  C9:{n:14,t:'Ushimaru, T. Influência do sombreamento sobre a fisiologia, crescimento e qualidade das mudas de juçara. Dissertação, UFV, 2021.',u:'https://locus.ufv.br//handle/123456789/29143'}
 };
 // el = entre linhas (m); ep = entre plantas (m); src = referência; sol = luz tolerada (P pleno, M meia-sombra, S sombra)
 // pl = meses de plantio (Sudeste); d = dias até 1ª colheita; v = vaso mínimo (L, 0 = não indicado); pt = porte adulto (m); h = altura típica (m)
 const DATA=[
- {id:'alface',n:'Alface',a:'Al',c:'h',e:'R',el:.25,ep:.25,src:'E47',sol:'PM',pl:ALL,col:'50–70 dias',d:60,v:5,h:.25},
- {id:'rucula',n:'Rúcula',a:'Rú',c:'h',e:'R',el:.2,ep:.1,src:'EPA',sol:'PM',pl:r(3,10),col:'40–60 dias',d:45,v:4,h:.3},
+ {id:'alface',n:'Alface',a:'Al',c:'h',e:'R',el:.2,ep:.2,src:'EPA',sol:'PM',pl:ALL,col:'50–70 dias',d:60,v:5,h:.25},
+ {id:'rucula',n:'Rúcula',a:'Rú',c:'h',e:'R',el:.25,ep:.05,src:'D3',sol:'PM',pl:r(3,10),col:'40–60 dias',d:45,v:4,h:.3},
  {id:'peixinho',n:'Peixinho',sci:'Stachys byzantina',a:'Px',c:'h',e:'R',el:.3,ep:.3,src:'PR',sol:'PM',pl:r(3,10),col:'folhas em 2–3 meses; colha as maiores',d:75,v:5,h:.3},
- {id:'cenoura',n:'Cenoura',a:'Ce',c:'h',e:'R',el:.2,ep:.05,src:'E47',sol:'P',pl:ALL,col:'85–110 dias',d:100,v:10,h:.3},
- {id:'beterraba',n:'Beterraba',a:'Be',c:'h',e:'R',el:.2,ep:.1,src:'E47',sol:'P',pl:r(2,9),col:'60–70 dias',d:65,v:10,h:.35},
+ {id:'cenoura',n:'Cenoura',a:'Ce',c:'h',e:'R',el:.2,ep:.04,src:'D1',sol:'P',pl:ALL,col:'85–110 dias',d:100,v:10,h:.3},
+ {id:'beterraba',n:'Beterraba',a:'Be',c:'h',e:'R',el:.2,ep:.075,src:'D2',sol:'P',pl:r(2,9),col:'60–70 dias',d:65,v:10,h:.35},
  {id:'couve',n:'Couve',a:'Co',c:'h',e:'B',el:.9,ep:.5,src:'E47',sol:'PM',pl:ALL,col:'80–90 dias',d:85,v:15,h:.8},
  {id:'tomate',n:'Tomate-cereja',a:'Tc',c:'h',e:'B',el:1,ep:.5,src:'E47',sol:'P',pl:r(8,2),col:'80–100 dias',d:90,v:20,h:1.5},
  {id:'berinjela',n:'Berinjela',a:'Bj',c:'h',e:'B',el:.8,ep:.8,src:'EPA',sol:'P',pl:r(8,1),col:'100–120 dias',d:110,v:20,h:1},
- {id:'pimenta',n:'Pimenta',a:'Pi',c:'h',e:'B',el:1.2,ep:.6,src:'E47',sol:'P',pl:r(8,12),col:'90–120 dias',d:100,v:10,h:.8},
+ {id:'pimenta',n:'Pimenta',a:'Pi',c:'h',e:'B',el:1.2,ep:1,src:'EPA',sol:'P',pl:r(8,12),col:'90–120 dias',d:100,v:10,h:.8},
  {id:'quiabo',n:'Quiabo',a:'Qu',c:'h',e:'B',el:1,ep:.4,src:'E47',sol:'P',pl:r(9,2),col:'70–80 dias',d:75,v:20,h:1.5},
  {id:'feijao',n:'Feijão (de vara)',a:'Fj',c:'h',e:'M',bed:1,el:.5,ep:.1,src:'E16',sol:'P',pl:r(9,11),col:'80–90 dias',d:85,v:0,adubo:1,h:1.8},
  {id:'abobora',n:'Abóbora',a:'Ab',c:'h',e:'R',el:2.5,ep:2.5,src:'E47',sol:'P',pl:r(9,1),col:'90–130 dias',d:120,v:60,h:.4},
@@ -1110,7 +1113,7 @@ const DATA=[
  {id:'goiaba',n:'Goiaba',sci:'Psidium guajava',a:'Gy',c:'f',o:'Z',e:'M',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'2–3 anos',d:800,v:60,pt:5},
  {id:'manga',n:'Manga',sci:'Mangifera indica',a:'Mq',c:'f',o:'Z',e:'A',arv:1,el:10,ep:8,src:'PR',sol:'P',pl:r(10,3),col:'4–5 anos (enxertada: 3)',d:1500,v:0,pt:15},
  {id:'caqui',n:'Caqui',sci:'Diospyros kaki',a:'Kq',c:'f',o:'X',e:'M',arv:1,el:6,ep:4,src:'PR',sol:'P',pl:r(6,8),col:'3–4 anos',d:1200,v:80,pt:6},
- {id:'melancia',n:'Melancia',sci:'Citrullus lanatus',a:'Mt',c:'f',o:'X',e:'R',el:2,ep:2,src:'E47',sol:'P',pl:r(8,1),col:'80–90 dias',d:85,v:0,h:.35},
+ {id:'melancia',n:'Melancia',sci:'Citrullus lanatus',a:'Mt',c:'f',o:'X',e:'R',el:2.5,ep:2,src:'EPA',sol:'P',pl:r(8,1),col:'80–90 dias',d:85,v:0,h:.35},
  {id:'abacaxi',n:'Abacaxi',sci:'Ananas comosus',a:'Az',c:'f',o:'N',e:'B',el:.4,ep:.3,src:'E16',sol:'P',pl:r(9,3),col:'18–24 meses',d:600,v:20,h:.9},
  {id:'majorgomes',n:"Major-gomes",sci:"Talinum paniculatum",a:"Ms",c:'h',o:'N',e:'B',el:0.4,ep:0.3,src:'PR',sol:'PM',pl:r(9,3),col:"50–60 dias (folhas)",d:55,v:10,h:0.6},
  {id:'cariru',n:"Cariru",sci:"Talinum fruticosum",a:null,c:'h',o:'N',e:'B',el:0.25,ep:0.25,src:'EPA',sol:'PM',pl:r(9,3),col:"6–8 semanas",d:50,v:5,h:0.5},
@@ -1360,7 +1363,7 @@ function save(){try{localStorage.setItem('quintal-saf-v2',JSON.stringify(S));}ca
 
 const $=id=>document.getElementById(id);
 const fmt=(n,d=1)=>n.toLocaleString('pt-BR',{maximumFractionDigits:d,minimumFractionDigits:0});
-const cm_=m=>m<1?fmt(m*100,0)+' cm':fmt(m,1)+' m';
+const cm_=m=>m<1?fmt(m*100,Math.abs(m*100-Math.round(m*100))>1e-6?1:0)+' cm':fmt(m,1)+' m';
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const darkLab=e=>(e==='M'||e==='B')?'lt':'dk';
 const isTree=s=>!!s.arv;
@@ -1868,12 +1871,16 @@ function planBase(){
         interc.push({g,rowGap,steps:g.map((m,k)=>[m,g[(k+1)%g.length],step(k)])});
       }else{
         const m=g[0];
-        const xs=[];
-        if(s1-s0<m.ep)xs.push((s0+s1)/2);else for(let x=s0+m.ep/2;x<s1-.001;x+=m.ep)xs.push(x);
-        xs.forEach(x=>{
-          const bi=Math.min(beds.length-1,Math.floor(x/L));const bd=beds[bi];
-          // nunca passa da ponta do canteiro (o trecho de uma planta pode atravessar de um canteiro para o outro)
-          const hw=Math.min(m.ep,L)/2,xi=Math.max(hw,Math.min(L-hw,x-bi*L));
+        // o trecho da planta pode atravessar de um canteiro para o outro: cada pedaço é preenchido por igual,
+        // no espaçamento certo e sem passar da ponta do canteiro
+        const xs=[],hw=Math.min(m.ep,L)/2;let big=null;
+        for(let bi=Math.floor(s0/L);bi<beds.length&&bi*L<s1-1e-9;bi++){
+          const a=Math.max(s0,bi*L)-bi*L,b2=Math.min(s1,(bi+1)*L)-bi*L,len=b2-a,n=Math.floor(len/m.ep+1e-6);
+          if(!big||len>big[2])big=[bi,a,len];
+          for(let k=0;k<n;k++)xs.push([bi,a+(len-n*m.ep)/2+m.ep/2+k*m.ep]);}
+        if(!xs.length&&big)xs.push([big[0],Math.max(hw,Math.min(L-hw,big[1]+big[2]/2))]);
+        xs.forEach(([bi,xi])=>{
+          const bd=beds[bi];
           const rows=Math.max(1,Math.floor(bd.h/m.el+.001)),y0=bd.y+(bd.h-(rows-1)*m.el)/2;
           for(let r=0;r<rows;r++)add(m,xi,rows>1?y0+r*m.el:bd.y+bd.h/2,'bed',Math.min(m.ep,m.el));
         });
