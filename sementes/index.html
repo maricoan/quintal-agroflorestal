@@ -101,6 +101,7 @@ header{display:flex;flex-direction:column;gap:10px}
 .filtros .c-h,.filtros .c-E{--c:var(--cv-leaf)} .filtros .c-t,.filtros .c-R{--c:var(--cv-fresh)} .filtros .c-a{--c:var(--cv-moss)} .filtros .c-f{--c:var(--cv-berry)}
 .filtros .c-p,.filtros .c-dura{--c:var(--cv-warn)} .filtros .c-n,.filtros .c-S{--c:var(--cv-seed)} .filtros .c-w{--c:var(--cv-water)} .filtros .c-g,.filtros .c-DR{--c:var(--cv-soil)}
 #grupos{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:4px;gap:4px;box-shadow:0 4px 12px rgba(20,40,25,.08)}
+.ftit{font-family:var(--f-display);font-weight:400;font-size:1.15rem;margin:2px 0 -2px 4px}
 #grupos .chip .cat-ico{stroke:#000}
 #grupos .chip.todas{font-weight:700;font-size:.95rem;padding:6px 16px 6px 12px;border:2px solid var(--ink);background:var(--surface);color:var(--ink);text-shadow:none;box-shadow:0 2px 0 color-mix(in srgb,var(--ink) 25%,transparent)}
 #grupos .chip.todas .cat-ico{stroke:currentColor}
@@ -250,7 +251,8 @@ details.ficha>summary{grid-template-columns:64px minmax(0,1fr) auto}
 <nav class="filtros" aria-label="Filtrar fichas">
   <label class="sr" for="q">Buscar planta</label>
   <div class="busca-w"><svg class="lupa" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><input id="q" class="busca" type="search" placeholder="nome popular ou científico" autocomplete="off"></div>
-  <div class="linha" id="grupos" role="group" aria-label="Grupo"></div>
+  <h2 class="ftit" id="t-grupos">Tipos de planta</h2>
+  <div class="linha" id="grupos" role="group" aria-labelledby="t-grupos"></div>
   <div class="linha" id="filtros" role="group" aria-label="Como propaga"></div>
   <span class="contagem" id="contagem" aria-live="polite"></span>
 </nav>
