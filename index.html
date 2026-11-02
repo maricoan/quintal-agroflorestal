@@ -718,7 +718,7 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
           </div>
           <p class="tenho-msg" id="tnMsg" aria-live="polite"></p>
           <ul class="tenho-l" id="tnList"></ul>
-          <p class="hint">O desenho usa só a quantidade que você tem; o resto do espaço vai para as outras plantas. Sementes sem quantidade contam como de sobra. A lista some ao fechar a página.</p>
+          <p class="hint">O desenho usa só a quantidade que você tem; o resto do espaço vai para as outras plantas. Sementes sem quantidade contam como abundantes. A lista some ao fechar a página.</p>
         </details>
         <div class="busca-w"><label class="sr" for="busca">Buscar planta</label><svg class="busca-ico" viewBox="0 0 18 18" aria-hidden="true"><circle cx="7.5" cy="7.5" r="5"/><path d="M11.2 11.2 16 16"/></svg><input id="busca" type="text" placeholder="Buscar"></div>
         <div class="inv-busca" id="invBusca" aria-live="polite" hidden></div>
@@ -1429,7 +1429,7 @@ const normN=t=>t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
 function renderTenho(){
   const all=DATA.concat(S.custom);
   $('tnLista').innerHTML=all.map(s=>`<option value="${esc(s.n)}">`).join('');
-  $('tnList').innerHTML=Object.entries(S.tenho).filter(([id])=>BYID[id]).map(([id,t])=>`<li>${t.n!=null?`<b>${t.n}</b> ${TIPO_TXT[t.tipo][t.n===1?0:1]} de`:'Sementes de sobra de'} ${esc(BYID[id].n)}<button type="button" data-tnrm="${id}" aria-label="Tirar ${esc(BYID[id].n)}">×</button></li>`).join('');
+  $('tnList').innerHTML=Object.entries(S.tenho).filter(([id])=>BYID[id]).map(([id,t])=>`<li>${t.n!=null?`<b>${t.n}</b> ${TIPO_TXT[t.tipo][t.n===1?0:1]} de`:'Sementes abundantes de'} ${esc(BYID[id].n)}<button type="button" data-tnrm="${id}" aria-label="Tirar ${esc(BYID[id].n)}">×</button></li>`).join('');
 }
 $('tnTipo').addEventListener('change',()=>{const q=$('tnQtd'),sem=$('tnTipo').value==='semente';q.disabled=false;q.placeholder=sem?'qtd.':'';if(sem&&q.value==='1')q.value='';if(!sem&&!q.value)q.value=1;});
 function tnAdd(){
