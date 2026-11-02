@@ -103,6 +103,19 @@ h2{font-family:var(--f-display);font-weight:400;font-size:22px;margin:0;text-wra
 #out .panel.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 1px 0 rgba(40,50,30,.04),0 10px 24px -18px rgba(40,50,30,.35)}
 #out .panel .note{background:transparent;border-radius:0;padding:8px 0 8px 12px}
 #out section[hidden]{display:none!important}
+.zinfo{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--leaf);color:var(--leaf);font:italic 700 12px/1 Georgia,serif;margin-left:6px;vertical-align:1px;cursor:pointer}
+.zinfo:hover,.zinfo:focus-visible{background:var(--leaf);color:var(--surface);outline:none}
+.zdlg{border:1px solid var(--line);border-radius:14px;padding:18px 20px 16px;max-width:560px;width:calc(100% - 32px);background:var(--surface);color:var(--ink);box-shadow:0 20px 50px rgba(20,30,15,.3);font-size:14.5px;line-height:1.5}
+.zdlg::backdrop{background:rgba(20,25,15,.45)}
+.zd-h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px}.zd-h h2{font-size:22px}
+.zd-x{border:0;background:transparent;font-size:24px;line-height:1;color:var(--muted);cursor:pointer;padding:0 4px}
+.zdlg p{margin:8px 0}
+.zd-z{list-style:none;padding:0;margin:10px 0;display:flex;flex-direction:column;gap:8px}
+.zd-z li{display:flex;gap:10px;align-items:flex-start;background:var(--bg);border-radius:10px;padding:8px 10px}
+.zd-n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--water-ln);color:var(--surface);display:flex;align-items:center;justify-content:center;font-weight:700}
+.zd-o{margin:6px 0;padding-left:18px}.zd-o li{margin:3px 0}
+.zd-f{font-size:13px;color:var(--muted)}
+
 .guia{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:0 0 14px;padding:8px 10px 8px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-size:14px}
 .guia[hidden]{display:none}
 .guia-t{color:var(--muted);font-weight:700;margin-right:2px}
@@ -796,6 +809,22 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
   </footer>
 </div>
 
+<dialog class="zdlg" id="zonasDlg" aria-labelledby="zd-t">
+  <div class="zd-h"><h2 id="zd-t">Zonas de plantio na beira d’água</h2><button type="button" class="zd-x" data-zclose aria-label="Fechar">×</button></div>
+  <p>Ao longo de um córrego, rio ou lago, a vegetação forma uma <b>faixa de proteção</b> (amortecedor ripário). Ela segura o barranco, sombreia a água e filtra de 50 a 85% da poluição que a chuva arrasta. A faixa tem três zonas, da água para fora:</p>
+  <ol class="zd-z">
+    <li><span class="zd-n">1</span><div><b>Beira da água.</b> Solo sempre úmido ou que alaga. Árvores de crescimento rápido que aguentam inundação e plantas tipo junco, que firmam o barranco e sombreiam a água. Ex.: ingá-do-brejo.</div></li>
+    <li><span class="zd-n">2</span><div><b>Floresta manejada.</b> Logo acima: árvores e arbustos que aguentam alagamento de vez em quando e abrigam a fauna. Ex.: embaúba, salgueiro, guapuruvu, urucum, juçara, mulungu.</div></li>
+    <li><span class="zd-n">3</span><div><b>Faixa de cima.</b> Parte mais alta, que recebe a enxurrada. Capins, ervas e árvores de solo sem excesso de água freiam a água e absorvem a maior parte dos poluentes. Ex.: pata-de-vaca, angico, sapucaia, cedro, canjarana.</div></li>
+  </ol>
+  <p>No app, as zonas 1 e 2 aparecem juntas como <b>Beira da água</b>, e a zona 3 como <b>Faixa de cima</b>. Os outros grupos completam a faixa:</p>
+  <ul class="zd-o">
+    <li><b>Mata ciliar e nascentes:</b> árvores nativas para recompor a mata da margem e cobrir nascentes.</li>
+    <li><b>Nascente com agrofloresta:</b> outras plantas usadas pela Embrapa Cerrados na recuperação de nascentes com agrofloresta.</li>
+    <li><b>Jardim de chuva e bordas úmidas:</b> ervas e arbustos que seguram e filtram a enxurrada antes que ela chegue à água.</li>
+  </ul>
+  <p class="zd-f">Antes de plantar perto de uma nascente, observe o terreno: solo sempre encharcado, alagamento de vez em quando ou só úmido. Isso define o que aguenta cada lugar. Fonte: Pinheiro, M. B., FAU-USP, 2017; Embrapa Cerrados.</p>
+</dialog>
 <nav class="mtabs" id="mtabs" aria-label="Partes do app">
   <button type="button" data-mt="espaco"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M3.5 12h17M12 5v14"/></svg><span>Espaço</span></button>
   <button type="button" data-mt="plantas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20v-8"/><path d="M12 12c0-4 3-6 7-6 0 4-3 6-7 6z"/><path d="M12 14c0-3-2.5-5-6-5 0 3 2.5 5 6 5z"/></svg><span>Plantas</span><b class="mt-b" id="mt-np"></b></button>
@@ -1654,7 +1683,7 @@ function renderCats(){
       const off=!s.sol.includes(S.sol);
       return `<button type="button" class="chip${off?' off':''}" data-id="${s.id}" aria-pressed="${on}"${off?` title="${esc(luzMotivo(s))}"`:''}>${sig(s.e)}${esc(s.n)}${S.tenho&&S.tenho[s.id]?` <span class="tem-tag">já tenho</span>`:''}${INVASORA[s.id]?` <span class="inv-tag" title="${esc(INVASORA[s.id])}">invasora</span>`:''}${s.o?` <span class="ico-w" role="img" aria-label="${ORIG_TXT[s.o]}">${ICON[s.o]}</span>`:''}${s.custom?` <span class="x" data-rm="${s.id}" role="button" aria-label="Remover ${esc(s.n)}">×</span>`:''}</button>`;
     };
-    const head=`<details class="cat${k==='w'?' cat-w':''}" data-k="${k}"${open?' open':''}><summary>${catIco(k)}<span class="cat-t">${lab}${k==='w'&&molhado?` <span class="cat-sub">${S.solo==='umido'?'bom para solo úmido':'bom para perto da água'}</span>`:''}</span><span class="cat-n">${nOn?`${nOn} de ${items.length}`:items.length}</span></summary>`;
+    const head=`<details class="cat${k==='w'?' cat-w':''}" data-k="${k}"${open?' open':''}><summary>${catIco(k)}<span class="cat-t">${lab}${k==='w'?` <span class="zinfo" role="button" tabindex="0" data-zinfo aria-label="O que são as zonas de plantio na beira d’água" title="O que são as zonas?">i</span>`:''}${k==='w'&&molhado?` <span class="cat-sub">${S.solo==='umido'?'bom para solo úmido':'bom para perto da água'}</span>`:''}</span><span class="cat-n">${nOn?`${nOn} de ${items.length}`:items.length}</span></summary>`;
     if(k==='w'){
       const R=REFS.MBP;let b='';
       BEIRA.forEach(([z,t,sub,ids])=>{const L=ids.split(' ');const its=items.filter(s=>L.includes(s.id));if(!its.length)return;
@@ -3807,6 +3836,12 @@ $('out').addEventListener('click',e=>{
     el.scrollIntoView({behavior:'smooth',block:'start'});});
   document.querySelector('.grid').addEventListener('click',fecha);
   const mt=$('mtabs');if(mt)mt.addEventListener('click',fecha);}
+
+// janela "zonas de plantio na beira d'água"
+{const D=$('zonasDlg');const abre=e=>{e.preventDefault();e.stopPropagation();try{D.showModal();}catch(_){D.setAttribute('open','');}};
+  $('cats').addEventListener('click',e=>{if(e.target.closest('[data-zinfo]'))abre(e);},true);
+  $('cats').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-zinfo]'))abre(e);},true);
+  D.addEventListener('click',e=>{if(e.target===D||e.target.closest('[data-zclose]'))D.close();});}
 // destaque de espécie no desenho
 {const O=$('out');let cur=null;
   const set=id=>{if(id===cur)return;cur=id;O.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));
