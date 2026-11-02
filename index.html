@@ -708,6 +708,10 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
         <div class="busca-w"><label class="sr" for="busca">Buscar planta</label><svg class="busca-ico" viewBox="0 0 18 18" aria-hidden="true"><circle cx="7.5" cy="7.5" r="5"/><path d="M11.2 11.2 16 16"/></svg><input id="busca" type="text" placeholder="Buscar"></div>
         <div class="inv-busca" id="invBusca" aria-live="polite" hidden></div>
         <div class="tray" id="tray" aria-live="polite"></div>
+        <div class="quick" id="quick"><span class="hint">Seleção rápida:</span>
+          <button type="button" data-q="umido">Solo úmido</button>
+          <button type="button" data-q="seco">Solo seco ou pedregoso</button>
+        </div>
         <details class="legend-box" id="legbox"><summary>Como ler os ícones</summary>
         <ul class="oleg" aria-label="Legenda de origem">
           <li><span class="ico-w" data-ico="N"></span>Nativa: ocorre naturalmente no Brasil</li>
@@ -726,10 +730,6 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
           <li><span class="chip off leg-off">Planta</span>Botão mais apagado: a planta não combina com o sol do seu espaço. Pede mais sol do que ele recebe ou prefere sombra. Dá para escolher mesmo assim; passe o mouse para ver o motivo.</li>
         </ul>
         </details>
-        <div class="quick" id="quick"><span class="hint">Seleção rápida:</span>
-          <button type="button" data-q="umido">Solo úmido</button>
-          <button type="button" data-q="seco">Solo seco ou pedregoso</button>
-        </div>
         <p class="chipinfo" id="chipinfo" aria-live="polite"><span class="ci-d">Passe o mouse ou toque numa planta para ver o estrato, a luz e a origem.</span></p>
         <div class="cats" id="cats"></div>
         <details class="inv" id="invBox"><summary><svg class="inv-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 18v-6M12 13.5c-3 0-4.6-1.8-4.8-4.5 3 0 4.6 1.7 4.8 4.5zM12 12c.2-2.6 1.8-4.3 4.6-4.3-.2 2.7-1.8 4.3-4.6 4.3z"/><path d="M5.3 5.3l13.4 13.4"/></svg><span>Evite plantar <span class="cat-sub">invasoras comuns em jardins de São Paulo</span></span></summary>
