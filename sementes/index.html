@@ -43,6 +43,7 @@ h2{font-size:1.45rem}
 h3{font-size:1.1rem}
 .eyebrow{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .eyebrow a{color:inherit}
+.topnav{display:flex;justify-content:flex-end;padding:10px 0 0}.tn-eb{display:inline-flex;align-items:center;gap:7px;font-family:var(--f-body);font-size:13px;font-weight:700;color:var(--leaf);text-decoration:none;border:1px solid var(--leaf);border-radius:999px;padding:5px 12px;background:var(--surface)}.tn-eb span{min-width:0}.tn-eb:hover{background:var(--leaf-soft)}.tn-eb:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}.tn-ic{width:16px;height:16px;flex:none;fill:none;stroke:var(--leaf);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}@media (max-width:880px){.topnav{justify-content:flex-start}}
 header{display:flex;flex-direction:column;gap:10px}
 .lede{margin:0;max-width:64ch;color:var(--muted)}
 .stats{display:flex;flex-wrap:wrap;gap:6px 20px;font-family:var(--f-mono);font-size:.84rem;font-variant-numeric:tabular-nums}
@@ -186,6 +187,7 @@ details.ficha>summary{grid-template-columns:64px minmax(0,1fr) auto}
 </head>
 <body>
 <div class="wrap">
+<nav class="topnav" aria-label="Outras páginas"><a class="tn-eb" href="https://quintal.marianacoan.com/"><svg class="tn-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V11M12 14c-3 0-4.8-1.7-5.2-4.6 3 0 4.8 1.7 5.2 4.6zM12 12.5c.4-2.8 2.1-4.4 5-4.4-.4 2.8-2.1 4.4-5 4.4z"/><path d="M5 21h14"/></svg><span>Quintal Agroflorestal</span><span aria-hidden="true">→</span></a></nav>
 <header>
   <div class="brand">
   <svg class="hero-logo" viewBox="0 0 200 200" role="img" aria-label="Logo Sementes do Quintal: uma semente na terra que germina e cresce até virar árvore" xmlns="http://www.w3.org/2000/svg">
@@ -211,7 +213,7 @@ details.ficha>summary{grid-template-columns:64px minmax(0,1fr) auto}
 <path d="M30 8.4 V2.4 M30 51.6 V57.6 M8.4 30 H2.4 M51.6 30 H57.6 M14.7 14.7 L10.5 10.5 M45.3 14.7 L49.5 10.5 M14.7 45.3 L10.5 49.5 M45.3 45.3 L49.5 49.5" stroke="#E3B23C" stroke-width="3.6" stroke-linecap="round"/>
 </svg>
   <div class="brand-t">
-  <span class="eyebrow"><a href="https://quintal.marianacoan.com/">Quintal Agroflorestal</a> · sementes e propagação</span>
+  <span class="eyebrow">Sementes e propagação</span>
   <h1>Sementes do Quintal</h1>
   </div>
   </div>
