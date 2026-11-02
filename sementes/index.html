@@ -146,6 +146,19 @@ summary::-webkit-details-marker{display:none}
 .sig i.d-E{background:var(--st-e)}.sig i.d-A{background:var(--st-a)}.sig i.d-M{background:var(--st-m)}.sig i.d-B{background:var(--st-b)}.sig i.d-R{background:var(--st-r)}
 .estleg{display:flex;flex-wrap:wrap;gap:4px 16px;margin:0;padding:0;list-style:none;font-size:.84rem;color:var(--muted)}
 .estleg li{display:flex;align-items:center}
+.info{display:inline-grid;place-items:center;width:30px;height:30px;margin:-6px 0;padding:0;border:none;border-radius:50%;background:transparent;color:var(--verde-t);cursor:pointer}
+.info svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.info svg .pt{fill:currentColor}
+.info:hover,.info[aria-expanded="true"]{background:var(--leaf-soft)}
+.info:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}
+.estinfo{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;max-width:70ch;font-size:.93rem}
+.estinfo p{margin:0}
+.estinfo dl{margin:0;display:flex;flex-direction:column;gap:8px}
+.estinfo dl div{display:grid;grid-template-columns:120px 1fr;gap:4px 12px}
+.estinfo dt{font-weight:700;display:flex;align-items:center}
+.estinfo dd{margin:0;min-width:0}
+.estinfo .nota{color:var(--muted);font-size:.85rem}
+@media (max-width:520px){.estinfo dl div{grid-template-columns:1fr}}
 .nome b{font-family:var(--f-display);font-weight:400;font-size:1.08rem}
 .nome i{color:var(--muted);font-size:.88rem}
 .tags{grid-column:2/-1;display:flex;flex-wrap:wrap;gap:5px}
@@ -221,7 +234,18 @@ details.ficha>summary{grid-template-columns:64px minmax(0,1fr) auto}
   <p class="lede">Como multiplicar cada planta do Quintal: onde conseguir a semente ou o galho, como preparar, quanto tempo leva para nascer e como plantar. As fichas cobrem todas as espécies do aplicativo, das hortaliças às grandes árvores nativas.</p>
   <p class="hero-free">Aplicativo de uso <strong>público</strong> e <strong>gratuito</strong>.<span class="cn-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect class="cn-f" x="8.2" y="15" width="7.6" height="8" rx="1.2"/><rect class="cn-f" x="4.8" y="5" width="14.4" height="11.2" rx="3"/><path class="cn-l" d="M8.4 5.4V9.6M12 5.4V9.6M15.6 5.4V9.6M4.8 10.6H13.2Q14.6 10.6 14.6 12"/></svg><svg viewBox="0 0 24 24"><path class="cn-s" d="M12 22V11"/><path class="cn-f" d="M12 15C7 15 4 12 4 7.5C9 7.5 12 10.5 12 15Z"/><path class="cn-f" d="M12 12C12 7 15 3.5 20.5 3.5C20.5 9 17 12 12 12Z"/><path class="cn-s" d="M6.5 22H17.5"/></svg></span></p>
   <div class="stats" id="stats"></div>
-  <ul class="estleg" aria-label="Legenda de estratos"><li><span class="sig" data-sig="E"></span>Emergente</li><li><span class="sig" data-sig="A"></span>Alto</li><li><span class="sig" data-sig="M"></span>Médio</li><li><span class="sig" data-sig="B"></span>Baixo</li><li><span class="sig" data-sig="R"></span>Rasteiro</li></ul>
+  <ul class="estleg" aria-label="Legenda de estratos"><li><span class="sig" data-sig="E"></span>Emergente</li><li><span class="sig" data-sig="A"></span>Alto</li><li><span class="sig" data-sig="M"></span>Médio</li><li><span class="sig" data-sig="B"></span>Baixo</li><li><span class="sig" data-sig="R"></span>Rasteiro</li><li><button type="button" class="info" id="estinfo-btn" aria-expanded="false" aria-controls="estinfo" aria-label="O que são os estratos"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.2"/><path d="M10 9v5"/><circle cx="10" cy="6.2" r=".6" class="pt"/></svg></button></li></ul>
+  <div class="estinfo" id="estinfo" hidden>
+    <p><b>Estrato</b> é a altura que a planta ocupa quando adulta, no andar de luz em que ela vive dentro da agrofloresta. Plantando espécies de estratos diferentes juntas, cada uma pega a luz de que precisa e o espaço rende muito mais, como numa mata.</p>
+    <dl>
+      <div><dt><span class="sig" data-sig="E"></span>Emergente</dt><dd>As mais altas, acima de todas, em sol pleno. Ocupam pouco espaço de copa: cerca de 20% da área. Ex.: guapuruvu, paineira, jequitibá, embaúba.</dd></div>
+      <div><dt><span class="sig" data-sig="A"></span>Alto</dt><dd>Logo abaixo das emergentes. Ocupam cerca de 40% da área. Ex.: abacate, ingá, cambuci, cereja-do-rio-grande, castanha-do-maranhão.</dd></div>
+      <div><dt><span class="sig" data-sig="M"></span>Médio</dt><dd>Arbustos e árvores pequenas, que aguentam meia-sombra. Cerca de 60% da área. Ex.: café, acerola, araçá, pitanga, cará.</dd></div>
+      <div><dt><span class="sig" data-sig="B"></span>Baixo</dt><dd>Ervas e arbustos de até mais ou menos 1 metro. Cerca de 80% da área. Ex.: capim-santo, boldo, berinjela, alecrim, biri.</dd></div>
+      <div><dt><span class="sig" data-sig="R"></span>Rasteiro</dt><dd>Cobrem e protegem o chão, segurando a umidade. Ex.: abóbora, batata-doce, amendoim-forrageiro, hortelã, alface.</dd></div>
+    </dl>
+    <p class="nota">As porcentagens são a regra prática da agricultura sintrópica para a sombra de cada andar. O estrato de cada planta é o mesmo usado no app do Quintal.</p>
+  </div>
 </header>
 
 <div class="guia">
@@ -294,6 +318,7 @@ const ORIG={N:'nativa',E:'endêmica do Brasil',Z:'naturalizada',X:'exótica'};
 const M='JFMAMJJASOND';
 const EST={E:'Emergente',A:'Alto',M:'Médio',B:'Baixo',R:'Rasteiro'},SIG_N={R:1,B:2,M:3,A:4,E:5};
 const sig=e=>`<span class="sig" role="img" aria-label="Estrato ${EST[e]}" title="Estrato ${EST[e]}">${[1,2,3,4,5].map(i=>`<i${i<=SIG_N[e]?` class="d-${e}"`:''}></i>`).join('')}</span>`;
+(()=>{const b=document.getElementById('estinfo-btn'),x=document.getElementById('estinfo');b.addEventListener('click',()=>{const on=b.getAttribute('aria-expanded')!=='true';b.setAttribute('aria-expanded',on);x.hidden=!on;});})();
 document.querySelectorAll('[data-sig]').forEach(el=>{el.outerHTML=sig(el.dataset.sig).replace(/ role="img"[^>]*>/,' aria-hidden="true">');});
 const FILT=[['R','Semeie fresca'],['S','Por semente'],['E','Por estaca'],['DR','Divisão, rizoma ou rebento'],['dura','Casca dura']];
 let gsel='', fsel=new Set(), q='';
