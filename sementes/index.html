@@ -109,7 +109,7 @@ header{display:flex;flex-direction:column;gap:10px}
 #grupos .chip.todas[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 #grupos .chip[aria-pressed="true"]{background:color-mix(in srgb,var(--c),#000 var(--chip-dk));color:#fff;border-color:var(--c);font-weight:700}
 #filtros .chip[aria-pressed="true"]{background:var(--c);color:var(--bg);border-color:var(--c);font-weight:700}
-#filtros{border-top:2px solid color-mix(in srgb,var(--soil) 55%,var(--line));padding-top:12px;margin-top:4px}
+.ftit.sep{border-top:2px solid color-mix(in srgb,var(--soil) 55%,var(--line));padding-top:14px;margin-top:6px}
 .chip[aria-pressed="true"]{background:var(--c);color:var(--bg);border-color:var(--c)}
 .c-h,.c-E{--c:var(--leaf)} .c-t,.c-R{--c:var(--fresh)} .c-a{--c:var(--moss)} .c-f{--c:var(--berry)}
 .c-p,.c-dura{--c:var(--warn)} .c-n,.c-S{--c:var(--seed)} .c-w{--c:var(--water)} .c-g,.c-DR{--c:var(--soil)}
@@ -253,7 +253,8 @@ details.ficha>summary{grid-template-columns:64px minmax(0,1fr) auto}
   <div class="busca-w"><svg class="lupa" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><input id="q" class="busca" type="search" placeholder="nome popular ou científico" autocomplete="off"></div>
   <h2 class="ftit" id="t-grupos">Tipos de planta</h2>
   <div class="linha" id="grupos" role="group" aria-labelledby="t-grupos"></div>
-  <div class="linha" id="filtros" role="group" aria-label="Como propaga"></div>
+  <h2 class="ftit sep" id="t-filtros">Como se propaga</h2>
+  <div class="linha" id="filtros" role="group" aria-labelledby="t-filtros"></div>
   <span class="contagem" id="contagem" aria-live="polite"></span>
 </nav>
 
