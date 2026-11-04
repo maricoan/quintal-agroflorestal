@@ -350,7 +350,7 @@ let PLANO=null;try{const u=new URLSearchParams(location.search).get('ids');if(u)
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 DATA.forEach(d=>{d._q=norm(d.n+' '+d.sci);d._dura=/lixe|lixa|80 °C/.test(d.pr)});
-document.getElementById('stats').innerHTML=`<span><b>${DATA.length}</b> espécies</span><span><b>${DATA.filter(d=>d.t==='R').length}</b> com semente que não guarda</span><span><b>${DATA.filter(d=>d.v.includes('E')).length}</b> que pegam de estaca</span>`;
+document.getElementById('stats').innerHTML=`<span><b>${DATA.length}</b> espécies</span><span><b>${DATA.filter(d=>d.t==='R').length}</b> para semear logo após colher</span><span><b>${DATA.filter(d=>d.v.includes('E')).length}</b> que pegam de estaca</span>`;
 const gEl=document.getElementById('grupos');
 gEl.innerHTML=`<button class="chip todas" id="g-todos" aria-pressed="true" data-g=""><svg class="cat-ico" viewBox="0 0 18 18" aria-hidden="true"><rect x="2.5" y="2.5" width="5" height="5" rx="1"/><rect x="10.5" y="2.5" width="5" height="5" rx="1"/><rect x="2.5" y="10.5" width="5" height="5" rx="1"/><rect x="10.5" y="10.5" width="5" height="5" rx="1"/></svg>Todas</button>`+GR.map(([k,l])=>`<button class="chip c-${k}" id="g-${k}" aria-pressed="false" data-g="${k}">${catIco(k)}${l}</button>`).join('');
 const fEl=document.getElementById('filtros');
