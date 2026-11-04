@@ -103,6 +103,9 @@ h2{font-family:var(--f-display);font-weight:400;font-size:22px;margin:0;text-wra
 #out .panel.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 1px 0 rgba(40,50,30,.04),0 10px 24px -18px rgba(40,50,30,.35)}
 #out .panel .note{background:transparent;border-radius:0;padding:8px 0 8px 12px}
 #out section[hidden]{display:none!important}
+.sem-l{font-size:12px;font-weight:700;color:var(--leaf);margin-left:6px;white-space:nowrap}
+.ci-sem{margin-left:auto;padding-left:10px;flex:none;font-size:12.5px;font-weight:700;color:var(--leaf);white-space:nowrap}
+
 .zinfo{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--leaf);color:var(--leaf);font:italic 700 12px/1 Georgia,serif;margin-left:6px;vertical-align:1px;cursor:pointer}
 .zinfo:hover,.zinfo:focus-visible{background:var(--leaf);color:var(--surface);outline:none}
 .zdlg{border:1px solid var(--line);border-radius:14px;padding:18px 20px 16px;max-width:560px;width:calc(100% - 32px);background:var(--surface);color:var(--ink);box-shadow:0 20px 50px rgba(20,30,15,.3);font-size:14.5px;line-height:1.5}
@@ -1437,6 +1440,10 @@ try{if(PUBLICO){window.dataLayer=window.dataLayer||[];window.gtag=function(){dat
   const ga=document.createElement('script');ga.async=true;ga.src='https://www.googletagmanager.com/gtag/js?id=G-RHSN1Z265E';document.head.appendChild(ga);}}catch(e){}
 try{if(PUBLICO||new URLSearchParams(location.search).has('limpo')){const c=S.custom;S=JSON.parse(JSON.stringify(DEFAULT));S.custom=c;S.sel=[];S.mtab='espaco';}}catch(e){}
 S.tenho={};
+// vindo do site Sementes: ?add=id (ou vários, separados por vírgula) já entra escolhida
+try{const u=new URLSearchParams(location.search),ad=u.get('add');if(ad){const ids=ad.split(',').map(x=>x.trim()).filter(i=>BYID[i]);
+  ids.forEach(i=>{if(!S.sel.includes(i))S.sel.push(i);});if(ids.length){S.exemplo=false;S.mtab='plantas';}
+  u.delete('add');history.replaceState(null,'',location.pathname+(u.toString()?'?'+u:'')+location.hash);}}catch(e){}
 function save(){try{localStorage.setItem('quintal-saf-v2',JSON.stringify(S));}catch(e){}}
 
 const $=id=>document.getElementById(id);
@@ -1615,20 +1622,28 @@ function invBusca(){
   el.hidden=false;
   el.innerHTML=hit.slice(0,3).map(x=>{const tr=x[5].filter(i=>BYID[i]);return `<div>${x[3]?`<b>${esc(x[1])} é invasora em São Paulo</b> (${INV_NIVEL[x[3]]}). Invade ${invOnde(x[4])}.`:`<b>${esc(x[1])}: evite plantar.</b> ${esc(x[6]||'')}`}${tr.length?`<div class="acts">${tr.map(i=>`<button type="button" data-invadd="${i}">+ ${esc(BYID[i].n)}</button>`).join('')}</div>`:''}</div>`;}).join('');
 }
+// links para o site Sementes do Quintal (ids iguais, com hífen no lugar do sublinhado)
+const SEM_URL='https://quintal.marianacoan.com/sementes/';
+const semId=id=>id.replace(/_/g,'-');
+const semLink=(id,txt)=>BYID[id]&&!BYID[id].custom?`<a class="sem-l" href="${SEM_URL}#${semId(id)}" target="_blank" rel="noopener">${txt}</a>`:'';
 function showInfo(id){
   const s=BYID[id];if(!s)return;
   const luz=s.sol.split('').map(x=>solTxt[x]).join(' ou ');
   const det=`${s.sci?`<i>${esc(s.sci)}</i> · `:''}Estrato ${EST[s.e].toLowerCase()} · ${luz} · ${s.o?ORIG_TXT[s.o].toLowerCase():'origem não informada'}${s.msp?` · Manual de Arb. de SP, porte ${PORTE[s.msp]}`:''}${s.tox?' · tóxica se ingerida':''}`;
   const mot=luzMotivo(s);
   const inv=INVASORA[s.id];
-  $('chipinfo').innerHTML=`<span class="ci-top">${sig(s.e)}${s.o?`<span class="ico-w">${ICON[s.o]}</span>`:''}<b>${esc(s.n)}</b></span><span class="ci-d">${inv?`<b class="ci-inv">Invasora em SP.</b> `:''}${det}${mot?`. <b class="ci-luz">${esc(mot)}</b>`:''}</span>`;
+  $('chipinfo').innerHTML=`<span class="ci-top">${sig(s.e)}${s.o?`<span class="ico-w">${ICON[s.o]}</span>`:''}<b>${esc(s.n)}</b>${s.custom?'':`<a class="ci-sem" href="${SEM_URL}#${semId(s.id)}" target="_blank" rel="noopener">Sementes e propagação →</a>`}</span><span class="ci-d">${inv?`<b class="ci-inv">Invasora em SP.</b> `:''}${det}${mot?`. <b class="ci-luz">${esc(mot)}</b>`:''}</span>`;
   $('chipinfo').title=(inv?inv+' ':'')+det.replace(/<[^>]+>/g,'')+(mot?'. '+mot:'');
 }
 $('cats').addEventListener('mouseover',e=>{const b=e.target.closest('.chip');if(b)showInfo(b.dataset.id);});
 $('cats').addEventListener('focusin',e=>{const b=e.target.closest('.chip');if(b)showInfo(b.dataset.id);});
 // ao tirar o mouse (ou o foco) de uma planta, o campo volta ao texto inicial
 function clearInfo(){const ci=$('chipinfo');ci.innerHTML='<span class="ci-d">Passe o mouse ou toque numa planta para ver o estrato, a luz e a origem.</span>';ci.title='';}
-$('cats').addEventListener('mouseout',e=>{const b=e.target.closest('.chip');if(b&&!(e.relatedTarget&&b.contains(e.relatedTarget)))clearInfo();});
+// a informação fica um instante depois de sair da planta, para dar tempo de clicar no link da barra
+let ciT=0;const ciLater=()=>{clearTimeout(ciT);ciT=setTimeout(()=>{if(!$('chipinfo').matches(':hover'))clearInfo();},1600);};
+$('cats').addEventListener('mouseover',()=>clearTimeout(ciT));
+$('chipinfo').addEventListener('mouseleave',ciLater);$('chipinfo').addEventListener('mouseenter',()=>clearTimeout(ciT));
+$('cats').addEventListener('mouseout',e=>{const b=e.target.closest('.chip');if(b&&!(e.relatedTarget&&b.contains(e.relatedTarget)))ciLater();});
 $('cats').addEventListener('focusout',e=>{if(e.target.closest('.chip'))clearInfo();});
 $('cats').addEventListener('toggle',e=>{const d=e.target;if(!d.matches||!d.matches('details.cat'))return;if($('busca').value.trim())return;S.openCats=S.openCats||{};S.openCats[d.dataset.k]=d.open;save();},true);
 $('cats').addEventListener('click',e=>{
@@ -3656,14 +3671,15 @@ function comprasPanel(p){
     let tem='—',falta=no;
     if(t&&t.n==null){tem='sementes';falta=0;}
     else if(t){tem=`${t.n} ${TIPO_TXT[t.tipo][t.n===1?0:1]}`;falta=Math.max(0,no-t.n);}
-    return `<tr><td>${esc(s.n)}</td><td class="n">${no}</td><td class="n">${tem}</td><td class="n ${falta?'falta':'ok'}">${falta?falta:'✓'}</td></tr>`;}).join('');
+    return `<tr><td>${esc(s.n)}${falta?` ${semLink(id,'como produzir')}`:''}</td><td class="n">${no}</td><td class="n">${tem}</td><td class="n ${falta?'falta':'ok'}">${falta?falta:'✓'}</td></tr>`;}).join('');
   const sobra=tn.filter(x=>x.t.n!=null&&(p.count[x.s.id]||0)<x.t.n);
   const aviso=sobra.map(x=>{const c=p.count[x.s.id]||0;return `<li class="note warn"><span class="tag">Atenção</span><div class="body"><span>${c?`Cabem ${c} das ${x.t.n} ${TIPO_TXT[x.t.tipo][1]} de ${esc(x.s.n)} neste espaço.`:`Não coube nenhuma das ${x.t.n} ${TIPO_TXT[x.t.tipo][1]} de ${esc(x.s.n)} neste espaço.`} Para caber mais, tire outras plantas de canteiro da lista ou aumente a área; senão, plante ${x.t.n-c>1?'as que sobraram':'a que sobrou'} em outro canto, num vaso ou doe para alguém.</span></div></li>`;}).join('');
   const nFalta=ids.reduce((a,id)=>{const t=S.tenho[id];const no=p.count[id]||0;return a+(t?(t.n==null?0:Math.max(0,no-t.n)):no);},0);
   return `<section class="panel" aria-labelledby="t-compra"><h2 id="t-compra">Já tenho e falta conseguir</h2>
     ${aviso?`<ul class="notes">${aviso}</ul>`:''}
     <div class="tbl estreita"><table class="compra"><thead><tr><th>Planta</th><th>No plano</th><th>Já tenho</th><th>Falta</th></tr></thead><tbody>${rows}</tbody></table></div>
-    <p class="hint">${nFalta?`Faltam ${nFalta} mudas ou plantas. `:'Você já tem tudo o que o desenho pede. '}Para produzir as mudas que faltam, veja <a href="https://quintal.marianacoan.com/sementes/" target="_blank" rel="noopener">Sementes do Quintal</a>.</p></section>`;
+    <p class="hint">${nFalta?`Faltam ${nFalta} mudas ou plantas.`:'Você já tem tudo o que o desenho pede.'}</p>
+    <p><a class="tn-eb" href="${SEM_URL}?ids=${ids.filter(i=>BYID[i]&&!BYID[i].custom).map(semId).join(',')}" target="_blank" rel="noopener"><svg class="tn-ic" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="7.5" cy="17" rx="3" ry="2.1" transform="rotate(-25 7.5 17)"/><ellipse cx="15.5" cy="18.5" rx="3" ry="2.1" transform="rotate(20 15.5 18.5)"/><path d="M12 14V8.5M12 10c-2.6 0-4.2-1.5-4.5-4 2.6 0 4.2 1.5 4.5 4zM12 9c.3-2.4 1.8-3.8 4.3-3.8-.3 2.4-1.8 3.8-4.3 3.8z"/></svg><span>Ver como produzir as mudas deste plano</span><span aria-hidden="true">→</span></a></p></section>`;
 }
 // salvar ou enviar a imagem do desenho
 const ehCelular=()=>{try{return matchMedia('(pointer:coarse)').matches&&innerWidth<900;}catch(e){return false;}};
