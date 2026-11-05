@@ -305,7 +305,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .tenho-l{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}.tenho-l:empty{display:none}
 .tenho-l li{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--leaf);border-radius:999px;padding:3px 4px 3px 10px;font-size:13px}
 .tenho-l button{border:0;background:transparent;color:var(--muted);font-size:16px;line-height:1;cursor:pointer;padding:0 4px}
-.cer-tag{font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--soil);border:1px solid var(--soil);border-radius:4px;padding:0 4px;line-height:1.5}
+.cer-tag{display:inline-flex;vertical-align:-3px}.cer-ic{width:20px;height:17px;fill:none;stroke:var(--soil);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}.cer-ic .cer-c{fill:color-mix(in srgb,#9A7400 55%,transparent);stroke:#7a5c00}.cer-ic .cer-g{stroke:#A4471F}.oleg .cer-tag{width:26px;justify-content:center;flex:none}
 .tem-tag{font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--leaf);border:1px solid var(--leaf);border-radius:4px;padding:0 4px;line-height:1.5}
 .compra th:not(:first-child){text-align:right}.compra td.n{text-align:right;font-variant-numeric:tabular-nums}.compra .ok{color:var(--leaf);font-weight:700}.compra .falta{color:var(--warn);font-weight:700}
 .ibox{background:var(--ci-bg,rgba(0,0,0,.04));border-radius:8px;padding:8px 12px;margin-top:4px}button.zinfo{padding:0;background:none}button.zinfo[aria-expanded="true"]{background:var(--leaf);color:var(--surface)}
@@ -765,6 +765,7 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
           <li><span class="ico-w" data-ico="Z"></span>Naturalizada: veio de fora e se reproduz sozinha aqui</li>
           <li><span class="ico-w" data-ico="E"></span>Endêmica: só ocorre naturalmente no Brasil</li>
           <li><span class="ico-w" data-ico="X"></span>Exótica cultivada: veio de fora e depende de cultivo</li>
+          <li><span class="cer-tag"><svg class="cer-ic" viewBox="0 0 20 18" aria-hidden="true"><path d="M2 17h16" class="cer-g"/><path d="M10 17c0-3-1.4-4.4-.6-6.6M9.4 10.4c-1.6-.4-2.6-1.4-3-2.6M9.6 10.6c1.4-.8 2.6-.8 3.6-2"/><path d="M2.6 7.4c1.2-2.6 4.4-3.6 7-3.2 2.8-.6 6 .6 7.6 3.4-2.4.8-5 1-7.6.6-2.6.4-4.8.2-7-.8z" class="cer-c"/></svg></span>Cerrado paulista: espécie do cerrado de São Paulo</li>
         </ul>
         <ul class="oleg" aria-label="Legenda de estratos">
           <li><span class="sig" data-sig="E"></span>Emergente: acima de todas</li>
@@ -1768,7 +1769,7 @@ function renderCats(){
     const chip=s=>{
       const on=S.sel.includes(s.id);
       const off=!s.sol.includes(S.sol);
-      return `<button type="button" class="chip${off?' off':''}" data-id="${s.id}" aria-pressed="${on}"${off?` title="${esc(luzMotivo(s))}"`:''}>${sig(s.e)}${esc(nomeChip(s.n))}${S.tenho&&S.tenho[s.id]?` <span class="tem-tag">já tenho</span>`:''}${INVASORA[s.id]?` <span class="inv-tag" title="${esc(INVASORA[s.id])}">invasora</span>`:''}${CERRADO.has(s.id)?` <span class="cer-tag" title="Espécie do cerrado paulista">cerrado SP</span>`:''}${s.o?` <span class="ico-w" role="img" aria-label="${ORIG_TXT[s.o]}">${ICON[s.o]}</span>`:''}${s.custom?` <span class="x" data-rm="${s.id}" role="button" aria-label="Remover ${esc(s.n)}">×</span>`:''}</button>`;
+      return `<button type="button" class="chip${off?' off':''}" data-id="${s.id}" aria-pressed="${on}"${off?` title="${esc(luzMotivo(s))}"`:''}>${sig(s.e)}${esc(nomeChip(s.n))}${S.tenho&&S.tenho[s.id]?` <span class="tem-tag">já tenho</span>`:''}${INVASORA[s.id]?` <span class="inv-tag" title="${esc(INVASORA[s.id])}">invasora</span>`:''}${CERRADO.has(s.id)?` <span class="cer-tag" role="img" aria-label="Cerrado paulista" title="Espécie do cerrado paulista"><svg class="cer-ic" viewBox="0 0 20 18" aria-hidden="true"><path d="M2 17h16" class="cer-g"/><path d="M10 17c0-3-1.4-4.4-.6-6.6M9.4 10.4c-1.6-.4-2.6-1.4-3-2.6M9.6 10.6c1.4-.8 2.6-.8 3.6-2"/><path d="M2.6 7.4c1.2-2.6 4.4-3.6 7-3.2 2.8-.6 6 .6 7.6 3.4-2.4.8-5 1-7.6.6-2.6.4-4.8.2-7-.8z" class="cer-c"/></svg></span>`:''}${s.o?` <span class="ico-w" role="img" aria-label="${ORIG_TXT[s.o]}">${ICON[s.o]}</span>`:''}${s.custom?` <span class="x" data-rm="${s.id}" role="button" aria-label="Remover ${esc(s.n)}">×</span>`:''}</button>`;
     };
     const head=`<details class="cat${k==='w'?' cat-w':''}" data-k="${k}"${open?' open':''}><summary>${catIco(k)}<span class="cat-t">${lab}${k==='w'?` <span class="zinfo" role="button" tabindex="0" data-zinfo aria-label="O que são as zonas de plantio na beira d’água" title="O que são as zonas?">i</span>`:''}${k==='w'&&molhado?` <span class="cat-sub">${S.solo==='umido'?'bom para solo úmido':'bom para perto da água'}</span>`:''}</span><span class="cat-n">${nOn?`${nOn} de ${items.length}`:items.length}</span></summary>`;
     if(k==='w'){
