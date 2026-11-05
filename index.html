@@ -497,6 +497,8 @@ svg text{font-family:var(--f-mono);fill:var(--ink)}
 .ab.dk{color:var(--st-ink)} .ab.lt{color:var(--st-ink-light)}
 .lg .nm{flex:1;min-width:0;display:flex;flex-direction:column}
 .lg .sp{font-family:var(--f-body);font-size:11px;color:var(--muted)}
+.compra-box{margin-top:12px}.compra-box .hint{margin:4px 0 8px}
+.lg .cmp{font-family:var(--f-body);font-size:11px;color:var(--muted)}.lg .cmp .falta{color:var(--warn)}.lg .cmp .ok{color:var(--leaf)}.lg .cmp .sem-l{font-size:11px}
 .sp-sum{display:flex;flex-direction:column;gap:4px;font-size:13px;border-top:1px solid var(--line);padding-top:10px}
 .sp-sum p{margin:0}
 .lg .q{font-family:var(--f-body);font-variant-numeric:tabular-nums;color:var(--muted)}
@@ -3074,10 +3076,13 @@ function legend(p){
   ids.sort((a,b)=>order.indexOf(BYID[a].e)-order.indexOf(BYID[b].e)||BYID[a].n.localeCompare(BYID[b].n));
   const kindOf=id=>{const q=p.pts.find(x=>x.s.id===id);return q?q.kind:'bed';};
   const spTxt=s=>{const k=kindOf(s.id);if(k==='tree')return `${cm_(s.ep)} entre árvores na linha`;if(k==='med')return '1 m entre plantas na linha';return `${cm_(s.ep)} na fileira · ${cm_(s.el)} entre fileiras`;};
+  const cmpTxt=(id,no)=>{const t=S.tenho&&S.tenho[id];let tem='',falta=no;
+    if(t&&t.n==null){tem='já tenho sementes';falta=0;}else if(t){tem=`já tenho ${t.n} ${TIPO_TXT[t.tipo][t.n===1?0:1]}`;falta=Math.max(0,no-t.n);}
+    return `<small class="cmp">${tem?esc(tem)+' · ':''}${falta?`<b class="falta">falta${falta>1?'m':''} ${falta}</b>${semLink(id,'como produzir')}`:'<b class="ok">✓ tudo certo</b>'}</small>`;};
   const strips=p.strips||[];const ruas=strips.filter(x=>x.t==='path'),cant=strips.filter(x=>x.t==='bed'),lin=strips.filter(x=>x.t==='line');
   const ruaTxt=[ruas.length?`ruas de ${[...new Set(ruas.map(r=>cm_(r.h)))].join(' e ')}`:'',cant.length?`canteiros de ${[...new Set(cant.map(r=>cm_(r.h)))].join(' e ')}`:'',lin.length?`linhas de árvores de ${cm_(lin[0].h)}`:''].filter(Boolean).join(' · ');
   const ic=(p.interc||[]).map(x=>`${x.steps.slice(0,x.g.length===2?1:x.g.length).map(([a,b,d])=>`${esc(a.n)} ↔ ${esc(b.n)} ${cm_(d)}`).join(', ')} (fileiras a ${cm_(x.rowGap)})`);
-  return `<div class="legend">`+ids.map(i=>{const s=BYID[i];return `<div class="lg" data-sp="${s.id}"><span class="ab d-${s.e} ${darkLab(s.e)}">${esc(s.a)}</span><span class="nm">${esc(s.n)}<small class="sp">${spTxt(s)}</small></span><span class="q">${p.count[i]} ${p.count[i]>1?'plantas':'planta'}</span></div>`}).join('')+`</div>`
+  return `<div class="legend">`+ids.map(i=>{const s=BYID[i];return `<div class="lg" data-sp="${s.id}"><span class="ab d-${s.e} ${darkLab(s.e)}">${esc(s.a)}</span><span class="nm">${esc(s.n)}<small class="sp">${spTxt(s)}</small>${cmpTxt(i,p.count[i])}</span><span class="q">${p.count[i]} ${p.count[i]>1?'plantas':'planta'}</span></div>`}).join('')+`</div>`
    +`<div class="sp-sum">${ruaTxt?`<p><b>Espaçamento entre ruas e faixas:</b> ${ruaTxt}.</p>`:''}${ic.length?`<p><b>Intercaladas na mesma fileira:</b> ${ic.join(' · ')}.</p>`:''}</div>`;
 }
 
@@ -3742,11 +3747,10 @@ function comprasPanel(p){
   const sobra=tn.filter(x=>x.t.n!=null&&(p.count[x.s.id]||0)<x.t.n);
   const aviso=sobra.map(x=>{const c=p.count[x.s.id]||0;return `<li class="note warn"><span class="tag">Atenção</span><div class="body"><span>${c?`Cabem ${c} das ${x.t.n} ${TIPO_TXT[x.t.tipo][1]} de ${esc(x.s.n)} neste espaço.`:`Não coube nenhuma das ${x.t.n} ${TIPO_TXT[x.t.tipo][1]} de ${esc(x.s.n)} neste espaço.`} Para caber mais, tire outras plantas de canteiro da lista ou aumente a área; senão, plante ${x.t.n-c>1?'as que sobraram':'a que sobrou'} em outro canto, num vaso ou doe para alguém.</span></div></li>`;}).join('');
   const nFalta=ids.reduce((a,id)=>{const t=S.tenho[id];const no=p.count[id]||0;return a+(t?(t.n==null?0:Math.max(0,no-t.n)):no);},0);
-  return `<section class="panel" aria-labelledby="t-compra"><h2 id="t-compra">Já tenho e falta conseguir</h2>
+  return `<div class="compra-box">
     ${aviso?`<ul class="notes">${aviso}</ul>`:''}
-    <div class="tbl estreita"><table class="compra"><thead><tr><th>Planta</th><th>No plano</th><th>Já tenho</th><th>Falta</th></tr></thead><tbody>${rows}</tbody></table></div>
     <p class="hint">${nFalta?`Faltam ${nFalta} mudas ou plantas.`:'Você já tem tudo o que o desenho pede.'}</p>
-    <p><a class="tn-eb" href="${SEM_URL}?ids=${ids.filter(i=>BYID[i]&&!BYID[i].custom&&!SEM_SEM.has(i)).map(semId).join(',')}" target="_blank" rel="noopener"><svg class="tn-ic" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="7.5" cy="17" rx="3" ry="2.1" transform="rotate(-25 7.5 17)"/><ellipse cx="15.5" cy="18.5" rx="3" ry="2.1" transform="rotate(20 15.5 18.5)"/><path d="M12 14V8.5M12 10c-2.6 0-4.2-1.5-4.5-4 2.6 0 4.2 1.5 4.5 4zM12 9c.3-2.4 1.8-3.8 4.3-3.8-.3 2.4-1.8 3.8-4.3 3.8z"/></svg><span>Ver como produzir as mudas deste plano</span><span aria-hidden="true">→</span></a></p></section>`;
+    <p><a class="tn-eb" href="${SEM_URL}?ids=${ids.filter(i=>BYID[i]&&!BYID[i].custom&&!SEM_SEM.has(i)).map(semId).join(',')}" target="_blank" rel="noopener"><svg class="tn-ic" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="7.5" cy="17" rx="3" ry="2.1" transform="rotate(-25 7.5 17)"/><ellipse cx="15.5" cy="18.5" rx="3" ry="2.1" transform="rotate(20 15.5 18.5)"/><path d="M12 14V8.5M12 10c-2.6 0-4.2-1.5-4.5-4 2.6 0 4.2 1.5 4.5 4zM12 9c.3-2.4 1.8-3.8 4.3-3.8-.3 2.4-1.8 3.8-4.3 3.8z"/></svg><span>Ver como produzir as mudas deste plano</span><span aria-hidden="true">→</span></a></p></div>`;
 }
 // salvar ou enviar a imagem do desenho
 const ehCelular=()=>{try{return matchMedia('(pointer:coarse)').matches&&innerWidth<900;}catch(e){return false;}};
@@ -3845,9 +3849,8 @@ function update(fromInput){
       ${p.sel.length?`<div class="stats"><div class="stat"><b>${p.beds.length}</b><span>${p.beds.length===1?'canteiro':'canteiros'}</span></div><div class="stat"><b>${p.lines.length}</b><span>${p.lines.length===1?'linha de árvores':'linhas de árvores'}</span></div></div>`:''}
       ${p.sel.length?`<div class="zoom" role="group" aria-label="Tamanho do desenho"><button type="button" data-zoom="-1" aria-label="Diminuir desenho">−</button><span>${Math.round((S.zoom||1)*100)}%</span><button type="button" data-zoom="1" aria-label="Ampliar desenho">+</button></div><div class="drawing"${isMob()&&(S.zoom||1)>1?` style="--zw:${(S.zoom||1)*100}%"`:''}>${v3?draw3D(p):vr?draw3D(p,true):drawPlan(p)}</div>${!v3&&isMob()?stripList(p):''}`:emptyState("Escolha as plantas na lista ao lado: o app monta aqui o desenho do plantio, com as distâncias de cada uma.")}
       ${capAlert(p)}
-      ${legend(p)}${p.sel.length?shareBar():''}
+      ${legend(p)}${p.sel.length?comprasPanel(p)+shareBar():''}
       ${p.sel.length?`<details class="hint-d"><summary><span class="zinfo" aria-hidden="true">i</span>Como ler este desenho</summary><p class="hint">`:'<details class="hint-d" hidden><summary></summary><p class="hint">'}${p.rings?'Com o lago, o plantio forma anéis em volta da água: primeiro a borda úmida (com as plantas de jardim de chuva e bordas úmidas, se escolhidas; senão, capim), depois a linha de árvores (com as que aguentam solo encharcado), uma rua, um canteiro, outra rua e assim por diante até o limite do terreno. ':''}${vr?'Mesma posição da vista 3D, mas no lugar de cada planta aparece o círculo que ela ocupa no chão, com a sigla no centro (veja a legenda abaixo). Nas árvores, a linha tracejada mostra a área de cada uma na linha, metade da distância até a próxima árvore.':v3?'Alturas aproximadas das plantas adultas, na mesma escala do terreno. Cada árvore aparece com o formato típico da copa adulta (arredondada, ovalada, em guarda-chuva, cônica, em taça, aberta, de palmeira) e, quando é o caso, com flores ou frutos. Adubo verde, hortaliças e aromáticas aparecem com a forma, a largura e as flores ou frutos típicos: cabeça da alface, folhagem da cenoura, tomate no tutor, touceira da cebolinha, espigas da lavanda, guarda-chuva da mandioca e tapete do amendoim-forrageiro. Passe o dedo ou o mouse sobre uma planta para ver nome, altura e largura.':(p.rings?'Cada quadrado = 1 m². Nos canteiros, as plantas que cooperam ficam intercaladas na mesma fileira circular. Anéis de árvores com palha grossa; canteiros de 1,2 m com ruas de 40 cm.':'Cada quadrado = 1 m². Plantas que cooperam ficam intercaladas na mesma fileira, e as fileiras vizinhas ficam desencontradas. As cotas mostram, em um exemplo de cada planta, a distância ideal até a vizinha da mesma fileira (horizontal) e até a fileira seguinte (vertical). Canteiros de 1,2 m com corredores de 40 cm. Linhas de árvores (faixa escura) com palha grossa. Se puder, deixe as linhas no sentido norte–sul para os dois lados receberem sol.')+(p.rings?'':(p.lines.length>1&&p.sel.filter(isTree).length>1?' Cada linha de árvores mistura os estratos (alto e médio se repetem em todas as linhas) e os pares com cooperação documentada ficam juntos. As emergentes vão primeiro para as linhas do lado sul, embaixo no desenho: com as linhas no sentido leste–oeste, a sombra delas cai menos sobre os canteiros.':''))+''}</p></details></section>`;
-    h+=comprasPanel(p);
     h+=coopPanel(p);
   }else{
     if(S.potmode==='meu'){h+=myPotPanel(p.sel);}else{
@@ -3882,7 +3885,7 @@ function update(fromInput){
   const tab=S.rtab==='parceiras'?'parceiras':'plano';
   const tabs=`<div class="rtabs" role="tablist"><button type="button" role="tab" data-rtab="plano" aria-selected="${tab==='plano'}">Plano</button><button type="button" role="tab" data-rtab="parceiras" aria-selected="${tab==='parceiras'}">Parceiras</button></div>`;
   // barra de atalhos para as seções do plano
-  const secs=[['t-des','Desenho'],['t-vas','Vasos'],['t-mine','Seu vaso'],['t-compra','Já tenho'],['t-coop','Consórcios'],['t-av','Ajustes'],['t-esp','Espaçamento'],['t-comp','Companhias'],['t-cal','Calendário'],['t-man','Cuidados']].filter(([id])=>h.includes(`id="${id}"`));
+  const secs=[['t-des','Desenho'],['t-vas','Vasos'],['t-mine','Seu vaso'],['t-coop','Consórcios'],['t-av','Ajustes'],['t-esp','Espaçamento'],['t-comp','Companhias'],['t-cal','Calendário'],['t-man','Cuidados']].filter(([id])=>h.includes(`id="${id}"`));
   const nav=`<nav class="secnav" aria-label="Seções do plano">${secs.map(([id,l])=>`<a href="#" data-go="${id}">${l}</a>`).join('')}</nav>`;
   $('out').innerHTML=nav+h;
   spy();
