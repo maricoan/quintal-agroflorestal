@@ -3886,6 +3886,8 @@ function update(fromInput){
   const tabs=`<div class="rtabs" role="tablist"><button type="button" role="tab" data-rtab="plano" aria-selected="${tab==='plano'}">Plano</button><button type="button" role="tab" data-rtab="parceiras" aria-selected="${tab==='parceiras'}">Parceiras</button></div>`;
   // barra de atalhos para as seções do plano
   const secs=[['t-des','Desenho'],['t-vas','Vasos'],['t-mine','Seu vaso'],['t-coop','Consórcios'],['t-av','Ajustes'],['t-esp','Espaçamento'],['t-comp','Companhias'],['t-cal','Calendário'],['t-man','Cuidados']].filter(([id])=>h.includes(`id="${id}"`));
+  // Consórcios e Ajustes na mesma aba
+  if(secs.some(x=>x[0]==='t-coop')&&secs.some(x=>x[0]==='t-av')){secs.splice(secs.findIndex(x=>x[0]==='t-av'),1);secs.find(x=>x[0]==='t-coop')[1]='Consórcios e ajustes';}
   const nav=`<nav class="secnav" aria-label="Seções do plano">${secs.map(([id,l])=>`<a href="#" data-go="${id}">${l}</a>`).join('')}</nav>`;
   $('out').innerHTML=nav+h;
   spy();
@@ -3893,8 +3895,10 @@ function update(fromInput){
 }
 // abas do plano: mostra uma seção de cada vez (a barra de cima troca a seção, não rola a página)
 function spy(){const nav=document.querySelector('#out .secnav');if(!nav)return;const ls=[...nav.querySelectorAll('a[data-go]')];if(!ls.length)return;
-  const ids=ls.map(a=>a.dataset.go);if(!ids.includes(S.sec))S.sec=ids[0];
+  const ids=ls.map(a=>a.dataset.go);if(!ids.includes(S.sec)&&!(S.sec==='t-av'&&ids.includes('t-coop')))S.sec=ids[0];
+  const JUNTA=ids.includes('t-av')?{}:{'t-av':'t-coop'};if(JUNTA[S.sec])S.sec=JUNTA[S.sec];
   ids.forEach(id=>{const el=document.getElementById(id);const sec=el&&(el.closest('section')||el);if(sec)sec.hidden=id!==S.sec;});
+  for(const [f,m] of Object.entries(JUNTA)){const el=document.getElementById(f);const sec=el&&el.closest('section');if(sec)sec.hidden=m!==S.sec;}
   ls.forEach(a=>{if(a.dataset.go===S.sec){a.setAttribute('aria-current','true');const nl=nav.getBoundingClientRect(),al=a.getBoundingClientRect();if(al.left<nl.left||al.right>nl.right-36)nav.scrollBy({left:al.left-nl.left-40});}else a.removeAttribute('aria-current');});}
 $('out').addEventListener('click',e=>{
   const zb=e.target.closest('[data-zoom]');if(zb){const Z=[1,1.5,2,3];let i=Z.indexOf(S.zoom||1);if(i<0)i=0;i=Math.max(0,Math.min(Z.length-1,i+(+zb.dataset.zoom)));S.zoom=Z[i];update();return;}
