@@ -328,7 +328,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .ind-c button{font:inherit;font-size:13px;margin-top:6px;border:1px solid var(--leaf);background:var(--leaf-soft);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
 .ind-who{font-weight:400;color:var(--muted);font-size:13px}.ind-l{margin:0;padding-left:18px;font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:2px}.ind-l b{color:var(--ink)}
 .ind-n{font-size:12.5px;color:var(--muted);margin:2px 0 0}.ind-n a{color:var(--leaf)}
-.legend-box{border:1px solid var(--line);border-radius:8px;padding:0 10px}
+.legend-box{border:1px solid var(--line);border-radius:8px;padding:0 10px;margin-bottom:10px}.legend-box:not([open]){display:none}.legend-box[open]{padding-top:10px}
 .legend-box summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--leaf);padding:8px 0;list-style:none}
 .legend-box summary::-webkit-details-marker{display:none}
 .legend-box summary::before{content:"ⓘ ";font-weight:400}
@@ -756,25 +756,10 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
 
       <section class="panel" id="sec-plantas" aria-labelledby="t-plantas">
         <div class="head">
-          <h2 id="t-plantas">O que quer plantar?</h2>
+          <h2 id="t-plantas">O que quer plantar? <button type="button" class="zinfo" id="legI" aria-expanded="false" aria-controls="legbox" aria-label="Como ler os ícones" title="Como ler os ícones">i</button></h2>
           <span class="hint" id="nsel"></span>
         </div>
-        <details class="tenho" id="tenhoBox"><summary><svg class="cat-ico" viewBox="0 0 18 18" aria-hidden="true"><path d="M1.5 12.2h2.4l2.5-1h3.1c.7 0 1.2.5 1.2 1.1s-.5 1.1-1.2 1.1H7.4"/><path d="M1.5 15.6h2.8l3 1.1c.6.2 1.3.2 1.9-.1l6.1-3c.6-.3.7-1.1.2-1.5-.4-.3-1-.3-1.4 0l-3.4 1.8"/><path d="M10 10.4V5.2M10 7.6c-1.9 0-3-1.1-3.2-2.9 1.9 0 3 1.1 3.2 2.9zM10 6.4c.2-1.8 1.3-2.8 3.1-2.8-.2 1.8-1.3 2.8-3.1 2.8z"/></svg><span>O que você já tem? <span class="cat-sub">Mudas, sementes ou estacas? Começamos por elas.</span></span></summary>
-          <div class="tenho-f">
-            <label class="sr" for="tnPlanta">Planta</label><input id="tnPlanta" list="tnLista" type="text" placeholder="Planta (ex.: helicônia)" autocomplete="off">
-            <datalist id="tnLista"></datalist>
-            <label class="sr" for="tnTipo">Tipo</label><select id="tnTipo"><option value="muda">mudas</option><option value="estaca">estacas ou rizomas</option><option value="semente">sementes</option></select>
-            <label class="sr" for="tnQtd">Quantidade</label><input id="tnQtd" type="number" min="1" step="1" value="1" inputmode="numeric">
-            <button type="button" id="tnAdd">Adicionar</button>
-          </div>
-          <p class="tenho-msg" id="tnMsg" aria-live="polite"></p>
-          <ul class="tenho-l" id="tnList"></ul>
-          <p class="hint">O desenho usa só a quantidade que você tem; o resto do espaço vai para as outras plantas. Sementes sem quantidade contam como abundantes. A lista some ao fechar a página.</p>
-        </details>
-        <div class="busca-w"><label class="sr" for="busca">Buscar planta</label><svg class="busca-ico" viewBox="0 0 18 18" aria-hidden="true"><circle cx="7.5" cy="7.5" r="5"/><path d="M11.2 11.2 16 16"/></svg><input id="busca" type="text" placeholder="Buscar"></div>
-        <div class="inv-busca" id="invBusca" aria-live="polite" hidden></div>
-        <div class="tray" id="tray" aria-live="polite"></div>
-        <details class="legend-box" id="legbox"><summary>Como ler os ícones</summary>
+        <details class="legend-box" id="legbox"><summary class="sr">Como ler os ícones</summary>
         <ul class="oleg" aria-label="Legenda de origem">
           <li><span class="ico-w" data-ico="N"></span>Nativa: ocorre naturalmente no Brasil</li>
           <li><span class="ico-w" data-ico="Z"></span>Naturalizada: veio de fora e se reproduz sozinha aqui</li>
@@ -792,6 +777,21 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
           <li><span class="chip off leg-off">Planta</span>Botão mais apagado: a planta não combina com o sol do seu espaço. Pede mais sol do que ele recebe ou prefere sombra. Dá para escolher mesmo assim; passe o mouse para ver o motivo.</li>
         </ul>
         </details>
+        <details class="tenho" id="tenhoBox"><summary><svg class="cat-ico" viewBox="0 0 18 18" aria-hidden="true"><path d="M1.5 12.2h2.4l2.5-1h3.1c.7 0 1.2.5 1.2 1.1s-.5 1.1-1.2 1.1H7.4"/><path d="M1.5 15.6h2.8l3 1.1c.6.2 1.3.2 1.9-.1l6.1-3c.6-.3.7-1.1.2-1.5-.4-.3-1-.3-1.4 0l-3.4 1.8"/><path d="M10 10.4V5.2M10 7.6c-1.9 0-3-1.1-3.2-2.9 1.9 0 3 1.1 3.2 2.9zM10 6.4c.2-1.8 1.3-2.8 3.1-2.8-.2 1.8-1.3 2.8-3.1 2.8z"/></svg><span>O que você já tem? <span class="cat-sub">Mudas, sementes ou estacas? Começamos por elas.</span></span></summary>
+          <div class="tenho-f">
+            <label class="sr" for="tnPlanta">Planta</label><input id="tnPlanta" list="tnLista" type="text" placeholder="Planta (ex.: helicônia)" autocomplete="off">
+            <datalist id="tnLista"></datalist>
+            <label class="sr" for="tnTipo">Tipo</label><select id="tnTipo"><option value="muda">mudas</option><option value="estaca">estacas ou rizomas</option><option value="semente">sementes</option></select>
+            <label class="sr" for="tnQtd">Quantidade</label><input id="tnQtd" type="number" min="1" step="1" value="1" inputmode="numeric">
+            <button type="button" id="tnAdd">Adicionar</button>
+          </div>
+          <p class="tenho-msg" id="tnMsg" aria-live="polite"></p>
+          <ul class="tenho-l" id="tnList"></ul>
+          <p class="hint">O desenho usa só a quantidade que você tem; o resto do espaço vai para as outras plantas. Sementes sem quantidade contam como abundantes. A lista some ao fechar a página.</p>
+        </details>
+        <div class="busca-w"><label class="sr" for="busca">Buscar planta</label><svg class="busca-ico" viewBox="0 0 18 18" aria-hidden="true"><circle cx="7.5" cy="7.5" r="5"/><path d="M11.2 11.2 16 16"/></svg><input id="busca" type="text" placeholder="Buscar"></div>
+        <div class="inv-busca" id="invBusca" aria-live="polite" hidden></div>
+        <div class="tray" id="tray" aria-live="polite"></div>
         <p class="chipinfo" id="chipinfo" aria-live="polite"><span class="ci-d">Passe o mouse ou toque numa planta para ver o estrato, a luz e a origem.</span></p>
         <div class="cats" id="cats"></div>
         <details class="inv" id="invBox"><summary><svg class="inv-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 18v-6M12 13.5c-3 0-4.6-1.8-4.8-4.5 3 0 4.6 1.7 4.8 4.5zM12 12c.2-2.6 1.8-4.3 4.6-4.3-.2 2.7-1.8 4.3-4.6 4.3z"/><path d="M5.3 5.3l13.4 13.4"/></svg><span>Evite plantar <span class="cat-sub">invasoras comuns em jardins de São Paulo</span></span></summary>
@@ -1587,7 +1587,9 @@ document.getElementById('invBox').addEventListener('click',e=>{const c=e.target.
 document.addEventListener('click',e=>{const a=e.target.closest('[data-invadd]');if(!a)return;const i=a.dataset.invadd;if(BYID[i]&&!S.sel.includes(i)){S.sel.push(i);S.exemplo=false;update();}a.disabled=true;a.textContent='✓ '+BYID[i].n;});
 $('tray').addEventListener('click',e=>{const b=e.target.closest('[data-rmsel]');if(!b)return;S.sel=S.sel.filter(i=>i!==b.dataset.rmsel);S.exemplo=false;update();});
 try{$('legbox').open=!!(S.legOpen);}catch(e){}
-$('legbox').addEventListener('toggle',()=>{S.legOpen=$('legbox').open;save();});
+$('legbox').addEventListener('toggle',()=>{S.legOpen=$('legbox').open;$('legI').setAttribute('aria-expanded',String($('legbox').open));save();});
+$('legI').addEventListener('click',()=>{$('legbox').open=!$('legbox').open;});
+try{$('legI').setAttribute('aria-expanded',String($('legbox').open));}catch(e){}
 $('limpar').addEventListener('click',()=>{if(!S.sel.length)return;const prev={sel:S.sel.slice(),consSel:(S.consSel||[]).slice(),exemplo:S.exemplo,tenho:Object.assign({},S.tenho)};
   S.sel=[];S.consSel=[];S.exemplo=false;S.tenho={};$('tnPlanta').value='';$('tnMsg').textContent='';update();
   let t=document.getElementById('toast');if(t)t.remove();t=document.createElement('div');t.id='toast';t.className='toast';t.setAttribute('role','status');
