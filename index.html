@@ -3844,7 +3844,7 @@ function update(fromInput){
   if(S.modo==='chao'){
     const total=Object.values(p.count).reduce((a,b)=>a+b,0);
     const v3=S.vista==='3d',vr=S.vista==='raio';
-    h+=`<section class="panel card" aria-labelledby="t-des"><div class="head"><h2 id="t-des">Desenho do plantio</h2>
+    h+=`<section class="panel card" aria-labelledby="t-des"><div class="head"><h2 id="t-des">Projeto de plantio</h2>
       <div class="seg" id="vista"><button type="button" data-v="planta" aria-pressed="${!v3&&!vr}">Projeto de plantio</button><button type="button" data-v="raio" aria-pressed="${vr}">Espaço de cada planta</button><button type="button" data-v="3d" aria-pressed="${v3}">Vista 3D</button></div></div>
       ${p.sel.length?`<div class="stats"><div class="stat"><b>${p.beds.length}</b><span>${p.beds.length===1?'canteiro':'canteiros'}</span></div><div class="stat"><b>${p.lines.length}</b><span>${p.lines.length===1?'linha de árvores':'linhas de árvores'}</span></div></div>`:''}
       ${p.sel.length?`<div class="zoom" role="group" aria-label="Tamanho do desenho"><button type="button" data-zoom="-1" aria-label="Diminuir desenho">−</button><span>${Math.round((S.zoom||1)*100)}%</span><button type="button" data-zoom="1" aria-label="Ampliar desenho">+</button></div><div class="drawing"${isMob()&&(S.zoom||1)>1?` style="--zw:${(S.zoom||1)*100}%"`:''}>${v3?draw3D(p):vr?draw3D(p,true):drawPlan(p)}</div>${!v3&&isMob()?stripList(p):''}`:emptyState("Escolha as plantas na lista ao lado: o app monta aqui o desenho do plantio, com as distâncias de cada uma.")}
