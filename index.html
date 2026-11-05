@@ -499,7 +499,7 @@ svg text{font-family:var(--f-mono);fill:var(--ink)}
 .lg .sp{font-family:var(--f-body);font-size:11px;color:var(--muted)}
 .compra-box{margin-top:12px}.compra-box .hint{margin:4px 0 8px}
 .lg .cmp{font-family:var(--f-body);font-size:11px;color:var(--muted)}.lg .cmp .falta{color:var(--warn)}.lg .cmp .ok{color:var(--leaf)}.lg .cmp .sem-l{font-size:11px}
-.sp-sum{display:flex;flex-direction:column;gap:4px;font-size:13px;border-top:1px solid var(--line);padding-top:10px}
+.sp-sum{display:flex;flex-direction:column;gap:4px;font-size:13px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:10px}
 .sp-sum p{margin:0}
 .lg .q{font-family:var(--f-body);font-variant-numeric:tabular-nums;color:var(--muted)}
 .coop-sec{display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--line)}
@@ -3069,7 +3069,7 @@ function coopPanel(p){
   ${sec('sug','Para aproveitar melhor o espaço','',sugR)}
   ${refs?`<details class="refs-d"><summary>Ver fontes (${(refs.match(/<li/g)||[]).length})</summary><ol class="refs">${refs}</ol></details>`:''}</section>`;
 }
-function legend(p){
+function legend(p,extra){
   const ids=Object.keys(p.count);
   if(!ids.length)return '';
   const order='EAMBR';
@@ -3082,8 +3082,8 @@ function legend(p){
   const strips=p.strips||[];const ruas=strips.filter(x=>x.t==='path'),cant=strips.filter(x=>x.t==='bed'),lin=strips.filter(x=>x.t==='line');
   const ruaTxt=[ruas.length?`ruas de ${[...new Set(ruas.map(r=>cm_(r.h)))].join(' e ')}`:'',cant.length?`canteiros de ${[...new Set(cant.map(r=>cm_(r.h)))].join(' e ')}`:'',lin.length?`linhas de árvores de ${cm_(lin[0].h)}`:''].filter(Boolean).join(' · ');
   const ic=(p.interc||[]).map(x=>`${x.steps.slice(0,x.g.length===2?1:x.g.length).map(([a,b,d])=>`${esc(a.n)} ↔ ${esc(b.n)} ${cm_(d)}`).join(', ')} (fileiras a ${cm_(x.rowGap)})`);
-  return `<div class="legend">`+ids.map(i=>{const s=BYID[i];return `<div class="lg" data-sp="${s.id}"><span class="ab d-${s.e} ${darkLab(s.e)}">${esc(s.a)}</span><span class="nm">${esc(s.n)}<small class="sp">${spTxt(s)}</small>${cmpTxt(i,p.count[i])}</span><span class="q">${p.count[i]} ${p.count[i]>1?'plantas':'planta'}</span></div>`}).join('')+`</div>`
-   +`<div class="sp-sum">${ruaTxt?`<p><b>Espaçamento entre ruas e faixas:</b> ${ruaTxt}.</p>`:''}${ic.length?`<p><b>Intercaladas na mesma fileira:</b> ${ic.join(' · ')}.</p>`:''}</div>`;
+  return `<div class="sp-sum">${ruaTxt?`<p><b>Espaçamento entre ruas e faixas:</b> ${ruaTxt}.</p>`:''}${ic.length?`<p><b>Intercaladas na mesma fileira:</b> ${ic.join(' · ')}.</p>`:''}</div>`
+   +`<div class="legend">`+ids.map(i=>{const s=BYID[i];return `<div class="lg" data-sp="${s.id}"><span class="ab d-${s.e} ${darkLab(s.e)}">${esc(s.a)}</span><span class="nm">${esc(s.n)}<small class="sp">${spTxt(s)}</small>${cmpTxt(i,p.count[i])}</span><span class="q">${p.count[i]} ${p.count[i]>1?'plantas':'planta'}</span></div>`}).join('')+`</div>`+(extra||'');
 }
 
 // ---------- vasos e floreiras em vista isométrica ----------
@@ -3750,7 +3750,7 @@ function comprasPanel(p){
   return `<div class="compra-box">
     ${aviso?`<ul class="notes">${aviso}</ul>`:''}
     <p class="hint">${nFalta?`Faltam ${nFalta} mudas ou plantas.`:'Você já tem tudo o que o desenho pede.'}</p>
-    <p><a class="tn-eb" href="${SEM_URL}?ids=${ids.filter(i=>BYID[i]&&!BYID[i].custom&&!SEM_SEM.has(i)).map(semId).join(',')}" target="_blank" rel="noopener"><svg class="tn-ic" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="7.5" cy="17" rx="3" ry="2.1" transform="rotate(-25 7.5 17)"/><ellipse cx="15.5" cy="18.5" rx="3" ry="2.1" transform="rotate(20 15.5 18.5)"/><path d="M12 14V8.5M12 10c-2.6 0-4.2-1.5-4.5-4 2.6 0 4.2 1.5 4.5 4zM12 9c.3-2.4 1.8-3.8 4.3-3.8-.3 2.4-1.8 3.8-4.3 3.8z"/></svg><span>Ver como produzir as mudas deste plano</span><span aria-hidden="true">→</span></a></p></div>`;
+    <p><a class="tn-eb" href="${SEM_URL}?ids=${ids.filter(i=>BYID[i]&&!BYID[i].custom&&!SEM_SEM.has(i)).map(semId).join(',')}" target="_blank" rel="noopener"><svg class="tn-ic" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="7.5" cy="17" rx="3" ry="2.1" transform="rotate(-25 7.5 17)"/><ellipse cx="15.5" cy="18.5" rx="3" ry="2.1" transform="rotate(20 15.5 18.5)"/><path d="M12 14V8.5M12 10c-2.6 0-4.2-1.5-4.5-4 2.6 0 4.2 1.5 4.5 4zM12 9c.3-2.4 1.8-3.8 4.3-3.8-.3 2.4-1.8 3.8-4.3 3.8z"/></svg><span>Como produzir mudas para este plano</span><span aria-hidden="true">→</span></a></p></div>`;
 }
 // salvar ou enviar a imagem do desenho
 const ehCelular=()=>{try{return matchMedia('(pointer:coarse)').matches&&innerWidth<900;}catch(e){return false;}};
@@ -3849,7 +3849,7 @@ function update(fromInput){
       ${p.sel.length?`<div class="stats"><div class="stat"><b>${p.beds.length}</b><span>${p.beds.length===1?'canteiro':'canteiros'}</span></div><div class="stat"><b>${p.lines.length}</b><span>${p.lines.length===1?'linha de árvores':'linhas de árvores'}</span></div></div>`:''}
       ${p.sel.length?`<div class="zoom" role="group" aria-label="Tamanho do desenho"><button type="button" data-zoom="-1" aria-label="Diminuir desenho">−</button><span>${Math.round((S.zoom||1)*100)}%</span><button type="button" data-zoom="1" aria-label="Ampliar desenho">+</button></div><div class="drawing"${isMob()&&(S.zoom||1)>1?` style="--zw:${(S.zoom||1)*100}%"`:''}>${v3?draw3D(p):vr?draw3D(p,true):drawPlan(p)}</div>${!v3&&isMob()?stripList(p):''}`:emptyState("Escolha as plantas na lista ao lado: o app monta aqui o desenho do plantio, com as distâncias de cada uma.")}
       ${capAlert(p)}
-      ${legend(p)}${p.sel.length?comprasPanel(p)+shareBar():''}
+      ${legend(p,p.sel.length?comprasPanel(p):'')}${p.sel.length?shareBar():''}
       ${p.sel.length?`<details class="hint-d"><summary><span class="zinfo" aria-hidden="true">i</span>Como ler este desenho</summary><p class="hint">`:'<details class="hint-d" hidden><summary></summary><p class="hint">'}${p.rings?'Com o lago, o plantio forma anéis em volta da água: primeiro a borda úmida (com as plantas de jardim de chuva e bordas úmidas, se escolhidas; senão, capim), depois a linha de árvores (com as que aguentam solo encharcado), uma rua, um canteiro, outra rua e assim por diante até o limite do terreno. ':''}${vr?'Mesma posição da vista 3D, mas no lugar de cada planta aparece o círculo que ela ocupa no chão, com a sigla no centro (veja a legenda abaixo). Nas árvores, a linha tracejada mostra a área de cada uma na linha, metade da distância até a próxima árvore.':v3?'Alturas aproximadas das plantas adultas, na mesma escala do terreno. Cada árvore aparece com o formato típico da copa adulta (arredondada, ovalada, em guarda-chuva, cônica, em taça, aberta, de palmeira) e, quando é o caso, com flores ou frutos. Adubo verde, hortaliças e aromáticas aparecem com a forma, a largura e as flores ou frutos típicos: cabeça da alface, folhagem da cenoura, tomate no tutor, touceira da cebolinha, espigas da lavanda, guarda-chuva da mandioca e tapete do amendoim-forrageiro. Passe o dedo ou o mouse sobre uma planta para ver nome, altura e largura.':(p.rings?'Cada quadrado = 1 m². Nos canteiros, as plantas que cooperam ficam intercaladas na mesma fileira circular. Anéis de árvores com palha grossa; canteiros de 1,2 m com ruas de 40 cm.':'Cada quadrado = 1 m². Plantas que cooperam ficam intercaladas na mesma fileira, e as fileiras vizinhas ficam desencontradas. As cotas mostram, em um exemplo de cada planta, a distância ideal até a vizinha da mesma fileira (horizontal) e até a fileira seguinte (vertical). Canteiros de 1,2 m com corredores de 40 cm. Linhas de árvores (faixa escura) com palha grossa. Se puder, deixe as linhas no sentido norte–sul para os dois lados receberem sol.')+(p.rings?'':(p.lines.length>1&&p.sel.filter(isTree).length>1?' Cada linha de árvores mistura os estratos (alto e médio se repetem em todas as linhas) e os pares com cooperação documentada ficam juntos. As emergentes vão primeiro para as linhas do lado sul, embaixo no desenho: com as linhas no sentido leste–oeste, a sombra delas cai menos sobre os canteiros.':''))+''}</p></details></section>`;
     h+=coopPanel(p);
   }else{
