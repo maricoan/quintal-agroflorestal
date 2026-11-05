@@ -346,8 +346,6 @@ a.sm-i:hover{border-color:var(--leaf)}
 .sm-bad b,.sm-bad span{color:var(--warn)}
 .secnav{display:flex;gap:4px;overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;position:sticky;top:calc(env(safe-area-inset-top, 0px) + 8px);z-index:6;box-shadow:0 4px 12px rgba(20,40,25,.08);scrollbar-width:none}
 .secnav::-webkit-scrollbar{display:none}
-.sec-ic{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;margin-right:6px;vertical-align:-3px}
-h2 .sec-ic{width:22px;height:22px;margin-right:8px;stroke:var(--leaf);vertical-align:-3px}
 .secnav a{flex:none;font-size:13px;font-weight:700;color:var(--muted);text-decoration:none;border-radius:999px;padding:6px 12px}
 .secnav a:hover,.secnav a:focus-visible{background:var(--leaf-soft);color:var(--leaf)}
 .secnav a[aria-current="true"]{background:var(--leaf);color:var(--surface)}
@@ -507,7 +505,7 @@ svg text{font-family:var(--f-mono);fill:var(--ink)}
 .lg .q{font-family:var(--f-body);font-variant-numeric:tabular-nums;color:var(--muted)}
 .coop-sec{display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--line)}
 .coop-sec h3{display:flex;align-items:center;gap:8px}
-.coop-sec h3::before{content:"";width:10px;height:10px;border-radius:50%;flex:none;background:var(--muted)}
+.coop-sec h3 .cs-ic{width:22px;height:22px;flex:none;fill:none;stroke:var(--muted);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.coop-sec.ok .cs-ic,.coop-sec.sug .cs-ic{stroke:var(--leaf)}.coop-sec.bad .cs-ic{stroke:var(--warn)}.coop-sec.none .cs-ic{stroke:var(--sun)}
 .coop-sec.ok h3::before{background:var(--leaf)} .coop-sec.bad h3::before{background:var(--warn)} .coop-sec.none h3::before{background:var(--sun)} .coop-sec.sug h3::before{background:var(--leaf)}
 .coop-sec.bad h3{color:var(--warn)}
 .pairs{display:flex;flex-wrap:wrap;gap:6px}
@@ -3063,7 +3061,8 @@ function coopPanel(p){
   if(p.lines.length&&!sel.some(s=>UNDER.includes(s.id)))sug.push(['amendoim',null,null]);
   if(sug.length)sugR=`<li class="note tip"><span class="tag">Aproveite</span><div class="body"><span>Para ocupar melhor o espaço, inclua parceiras com cooperação documentada:</span><div class="acts">${sug.map(([o,s,c])=>`<button type="button" data-addsp="${o}" title="${c?esc(c[3]):'Cobre o chão entre as árvores'}">+ ${esc(BYID[o].n)}${s?` (com ${esc(s.n)})`:' (sob as árvores)'}</button>`).join('')}</div></div></li>`;
   if(!good&&!badR&&!noneR&&!sugR)return '';
-  const sec=(cls,t,d,body)=>body?`<div class="coop-sec ${cls}"><h3>${t}</h3>${d?`<p class="hint">${d}</p>`:''}<ul class="notes">${body}</ul></div>`:'';
+  const CI={ok:'<circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/><path d="M10.5 12.2l1.4 1.4 2.6-2.8"/>',bad:'<circle cx="12" cy="12" r="9"/><path d="M8.5 8.5l7 7M15.5 8.5l-7 7"/>',none:'<circle cx="8" cy="12" r="4.5"/><circle cx="16" cy="12" r="4.5" stroke-dasharray="2.4 2.2"/>',sug:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18M12 3v18"/><circle cx="7.5" cy="7.5" r="1.6"/><circle cx="16.5" cy="16.5" r="1.6"/>'};
+  const sec=(cls,t,d,body)=>body?`<div class="coop-sec ${cls}"><h3><svg class="cs-ic" viewBox="0 0 24 24" aria-hidden="true">${CI[cls]||''}</svg>${t}</h3>${d?`<p class="hint">${d}</p>`:''}<ul class="notes">${body}</ul></div>`:'';
   const refs=[...used].filter(k=>REFS[k]&&REFS[k].n).sort((a,b)=>REFS[a].n-REFS[b].n).map(k=>`<li value="${REFS[k].n}">${esc(REFS[k].t)} <a href="${REFS[k].u}" target="_blank" rel="noopener">Abrir</a></li>`).join('');
   return `<section class="panel" aria-labelledby="t-coop"><h2 id="t-coop">Consórcios e cooperação <button type="button" class="zinfo" data-ibox="coopinfo" aria-expanded="false" aria-controls="coopinfo" aria-label="Como o app usa os consórcios" title="O que é isso?">i</button></h2><p class="hint ibox" id="coopinfo" hidden>O app intercala, nos canteiros e nas linhas de árvores, as plantas que cooperam entre si. UET (uso eficiente da terra) acima de 1 indica que o consórcio produz mais do que as mesmas plantas em canteiros separados.</p>
   ${sec('ok','Cooperam entre si','',good)}
@@ -3891,14 +3890,11 @@ function update(fromInput){
   const secs=[['t-des','Desenho'],['t-vas','Vasos'],['t-mine','Seu vaso'],['t-coop','Consórcios'],['t-av','Ajustes'],['t-esp','Espaçamento'],['t-comp','Companhias'],['t-cal','Calendário'],['t-man','Cuidados']].filter(([id])=>h.includes(`id="${id}"`));
   // Consórcios e Ajustes na mesma aba
   if(secs.some(x=>x[0]==='t-coop')&&secs.some(x=>x[0]==='t-av')){secs.splice(secs.findIndex(x=>x[0]==='t-av'),1);secs.find(x=>x[0]==='t-coop')[1]='Consórcios e ajustes';}
-  const nav=`<nav class="secnav" aria-label="Seções do plano">${secs.map(([id,l])=>`<a href="#" data-go="${id}">${secIco(id)}${l}</a>`).join('')}</nav>`;
+  const nav=`<nav class="secnav" aria-label="Seções do plano">${secs.map(([id,l])=>`<a href="#" data-go="${id}">${l}</a>`).join('')}</nav>`;
   $('out').innerHTML=nav+h;
-  Object.keys(SEC_ICO).forEach(id=>{const t=document.getElementById(id);if(t&&t.tagName==='H2'&&!t.querySelector('.sec-ic'))t.insertAdjacentHTML('afterbegin',secIco(id));});
   spy();
   mtabSync();try{fitText();}catch(e){}
 }
-const SEC_ICO={"t-des": "<rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/><circle cx=\"8.5\" cy=\"8.5\" r=\"2\"/><circle cx=\"15.5\" cy=\"8.5\" r=\"2\"/><circle cx=\"8.5\" cy=\"15.5\" r=\"2\"/><circle cx=\"15.5\" cy=\"15.5\" r=\"2\"/>", "t-vas": "<path d=\"M5 9h14l-2 11H7z\"/><path d=\"M12 9V5M12 6c-2 0-3.5-1.2-4-3 2 0 3.5 1.2 4 3zM12 6c.5-1.8 2-3 4-3-.5 1.8-2 3-4 3z\"/>", "t-mine": "<path d=\"M6 10h12l-1.5 10h-9z\"/><path d=\"M4 10h16\"/><path d=\"M12 10V6\"/>", "t-coop": "<circle cx=\"9\" cy=\"12\" r=\"5\"/><circle cx=\"15\" cy=\"12\" r=\"5\"/>", "t-av": "<path d=\"M4 7h10M18 7h2M4 17h2M10 17h10\"/><circle cx=\"16\" cy=\"7\" r=\"2\"/><circle cx=\"8\" cy=\"17\" r=\"2\"/>", "t-esp": "<path d=\"M3 12h18M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3\"/><path d=\"M3 6v12M21 6v12\"/>", "t-comp": "<path d=\"M12 21V11\"/><path d=\"M12 13c-4 0-7-2.5-7-7 4 0 7 2.5 7 7zM12 11c0-4 2.5-7 7-7 0 4-2.5 7-7 7z\"/>", "t-cal": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2\"/><path d=\"M3 10h18M8 3v4M16 3v4\"/>", "t-man": "<path d=\"M4 14l5-5 3 3 6-6\"/><path d=\"M14 6h4v4\"/><path d=\"M3 20h18\"/>"};
-const secIco=id=>SEC_ICO[id]?`<svg class="sec-ic" viewBox="0 0 24 24" aria-hidden="true">${SEC_ICO[id]}</svg>`:'';
 // abas do plano: mostra uma seção de cada vez (a barra de cima troca a seção, não rola a página)
 function spy(){const nav=document.querySelector('#out .secnav');if(!nav)return;const ls=[...nav.querySelectorAll('a[data-go]')];if(!ls.length)return;
   const ids=ls.map(a=>a.dataset.go);if(!ids.includes(S.sec)&&!(S.sec==='t-av'&&ids.includes('t-coop')))S.sec=ids[0];
