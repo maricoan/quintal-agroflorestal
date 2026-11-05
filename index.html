@@ -499,6 +499,7 @@ svg text{font-family:var(--f-mono);fill:var(--ink)}
 .lg .nm{flex:1;min-width:0;display:flex;flex-direction:column}
 .lg .sp{font-family:var(--f-body);font-size:11px;color:var(--muted)}
 .compra-box{margin-top:12px}.compra-box .hint{margin:4px 0 8px}
+.lg .fn{color:var(--muted);opacity:.85}
 .lg .cmp{font-family:var(--f-body);font-size:11px;color:var(--muted)}.lg .cmp .falta{color:var(--warn)}.lg .cmp .ok{color:var(--leaf)}.lg .cmp .sem-l{font-size:11px}
 .sp-sum{display:flex;flex-direction:column;gap:4px;font-size:13px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:10px}
 .sp-sum p{margin:0}
@@ -3077,7 +3078,8 @@ function legend(p,extra){
   const order='EAMBR';
   ids.sort((a,b)=>order.indexOf(BYID[a].e)-order.indexOf(BYID[b].e)||BYID[a].n.localeCompare(BYID[b].n));
   const kindOf=id=>{const q=p.pts.find(x=>x.s.id===id);return q?q.kind:'bed';};
-  const spTxt=s=>{const k=kindOf(s.id);if(k==='tree')return `${cm_(s.ep)} entre árvores na linha`;if(k==='med')return '1 m entre plantas na linha';return `${cm_(s.ep)} na fileira · ${cm_(s.el)} entre fileiras`;};
+  const fnt=s=>{const R=REFS[s.src];return R&&R.n?` <span class="fn" title="${esc(R.t)}">[${R.n}]</span>`:' <span class="fn">(prática)</span>';};
+  const spTxt=s=>{const k=kindOf(s.id);if(k==='tree')return `${cm_(s.ep)} entre árvores na linha`+fnt(s);if(k==='med')return '1 m entre plantas na linha'+fnt(s);const d=1/(s.el*s.ep);return `${cm_(s.ep)} na fileira · ${cm_(s.el)} entre fileiras · ${d>=1?fmt(d,0):fmt(d,2)} por m²`+fnt(s);};
   const cmpTxt=(id,no)=>{const t=S.tenho&&S.tenho[id];let tem='',falta=no;
     if(t&&t.n==null){tem='já tenho sementes';falta=0;}else if(t){tem=`já tenho ${t.n} ${TIPO_TXT[t.tipo][t.n===1?0:1]}`;falta=Math.max(0,no-t.n);}
     return `<small class="cmp">${tem?esc(tem)+' · ':''}${falta?`<b class="falta">falta${falta>1?'m':''} ${falta}</b>${semLink(id,'como produzir')}`:'<b class="ok">✓ tudo certo</b>'}</small>`;};
@@ -3687,9 +3689,8 @@ function spacing(sel){
   }).join('');
   const refs=Object.entries(REFS).filter(([k,v])=>v.n&&used.has(k)).sort((a,b)=>a[1].n-b[1].n)
     .map(([k,v])=>`<li value="${v.n}">${esc(v.t)} <a href="${v.u}" target="_blank" rel="noopener">Abrir</a></li>`).join('');
-  return `<div class="tbl estreita"><table class="cards"><thead><tr><th>Planta</th><th class="num">Entre linhas</th><th class="num">Entre plantas</th><th class="num">Plantas/m²</th><th style="text-align:left">Fonte</th></tr></thead><tbody>${rows}</tbody></table></div>
-  <p class="hint">Nos canteiros, as hortaliças seguem o espaçamento das publicações. Nas linhas de árvores, frutíferas e nativas ficam a 2 m uma da outra e as adubadeiras ocupam os espaços entre elas, como nos sistemas agroflorestais testados. Onde não encontrei estudo específico, o app usa a prática comum de horta, marcada como “prática”.</p>
-  ${refs?`<details class="refs-d"><summary>Ver fontes (${(refs.match(/<li/g)||[]).length})</summary><ol class="refs">${refs}</ol></details>`:''}`;
+  return `<p class="hint">Nos canteiros, as hortaliças seguem o espaçamento das publicações. Nas linhas de árvores, frutíferas e nativas ficam a 2 m uma da outra e as adubadeiras ocupam os espaços entre elas, como nos sistemas agroflorestais testados. Onde não encontrei estudo específico, o app usa a prática comum de horta, marcada como “prática”. Os números entre colchetes na lista de plantas indicam a fonte.</p>
+  ${refs?`<details class="refs-d"><summary>Fontes dos espaçamentos (${(refs.match(/<li/g)||[]).length})</summary><ol class="refs">${refs}</ol></details>`:''}`;
 }
 
 function calendar(sel){
@@ -3852,7 +3853,7 @@ function update(fromInput){
       ${p.sel.length?`<div class="zoom" role="group" aria-label="Tamanho do desenho"><button type="button" data-zoom="-1" aria-label="Diminuir desenho">−</button><span>${Math.round((S.zoom||1)*100)}%</span><button type="button" data-zoom="1" aria-label="Ampliar desenho">+</button></div><div class="drawing"${isMob()&&(S.zoom||1)>1?` style="--zw:${(S.zoom||1)*100}%"`:''}>${v3?draw3D(p):vr?draw3D(p,true):drawPlan(p)}</div>${!v3&&isMob()?stripList(p):''}`:emptyState("Escolha as plantas na lista ao lado: o app monta aqui o desenho do plantio, com as distâncias de cada uma.")}
       ${capAlert(p)}
       ${legend(p,p.sel.length?comprasPanel(p):'')}${p.sel.length?shareBar():''}
-      ${p.sel.length?`<details class="hint-d"><summary><span class="zinfo" aria-hidden="true">i</span>Como ler este desenho</summary><p class="hint">`:'<details class="hint-d" hidden><summary></summary><p class="hint">'}${p.rings?'Com o lago, o plantio forma anéis em volta da água: primeiro a borda úmida (com as plantas de jardim de chuva e bordas úmidas, se escolhidas; senão, capim), depois a linha de árvores (com as que aguentam solo encharcado), uma rua, um canteiro, outra rua e assim por diante até o limite do terreno. ':''}${vr?'Mesma posição da vista 3D, mas no lugar de cada planta aparece o círculo que ela ocupa no chão, com a sigla no centro (veja a legenda abaixo). Nas árvores, a linha tracejada mostra a área de cada uma na linha, metade da distância até a próxima árvore.':v3?'Alturas aproximadas das plantas adultas, na mesma escala do terreno. Cada árvore aparece com o formato típico da copa adulta (arredondada, ovalada, em guarda-chuva, cônica, em taça, aberta, de palmeira) e, quando é o caso, com flores ou frutos. Adubo verde, hortaliças e aromáticas aparecem com a forma, a largura e as flores ou frutos típicos: cabeça da alface, folhagem da cenoura, tomate no tutor, touceira da cebolinha, espigas da lavanda, guarda-chuva da mandioca e tapete do amendoim-forrageiro. Passe o dedo ou o mouse sobre uma planta para ver nome, altura e largura.':(p.rings?'Cada quadrado = 1 m². Nos canteiros, as plantas que cooperam ficam intercaladas na mesma fileira circular. Anéis de árvores com palha grossa; canteiros de 1,2 m com ruas de 40 cm.':'Cada quadrado = 1 m². Plantas que cooperam ficam intercaladas na mesma fileira, e as fileiras vizinhas ficam desencontradas. As cotas mostram, em um exemplo de cada planta, a distância ideal até a vizinha da mesma fileira (horizontal) e até a fileira seguinte (vertical). Canteiros de 1,2 m com corredores de 40 cm. Linhas de árvores (faixa escura) com palha grossa. Se puder, deixe as linhas no sentido norte–sul para os dois lados receberem sol.')+(p.rings?'':(p.lines.length>1&&p.sel.filter(isTree).length>1?' Cada linha de árvores mistura os estratos (alto e médio se repetem em todas as linhas) e os pares com cooperação documentada ficam juntos. As emergentes vão primeiro para as linhas do lado sul, embaixo no desenho: com as linhas no sentido leste–oeste, a sombra delas cai menos sobre os canteiros.':''))+''}</p></details></section>`;
+      ${p.sel.length?`<details class="hint-d"><summary><span class="zinfo" aria-hidden="true">i</span>Como ler este desenho</summary><p class="hint">`:'<details class="hint-d" hidden><summary></summary><p class="hint">'}${p.rings?'Com o lago, o plantio forma anéis em volta da água: primeiro a borda úmida (com as plantas de jardim de chuva e bordas úmidas, se escolhidas; senão, capim), depois a linha de árvores (com as que aguentam solo encharcado), uma rua, um canteiro, outra rua e assim por diante até o limite do terreno. ':''}${vr?'Mesma posição da vista 3D, mas no lugar de cada planta aparece o círculo que ela ocupa no chão, com a sigla no centro (veja a legenda abaixo). Nas árvores, a linha tracejada mostra a área de cada uma na linha, metade da distância até a próxima árvore.':v3?'Alturas aproximadas das plantas adultas, na mesma escala do terreno. Cada árvore aparece com o formato típico da copa adulta (arredondada, ovalada, em guarda-chuva, cônica, em taça, aberta, de palmeira) e, quando é o caso, com flores ou frutos. Adubo verde, hortaliças e aromáticas aparecem com a forma, a largura e as flores ou frutos típicos: cabeça da alface, folhagem da cenoura, tomate no tutor, touceira da cebolinha, espigas da lavanda, guarda-chuva da mandioca e tapete do amendoim-forrageiro. Passe o dedo ou o mouse sobre uma planta para ver nome, altura e largura.':(p.rings?'Cada quadrado = 1 m². Nos canteiros, as plantas que cooperam ficam intercaladas na mesma fileira circular. Anéis de árvores com palha grossa; canteiros de 1,2 m com ruas de 40 cm.':'Cada quadrado = 1 m². Plantas que cooperam ficam intercaladas na mesma fileira, e as fileiras vizinhas ficam desencontradas. As cotas mostram, em um exemplo de cada planta, a distância ideal até a vizinha da mesma fileira (horizontal) e até a fileira seguinte (vertical). Canteiros de 1,2 m com corredores de 40 cm. Linhas de árvores (faixa escura) com palha grossa. Se puder, deixe as linhas no sentido norte–sul para os dois lados receberem sol.')+(p.rings?'':(p.lines.length>1&&p.sel.filter(isTree).length>1?' Cada linha de árvores mistura os estratos (alto e médio se repetem em todas as linhas) e os pares com cooperação documentada ficam juntos. As emergentes vão primeiro para as linhas do lado sul, embaixo no desenho: com as linhas no sentido leste–oeste, a sombra delas cai menos sobre os canteiros.':''))+''}</p>${S.modo==='chao'?spacing(p.sel):''}</details></section>`;
     h+=coopPanel(p);
   }else{
     if(S.potmode==='meu'){h+=myPotPanel(p.sel);}else{
@@ -3875,7 +3876,6 @@ function update(fromInput){
     h+=`</section>`;
   }
   if(p.sel.length){
-    if(S.modo==='chao')h+=`<section class="panel" aria-labelledby="t-esp"><h2 id="t-esp">Espaçamento sugerido</h2>${spacing(p.sel)}</section>`;
     const comp=p.sel.filter(s=>compOf(s.id));
     if(comp.length){
       const selIds=new Set(S.sel);
@@ -3887,7 +3887,7 @@ function update(fromInput){
   const tab=S.rtab==='parceiras'?'parceiras':'plano';
   const tabs=`<div class="rtabs" role="tablist"><button type="button" role="tab" data-rtab="plano" aria-selected="${tab==='plano'}">Plano</button><button type="button" role="tab" data-rtab="parceiras" aria-selected="${tab==='parceiras'}">Parceiras</button></div>`;
   // barra de atalhos para as seções do plano
-  const secs=[['t-des','Desenho'],['t-vas','Vasos'],['t-mine','Seu vaso'],['t-coop','Consórcios'],['t-av','Ajustes'],['t-esp','Espaçamento'],['t-comp','Companhias'],['t-cal','Calendário'],['t-man','Cuidados']].filter(([id])=>h.includes(`id="${id}"`));
+  const secs=[['t-des','Desenho'],['t-vas','Vasos'],['t-mine','Seu vaso'],['t-coop','Consórcios'],['t-av','Ajustes'],['t-comp','Companhias'],['t-cal','Calendário'],['t-man','Cuidados']].filter(([id])=>h.includes(`id="${id}"`));
   // Consórcios e Ajustes na mesma aba
   if(secs.some(x=>x[0]==='t-coop')&&secs.some(x=>x[0]==='t-av')){secs.splice(secs.findIndex(x=>x[0]==='t-av'),1);secs.find(x=>x[0]==='t-coop')[1]='Consórcios e ajustes';}
   const nav=`<nav class="secnav" aria-label="Seções do plano">${secs.map(([id,l])=>`<a href="#" data-go="${id}">${l}</a>`).join('')}</nav>`;
