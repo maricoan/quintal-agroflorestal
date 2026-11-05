@@ -1515,6 +1515,8 @@ function save(){try{localStorage.setItem('quintal-saf-v2',JSON.stringify(S));}ca
 const $=id=>document.getElementById(id);
 const fmt=(n,d=1)=>n.toLocaleString('pt-BR',{maximumFractionDigits:d,minimumFractionDigits:0});
 const cm_=m=>m<1?fmt(m*100,Math.abs(m*100-Math.round(m*100))>1e-6?1:0)+' cm':fmt(m,1)+' m';
+// nome do botão sem o nome científico entre parênteses (ele aparece na caixa de informação)
+const nomeChip=n=>n.replace(/ \((?:[A-Z][a-z]*\.? [a-z][^)]*|Dyckia)\)$/,'');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const darkLab=e=>(e==='M'||e==='B')?'lt':'dk';
 const isTree=s=>!!s.arv;
@@ -1766,7 +1768,7 @@ function renderCats(){
     const chip=s=>{
       const on=S.sel.includes(s.id);
       const off=!s.sol.includes(S.sol);
-      return `<button type="button" class="chip${off?' off':''}" data-id="${s.id}" aria-pressed="${on}"${off?` title="${esc(luzMotivo(s))}"`:''}>${sig(s.e)}${esc(s.n)}${S.tenho&&S.tenho[s.id]?` <span class="tem-tag">já tenho</span>`:''}${INVASORA[s.id]?` <span class="inv-tag" title="${esc(INVASORA[s.id])}">invasora</span>`:''}${CERRADO.has(s.id)?` <span class="cer-tag" title="Espécie do cerrado paulista">cerrado SP</span>`:''}${s.o?` <span class="ico-w" role="img" aria-label="${ORIG_TXT[s.o]}">${ICON[s.o]}</span>`:''}${s.custom?` <span class="x" data-rm="${s.id}" role="button" aria-label="Remover ${esc(s.n)}">×</span>`:''}</button>`;
+      return `<button type="button" class="chip${off?' off':''}" data-id="${s.id}" aria-pressed="${on}"${off?` title="${esc(luzMotivo(s))}"`:''}>${sig(s.e)}${esc(nomeChip(s.n))}${S.tenho&&S.tenho[s.id]?` <span class="tem-tag">já tenho</span>`:''}${INVASORA[s.id]?` <span class="inv-tag" title="${esc(INVASORA[s.id])}">invasora</span>`:''}${CERRADO.has(s.id)?` <span class="cer-tag" title="Espécie do cerrado paulista">cerrado SP</span>`:''}${s.o?` <span class="ico-w" role="img" aria-label="${ORIG_TXT[s.o]}">${ICON[s.o]}</span>`:''}${s.custom?` <span class="x" data-rm="${s.id}" role="button" aria-label="Remover ${esc(s.n)}">×</span>`:''}</button>`;
     };
     const head=`<details class="cat${k==='w'?' cat-w':''}" data-k="${k}"${open?' open':''}><summary>${catIco(k)}<span class="cat-t">${lab}${k==='w'?` <span class="zinfo" role="button" tabindex="0" data-zinfo aria-label="O que são as zonas de plantio na beira d’água" title="O que são as zonas?">i</span>`:''}${k==='w'&&molhado?` <span class="cat-sub">${S.solo==='umido'?'bom para solo úmido':'bom para perto da água'}</span>`:''}</span><span class="cat-n">${nOn?`${nOn} de ${items.length}`:items.length}</span></summary>`;
     if(k==='w'){
