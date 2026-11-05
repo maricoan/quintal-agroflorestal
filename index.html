@@ -308,6 +308,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .cer-tag{font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--soil);border:1px solid var(--soil);border-radius:4px;padding:0 4px;line-height:1.5}
 .tem-tag{font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--leaf);border:1px solid var(--leaf);border-radius:4px;padding:0 4px;line-height:1.5}
 .compra th:not(:first-child){text-align:right}.compra td.n{text-align:right;font-variant-numeric:tabular-nums}.compra .ok{color:var(--leaf);font-weight:700}.compra .falta{color:var(--warn);font-weight:700}
+.ibox{background:var(--ci-bg,rgba(0,0,0,.04));border-radius:8px;padding:8px 12px;margin-top:4px}button.zinfo{padding:0;background:none}button.zinfo[aria-expanded="true"]{background:var(--leaf);color:var(--surface)}
 .hint-d{margin-top:10px}.hint-d>summary{display:inline-flex;align-items:center;gap:6px;cursor:pointer;list-style:none;font-size:14px;color:var(--leaf);font-weight:700}.hint-d>summary::-webkit-details-marker{display:none}.hint-d>summary .zinfo{margin-left:0}.hint-d[open]>summary .zinfo{background:var(--leaf);color:var(--surface)}.hint-d>.hint{margin-top:6px}
 .share{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
 .share button{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:14px;font-weight:700;border:1px solid var(--leaf);border-radius:999px;padding:6px 14px;background:var(--surface);color:var(--leaf);cursor:pointer}
@@ -3062,7 +3063,7 @@ function coopPanel(p){
   if(!good&&!badR&&!noneR&&!sugR)return '';
   const sec=(cls,t,d,body)=>body?`<div class="coop-sec ${cls}"><h3>${t}</h3>${d?`<p class="hint">${d}</p>`:''}<ul class="notes">${body}</ul></div>`:'';
   const refs=[...used].filter(k=>REFS[k]&&REFS[k].n).sort((a,b)=>REFS[a].n-REFS[b].n).map(k=>`<li value="${REFS[k].n}">${esc(REFS[k].t)} <a href="${REFS[k].u}" target="_blank" rel="noopener">Abrir</a></li>`).join('');
-  return `<section class="panel" aria-labelledby="t-coop"><h2 id="t-coop">Consórcios e cooperação</h2><p class="hint">O app intercala, nos canteiros e nas linhas de árvores, as plantas que cooperam entre si. UET (uso eficiente da terra) acima de 1 indica que o consórcio produz mais do que as mesmas plantas em canteiros separados.</p>
+  return `<section class="panel" aria-labelledby="t-coop"><h2 id="t-coop">Consórcios e cooperação <button type="button" class="zinfo" data-ibox="coopinfo" aria-expanded="false" aria-controls="coopinfo" aria-label="Como o app usa os consórcios" title="O que é isso?">i</button></h2><p class="hint ibox" id="coopinfo" hidden>O app intercala, nos canteiros e nas linhas de árvores, as plantas que cooperam entre si. UET (uso eficiente da terra) acima de 1 indica que o consórcio produz mais do que as mesmas plantas em canteiros separados.</p>
   ${sec('ok','Cooperam entre si','',good)}
   ${sec('bad','Não podem ser plantadas juntas','Há estudo mostrando que uma prejudica a outra.',badR)}
   ${sec('none','Sem cooperação conhecida','Não há estudo nem indicação nas suas listas de que se ajudem ou se prejudiquem. Podem ficar lado a lado, mas o ideal é intercalar uma planta que coopere com as duas.',noneR)}
@@ -3901,6 +3902,7 @@ function spy(){const nav=document.querySelector('#out .secnav');if(!nav)return;c
   for(const [f,m] of Object.entries(JUNTA)){const el=document.getElementById(f);const sec=el&&el.closest('section');if(sec)sec.hidden=m!==S.sec;}
   ls.forEach(a=>{if(a.dataset.go===S.sec){a.setAttribute('aria-current','true');const nl=nav.getBoundingClientRect(),al=a.getBoundingClientRect();if(al.left<nl.left||al.right>nl.right-36)nav.scrollBy({left:al.left-nl.left-40});}else a.removeAttribute('aria-current');});}
 $('out').addEventListener('click',e=>{
+  const ib=e.target.closest('[data-ibox]');if(ib){const bx=document.getElementById(ib.dataset.ibox);if(bx){bx.hidden=!bx.hidden;ib.setAttribute('aria-expanded',String(!bx.hidden));}return;}
   const zb=e.target.closest('[data-zoom]');if(zb){const Z=[1,1.5,2,3];let i=Z.indexOf(S.zoom||1);if(i<0)i=0;i=Math.max(0,Math.min(Z.length-1,i+(+zb.dataset.zoom)));S.zoom=Z[i];update();return;}
   const go=e.target.closest('[data-go]');if(go){e.preventDefault();const id=go.dataset.go;const el=id==='cap'?document.querySelector('#out .cap-alert'):document.getElementById(id);
     if(el){const sec=el.closest('section')||el;const lb=sec.getAttribute&&sec.getAttribute('aria-labelledby');if(lb){S.sec=lb;spy();}
