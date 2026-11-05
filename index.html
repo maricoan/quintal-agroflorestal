@@ -3752,7 +3752,7 @@ function comprasPanel(p){
   return `<div class="compra-box">
     ${aviso?`<ul class="notes">${aviso}</ul>`:''}
     
-    <p><a class="tn-eb" href="${SEM_URL}?ids=${ids.filter(i=>BYID[i]&&!BYID[i].custom&&!SEM_SEM.has(i)).map(semId).join(',')}" target="_blank" rel="noopener"><svg class="tn-ic" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="7.5" cy="17" rx="3" ry="2.1" transform="rotate(-25 7.5 17)"/><ellipse cx="15.5" cy="18.5" rx="3" ry="2.1" transform="rotate(20 15.5 18.5)"/><path d="M12 14V8.5M12 10c-2.6 0-4.2-1.5-4.5-4 2.6 0 4.2 1.5 4.5 4zM12 9c.3-2.4 1.8-3.8 4.3-3.8-.3 2.4-1.8 3.8-4.3 3.8z"/></svg><span>Como produzir mudas para este plano</span><span aria-hidden="true">→</span></a></p></div>`;
+    <p><a class="tn-eb" href="${SEM_URL}?ids=${ids.filter(i=>BYID[i]&&!BYID[i].custom&&!SEM_SEM.has(i)).map(semId).join(',')}" target="_blank" rel="noopener"><svg class="tn-ic" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="7.5" cy="17" rx="3" ry="2.1" transform="rotate(-25 7.5 17)"/><ellipse cx="15.5" cy="18.5" rx="3" ry="2.1" transform="rotate(20 15.5 18.5)"/><path d="M12 14V8.5M12 10c-2.6 0-4.2-1.5-4.5-4 2.6 0 4.2 1.5 4.5 4zM12 9c.3-2.4 1.8-3.8 4.3-3.8-.3 2.4-1.8 3.8-4.3 3.8z"/></svg><span>Como produzir todas as mudas para esse projeto</span><span aria-hidden="true">→</span></a></p></div>`;
 }
 // salvar ou enviar a imagem do desenho
 const ehCelular=()=>{try{return matchMedia('(pointer:coarse)').matches&&innerWidth<900;}catch(e){return false;}};
