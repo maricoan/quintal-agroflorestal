@@ -499,6 +499,7 @@ svg text{font-family:var(--f-mono);fill:var(--ink)}
 .lg .nm{flex:1;min-width:0;display:flex;flex-direction:column}
 .lg .sp{font-family:var(--f-body);font-size:11px;color:var(--muted)}
 .compra-box{margin-top:12px}.compra-box .hint{margin:4px 0 8px}
+sup.ref{font-size:.68em;line-height:0;vertical-align:super;margin-left:1px;font-variant-numeric:normal}
 .lg .fn{color:var(--muted);opacity:.85}
 .lg .cmp{font-family:var(--f-body);font-size:11px;color:var(--muted)}.lg .cmp .falta{color:var(--warn)}.lg .cmp .ok{color:var(--leaf)}.lg .cmp .sem-l{font-size:11px}
 .sp-sum{display:flex;flex-direction:column;gap:4px;font-size:13px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:10px}
@@ -1785,8 +1786,8 @@ function renderCats(){
     if(cons.length){const ids=new Set(S.sel);const nAll=cons.filter(c=>c.sp.every(i=>ids.has(i))).length;const open=!!q||!!(S.openCats||{}).parc;
       h+=`<details class="cat cat-parc" data-k="parc"${open?' open':''}><summary>${catIco('parc')}<span class="cat-t">Parceiras <span class="cat-sub">consórcios com estudo</span></span><span class="cat-n">${nAll?`${nAll} de ${cons.length}`:cons.length}</span></summary><ul class="pc-list">`+cons.map(c=>{
         const all=c.sp.every(i=>ids.has(i)),some=c.sp.some(i=>ids.has(i));const R=REFS[c.src];
-        return `<li class="pc${all?' all':''}" title="${esc(c.t)}"><div class="pc-n">${c.sp.map(i=>BYID[i]?`<span class="${ids.has(i)?'on':''}">${esc(BYID[i].n)}</span>`:'').join('<i>+</i>')}</div><p class="pc-t">${esc(c.t)}${R&&R.n?` [${R.n}]`:''}</p><p class="pc-a">${esc(consArr(c.sp))}</p><div class="pc-act">${all?'<span class="cons-ok">✓ no seu plantio</span>':`<button type="button" class="btn cons-add" data-addcons="${c.sp.join(',')}">${some?'Completar consórcio':'Plantar consórcio'}</button>`}${consPot(c.sp).no?`<span class="pc-chao" title="${esc(consPot(c.sp).no.map(s=>s.n).join(' e '))}: plantar direto no chão"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="g-soil" d="M2 17h20v5H2z"/><path class="g-line" d="M2 17h20"/><path class="g-stem" d="M12 17V9"/><path class="g-leaf" d="M12 12c-4 0-6-2-6-5 4 0 6 2 6 5z"/><path class="g-leaf" d="M12 10c0-3 2-5 6-5 0 3-2 5-6 5z"/><path class="g-root" d="M12 17v3M12 18l-2 2M12 18l2 2"/></svg>consórcio não recomendado para vasos</span>`:''}</div></li>`;}).join('')+
-        COOP.filter(c=>c[2]<0).map(c=>`<li class="pc bad"><div class="pc-n"><span>${esc(BYID[c[0]].n)}</span><i>✕</i><span>${esc(BYID[c[1]].n)}</span></div><p class="pc-t">Não plantar juntas. ${esc(c[3])}${REFS[c[4]]?` [${REFS[c[4]].n}]`:''}</p></li>`).join('')+`</ul></details>`;}}
+        return `<li class="pc${all?' all':''}" title="${esc(c.t)}"><div class="pc-n">${c.sp.map(i=>BYID[i]?`<span class="${ids.has(i)?'on':''}">${esc(BYID[i].n)}</span>`:'').join('<i>+</i>')}</div><p class="pc-t">${esc(c.t)}${R&&R.n?`<sup class="ref">${R.n}</sup>`:''}</p><p class="pc-a">${esc(consArr(c.sp))}</p><div class="pc-act">${all?'<span class="cons-ok">✓ no seu plantio</span>':`<button type="button" class="btn cons-add" data-addcons="${c.sp.join(',')}">${some?'Completar consórcio':'Plantar consórcio'}</button>`}${consPot(c.sp).no?`<span class="pc-chao" title="${esc(consPot(c.sp).no.map(s=>s.n).join(' e '))}: plantar direto no chão"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="g-soil" d="M2 17h20v5H2z"/><path class="g-line" d="M2 17h20"/><path class="g-stem" d="M12 17V9"/><path class="g-leaf" d="M12 12c-4 0-6-2-6-5 4 0 6 2 6 5z"/><path class="g-leaf" d="M12 10c0-3 2-5 6-5 0 3-2 5-6 5z"/><path class="g-root" d="M12 17v3M12 18l-2 2M12 18l2 2"/></svg>consórcio não recomendado para vasos</span>`:''}</div></li>`;}).join('')+
+        COOP.filter(c=>c[2]<0).map(c=>`<li class="pc bad"><div class="pc-n"><span>${esc(BYID[c[0]].n)}</span><i>✕</i><span>${esc(BYID[c[1]].n)}</span></div><p class="pc-t">Não plantar juntas. ${esc(c[3])}${REFS[c[4]]?`<sup class="ref">${REFS[c[4]].n}</sup>`:''}</p></li>`).join('')+`</ul></details>`;}}
   h+=hCats;
   $('cats').innerHTML=h||'<p class="empty">Nenhuma planta com esse nome.</p>';
   $('limpar').disabled=!S.sel.length;
@@ -3004,7 +3005,7 @@ function coopCatalog(){
   const card=c=>{used.add(c.src);const R=REFS[c.src];const all=c.sp.every(i=>ids.has(i)),some=c.sp.some(i=>ids.has(i));
     const names=c.sp.map(i=>BYID[i]?`<span class="cs-p${ids.has(i)?' on':''}">${sig(BYID[i].e)}${esc(BYID[i].n)}</span>`:'').join('<span class="cc-x">+</span>');
     return `<li class="cons${all?' all':''}"><div class="cons-h"><div class="cons-n">${names}</div>${all?'<span class="cons-ok">✓ no seu plantio</span>':`<button type="button" class="btn cons-add" data-addcons="${c.sp.join(',')}">${some?'Completar consórcio':'Plantar consórcio'}</button>`}</div>
-      <p class="cons-t">${esc(c.t)} ${R&&R.n?`<span class="hint">[${R.n}]</span>`:''}</p>
+      <p class="cons-t">${esc(c.t)}${R&&R.n?`<span class="hint"><sup class="ref">${R.n}</sup></span>`:''}</p>
       <p class="cons-a"><b>Arranjo:</b> ${esc(consArr(c.sp))}</p></li>`;};
   const cs_=consorcios();const cardsHTML=cs_.map(card).join('');
   const bad=COOP.filter(c=>c[2]<0);
@@ -3013,12 +3014,12 @@ function coopCatalog(){
   return `<section class="panel" aria-labelledby="t-cat"><div class="head"><h2 id="t-cat">Parceiras</h2><span class="hint">${cs_.length} consórcios com estudo publicado</span></div>
   <p class="hint">Cada item é um consórcio testado. "Plantar consórcio" acrescenta todas as plantas dele ao seu plantio; as que já estão na sua seleção aparecem em verde.</p>
   <ul class="cons-list">${cardsHTML}</ul>
-  ${bad.length?`<div class="coop-sec bad"><h3>Não plantar juntas</h3><ul class="notes">${bad.map(c=>`<li class="note warn"><span class="tag">Não junte</span><div class="body"><span><b>${esc(BYID[c[0]].n)}</b> e <b>${esc(BYID[c[1]].n)}</b></span><span class="hint">${esc(c[3])} [${REFS[c[4]].n}]</span></div></li>`).join('')}</ul></div>`:''}
+  ${bad.length?`<div class="coop-sec bad"><h3>Não plantar juntas</h3><ul class="notes">${bad.map(c=>`<li class="note warn"><span class="tag">Não junte</span><div class="body"><span><b>${esc(BYID[c[0]].n)}</b> e <b>${esc(BYID[c[1]].n)}</b></span><span class="hint">${esc(c[3])}<sup class="ref">${REFS[c[4]].n}</sup></span></div></li>`).join('')}</ul></div>`:''}
   ${rl?`<details class="refs-d"><summary>Ver fontes (${(rl.match(/<li/g)||[]).length})</summary><ol class="refs">${rl}</ol></details>`:''}</section>`;
 }
 function coopPanel(p){
   const sel=p.sel,ids=new Set(S.sel),used=new Set();
-  const refN=src=>REFS[src]&&REFS[src].n?` <span class="hint">[${REFS[src].n}]</span>`:(src==='L'?' <span class="hint">(suas listas)</span>':'');
+  const refN=src=>REFS[src]&&REFS[src].n?`<span class="hint"><sup class="ref">${REFS[src].n}</sup></span>`:(src==='L'?' <span class="hint">(suas listas)</span>':'');
   let good='',badR='',noneR='',sugR='';
   (p.groups||[]).filter(g=>g.length>1).forEach(g=>{
     const pairs=[];for(let i=0;i<g.length;i++)for(let j=i+1;j<g.length;j++){const c=coop(g[i].id,g[j].id);if(c){pairs.push(c);used.add(c.src);}}
@@ -3078,8 +3079,8 @@ function legend(p,extra){
   const order='EAMBR';
   ids.sort((a,b)=>order.indexOf(BYID[a].e)-order.indexOf(BYID[b].e)||BYID[a].n.localeCompare(BYID[b].n));
   const kindOf=id=>{const q=p.pts.find(x=>x.s.id===id);return q?q.kind:'bed';};
-  const fnt=s=>{const R=REFS[s.src];return R&&R.n?` <span class="fn" title="${esc(R.t)}">[${R.n}]</span>`:' <span class="fn">(prática)</span>';};
-  const spTxt=s=>{const k=kindOf(s.id);if(k==='tree')return `${cm_(s.ep)} entre árvores na linha`+fnt(s);if(k==='med')return '1 m entre plantas na linha'+fnt(s);const d=1/(s.el*s.ep);return `${cm_(s.ep)} na fileira · ${cm_(s.el)} entre fileiras · ${d>=1?fmt(d,0):fmt(d,2)} por m²`+fnt(s);};
+  const fnt=s=>{const R=REFS[s.src];return R&&R.n?`<span class="fn" title="${esc(R.t)}"><sup class="ref">${R.n}</sup></span>`:' <span class="fn">(prática)</span>';};
+  const spTxt=s=>{const k=kindOf(s.id);if(k==='tree')return `${cm_(s.ep)} entre árvores na linha`+fnt(s);if(k==='med')return '1 m entre plantas na linha'+fnt(s);const d=1/(s.el*s.ep);return `${cm_(s.ep)} na fileira · ${cm_(s.el)} entre fileiras`+fnt(s)+` · ${d>=1?fmt(d,0):fmt(d,2)} por m²`;};
   const cmpTxt=(id,no)=>{const t=S.tenho&&S.tenho[id];let tem='',falta=no;
     if(t&&t.n==null){tem='já tenho sementes';falta=0;}else if(t){tem=`já tenho ${t.n} ${TIPO_TXT[t.tipo][t.n===1?0:1]}`;falta=Math.max(0,no-t.n);}
     return `<small class="cmp">${tem?esc(tem)+' · ':''}${falta?`<b class="falta">falta${falta>1?'m':''} ${falta}</b>${semLink(id,'como produzir')}`:'<b class="ok">✓ tudo certo</b>'}</small>`;};
@@ -3685,11 +3686,11 @@ function spacing(sel){
     if(isTree(s)){el='linha de árvores';ep=cm_(s.ep)+' na linha';dens='—';}
     else if(isMed(s)&&S.modo==='chao'){el='linha de árvores';ep='1 m entre árvores';dens='—';}
     else{el=cm_(s.el);ep=cm_(s.ep);const d=1/(s.el*s.ep);dens=d>=1?fmt(d,0):fmt(d,2);}
-    return `<tr><td>${esc(s.n)}</td><td class="num" data-l="Entre linhas">${el}</td><td class="num" data-l="Entre plantas">${ep}</td><td class="num" data-l="Plantas/m²">${dens}</td><td class="src" data-l="Fonte">${R.n?`[${R.n}]`:'prática'}</td></tr>`;
+    return `<tr><td>${esc(s.n)}</td><td class="num" data-l="Entre linhas">${el}</td><td class="num" data-l="Entre plantas">${ep}</td><td class="num" data-l="Plantas/m²">${dens}</td><td class="src" data-l="Fonte">${R.n?`<sup class="ref">${R.n}</sup>`:'prática'}</td></tr>`;
   }).join('');
   const refs=Object.entries(REFS).filter(([k,v])=>v.n&&used.has(k)).sort((a,b)=>a[1].n-b[1].n)
     .map(([k,v])=>`<li value="${v.n}">${esc(v.t)} <a href="${v.u}" target="_blank" rel="noopener">Abrir</a></li>`).join('');
-  return `<p class="hint">Nos canteiros, as hortaliças seguem o espaçamento das publicações. Nas linhas de árvores, frutíferas e nativas ficam a 2 m uma da outra e as adubadeiras ocupam os espaços entre elas, como nos sistemas agroflorestais testados. Onde não encontrei estudo específico, o app usa a prática comum de horta, marcada como “prática”. Os números entre colchetes na lista de plantas indicam a fonte.</p>
+  return `<p class="hint">Nos canteiros, as hortaliças seguem o espaçamento das publicações. Nas linhas de árvores, frutíferas e nativas ficam a 2 m uma da outra e as adubadeiras ocupam os espaços entre elas, como nos sistemas agroflorestais testados. Onde não encontrei estudo específico, o app usa a prática comum de horta, marcada como “prática”. Os números sobrescritos na lista de plantas indicam a fonte.</p>
   ${refs?`<details class="refs-d"><summary>Fontes dos espaçamentos (${(refs.match(/<li/g)||[]).length})</summary><ol class="refs">${refs}</ol></details>`:''}`;
 }
 
