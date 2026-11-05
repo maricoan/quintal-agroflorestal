@@ -1011,6 +1011,7 @@ const REFS={
  D1:{n:20,t:'Resende, G. M.; Yuri, J. E.; Costa, N. D. Recomendação de espaçamento no plantio de cenoura no Submédio do Vale do São Francisco. Embrapa Semiárido, Instruções Técnicas 128, 2016.',u:'https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1054103/1/INT128.pdf'},
  D2:{n:21,t:'Corrêa, C. V. et al. Produção de beterraba em função do espaçamento. Horticultura Brasileira 32(1), 2014.',u:'https://acervodigital.unesp.br/handle/11449/110126'},
  D3:{n:22,t:'Freitas, K. K. C. et al. Desempenho agronômico de rúcula sob diferentes espaçamentos e épocas de plantio. Revista Ciência Agronômica 40(3), 2009.',u:'https://www.periodicos.ufc.br/revistacienciaagronomica/article/download/83954/228106/320409'},
+ CER:{n:23,t:'Durigan, G. et al. Manual para recuperação da vegetação de cerrado. 3ª ed. Secretaria do Meio Ambiente de SP, 2011. Porte das espécies conforme Durigan, G. et al. Plantas do Cerrado Paulista: imagens de uma paisagem ameaçada. Instituto Florestal, 2004.',u:'https://semil.sp.gov.br/educacaoambiental/prateleira-ambiental/manual-para-recuperacao-da-vegetacao-de-cerrado-2/'},
  C9:{n:14,t:'Ushimaru, T. Influência do sombreamento sobre a fisiologia, crescimento e qualidade das mudas de juçara. Dissertação, UFV, 2021.',u:'https://locus.ufv.br//handle/123456789/29143'}
 };
 // el = entre linhas (m); ep = entre plantas (m); src = referência; sol = luz tolerada (P pleno, M meia-sombra, S sombra)
@@ -1074,7 +1075,7 @@ const DATA=[
  {id:'samambaia',n:'Samambaias nativas',a:'Sm',c:'u',e:'B',el:.5,ep:.5,src:'PR',sol:'MS',pl:r(9,3),col:'folhagem perene',d:0,v:10,nat:1,h:.6},
  {id:'feijaoporco',n:'Feijão-de-porco',a:'Fp',c:'s',e:'B',el:.5,ep:.2,src:'E16',sol:'P',pl:r(9,1),col:'corte em 4–8 meses (adubo verde)',d:0,v:0,adubo:1,h:.8},
  {id:'feijaocorda',n:'Feijão-de-corda',a:'Fc',c:'s',e:'B',el:.5,ep:.1,src:'E16',sol:'P',pl:r(9,2),col:'≈ 3 meses',d:90,v:0,adubo:1,h:.6},
- {id:'gabiroba',n:'Gabiroba-do-campo',a:'Gb',c:'s',e:'B',el:1,ep:1,src:'PR',sol:'P',pl:r(10,3),col:'2–3 anos',d:900,v:30,nat:1,h:1.2},
+ {id:'gabiroba',n:'Gabiroba-do-campo',sci:'Campomanesia adamantium',a:'Gb',c:'s',e:'B',el:1,ep:1,src:'PR',sol:'P',pl:r(10,3),col:'2–3 anos',d:900,v:30,nat:1,h:1.2},
  {id:'patadevaca',n:'Pata-de-vaca',a:'Pv',c:'s',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'folhas para chá em 1–2 anos',d:0,v:0,pt:7,nat:1,adubo:1},
  {id:'guariroba',n:'Guariroba',a:'Gw',c:'s',e:'A',arv:1,el:4,ep:2,src:'IPE',sol:'P',pl:r(10,3),col:'palmito em 5–7 anos',d:2000,v:0,pt:10,nat:1},
  {id:'alecrimcampo',n:'Alecrim-do-campo',a:'Ak',c:'s',e:'M',el:1,ep:1,src:'PR',sol:'P',pl:r(9,3),col:'pioneira; melífera',d:0,v:30,nat:1,h:2},
@@ -1261,7 +1262,25 @@ const DATA=[
  {id:'capororoca',n:'Capororoca',sci:'Myrsine spp.',a:null,c:'w',o:'N',e:'A',arv:1,el:4,ep:2,src:'ID38',sol:'P',pl:r(10,3),col:'frutinhos para aves; pioneira que aguenta solo úmido',d:0,v:0,pt:10},
  {id:'pinhadobrejo',n:'Pinha-do-brejo',sci:'Magnolia ovata',a:null,c:'w',o:'N',e:'E',arv:1,el:4,ep:2,src:'ID38',sol:'PM',pl:r(10,3),col:'flores perfumadas; árvore de mata de brejo, aguenta solo encharcado',d:0,v:0,pt:20},
  {id:'inhame',n:'Inhame',sci:'Colocasia esculenta',a:'Ih',c:'h',e:'B',el:.8,ep:.4,src:'ID38',sol:'PM',pl:r(8,11),col:'7–9 meses (rizomas)',d:240,v:30,h:1.2},
- {id:'gengibre',n:'Gengibre',sci:'Zingiber officinale',a:'Gg',c:'t',e:'B',el:.4,ep:.3,src:'ID38',sol:'PM',pl:r(8,11),col:'8–10 meses (rizomas)',d:270,v:30,h:.9}
+ {id:'gengibre',n:'Gengibre',sci:'Zingiber officinale',a:'Gg',c:'t',e:'B',el:.4,ep:.3,src:'ID38',sol:'PM',pl:r(8,11),col:'8–10 meses (rizomas)',d:270,v:30,h:.9},
+ // cerrado paulista (Durigan et al., Manual para recuperação da vegetação de cerrado, 2011; porte conforme Plantas do Cerrado Paulista, 2004)
+ {id:'pequi',n:'Pequi',sci:'Caryocar brasiliense',a:null,c:'f',o:'N',e:'M',arv:1,el:3,ep:3,src:'CER',sol:'P',pl:r(10,12),d:0,v:0,col:'fruto de polpa amarela; arbusto ou árvore de cerrado'},
+ {id:'mangaba',n:'Mangaba',sci:'Hancornia speciosa',a:null,c:'f',o:'N',e:'M',arv:1,el:3,ep:3,src:'CER',sol:'P',pl:r(10,12),d:0,v:0,col:'fruto amarelo quando maduro; árvore pequena de cerrado'},
+ {id:'baru',n:'Baru (cumbaru)',sci:'Dipteryx alata',a:null,c:'f',o:'N',e:'A',arv:1,el:3,ep:3,src:'CER',sol:'P',pl:r(10,12),d:0,v:0,col:'castanha do fruto; em SP só no extremo norte do estado'},
+ {id:'araticum',n:'Araticum',sci:'Annona crassiflora',a:null,c:'f',o:'N',e:'M',arv:1,el:3,ep:3,src:'CER',sol:'P',pl:r(10,12),d:0,v:0,col:'fruto grande, até 15 cm'},
+ {id:'marolo',n:'Marolo (araticum-do-campo)',sci:'Annona coriacea',a:null,c:'f',o:'N',e:'M',arv:1,el:3,ep:3,src:'CER',sol:'P',pl:r(10,12),d:0,v:0,col:'fruto de polpa amarela, até 25 cm'},
+ {id:'murici',n:'Murici',sci:'Byrsonima pachyphylla',a:null,c:'f',o:'N',e:'A',arv:1,el:3,ep:3,src:'CER',sol:'P',pl:r(10,12),d:0,v:0,col:'frutinhos amarelos em cachos'},
+ {id:'jatobacerrado',n:'Jatobá-do-cerrado',sci:'Hymenaea stigonocarpa',a:null,c:'f',o:'N',e:'A',arv:1,el:3,ep:3,src:'CER',sol:'P',pl:r(10,12),d:0,v:0,col:'vagem com polpa farinácea'},
+ {id:'pitangacerrado',n:'Pitanga-do-cerrado',sci:'Eugenia pitanga',a:null,c:'f',o:'N',e:'B',el:3,ep:1.5,src:'CER',sol:'P',pl:r(10,12),d:0,v:0,col:'frutinho vermelho ou roxo; arbusto de até 1,5 m',h:1.5},
+ {id:'peracerrado',n:'Pera-do-cerrado',sci:'Eugenia klotzschiana',a:null,c:'f',o:'N',e:'B',el:3,ep:1.5,src:'CER',sol:'P',pl:r(10,12),d:0,v:0,col:'fruto em forma de pera, até 15 cm; arbusto pequeno',h:1},
+ {id:'mamacadela',n:'Mama-cadela',sci:'Brosimum gaudichaudii',a:null,c:'f',o:'N',e:'M',arv:1,el:3,ep:3,src:'CER',sol:'P',pl:r(10,12),d:0,v:0,col:'frutinho alaranjado; arbusto a árvore pequena'},
+ {id:'barbatimao',n:'Barbatimão',sci:'Stryphnodendron adstringens',a:null,c:'g',o:'N',e:'M',arv:1,el:3,ep:3,src:'CER',sol:'P',pl:r(10,12),d:0,v:0,col:'sem colheita; árvore pequena de cerrado'},
+ {id:'pauterra',n:'Pau-terra',sci:'Qualea grandiflora',a:null,c:'g',o:'N',e:'A',arv:1,el:3,ep:3,src:'CER',sol:'P',pl:r(10,12),d:0,v:0,col:'sem colheita; flores amarelo-ouro'},
+ {id:'faveira',n:'Faveira (falso-barbatimão)',sci:'Dimorphandra mollis',a:null,c:'g',o:'N',e:'M',arv:1,el:3,ep:3,src:'CER',sol:'P',pl:r(10,12),d:0,v:0,col:'sem colheita; árvore pequena de cerrado'},
+ {id:'caraiba',n:'Caraíba (ipê-amarelo-do-cerrado)',sci:'Tabebuia aurea',a:null,c:'g',o:'N',e:'A',arv:1,el:3,ep:3,src:'CER',sol:'P',pl:r(10,12),d:0,v:0,col:'sem colheita; flores amarelo-ouro'},
+ {id:'pimentamacaco',n:'Pimenta-de-macaco (pindaíba-do-campo)',sci:'Xylopia aromatica',a:null,c:'g',o:'N',e:'M',arv:1,el:3,ep:3,src:'CER',sol:'P',pl:r(10,12),d:0,v:0,col:'frutos aromáticos; árvore pequena de cerrado'},
+ {id:'angicocerrado',n:'Angico-do-cerrado (angico-preto)',sci:'Anadenanthera peregrina var. falcata',a:null,c:'g',o:'N',e:'A',arv:1,el:3,ep:3,src:'CER',sol:'P',pl:r(10,12),d:0,v:0,col:'sem colheita; árvore grande de cerrado'},
+ {id:'algodaocampo',n:'Algodão-do-campo',sci:'Cochlospermum regium',a:null,c:'p',o:'N',e:'B',el:3,ep:1.5,src:'CER',sol:'P',pl:r(10,12),d:0,v:0,col:'flores amarelas grandes; arbusto de até 2 m',h:2}
 ];
 const VIELA=['pitanga','grumixama','orapronobis','cereja','cabeludinha','castanha','dedaleira','candeia','lantana','canaindia','amendoim'];
 // Solos mais úmidos: ciclo e boas companhias
@@ -1625,14 +1644,16 @@ function invBusca(){
 // links para o site Sementes do Quintal (ids iguais, com hífen no lugar do sublinhado)
 const SEM_URL='https://quintal.marianacoan.com/sementes/';
 const semId=id=>id.replace(/_/g,'-');
-const semLink=(id,txt)=>BYID[id]&&!BYID[id].custom?`<a class="sem-l" href="${SEM_URL}#${semId(id)}" target="_blank" rel="noopener">${txt}</a>`:'';
+// espécies ainda sem ficha no Sementes do Quintal
+const SEM_SEM=new Set(['pequi','mangaba','baru','araticum','marolo','murici','jatobacerrado','pitangacerrado','peracerrado','mamacadela','barbatimao','pauterra','faveira','caraiba','pimentamacaco','angicocerrado','algodaocampo']);
+const semLink=(id,txt)=>BYID[id]&&!BYID[id].custom&&!SEM_SEM.has(id)?`<a class="sem-l" href="${SEM_URL}#${semId(id)}" target="_blank" rel="noopener">${txt}</a>`:'';
 function showInfo(id){
   const s=BYID[id];if(!s)return;
   const luz=s.sol.split('').map(x=>solTxt[x]).join(' ou ');
   const det=`${s.sci?`<i>${esc(s.sci)}</i> · `:''}Estrato ${EST[s.e].toLowerCase()} · ${luz} · ${s.o?ORIG_TXT[s.o].toLowerCase():'origem não informada'}${s.msp?` · Manual de Arb. de SP, porte ${PORTE[s.msp]}`:''}${s.tox?' · tóxica se ingerida':''}`;
   const mot=luzMotivo(s);
   const inv=INVASORA[s.id];
-  $('chipinfo').innerHTML=`<span class="ci-top">${sig(s.e)}${s.o?`<span class="ico-w">${ICON[s.o]}</span>`:''}<b>${esc(s.n)}</b>${s.custom?'':`<a class="ci-sem" href="${SEM_URL}#${semId(s.id)}" target="_blank" rel="noopener">Sementes e propagação →</a>`}</span><span class="ci-d">${inv?`<b class="ci-inv">Invasora em SP.</b> `:''}${det}${mot?`. <b class="ci-luz">${esc(mot)}</b>`:''}</span>`;
+  $('chipinfo').innerHTML=`<span class="ci-top">${sig(s.e)}${s.o?`<span class="ico-w">${ICON[s.o]}</span>`:''}<b>${esc(s.n)}</b>${s.custom||SEM_SEM.has(s.id)?'':`<a class="ci-sem" href="${SEM_URL}#${semId(s.id)}" target="_blank" rel="noopener">Sementes e propagação →</a>`}</span><span class="ci-d">${inv?`<b class="ci-inv">Invasora em SP.</b> `:''}${det}${mot?`. <b class="ci-luz">${esc(mot)}</b>`:''}</span>`;
   $('chipinfo').title=(inv?inv+' ':'')+det.replace(/<[^>]+>/g,'')+(mot?'. '+mot:'');
 }
 $('cats').addEventListener('mouseover',e=>{const b=e.target.closest('.chip');if(b)showInfo(b.dataset.id);});
@@ -3679,7 +3700,7 @@ function comprasPanel(p){
     ${aviso?`<ul class="notes">${aviso}</ul>`:''}
     <div class="tbl estreita"><table class="compra"><thead><tr><th>Planta</th><th>No plano</th><th>Já tenho</th><th>Falta</th></tr></thead><tbody>${rows}</tbody></table></div>
     <p class="hint">${nFalta?`Faltam ${nFalta} mudas ou plantas.`:'Você já tem tudo o que o desenho pede.'}</p>
-    <p><a class="tn-eb" href="${SEM_URL}?ids=${ids.filter(i=>BYID[i]&&!BYID[i].custom).map(semId).join(',')}" target="_blank" rel="noopener"><svg class="tn-ic" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="7.5" cy="17" rx="3" ry="2.1" transform="rotate(-25 7.5 17)"/><ellipse cx="15.5" cy="18.5" rx="3" ry="2.1" transform="rotate(20 15.5 18.5)"/><path d="M12 14V8.5M12 10c-2.6 0-4.2-1.5-4.5-4 2.6 0 4.2 1.5 4.5 4zM12 9c.3-2.4 1.8-3.8 4.3-3.8-.3 2.4-1.8 3.8-4.3 3.8z"/></svg><span>Ver como produzir as mudas deste plano</span><span aria-hidden="true">→</span></a></p></section>`;
+    <p><a class="tn-eb" href="${SEM_URL}?ids=${ids.filter(i=>BYID[i]&&!BYID[i].custom&&!SEM_SEM.has(i)).map(semId).join(',')}" target="_blank" rel="noopener"><svg class="tn-ic" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="7.5" cy="17" rx="3" ry="2.1" transform="rotate(-25 7.5 17)"/><ellipse cx="15.5" cy="18.5" rx="3" ry="2.1" transform="rotate(20 15.5 18.5)"/><path d="M12 14V8.5M12 10c-2.6 0-4.2-1.5-4.5-4 2.6 0 4.2 1.5 4.5 4zM12 9c.3-2.4 1.8-3.8 4.3-3.8-.3 2.4-1.8 3.8-4.3 3.8z"/></svg><span>Ver como produzir as mudas deste plano</span><span aria-hidden="true">→</span></a></p></section>`;
 }
 // salvar ou enviar a imagem do desenho
 const ehCelular=()=>{try{return matchMedia('(pointer:coarse)').matches&&innerWidth<900;}catch(e){return false;}};
