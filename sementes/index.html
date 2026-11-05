@@ -376,7 +376,7 @@ const NO_APP=new Set(['tuna']);
 // vindo do app: ?ids=... mostra só as plantas do plano
 let PLANO=null;try{const u=new URLSearchParams(location.search).get('ids');if(u){const ids=u.split(',').map(x=>x.trim().replace(/_/g,'-')).filter(x=>DATA.some(d=>d.id===x));if(ids.length)PLANO=new Set(ids);}}catch(e){}
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[-‐–]/g,' ').replace(/\s+/g,' ');
 DATA.forEach(d=>{d._q=norm(d.n+' '+d.sci);d._dura=/lixe|lixa|80 °C/.test(d.pr)});
 document.getElementById('stats').innerHTML=`<span><b>${DATA.length}</b> espécies</span><span><b>${DATA.filter(d=>d.t==='R').length}</b> para semear logo após colher</span><span><b>${DATA.filter(d=>d.v.includes('E')).length}</b> que pegam de estaca</span><span><b>${DATA.filter(d=>d.ag==='S'||d.ag==='T').length}</b> que enraízam na água</span>`;
 const gEl=document.getElementById('grupos');

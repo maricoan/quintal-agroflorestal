@@ -1463,7 +1463,7 @@ const BEIRA=[
  ['z3','Faixa de cima','recebe a enxurrada; solo sem excesso de água (zona 3)','patadevaca a_cedrelafissilis a_cabraleacanjerana angico sapucaia'],
  ['mc','Mata ciliar e nascentes','árvores para recompor a mata da margem e cobrir nascentes','jenipapo peitodepombo pindaiba urundeuva fedegoso cafezinho goiabeiramato limaobravo paineira figueirabranca canafistulaf amendoinzeiro embira canelabatalha canelaocotea gabirobaarvore cambui paudalho a_handroanthusimpetiginosus a_handroanthusochraceus a_zeyheriatuberculosa a_nectandramegapotamica'],
  ['na','Nascente com agrofloresta','outras plantas usadas pela Embrapa Cerrados em nascentes','buriti capororoca pinhadobrejo a_calophyllumbrasiliense sangra a_tibouchinagranulosa banana inhame gengibre'],
- ['jc','Jardim de chuva e bordas úmidas','herbáceas e arbustos que seguram e filtram a enxurrada','falsairis vedelia alamanda heliconia canademacaco marantacinza taioba']];
+ ['jc','Jardim de chuva e bordas úmidas','herbáceas e arbustos que seguram e filtram a enxurrada','falsairis vedelia alamanda heliconia canademacaco marantacinza taioba elegante begoniabrejo']];
 const BEIRA_Z1=new Set(BEIRA[0][3].split(' ').concat(['buriti','capororoca','pinhadobrejo','a_calophyllumbrasiliense','sangra']));
 const ORIG_TXT={N:'Nativa',Z:'Naturalizada',E:'Endêmica',X:'Exótica cultivada'};
 const PORTE={P:'pequeno',M:'médio',G:'grande'};
@@ -1747,12 +1747,12 @@ function consPotTxt(sp){const r=consPot(sp);
   if(r.fl)a.push(`floreira de ${r.fl.Wd} × ${r.fl.Dp} cm e ${r.fl.H} cm de fundo (≈ ${fmt(r.fl.V,0)} L)`);
   return a.length?`<b>Em vaso:</b> ${a.join(' ou ')}.`:'Não cabe num vaso comum: plante no chão.';}
 function renderCats(){
-  const q=$('busca').value.trim().toLowerCase();
+  const qn=t=>normN(t).replace(/[-‐–]/g,' ').replace(/\s+/g,' ');const q=qn($('busca').value.trim());
   const all=DATA.concat(S.custom);
   let h='';
   let wHtml='';
   CATS.forEach(([k,lab])=>{
-    const items=all.filter(s=>(s.c===k||(GRUPO_EXTRA[k]||[]).includes(s.id))&&(!q||s.n.toLowerCase().includes(q)));
+    const items=all.filter(s=>(s.c===k||(GRUPO_EXTRA[k]||[]).includes(s.id))&&(!q||qn(s.n+' '+(s.sci||'')).includes(q)));
     if(!items.length)return;
     items.sort((a,b)=>a.n.localeCompare(b.n,'pt'));
     const nOn=items.filter(s=>S.sel.includes(s.id)).length;
@@ -1776,7 +1776,7 @@ function renderCats(){
   if(wHtml){const i=h.indexOf('<details class="cat" data-k="x"');h=i>=0?h.slice(0,i)+wHtml+h.slice(i):h+wHtml;}
   // Parceiras fica no topo da lista
   const hCats=h;h='';
-  {const cons=consorcios().filter(c=>!q||c.sp.some(i=>BYID[i]&&BYID[i].n.toLowerCase().includes(q)));
+  {const cons=consorcios().filter(c=>!q||c.sp.some(i=>BYID[i]&&qn(BYID[i].n).includes(q)));
     if(cons.length){const ids=new Set(S.sel);const nAll=cons.filter(c=>c.sp.every(i=>ids.has(i))).length;const open=!!q||!!(S.openCats||{}).parc;
       h+=`<details class="cat cat-parc" data-k="parc"${open?' open':''}><summary>${catIco('parc')}<span class="cat-t">Parceiras <span class="cat-sub">consórcios com estudo</span></span><span class="cat-n">${nAll?`${nAll} de ${cons.length}`:cons.length}</span></summary><ul class="pc-list">`+cons.map(c=>{
         const all=c.sp.every(i=>ids.has(i)),some=c.sp.some(i=>ids.has(i));const R=REFS[c.src];
