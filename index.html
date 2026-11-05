@@ -501,7 +501,7 @@ svg text{font-family:var(--f-mono);fill:var(--ink)}
 .compra-box{margin-top:12px}.compra-box .hint{margin:4px 0 8px}
 sup.ref{font-size:.68em;line-height:0;vertical-align:super;margin-left:1px;font-variant-numeric:normal}
 .lg .fn{color:var(--muted);opacity:.85}
-.lg .cmp{font-family:var(--f-body);font-size:11px;color:var(--muted)}.lg .cmp .falta{color:var(--warn)}.lg .cmp .ok{color:var(--leaf)}.lg .cmp .sem-l{font-size:11px}
+.lg .cmp{font-family:var(--f-body);font-size:11px;color:var(--muted)}.lg .cmp .falta{color:var(--warn)}.lg .cmp .ok{color:var(--leaf)}.lg .cmp .sem-l{font-size:11px;margin-left:0}
 .sp-sum{display:flex;flex-direction:column;gap:4px;font-size:13px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:10px}
 .sp-sum p{margin:0}
 .lg .q{font-family:var(--f-body);font-variant-numeric:tabular-nums;color:var(--muted)}
@@ -3081,9 +3081,7 @@ function legend(p,extra){
   const kindOf=id=>{const q=p.pts.find(x=>x.s.id===id);return q?q.kind:'bed';};
   const fnt=s=>{const R=REFS[s.src];return R&&R.n?`<span class="fn" title="${esc(R.t)}"><sup class="ref">${R.n}</sup></span>`:' <span class="fn">(prática)</span>';};
   const spTxt=s=>{const k=kindOf(s.id);if(k==='tree')return `${cm_(s.ep)} entre árvores na linha`+fnt(s);if(k==='med')return '1 m entre plantas na linha'+fnt(s);const d=1/(s.el*s.ep);return `${cm_(s.ep)} na fileira · ${cm_(s.el)} entre fileiras`+fnt(s)+` · ${d>=1?fmt(d,0):fmt(d,2)} por m²`;};
-  const cmpTxt=(id,no)=>{const t=S.tenho&&S.tenho[id];let tem='',falta=no;
-    if(t&&t.n==null){tem='já tenho sementes';falta=0;}else if(t){tem=`já tenho ${t.n} ${TIPO_TXT[t.tipo][t.n===1?0:1]}`;falta=Math.max(0,no-t.n);}
-    return `<small class="cmp">${tem?esc(tem)+' · ':''}${falta?`<b class="falta">falta${falta>1?'m':''} ${falta}</b>${semLink(id,'como produzir')}`:'<b class="ok">✓ tudo certo</b>'}</small>`;};
+  const cmpTxt=id=>{const l=semLink(id,'Como produzir mudas');return l?`<small class="cmp">${l}</small>`:'';};
   const strips=p.strips||[];const ruas=strips.filter(x=>x.t==='path'),cant=strips.filter(x=>x.t==='bed'),lin=strips.filter(x=>x.t==='line');
   const ruaTxt=[ruas.length?`ruas de ${[...new Set(ruas.map(r=>cm_(r.h)))].join(' e ')}`:'',cant.length?`canteiros de ${[...new Set(cant.map(r=>cm_(r.h)))].join(' e ')}`:'',lin.length?`linhas de árvores de ${cm_(lin[0].h)}`:''].filter(Boolean).join(' · ');
   const ic=(p.interc||[]).map(x=>`${x.steps.slice(0,x.g.length===2?1:x.g.length).map(([a,b,d])=>`${esc(a.n)} ↔ ${esc(b.n)} ${cm_(d)}`).join(', ')} (fileiras a ${cm_(x.rowGap)})`);
@@ -3753,7 +3751,7 @@ function comprasPanel(p){
   const nFalta=ids.reduce((a,id)=>{const t=S.tenho[id];const no=p.count[id]||0;return a+(t?(t.n==null?0:Math.max(0,no-t.n)):no);},0);
   return `<div class="compra-box">
     ${aviso?`<ul class="notes">${aviso}</ul>`:''}
-    <p class="hint">${nFalta?`Faltam ${nFalta} mudas ou plantas.`:'Você já tem tudo o que o desenho pede.'}</p>
+    
     <p><a class="tn-eb" href="${SEM_URL}?ids=${ids.filter(i=>BYID[i]&&!BYID[i].custom&&!SEM_SEM.has(i)).map(semId).join(',')}" target="_blank" rel="noopener"><svg class="tn-ic" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="7.5" cy="17" rx="3" ry="2.1" transform="rotate(-25 7.5 17)"/><ellipse cx="15.5" cy="18.5" rx="3" ry="2.1" transform="rotate(20 15.5 18.5)"/><path d="M12 14V8.5M12 10c-2.6 0-4.2-1.5-4.5-4 2.6 0 4.2 1.5 4.5 4zM12 9c.3-2.4 1.8-3.8 4.3-3.8-.3 2.4-1.8 3.8-4.3 3.8z"/></svg><span>Como produzir mudas para este plano</span><span aria-hidden="true">→</span></a></p></div>`;
 }
 // salvar ou enviar a imagem do desenho
