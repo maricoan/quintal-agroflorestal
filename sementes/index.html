@@ -135,7 +135,7 @@ header{display:flex;flex-direction:column;gap:10px}
 #filtros .chip{background:color-mix(in srgb,var(--c) 25%,transparent);border-color:color-mix(in srgb,var(--c) 60%,transparent);color:var(--ink)}
 #grupos .chip:hover{background:color-mix(in srgb,var(--c),#000 20%)}
 #filtros .chip:hover{background:color-mix(in srgb,var(--c) 37%,transparent)}
-.filtros .c-h,.filtros .c-E{--c:var(--cv-leaf)} .filtros .c-t,.filtros .c-R{--c:var(--cv-fresh)} .filtros .c-a{--c:var(--cv-moss)} .filtros .c-f{--c:var(--cv-berry)}
+.filtros .c-h,.filtros .c-E{--c:var(--cv-leaf)} .filtros .c-t,.filtros .c-R{--c:var(--cv-fresh)} .filtros .c-a{--c:var(--cv-moss)} .filtros .c-b{--c:color-mix(in srgb,var(--cv-leaf),var(--cv-soil))} .filtros .c-f{--c:var(--cv-berry)}
 .filtros .c-p,.filtros .c-dura{--c:var(--cv-warn)} .filtros .c-n,.filtros .c-S{--c:var(--cv-seed)} .filtros .c-w{--c:var(--cv-water)} .filtros .c-g,.filtros .c-DR{--c:var(--cv-soil)}
 .ftit{font-family:var(--f-display);font-weight:400;font-size:1.15rem;margin:2px 0 -2px 4px}
 #grupos .chip .cat-ico{stroke:color-mix(in srgb,var(--c) 45%,#fff);stroke-width:1.8}
@@ -147,7 +147,7 @@ header{display:flex;flex-direction:column;gap:10px}
 #filtros .chip[aria-pressed="true"]{background:var(--c);color:var(--bg);border-color:var(--c);font-weight:700}
 .ftit.sep{border-top:2px solid color-mix(in srgb,var(--soil) 55%,var(--line));padding-top:14px;margin-top:6px}
 .chip[aria-pressed="true"]{background:var(--c);color:var(--bg);border-color:var(--c)}
-.c-h,.c-E{--c:var(--cv-leaf)} .c-t,.c-R{--c:var(--cv-fresh)} .c-a{--c:var(--cv-moss)} .c-f{--c:var(--cv-berry)}
+.c-h,.c-E{--c:var(--cv-leaf)} .c-t,.c-R{--c:var(--cv-fresh)} .c-a{--c:var(--cv-moss)} .c-b{--c:color-mix(in srgb,var(--cv-leaf),var(--cv-soil))} .c-f{--c:var(--cv-berry)}
 .c-p,.c-dura{--c:var(--cv-warn)} .c-n,.c-S{--c:var(--cv-seed)} .c-w{--c:var(--cv-water)} .c-g,.c-DR{--c:var(--cv-soil)}
 .contagem{font-family:var(--f-body);font-size:.8rem;color:var(--muted)}
 
@@ -355,11 +355,11 @@ details.ficha>summary{grid-template-columns:64px minmax(0,1fr) auto}
 <script>
 (function(){
 const DATA=JSON.parse(document.getElementById('dados').textContent);
-const CAT_ICO={w:'<path d="M9 2.5 C6.5 6.5 4.5 9 4.5 11.5 a4.5 4.5 0 0 0 9 0 C13.5 9 11.5 6.5 9 2.5 Z"/><path d="M7 12.5 q1 1.6 3 1.4"/>',p:'<circle cx="9" cy="9" r="1.8"/><circle cx="9" cy="4.6" r="2.6"/><circle cx="13.2" cy="7.6" r="2.6"/><circle cx="11.6" cy="12.8" r="2.6"/><circle cx="6.4" cy="12.8" r="2.6"/><circle cx="4.8" cy="7.6" r="2.6"/>',f:'<circle cx="9" cy="11" r="5"/><path d="M9 6 q2 -4 6 -3 q-1 4 -6 3"/>',a:'<path d="M9 16 V9 M9 11 q-5 0 -6 -5 q5 0 6 5 M9 9 q4 -1 5 -5 q-4 0 -5 5"/>',t:'<path d="M5 16 L13 3 M7.4 12.2 l-3 -.8 M9.2 9.3 l-3 -.8 M11 6.4 l-3 -.8 M8.3 13.8 l3 .8 M10.1 10.9 l3 .8 M11.9 8 l3 .8"/>',h:'<path d="M4 14 Q4 4 14 4 Q14 14 4 14 Z M4 14 L11 7"/>',g:'<circle cx="9" cy="7" r="5"/><path d="M9 12 V17 M6 17 h6"/>',n:'<path d="M9 17 V9"/><path d="M9 10 C5 10 3.5 7.5 3.5 4.5 C7 4.5 9 7 9 10 Z M9 8 C9 5 10.5 2.5 14.5 2.5 C14.5 6 12.5 8 9 8 Z"/><path d="M5.5 17 h7"/>'};
+const CAT_ICO={b:'<path d="M3.5 12.5 C2 9.5 4 7 6.5 7.5 C7 4.5 11 4 12 6.5 C15 6 16.5 9.5 14.5 12.5 Z"/><path d="M9 12.5 V16 M6.5 16 h5"/>',w:'<path d="M9 2.5 C6.5 6.5 4.5 9 4.5 11.5 a4.5 4.5 0 0 0 9 0 C13.5 9 11.5 6.5 9 2.5 Z"/><path d="M7 12.5 q1 1.6 3 1.4"/>',p:'<circle cx="9" cy="9" r="1.8"/><circle cx="9" cy="4.6" r="2.6"/><circle cx="13.2" cy="7.6" r="2.6"/><circle cx="11.6" cy="12.8" r="2.6"/><circle cx="6.4" cy="12.8" r="2.6"/><circle cx="4.8" cy="7.6" r="2.6"/>',f:'<circle cx="9" cy="11" r="5"/><path d="M9 6 q2 -4 6 -3 q-1 4 -6 3"/>',a:'<path d="M9 16 V9 M9 11 q-5 0 -6 -5 q5 0 6 5 M9 9 q4 -1 5 -5 q-4 0 -5 5"/>',t:'<path d="M5 16 L13 3 M7.4 12.2 l-3 -.8 M9.2 9.3 l-3 -.8 M11 6.4 l-3 -.8 M8.3 13.8 l3 .8 M10.1 10.9 l3 .8 M11.9 8 l3 .8"/>',h:'<path d="M4 14 Q4 4 14 4 Q14 14 4 14 Z M4 14 L11 7"/>',g:'<circle cx="9" cy="7" r="5"/><path d="M9 12 V17 M6 17 h6"/>',n:'<path d="M9 17 V9"/><path d="M9 10 C5 10 3.5 7.5 3.5 4.5 C7 4.5 9 7 9 10 Z M9 8 C9 5 10.5 2.5 14.5 2.5 C14.5 6 12.5 8 9 8 Z"/><path d="M5.5 17 h7"/>'};
 const catIco=k=>`<svg class="cat-ico" viewBox="0 0 18 18" aria-hidden="true">${CAT_ICO[k]||''}</svg>`;
 const grDe=id=>(DATA.find(x=>x.id===id)||{}).gr;
 // mesmos nomes e ordem das categorias do app Quintal Agroflorestal
-const GR=[['f','Frutíferas'],['a','Adubo verde e biomassa'],['t','Aromáticas'],['h','Hortaliças'],['p','Flores para polinizadores'],['g','Grandes árvores'],['w','Beira d’água e nascentes']];
+const GR=[['f','Frutíferas'],['a','Adubo verde e biomassa'],['t','Aromáticas'],['h','Hortaliças'],['p','Flores para polinizadores'],['b','Arbustivas'],['g','Grandes árvores'],['w','Beira d’água e nascentes']];
 const VIA={S:'semente',E:'estaca',D:'divisão',R:'rizoma ou rama',B:'rebento',A:'mergulhia',X:'enxerto',F:'esporos'};
 const TIPO={R:['semeie fresca','Recalcitrante: não deixe secar'],O:['guardar seca','Ortodoxa: pode secar e guardar'],C:['vida curta','Seca, mas perde a força em poucos meses'],I:['intermediária','Guarda pouco tempo']};
 const ORIG={N:'nativa',E:'endêmica do Brasil',Z:'naturalizada',X:'exótica'};
@@ -443,7 +443,7 @@ function pintar(el){const id=el.dataset.k;if(el.dataset.ok)return;el.dataset.ok=
 const OBS='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){OBS.unobserve(e.target);pintar(e.target);}}),{rootMargin:'300px'}):null;
 function observar(){document.querySelectorAll('.foto[data-k]').forEach(el=>OBS?OBS.observe(el):pintar(el));}
 document.addEventListener('toggle',e=>{const t=e.target;if(t.classList&&t.classList.contains('ficha')&&t.open){const f=t.querySelector('.fig');if(f)pintar(f);}},true);
-const EXTRA={w:["inga", "embauba", "jucara", "urucum", "patadevaca", "a-cedrelafissilis", "a-cabraleacanjerana", "a-handroanthusimpetiginosus", "a-handroanthusochraceus", "a-zeyheriatuberculosa", "a-nectandramegapotamica", "falsairis", "vedelia", "alamanda", "heliconia", "taioba", "sangra", "a-calophyllumbrasiliense", "a-tibouchinagranulosa", "banana", "inhame", "gengibre"]};
+const EXTRA={b:["lobeira", "aracacampo", "guabiroba", "gabiroba", "muricicampo", "peracerrado", "algodaocampo", "assapeixe", "assapeixeroxo", "caneladevelho", "orelhadeonca", "fedegosopendula", "senaempenada", "milhodegrilo", "lantanacamara", "lantana", "esponjinha", "jacobinia", "salviaazul", "juqueri", "juqueriamarelo", "margaridao", "guandu", "alecrimcampo", "baleeira", "alecrimpimenta", "boldo", "pariparoba", "orapronobis"],w:["inga", "embauba", "jucara", "urucum", "patadevaca", "a-cedrelafissilis", "a-cabraleacanjerana", "a-handroanthusimpetiginosus", "a-handroanthusochraceus", "a-zeyheriatuberculosa", "a-nectandramegapotamica", "falsairis", "vedelia", "alamanda", "heliconia", "taioba", "sangra", "a-calophyllumbrasiliense", "a-tibouchinagranulosa", "banana", "inhame", "gengibre"]};
 const inG=(d,k)=>d.gr===k||(EXTRA[k]||[]).includes(d.id);
 function ok(d){
   if(PLANO&&!PLANO.has(d.id))return false;
