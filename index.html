@@ -1502,7 +1502,9 @@ const DEF_SP={R:{el:.25,ep:.2,h:.3},B:{el:.6,ep:.5,h:.8},M:{el:1,ep:1,h:2},A:{el
 
 const DEFAULT={L:6,W:3,sol:'P',agua:'facil',modo:'chao',vista:'planta',sel:['alface','couve','cebolinha','manjericao','tomate','cenoura','guandu','mandioca','banana','pitanga'],custom:[],exemplo:true};
 let S;
-try{S=JSON.parse(localStorage.getItem('quintal-saf-v2')||'null');}catch(e){S=null}
+try{S=JSON.parse(localStorage.getItem('quintal-saf-v3')||'null');}catch(e){S=null}
+// estado antigo (v2): aproveita só as plantas criadas pela pessoa
+if(!S){try{const o=JSON.parse(localStorage.getItem('quintal-saf-v2')||'null');if(o&&Array.isArray(o.custom)&&o.custom.length){S=JSON.parse(JSON.stringify(DEFAULT));S.custom=o.custom;}}catch(e){}}
 if(!S||!Array.isArray(S.sel))S=JSON.parse(JSON.stringify(DEFAULT));
 S.custom=(S.custom||[]).filter(c=>c&&c.el);S.vista=S.vista||'planta';
 S.custom.forEach(c=>BYID[c.id]=c);
@@ -1521,7 +1523,7 @@ S.tenho={};
 try{const u=new URLSearchParams(location.search),ad=u.get('add');if(ad){const ids=ad.split(',').map(x=>x.trim()).filter(i=>BYID[i]);
   ids.forEach(i=>{if(!S.sel.includes(i))S.sel.push(i);});if(ids.length){S.exemplo=false;S.mtab='plantas';}
   u.delete('add');history.replaceState(null,'',location.pathname+(u.toString()?'?'+u:'')+location.hash);}}catch(e){}
-function save(){try{localStorage.setItem('quintal-saf-v2',JSON.stringify(S));}catch(e){}}
+function save(){try{localStorage.setItem('quintal-saf-v3',JSON.stringify(S));}catch(e){}}
 
 const $=id=>document.getElementById(id);
 const fmt=(n,d=1)=>n.toLocaleString('pt-BR',{maximumFractionDigits:d,minimumFractionDigits:0});
