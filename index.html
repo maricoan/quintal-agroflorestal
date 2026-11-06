@@ -451,6 +451,7 @@ svg text{font-family:var(--f-mono);fill:var(--ink)}
 .cap-opts{list-style:none;padding:0!important;gap:8px!important}.cap-row{display:grid;grid-template-columns:minmax(0,190px) minmax(0,1fr);gap:2px 12px;align-items:center}.cap-row small{grid-column:2;font-size:12.5px;color:var(--muted)}.cap-l{font-weight:700;font-size:13.5px;grid-row:span 2}
 .cap-v{display:flex;flex-wrap:wrap;align-items:center;gap:4px}.cap-dots{display:inline-flex;gap:3px;align-items:center}.cap-dots .tdot{width:12px;height:12px}.cap-dots b{font-size:12px;color:var(--muted)}.cap-plus{color:var(--muted);font-size:12px;margin:0 2px}
 @media (max-width:560px){.cap-row{grid-template-columns:1fr}.cap-row small{grid-column:1}.cap-l{grid-row:auto}}
+.cap-leg{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0;font-size:12.5px;color:var(--muted)}.cap-leg span{display:inline-flex;align-items:center;gap:5px}.cap-leg .tdot{width:12px;height:12px}.cap-leg-n{font-style:italic}
 .cap-meter{display:flex;flex-direction:column;gap:4px}.cap-bar{height:10px;border-radius:5px;background:var(--surface);border:1px solid var(--line);overflow:hidden}.cap-bar span{display:block;height:100%;background:var(--leaf);border-radius:5px}
 .cap-bigb{font:inherit;font-size:12.5px;font-weight:700;border:1px solid var(--leaf);color:var(--leaf);background:var(--surface);border-radius:999px;padding:3px 10px;cursor:pointer;margin-left:4px}
 .cap-ex button.par{border-color:var(--sun)}.par-i{color:var(--sun)}
@@ -3406,7 +3407,7 @@ function capacityBox(m){const c=potCapacity(m);const pl=(n,a,b)=>`${n} ${n===1?a
   const chips=l=>l.map(s=>{if(S.sel.includes(s.id))return `<button type="button" class="on" data-rmsel="${s.id}" aria-pressed="true" title="Tirar ${esc(s.n)} da seleção">✓ ${esc(s.n)}</button>`;
     const pp=par(s);return `<button type="button" data-addsp="${s.id}" aria-pressed="false"${pp?` class="par" title="Combina com ${esc(pp.n)}"`:` title="Acrescentar ${esc(s.n)}"`}>+ ${esc(s.n)}${pp?' <span class="par-i" aria-label="parceira">★</span>':''}</button>`;}).join('');
   // bolinhas por estrato
-  const dots=(e,n)=>n>0?`<span class="cap-dots" aria-hidden="true">${Array.from({length:Math.min(n,10)},()=>`<i class="tdot d-${e}"></i>`).join('')}${n>10?'<b>+</b>':''}</span>`:'';
+  const ET={M:'médio',B:'baixo',R:'rasteiro'};const dots=(e,n)=>n>0?`<span class="cap-dots" title="${n} ${n===1?'planta':'plantas'} de estrato ${ET[e]}">${Array.from({length:Math.min(n,10)},()=>`<i class="tdot d-${e}"></i>`).join('')}${n>10?'<b>+</b>':''}</span>`:'';
   const row=(lab,parts,alt)=>`<li class="cap-row"><span class="cap-l">${lab}</span><span class="cap-v">${parts.filter(([,n])=>n>0).map(([e,n])=>dots(e,n)).join('<span class="cap-plus">+</span>')}</span><small>${parts.filter(([,n])=>n>0).map(([e,n,t1,t2])=>pl(n,t1,t2)).join(' + ')}${alt?` · ou ${alt}`:''}</small></li>`;
   const opt=[];
   if(c.two){const t=c.two;opt.push(row('Duas frutíferas, uma em cada ponta',[['M',2,'frutífera','frutíferas'],['B',t.nh,'hortaliça','hortaliças'],['R',t.nrh,'rasteira','rasteiras']],t.na?pl(t.na,'aromática','aromáticas')+' no lugar das hortaliças':''));}
@@ -3430,7 +3431,7 @@ function capacityBox(m){const c=potCapacity(m);const pl=(n,a,b)=>`${n} ${n===1?a
   const exT=fit.length&&falta.length?'Para completar os estratos:':'Exemplos:';
   return `<div class="capbox"><h3>O que cabe ${m.round?'neste vaso':'nesta floreira'} (≈ ${fmt(m.V,0)} L) <button type="button" class="zinfo" data-capi aria-expanded="false" aria-label="Como montar o vaso" title="Como montar o vaso">i</button></h3>
     <p class="hint ibox cap-ibox" hidden>Seguindo a agricultura sintrópica: combine estratos diferentes no mesmo recipiente, com a planta mais alta no centro (ou no lado oposto à luz), as baixas em volta e uma forração rasteira cobrindo a terra, que nunca deve ficar exposta. A poda da planta maior volta para a terra como cobertura. Contas feitas com valores típicos de cada estrato: frutífera pequena de 50 L no centro, hortaliças com 20 cm de espaço e 5 L, aromáticas com 24 cm e 5 L, rasteiras com 12 cm e 3 L. Plantas que pedem mais terra (como couve, cenoura ou limão) reduzem esses números.</p>
-    ${meter}<ul class="cap-opts">${opt.join('')}${big}</ul>
+    ${meter}<ul class="cap-opts">${opt.join('')}${big}</ul><p class="cap-leg"><span><i class="tdot d-M"></i>médio: frutífera pequena</span><span><i class="tdot d-B"></i>baixo: hortaliça ou aromática</span><span><i class="tdot d-R"></i>rasteiro: forração</span><span class="cap-leg-n">cada bolinha é uma planta</span></p>
     <h4 class="cap-ex-t">${exT}</h4><div class="cap-ex">${show.map(g=>g[1]).join('')}</div>${show.some(g=>g[1].includes('par-i'))?'<p class="hint">★ combina com uma planta que você já escolheu.</p>':''}</div>`;}
 function myPotPanel(sel){
   const m=myPot(sel);const pct=Math.min(100,Math.round(m.uV/m.V*100));
