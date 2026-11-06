@@ -299,7 +299,8 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .tenho[open]{padding-bottom:10px}.tenho .hint{margin:8px 0 0;font-size:12.5px}
 .tenho-f{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .tenho-f input,.tenho-f select{font:inherit;font-size:14px;border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:var(--surface);color:var(--ink);min-width:0}
-.tenho-f #tnPlanta{flex:1 1 170px}.tenho-f #tnQtd{width:70px}
+.tenho-f #tnPlanta{flex:1 1 170px}
+.tn-tipos{display:flex;flex-wrap:wrap;gap:6px;flex-basis:100%;order:-1}.tn-tipos label{display:inline-flex;align-items:center;gap:6px;font-size:14px;border:1px solid var(--line);border-radius:999px;padding:5px 12px 5px 8px;background:var(--surface);cursor:pointer}.tn-tipos input{accent-color:var(--leaf);width:16px;height:16px;margin:0}.tn-tipos label:has(input:checked){border-color:var(--leaf);background:color-mix(in srgb,var(--leaf) 12%,var(--surface));font-weight:700;color:var(--leaf)}.tenho-f #tnQtd{width:70px}
 .tenho-f button{font:inherit;font-size:14px;font-weight:700;border:0;border-radius:6px;padding:7px 14px;background:var(--leaf);color:var(--surface);cursor:pointer}
 .tenho-msg{margin:6px 0 0;font-size:12.5px;color:var(--warn)}.tenho-msg:empty{display:none}
 .tenho-l{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}.tenho-l:empty{display:none}
@@ -787,7 +788,7 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
           <div class="tenho-f">
             <label class="sr" for="tnPlanta">Planta</label><input id="tnPlanta" list="tnLista" type="text" placeholder="Planta (ex.: helicônia)" autocomplete="off">
             <datalist id="tnLista"></datalist>
-            <label class="sr" for="tnTipo">Tipo</label><select id="tnTipo"><option value="muda">mudas</option><option value="estaca">estacas ou rizomas</option><option value="semente">sementes</option></select>
+            <select id="tnTipo" hidden aria-hidden="true" tabindex="-1"><option value="muda">mudas</option><option value="estaca">estacas ou rizomas</option><option value="semente">sementes</option></select><div class="tn-tipos" role="radiogroup" aria-label="O que você tem"><label><input type="radio" name="tnTipoR" value="muda" checked><span>Mudas</span></label><label><input type="radio" name="tnTipoR" value="estaca"><span>Estacas ou rizomas</span></label><label><input type="radio" name="tnTipoR" value="semente"><span>Sementes</span></label></div>
             <label class="sr" for="tnQtd">Quantidade</label><input id="tnQtd" type="number" min="1" step="1" value="1" inputmode="numeric">
             <button type="button" id="tnAdd">Adicionar</button>
           </div>
@@ -1572,6 +1573,7 @@ function renderTenho(){
   $('tnLista').innerHTML=all.map(s=>`<option value="${esc(s.n)}">`).join('');
   $('tnList').innerHTML=Object.entries(S.tenho).filter(([id])=>BYID[id]).map(([id,t])=>`<li>${t.n!=null?`<b>${t.n}</b> ${TIPO_TXT[t.tipo][t.n===1?0:1]} de`:'Sementes abundantes de'} ${esc(BYID[id].n)}<button type="button" data-tnrm="${id}" aria-label="Tirar ${esc(BYID[id].n)}">×</button></li>`).join('');
 }
+document.querySelectorAll('input[name=tnTipoR]').forEach(r=>r.addEventListener('change',()=>{if(r.checked){$('tnTipo').value=r.value;$('tnTipo').dispatchEvent(new Event('change'));}}));
 $('tnTipo').addEventListener('change',()=>{const q=$('tnQtd'),sem=$('tnTipo').value==='semente';q.disabled=false;q.placeholder=sem?'qtd.':'';if(sem&&q.value==='1')q.value='';if(!sem&&!q.value)q.value=1;});
 function tnAdd(){
   const q=normN($('tnPlanta').value);if(!q){$('tnMsg').textContent='Escreva o nome da planta.';return;}
