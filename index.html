@@ -3140,7 +3140,7 @@ function isoPots(pots,aria){
       g+=`<polygon class="s-bed" points="${P([C(-hx,-hy,H),C(hx,-hy,H),C(hx,hy,H),C(-hx,hy,H)])}"/><polygon fill="url(#tx-soil)" points="${P([C(-hx,-hy,H),C(hx,-hy,H),C(hx,hy,H),C(-hx,hy,H)])}"/>`;
       g+=`<polygon class="pot-rim-l" points="${P([C(-hx,-hy,H),C(hx,-hy,H),C(hx,hy,H),C(-hx,hy,H)])}"/>`;}
     p.placed.slice().sort((a,b)=>(a.x+a.y)-(b.x+b.y)).forEach(q=>{const [bx,by]=iso(p.X0+q.x,p.Y0+q.y,H),ph=potPlantH(q.s)*K*ZF,pw=Math.max(10,2*q.r*K*.95);
-      g+=`<g data-sp="${q.s.id}"><title>${esc(q.s.n)}</title><ellipse class="shd" cx="${X(bx)}" cy="${X(by)}" rx="${X(pw*.45)}" ry="${X(pw*.22)}"/>`;
+      g+=`<g><ellipse class="shd" cx="${X(bx)}" cy="${X(by)}" rx="${X(pw*.45)}" ry="${X(pw*.22)}"/>`;
       g+=(q.s.arv?crownSVG(q.s,bx,by,ph,Math.max(pw,ph*.2),Math.max(pw*3,ph*.55)):potPlantSVG(q.s,bx,by,pw*.95,ph,pw))+'</g>';});
   });
   // nomes por último, por cima de tudo
