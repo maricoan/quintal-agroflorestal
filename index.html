@@ -3329,7 +3329,24 @@ function potCompanions(m){
   res.sort((a,b)=>rk(a[1])-rk(b[1])||(/M/.test(a[0].sol||'')?0:1)-(/M/.test(b[0].sol||'')?0:1)||a[0].v-b[0].v);
   return res.slice(0,6);
 }
+// café em vaso: arbusto em camadas, ramos laterais horizontais em pares, copa cônica, frutos vermelhos agrupados nos nós
+function coffeeSVG(s,cx,base,ph,w,room){
+  const X=n=>n.toFixed(1),W=Math.min(Math.max(w*1.1,ph*.42),ph*.5,room/2),top=base-ph,n=11;
+  let o=`<g><title>${esc(s.n)}</title><line class="trunk" stroke-width="${X(Math.max(2,Math.min(4.5,W*.07)))}" x1="${X(cx)}" y1="${X(base)}" x2="${X(cx)}" y2="${X(top+ph*.04)}"/>`;
+  const lf=(x,y,rx,ry,ang,c)=>`<ellipse class="${c}" cx="${X(x)}" cy="${X(y)}" rx="${X(rx)}" ry="${X(ry)}" transform="rotate(${ang.toFixed(0)} ${X(x)} ${X(y)})"/>`;
+  const leaves=[],fruits=[];
+  for(let k=0;k<n;k++){const t=k/(n-1),y=base-ph*(.16+t*.78),len=W*(1-t*.78);
+    [-1,1].forEach(d=>{const ex=cx+d*len,ey=y+len*.14;
+      o+=`<path class="trunk-thin" fill="none" d="M${X(cx)},${X(y)} Q${X(cx+d*len*.5)},${X(y-len*.04)} ${X(ex)},${X(ey)}"/>`;
+      const nn=Math.max(2,Math.round(5-t*3));
+      for(let j=1;j<=nn;j++){const u=j/(nn+.3),lx=cx+d*len*u,ly=y+len*.14*u*u-len*.02*u,L=Math.max(2.4,W*.14*(1-t*.4)),H=L*.42;
+        leaves.push(lf(lx,ly-H*.9,L,H,d*-28,(j+k)%3?'tn1':'tn4'));leaves.push(lf(lx,ly+H*.9,L,H,d*28,(j+k)%2?'tn1s':'tn1'));
+        if(k<n-3&&j<nn&&(j+k)%2)for(let q=0;q<3;q++)fruits.push(`<circle class="fr-rd" cx="${X(lx+(q-1)*Math.max(1.2,W*.035))}" cy="${X(ly+(q===1?-1:1)*Math.max(.6,W*.015))}" r="${X(Math.max(1.2,Math.min(2.4,W*.035)))}"/>`);}
+      leaves.push(lf(ex+d*W*.03,ey,Math.max(2,W*.12*(1-t*.4)),Math.max(1,W*.05),d*-6,'tn4'));});}
+  leaves.push(lf(cx,top+ph*.04,Math.max(2,W*.09),Math.max(2.4,W*.14),0,'tn4'));
+  return o+leaves.join('')+fruits.join('')+`</g>`;}
 function crownSVG(s,cx,base,ph,w,room){
+  if((TREEFORM[s.id]||{}).f==='coffee')return coffeeSVG(s,cx,base,ph,w,room);
   const X=n=>n.toFixed(1),cr=Math.min(Math.max(w*.9,ph*.34),ph*.42,room/2),cyc=base-ph+cr*.95,tn=FOLT[s.id]||({E:3,A:1,M:4})[s.e]||1;
   let o=`<line class="trunk" stroke-width="${Math.max(2.4,Math.min(6,cr*.1)).toFixed(1)}" x1="${X(cx)}" y1="${X(base)}" x2="${X(cx)}" y2="${X(cyc+cr*.5)}"/><g><title>${esc(s.n)}</title>`;
   o+=`<ellipse class="crown tn${tn}s" cx="${X(cx)}" cy="${X(cyc)}" rx="${X(cr)}" ry="${X(cr*.95)}"/>`;
