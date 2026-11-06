@@ -3653,7 +3653,7 @@ const potSun=it=>{const s=it.sp[0];return (s.sol||'P')==='P'?1:(s.sol||'').inclu
 function potLegend(list,cnt){const seen=new Set(),u=list.filter(s=>s&&!seen.has(s.id)&&seen.add(s.id));if(!u.length)return '';
   const order='EAMBR';u.sort((x,y)=>order.indexOf(x.e)-order.indexOf(y.e)||x.n.localeCompare(y.n));
   return `<div class="legend">`+u.map(s=>{const l=semLink(s.id,'Como produzir mudas');const n=cnt[s.id]||1;return `<div class="lg" data-sp="${s.id}"><span class="ab d-${s.e} ${darkLab(s.e)}">${esc(s.a)}</span><span class="nm">${esc(s.n)}<small class="sp">${EST[s.e]} · altura no vaso ${cmTxt(potRange(s))}${s.v?` · mín. ${s.v} L de terra`:''}</small>${l?`<small class="cmp">${l}</small>`:''}</span><span class="q">${n} ${n>1?'plantas':'planta'}</span></div>`;}).join('')+`</div>`;}
-function potExtras(list,cnt){ultimoPlano={count:cnt,vaso:true};return potLegend(list,cnt)+comprasPanel({count:cnt,tenho:[]})+shareBar();}
+function potExtras(list,cnt){const info={};list.forEach(s=>{info[s.id]=s;});ultimoPlano={count:cnt,vaso:true,info};return potLegend(list,cnt)+comprasPanel({count:cnt,tenho:[]})+shareBar();}
 function abLegend(list){const seen=new Set(),u=list.filter(s=>s&&!seen.has(s.id)&&seen.add(s.id));if(!u.length)return '';
   return `<div class="ab-leg" aria-label="Legenda das siglas">${u.map(s=>`<span class="ab-i" data-sp="${s.id}"><span class="ab d-${s.e} ${darkLab(s.e)}">${esc(s.a)}</span>${esc(s.n)}</span>`).join('')}</div>`;}
 function drawPotsTop(items){
@@ -3844,7 +3844,7 @@ function svgParaPng(svg,p){
     cl.setAttribute('width',dw);cl.setAttribute('height',dh);cl.setAttribute('xmlns','http://www.w3.org/2000/svg');
     const css=getComputedStyle(document.body),cor=k=>getComputedStyle(document.documentElement).getPropertyValue(k).trim()||'#222';
     const ids=Object.keys(p.count).filter(i=>BYID[i]);
-    const colN=3,linhas=Math.ceil(ids.length/colN),H=140+dh+40+linhas*34+70;
+    const colN=p.vaso?1:3,rowH=p.vaso?62:34,linhas=Math.ceil(ids.length/colN),H=140+dh+40+linhas*rowH+70;
     const cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');
     c.fillStyle=cor('--bg');c.fillRect(0,0,W,H);
     c.fillStyle=cor('--leaf');c.font='bold 46px Georgia, serif';c.fillText(p.vaso?'Minha agrofloresta no vaso':'Meu plantio',60,78);
@@ -3853,9 +3853,10 @@ function svgParaPng(svg,p){
     const img=new Image();
     img.onload=()=>{c.drawImage(img,60,140,dw,dh);
       let y=140+dh+50;c.font='22px system-ui, sans-serif';
-      ids.forEach((id,i)=>{const s=BYID[id],x=60+(i%colN)*((W-120)/colN),yy=y+Math.floor(i/colN)*34;
+      ids.forEach((id,i)=>{const s=BYID[id],x=60+(i%colN)*((W-120)/colN),yy=y+Math.floor(i/colN)*rowH;
         c.fillStyle=cor('--ink');c.font='bold 20px ui-monospace, monospace';c.fillText(s.a||'',x,yy);
-        c.font='22px system-ui, sans-serif';c.fillText(`${s.n} (${p.count[id]})`,x+48,yy);});
+        c.font='22px system-ui, sans-serif';c.fillText(`${s.n} (${p.count[id]})`,x+48,yy);
+        if(p.vaso){const ps=(p.info&&p.info[id])||s;c.fillStyle=cor('--muted');c.font='19px system-ui, sans-serif';c.fillText(`Estrato ${EST[ps.e].toLowerCase()} · altura no vaso ${cmTxt(potRange(ps)).replace(/<[^>]*>/g,'')}${ps.v?` · mín. ${ps.v} L de terra`:''}`,x+48,yy+26);c.fillStyle=cor('--ink');}});
       c.fillStyle=cor('--muted');c.font='20px system-ui, sans-serif';c.fillText('Feito no Quintal Agroflorestal · quintal.marianacoan.com',60,H-30);
       cv.toBlob(bl=>bl?ok(bl):erro(new Error('blob')),'image/png');};
     img.onerror=()=>erro(new Error('svg'));
