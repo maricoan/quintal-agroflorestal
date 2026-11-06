@@ -309,6 +309,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .cer-tag{display:inline-flex;vertical-align:-3px}.cer-ic{width:20px;height:17px;fill:none;stroke:var(--soil);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}.cer-ic .cer-c{fill:color-mix(in srgb,#9A7400 55%,transparent);stroke:#7a5c00}.cer-ic .cer-g{stroke:#A4471F}.oleg .cer-tag{width:26px;justify-content:center;flex:none}
 .tem-tag{font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--leaf);border:1px solid var(--leaf);border-radius:4px;padding:0 4px;line-height:1.5}
 .compra th:not(:first-child){text-align:right}.compra td.n{text-align:right;font-variant-numeric:tabular-nums}.compra .ok{color:var(--leaf);font-weight:700}.compra .falta{color:var(--warn);font-weight:700}
+.ibox p{margin:0 0 6px}.ibox p:last-child{margin:0}#soloInfo{font-size:14px;color:var(--muted)}
 .ibox{background:var(--ci-bg,rgba(0,0,0,.04));border-radius:8px;padding:8px 12px;margin-top:4px}button.zinfo{padding:0;background:none}button.zinfo[aria-expanded="true"]{background:var(--leaf);color:var(--surface)}
 .hint-d{margin-top:10px}.hint-d>summary{display:inline-flex;align-items:center;gap:6px;cursor:pointer;list-style:none;font-size:14px;color:var(--leaf);font-weight:700}.hint-d>summary::-webkit-details-marker{display:none}.hint-d>summary .zinfo{margin-left:0}.hint-d[open]>summary .zinfo{background:var(--leaf);color:var(--surface)}.hint-d>.hint{margin-top:6px}
 .share{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
@@ -752,7 +753,8 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
       </section>
 
       <section class="panel" id="sec-solo" aria-labelledby="t-solo">
-        <div class="head"><h2 id="t-solo">2. Solo</h2></div>
+        <div class="head"><h2 id="t-solo">2. Solo <button type="button" class="zinfo" id="soloI" aria-expanded="false" aria-controls="soloInfo" aria-label="Como o mato indica o solo" title="Como o mato indica o solo">i</button></h2></div>
+        <div class="ibox" id="soloInfo" hidden><p>As plantas que nascem sozinhas (espontâneas) aparecem onde o solo tem as condições de que elas gostam. Por isso, o mato que domina o terreno dá pistas de como ele está: ácido, compactado, encharcado, pobre ou fértil.</p><p>Marque abaixo as que você vê. O app mostra o que elas indicam e como corrigir: adubação verde, palha, composto, plantas de raiz forte para soltar a terra ou espécies que aguentam umidade. Para acidez e falta de nutrientes, a análise de solo é que diz quanto corrigir.</p><p class="hint">Fontes: Embrapa Hortaliças, Circular Técnica 62 (2008); Oficinas Agroecológicas UFSC.</p></div>
         <details class="indic" id="indicBox"><summary><svg class="cat-ico" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 .8V4.6M7.3 3 9 4.7 10.7 3"/><path transform="translate(2.25 4) scale(.75)" vector-effect="non-scaling-stroke" d="M9 16 V8 M9 11 q-4 0 -5 -4 q4 0 5 4 M9 9 q3 -1 4 -4 q-3 0 -4 4 M3 16 h12"/></svg><span>Plantas indicadoras do solo <span class="cat-sub">Marque o mato que nasce sozinho no terreno: ele mostra como está o solo.</span></span></summary>
           <div class="chips" id="indicList"></div>
           <div id="indicRes" aria-live="polite"></div>
@@ -1599,6 +1601,7 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-invadd]');
 $('tray').addEventListener('click',e=>{const b=e.target.closest('[data-rmsel]');if(!b)return;S.sel=S.sel.filter(i=>i!==b.dataset.rmsel);S.exemplo=false;update();});
 try{$('legbox').open=!!(S.legOpen);}catch(e){}
 $('legbox').addEventListener('toggle',()=>{S.legOpen=$('legbox').open;$('legI').setAttribute('aria-expanded',String($('legbox').open));save();});
+$('soloI').addEventListener('click',()=>{const b=$('soloInfo');b.hidden=!b.hidden;$('soloI').setAttribute('aria-expanded',String(!b.hidden));});
 $('legI').addEventListener('click',()=>{$('legbox').open=!$('legbox').open;});
 try{$('legI').setAttribute('aria-expanded',String($('legbox').open));}catch(e){}
 $('limpar').addEventListener('click',()=>{if(!S.sel.length)return;const prev={sel:S.sel.slice(),consSel:(S.consSel||[]).slice(),exemplo:S.exemplo,tenho:Object.assign({},S.tenho)};
