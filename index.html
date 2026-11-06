@@ -765,7 +765,7 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
 
       <section class="panel" id="sec-plantas" aria-labelledby="t-plantas">
         <div class="head">
-          <h2 id="t-plantas">3. O que plantar? <button type="button" class="zinfo" id="legI" aria-expanded="false" aria-controls="legbox" aria-label="Como ler os ícones" title="Como ler os ícones">i</button></h2>
+          <h2 id="t-plantas"><span id="nPlantas">3</span>. O que plantar? <button type="button" class="zinfo" id="legI" aria-expanded="false" aria-controls="legbox" aria-label="Como ler os ícones" title="Como ler os ícones">i</button></h2>
           <span class="hint" id="nsel"></span>
         </div>
         <details class="legend-box" id="legbox"><summary class="sr">Como ler os ícones</summary>
@@ -3839,6 +3839,7 @@ function update(fromInput){
   alignSub();$('fC').hidden=$('fW').hidden=S.pottipo!=='floreira';
   if(!fromInput){$('pD').value=S.pD||30;$('pC').value=S.pC||60;$('pW').value=S.pW||20;$('pH').value=S.pH||25;}
   $('formaF').hidden=S.modo==='vaso';
+  $('sec-solo').hidden=S.modo==='vaso';$('nPlantas').textContent=S.modo==='vaso'?'2':'3';
   $('medidas').hidden=S.modo==='vaso'||isCirc();
   $('medD').hidden=S.modo==='vaso'||!isCirc();
   syncSeg('curso',S.curso||'nao');$('cursoF').hidden=S.modo==='vaso';
