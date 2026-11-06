@@ -3338,7 +3338,10 @@ function drawMyPot(m){
 }
 // vista de cima: o círculo tracejado é o espaço de que cada planta precisa
 function drawPotTop(m){
-  const X=n=>n.toFixed(1),T=Math.min(260/(m.Wd/100),150/(m.Dp/100)),w=m.Wd/100*T,h=m.Dp/100*T,pad=16,VW=Math.max(w+pad*2,170),VH=h+pad*2,cx=VW/2,cy=pad+h/2;
+  const X0=n=>n.toFixed(1),T=Math.min(260/(m.Wd/100),150/(m.Dp/100)),w=m.Wd/100*T,h=m.Dp/100*T;
+  // folga para que o círculo de espaço de cada planta apareça inteiro
+  let ex=0,ey=0;(m.placed||[]).forEach(q=>{const r=q.r*T;ex=Math.max(ex,Math.abs(q.x*T)+r-w/2);ey=Math.max(ey,Math.abs(q.y*T)+r-h/2);});
+  const pad=16,px=pad+Math.max(0,ex),py=pad+Math.max(0,ey),VW=Math.max(w+px*2,170),VH=h+py*2,cx=VW/2,cy=py+h/2,X=X0;
   let b=m.round?`<circle class="pot-top" cx="${X(cx)}" cy="${X(cy)}" r="${X(w/2)}"/>`:`<rect class="pot-top" x="${X(cx-w/2)}" y="${X(cy-h/2)}" width="${X(w)}" height="${X(h)}" rx="4"/>`;
   (m.placed||[]).forEach(p=>{const x=cx+p.x*T,y=cy+p.y*T;
     b+=`<g data-sp="${p.s.id}"><circle class="need" cx="${X(x)}" cy="${X(y)}" r="${X(p.r*T)}"><title>${esc(p.s.n)}: ${Math.round(p.r*200)} cm de espaço</title></circle>`;
