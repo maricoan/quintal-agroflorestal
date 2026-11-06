@@ -1731,7 +1731,7 @@ function showInfo(id){
   const det=`${s.sci?`<i>${esc(s.sci)}</i> · `:''}Estrato ${EST[s.e].toLowerCase()} · ${luz} · ${s.o?ORIG_TXT[s.o].toLowerCase():'origem não informada'}${s.msp?` · Manual de Arb. de SP, porte ${PORTE[s.msp]}`:''}${s.tox?' · tóxica se ingerida':''}`;
   const mot=luzMotivo(s);
   const inv=INVASORA[s.id];
-  $('chipinfo').innerHTML=`<span class="ci-top">${sig(s.e)}${s.o?`<span class="ico-w">${ICON[s.o]}</span>`:''}<b>${esc(s.n)}</b>${s.custom||SEM_SEM.has(s.id)?'':`<a class="ci-sem" href="${SEM_URL}#${semId(s.id)}" target="_blank" rel="noopener">Sementes e propagação →</a>`}</span><span class="ci-d">${inv?`<b class="ci-inv">Invasora em SP.</b> `:''}${CERRADO.has(s.id)?'<b class="ci-cer">Cerrado SP.</b> ':''}${det}${mot?`. <b class="ci-luz">${esc(mot)}</b>`:''}</span>`;
+  $('chipinfo').innerHTML=`<span class="ci-top">${sig(s.e)}${s.o?`<span class="ico-w">${ICON[s.o]}</span>`:''}<b>${esc(s.n)}</b></span><span class="ci-d">${inv?`<b class="ci-inv">Invasora em SP.</b> `:''}${CERRADO.has(s.id)?'<b class="ci-cer">Cerrado SP.</b> ':''}${det}${mot?`. <b class="ci-luz">${esc(mot)}</b>`:''}</span>`;
   $('chipinfo').title=(inv?inv+' ':'')+det.replace(/<[^>]+>/g,'')+(mot?'. '+mot:'');
 }
 $('cats').addEventListener('mouseover',e=>{const b=e.target.closest('.chip');if(b)showInfo(b.dataset.id);});
