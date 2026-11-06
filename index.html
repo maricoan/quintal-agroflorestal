@@ -133,7 +133,7 @@ h2{font-family:var(--f-display);font-weight:400;font-size:22px;margin:0;text-wra
 /* destaque de espécie: ao passar o mouse numa planta ou na legenda, as da mesma espécie acendem */
 #out.hl-on svg [data-sp]{transition:opacity .15s}
 #out.hl-on svg [data-sp]:not(.hl){opacity:.18}
-#out.hl-on .legend .lg[data-sp]:not(.hl){opacity:.45}
+#out.hl-on .legend .lg[data-sp]:not(.hl),.hl-on .ab-leg [data-sp]:not(.hl){opacity:.45}
 #out .legend .lg[data-sp]{cursor:default;border-radius:6px}
 #out .legend .lg.hl{background:var(--leaf-soft)}
 
@@ -3140,8 +3140,8 @@ function isoPots(pots,aria){
       g+=`<polygon class="s-bed" points="${P([C(-hx,-hy,H),C(hx,-hy,H),C(hx,hy,H),C(-hx,hy,H)])}"/><polygon fill="url(#tx-soil)" points="${P([C(-hx,-hy,H),C(hx,-hy,H),C(hx,hy,H),C(-hx,hy,H)])}"/>`;
       g+=`<polygon class="pot-rim-l" points="${P([C(-hx,-hy,H),C(hx,-hy,H),C(hx,hy,H),C(-hx,hy,H)])}"/>`;}
     p.placed.slice().sort((a,b)=>(a.x+a.y)-(b.x+b.y)).forEach(q=>{const [bx,by]=iso(p.X0+q.x,p.Y0+q.y,H),ph=potPlantH(q.s)*K*ZF,pw=Math.max(10,2*q.r*K*.95);
-      g+=`<ellipse class="shd" cx="${X(bx)}" cy="${X(by)}" rx="${X(pw*.45)}" ry="${X(pw*.22)}"/>`;
-      g+=q.s.arv?crownSVG(q.s,bx,by,ph,Math.max(pw,ph*.2),Math.max(pw*3,ph*.55)):potPlantSVG(q.s,bx,by,pw*.95,ph,pw);});
+      g+=`<g data-sp="${q.s.id}"><title>${esc(q.s.n)}</title><ellipse class="shd" cx="${X(bx)}" cy="${X(by)}" rx="${X(pw*.45)}" ry="${X(pw*.22)}"/>`;
+      g+=(q.s.arv?crownSVG(q.s,bx,by,ph,Math.max(pw,ph*.2),Math.max(pw*3,ph*.55)):potPlantSVG(q.s,bx,by,pw*.95,ph,pw))+'</g>';});
   });
   // nomes por último, por cima de tudo
   pots.forEach(p=>{const hx=p.Wd/2,hy=p.Dp/2;const [,ly]=iso(p.X0+hx,p.Y0+hy,0);const [mx]=iso(p.X0,p.Y0,0);
@@ -3341,8 +3341,8 @@ function drawPotTop(m){
   const X=n=>n.toFixed(1),T=Math.min(260/(m.Wd/100),150/(m.Dp/100)),w=m.Wd/100*T,h=m.Dp/100*T,pad=16,VW=Math.max(w+pad*2,170),VH=h+pad*2,cx=VW/2,cy=pad+h/2;
   let b=m.round?`<circle class="pot-top" cx="${X(cx)}" cy="${X(cy)}" r="${X(w/2)}"/>`:`<rect class="pot-top" x="${X(cx-w/2)}" y="${X(cy-h/2)}" width="${X(w)}" height="${X(h)}" rx="4"/>`;
   (m.placed||[]).forEach(p=>{const x=cx+p.x*T,y=cy+p.y*T;
-    b+=`<circle class="need" cx="${X(x)}" cy="${X(y)}" r="${X(p.r*T)}"><title>${esc(p.s.n)}: ${Math.round(p.r*200)} cm de espaço</title></circle>`;
-    b+=`<circle class="p-${p.s.e}" cx="${X(x)}" cy="${X(y)}" r="${X(Math.max(6,Math.min(11,p.r*T*.55)))}"/><text class="lab ${darkLab(p.s.e)}" x="${X(x)}" y="${X(y)}">${esc(p.s.a)}</text>`;});
+    b+=`<g data-sp="${p.s.id}"><circle class="need" cx="${X(x)}" cy="${X(y)}" r="${X(p.r*T)}"><title>${esc(p.s.n)}: ${Math.round(p.r*200)} cm de espaço</title></circle>`;
+    b+=`<circle class="p-${p.s.e}" cx="${X(x)}" cy="${X(y)}" r="${X(Math.max(6,Math.min(11,p.r*T*.55)))}"/><text class="lab ${darkLab(p.s.e)}" x="${X(x)}" y="${X(y)}">${esc(p.s.a)}</text></g>`;});
   return `<svg viewBox="0 0 ${X(VW)} ${X(VH)}" role="img" aria-label="Vista de cima do vaso com o espaço de cada planta" style="max-width:${Math.round(VW*1.6)}px">${b}</svg>`;
 }
 // quantas plantas de cada estrato cabem neste vaso, com a mesma regra de espaço do desenho
@@ -3609,7 +3609,7 @@ function potLegend(list,cnt){const seen=new Set(),u=list.filter(s=>s&&!seen.has(
   return `<div class="legend">`+u.map(s=>{const l=semLink(s.id,'Como produzir mudas');const n=cnt[s.id]||1;return `<div class="lg" data-sp="${s.id}"><span class="ab d-${s.e} ${darkLab(s.e)}">${esc(s.a)}</span><span class="nm">${esc(s.n)}<small class="sp">${EST[s.e]} · altura no vaso ${cmTxt(potRange(s))}${s.v?` · mín. ${s.v} L de terra`:''}</small>${l?`<small class="cmp">${l}</small>`:''}</span><span class="q">${n} ${n>1?'plantas':'planta'}</span></div>`;}).join('')+`</div>`;}
 function potExtras(list,cnt){ultimoPlano={count:cnt,vaso:true};return potLegend(list,cnt)+comprasPanel({count:cnt,tenho:[]})+shareBar();}
 function abLegend(list){const seen=new Set(),u=list.filter(s=>s&&!seen.has(s.id)&&seen.add(s.id));if(!u.length)return '';
-  return `<div class="ab-leg" aria-label="Legenda das siglas">${u.map(s=>`<span class="ab-i"><span class="ab d-${s.e} ${darkLab(s.e)}">${esc(s.a)}</span>${esc(s.n)}</span>`).join('')}</div>`;}
+  return `<div class="ab-leg" aria-label="Legenda das siglas">${u.map(s=>`<span class="ab-i" data-sp="${s.id}"><span class="ab d-${s.e} ${darkLab(s.e)}">${esc(s.a)}</span>${esc(s.n)}</span>`).join('')}</div>`;}
 function drawPotsTop(items){
   const X=n=>n.toFixed(1);
   const rows=[{t:'Plantas altas',f:it=>rankOf(it)<=1},{t:'Plantas médias',f:it=>rankOf(it)===2},{t:'Plantas baixas',f:it=>rankOf(it)===3}]
@@ -3624,8 +3624,8 @@ function drawPotsTop(items){
       b+=m.round?`<circle class="pot-top" cx="${X(cx)}" cy="${X(cy)}" r="${X(w/2)}"/>`:`<rect class="pot-top" x="${X(x)}" y="${X(cy-h/2)}" width="${X(w)}" height="${X(h)}" rx="3"/>`;
       const placed=it.kind==='cons'?it.placed.slice():[];const sN=s=>(s.sol||'P')==='P'?1:(s.sol||'').includes('P')?0:-1;if(it.kind!=='cons')it.sp.concat((it.under||[]).slice().sort((a,b)=>sN(b)-sN(a))).forEach(s=>{const p=tryPlace(m,placed,s);if(p)placed.push(p);});
       placed.forEach(p=>{const px=cx+p.x*K,py=cy+p.y*K;
-        if(placed.length>1)b+=`<circle class="need" cx="${X(px)}" cy="${X(py)}" r="${X(p.r*K)}"><title>${esc(p.s.n)}: ${Math.round(p.r*200)} cm de espaço</title></circle>`;
-        b+=`<circle class="p-${p.s.e}" cx="${X(px)}" cy="${X(py)}" r="${X(Math.max(6,Math.min(10,p.r*K*.5)))}"/><text class="lab ${darkLab(p.s.e)}" x="${X(px)}" y="${X(py)}">${esc(p.s.a)}</text>`;});
+        b+=`<g data-sp="${p.s.id}">`;if(placed.length>1)b+=`<circle class="need" cx="${X(px)}" cy="${X(py)}" r="${X(p.r*K)}"><title>${esc(p.s.n)}: ${Math.round(p.r*200)} cm de espaço</title></circle>`;
+        b+=`<circle class="p-${p.s.e}" cx="${X(px)}" cy="${X(py)}" r="${X(Math.max(6,Math.min(10,p.r*K*.5)))}"/><text class="lab ${darkLab(p.s.e)}" x="${X(px)}" y="${X(py)}">${esc(p.s.a)}</text></g>`;});
       const nms=it.sp.concat(it.under||[]).map(s=>s.n.replace(/ \(.*\)$/,''));const mx=Math.max(10,Math.floor((w+gap*K)/6.2));const ls=[];let cur='';
       nms.forEach(t=>{const nx=cur?cur+' + '+t:t;if(nx.length>mx&&cur){ls.push(cur);cur=t;}else cur=nx;});if(cur)ls.push(cur);
       ls.forEach((t,k)=>{b+=`<text class="nm-lab" x="${X(cx)}" y="${X(cy+hMax/2+16+k*13)}">${esc(t)}</text>`;});
@@ -3967,9 +3967,9 @@ $('out').addEventListener('click',e=>{
 {const O=$('out');let cur=null;
   const set=id=>{if(id===cur)return;cur=id;O.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));
     if(!id){O.classList.remove('hl-on');return;}O.classList.add('hl-on');O.querySelectorAll(`[data-sp="${id}"]`).forEach(e=>e.classList.add('hl'));};
-  O.addEventListener('pointerover',e=>{if(e.pointerType==='touch')return;const t=e.target.closest('svg [data-sp], .legend [data-sp]');set(t?t.dataset.sp:null);});
+  O.addEventListener('pointerover',e=>{if(e.pointerType==='touch')return;const t=e.target.closest('svg [data-sp], .legend [data-sp], .ab-leg [data-sp]');set(t?t.dataset.sp:null);});
   O.addEventListener('pointerleave',()=>set(null));
-  O.addEventListener('click',e=>{const t=e.target.closest('svg [data-sp], .legend [data-sp]');if(t){set(cur===t.dataset.sp?null:t.dataset.sp);}else if(cur&&!e.target.closest('button,a'))set(null);});
+  O.addEventListener('click',e=>{const t=e.target.closest('svg [data-sp], .legend [data-sp], .ab-leg [data-sp]');if(t){set(cur===t.dataset.sp?null:t.dataset.sp);}else if(cur&&!e.target.closest('button,a'))set(null);});
   new MutationObserver(()=>{if(cur){const id=cur;cur=null;set(id);}}).observe(O,{childList:true});}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-mt]');if(!b)return;S.mtab=b.dataset.mt;save();mtabSync();window.scrollTo(0,0);update();});
 try{matchMedia(MQ).addEventListener('change',()=>update());}catch(e){}
