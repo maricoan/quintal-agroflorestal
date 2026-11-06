@@ -3212,7 +3212,10 @@ const depthNeed=v=>v<=5?12:v<=15?18:v<=30?25:v<=60?35:45;
 const footA=s=>{const d=Math.cbrt(s.v/.6)/10;return d*d*.785;};
 // espaço que cada planta ocupa na superfície do vaso (raio, em m): 80% do espaçamento de canteiro;
 // a frutífera reserva só a zona do tronco, e as de raiz rasa ficam em volta dela
-const prad=s=>s.arv?.07:(FORM[s.id]&&FORM[s.id][0]==='groundvine')?.3:Math.min(.3,Math.max(.06,(s.ep||.3)*.4));
+// adensamento máximo em vaso: plantas por quadrado de 30,5 cm do método square foot gardening (Bartholomew; tabela de L. Hodgson e Phipps Conservatory)
+const SFG={alface:6,rucula:4,cenoura:16,beterraba:9,couve:1,tomate:1,berinjela:1,pimenta:1,quiabo:1,batatadoce:1,manjericao:4,cebolinha:16,salsinha:4,hortela:4,alecrim:1,lavanda:1,perpetua:4,salviavermelha:4,ruelia:4};
+const prad=s=>{if(s.arv)return .07;if(FORM[s.id]&&FORM[s.id][0]==='groundvine')return .3;const r0=Math.min(.3,Math.max(.06,(s.ep||.3)*.4));
+  if(SFG[s.id]){const rs=.305/Math.sqrt(SFG[s.id])/2,rc=(s.ep||.3)/2;return Math.max(.03,Math.min(r0,rs,rc));}return r0;};
 function tryPlace(m,placed,s,tight){
   const r=prad(s),e=Math.max(.04,r*(m.strict?.85:.5)),hx=m.Wd/200,hy=m.Dp/200;
   const inside=(x,y)=>m.round?Math.hypot(x,y)<=hx-e+1e-9:(Math.abs(x)<=hx-e+1e-9&&Math.abs(y)<=hy-e+1e-9);
