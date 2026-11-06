@@ -386,7 +386,7 @@ a.sm-i:hover{border-color:var(--leaf)}
 .pot-top-w svg{min-width:0!important;margin:0 auto}
 .pot-top-w.big{grid-template-columns:minmax(0,1fr)}
 .pot-top-w>p.hint{grid-column:1/-1;max-width:none;width:100%}
-.pot-top-w.big svg{max-width:364px!important;width:100%}
+.pot-top-w.big svg{max-width:440px!important;width:100%}
 @media (max-width:640px){.pot-top-w{grid-template-columns:minmax(0,1fr)}}
 .hb-lt{opacity:.78}
 .hb-vein{fill:none;stroke:var(--surface);stroke-width:.7;opacity:.5}
@@ -3359,7 +3359,7 @@ function drawPotTop(m){
   (m.placed||[]).forEach(p=>{const x=cx+p.x*T,y=cy+p.y*T;
     b+=`<g data-sp="${p.s.id}"><circle class="need" cx="${X(x)}" cy="${X(y)}" r="${X(p.r*T)}"><title>${esc(p.s.n)}: ${Math.round(p.r*200)} cm de espaço</title></circle>`;
     b+=`<circle class="p-${p.s.e}" cx="${X(x)}" cy="${X(y)}" r="${X(Math.max(6,Math.min(11,p.r*T*.55)))}"/><text class="lab ${darkLab(p.s.e)}" x="${X(x)}" y="${X(y)}">${esc(p.s.a)}</text></g>`;});
-  return `<svg viewBox="0 0 ${X(VW)} ${X(VH)}" role="img" aria-label="Vista de cima do vaso com o espaço de cada planta" style="max-width:${Math.round(VW*1.12)}px">${b}</svg>`;
+  return `<svg viewBox="0 0 ${X(VW)} ${X(VH)}" role="img" aria-label="Vista de cima do vaso com o espaço de cada planta" style="max-width:${Math.round(VW*1.35)}px">${b}</svg>`;
 }
 // quantas plantas de cada estrato cabem neste vaso, com a mesma regra de espaço do desenho
 function potCapacity(m){
