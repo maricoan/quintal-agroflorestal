@@ -187,6 +187,8 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .cat .cat-n{font-family:var(--f-body);font-size:12px;font-weight:400;color:var(--muted)}
 .cat .chips{padding:0 12px 12px}
 .cats{gap:8px}
+.cats-w{position:relative}.cats-arr{position:absolute;left:50%;transform:translateX(-50%);z-index:3;width:44px;height:26px;border-radius:13px;border:1px solid var(--leaf);background:var(--surface);color:var(--leaf);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(30,40,20,.18)}
+.cats-arr svg{width:16px;height:10px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}.cats-arr.up{top:-6px}.cats-arr.down{bottom:-6px}.cats-arr:hover{background:var(--leaf);color:var(--surface)}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{font:inherit;font-size:13.5px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:5px 11px 5px 8px;cursor:pointer}
 .ci-luz{font-weight:400}
@@ -809,7 +811,9 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
         <div class="inv-busca" id="invBusca" aria-live="polite" hidden></div>
         <div class="tray" id="tray" aria-live="polite"></div>
         <p class="chipinfo" id="chipinfo" aria-live="polite"><span class="ci-d">Passe o mouse ou toque numa planta para ver o estrato, a luz e a origem.</span></p>
+        <div class="cats-w"><button type="button" class="cats-arr up" data-catsrol="-1" aria-label="Rolar a lista para cima" hidden><svg viewBox="0 0 20 12" aria-hidden="true"><path d="M3 10l7-7 7 7"/></svg></button>
         <div class="cats" id="cats"></div>
+        <button type="button" class="cats-arr down" data-catsrol="1" aria-label="Rolar a lista para baixo" hidden><svg viewBox="0 0 20 12" aria-hidden="true"><path d="M3 2l7 7 7-7"/></svg></button></div>
         <details class="inv" id="invBox"><summary><svg class="inv-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 18v-6M12 13.5c-3 0-4.6-1.8-4.8-4.5 3 0 4.6 1.7 4.8 4.5zM12 12c.2-2.6 1.8-4.3 4.6-4.3-.2 2.7-1.8 4.3-4.6 4.3z"/><path d="M5.3 5.3l13.4 13.4"/></svg><span>Evite plantar <span class="cat-sub">invasoras comuns em jardins de São Paulo</span></span></summary>
           <p class="hint">Estas plantas são vendidas e usadas em paisagismo, mas escapam dos jardins e invadem matas, beiras de rio e terrenos. Toque numa delas para ver onde invade e uma nativa para plantar no lugar.</p>
           <div id="invList"></div>
@@ -3997,6 +4001,14 @@ $('out').addEventListener('click',e=>{
   $('cats').addEventListener('click',e=>{if(e.target.closest('[data-zinfo]'))abre(e);},true);
   $('cats').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-zinfo]'))abre(e);},true);
   D.addEventListener('click',e=>{if(e.target===D||e.target.closest('[data-zclose]'))D.close();});}
+
+// setas da lista de plantas: aparecem quando há mais para rolar
+{const C=$('cats'),up=document.querySelector('.cats-arr.up'),dn=document.querySelector('.cats-arr.down');
+  const chk=()=>{const sc=C.scrollHeight>C.clientHeight+4;up.hidden=!sc||C.scrollTop<4;dn.hidden=!sc||C.scrollTop+C.clientHeight>=C.scrollHeight-4;};
+  C.addEventListener('scroll',chk,{passive:true});try{new ResizeObserver(chk).observe(C);}catch(e){}
+  new MutationObserver(()=>requestAnimationFrame(chk)).observe(C,{childList:true,subtree:true,attributes:true,attributeFilter:['open']});
+  document.querySelectorAll('[data-catsrol]').forEach(b=>b.addEventListener('click',()=>C.scrollBy({top:+b.dataset.catsrol*C.clientHeight*.7,behavior:'smooth'})));
+  C.addEventListener('toggle',()=>requestAnimationFrame(chk),true);setTimeout(chk,300);}
 // destaque de espécie no desenho
 {const O=$('out');let cur=null;
   const set=id=>{if(id===cur)return;cur=id;O.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));
