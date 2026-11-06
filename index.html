@@ -2369,7 +2369,8 @@ let FZ=1;const MQ='(max-width:640px)';
 function isMob(){try{return matchMedia(MQ).matches;}catch(e){return false;}}
 function planRot(){const [L,W]=LW();return isMob()&&!isCirc()&&L>W*1.15;}
 // no celular, aumenta o texto dos desenhos para compensar a redução da escala
-function fitText(){if(!isMob())return;document.querySelectorAll('#out .drawing svg:not([data-fz])').forEach(svg=>{const vb=svg.viewBox&&svg.viewBox.baseVal;const w=svg.getBoundingClientRect().width;if(!vb||!w)return;svg.style.setProperty('--fz',Math.min(2.4,Math.max(1,vb.width/w)).toFixed(2));});}
+function fitPotText(){document.querySelectorAll('#out svg.pot-iso').forEach(svg=>{const vb=svg.viewBox&&svg.viewBox.baseVal;const w=svg.getBoundingClientRect().width;if(!vb||!w)return;svg.style.setProperty('--fz',Math.min(1.8,Math.max(.25,(isMob()?1.4:1.3)*vb.width/w)).toFixed(3));});}
+function fitText(){fitPotText();if(!isMob())return;document.querySelectorAll('#out .drawing svg:not([data-fz])').forEach(svg=>{const vb=svg.viewBox&&svg.viewBox.baseVal;const w=svg.getBoundingClientRect().width;if(!vb||!w)return;svg.style.setProperty('--fz',Math.min(2.4,Math.max(1,vb.width/w)).toFixed(2));});}
 function mtabSync(){const t=S.mtab||'espaco';document.body.dataset.mtab=t;
   document.querySelectorAll('#mtabs [data-mt]').forEach(b=>{if(b.dataset.mt===t)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
   const np=$('mt-np');if(np)np.textContent=S.sel.length?S.sel.length:'';
@@ -3146,10 +3147,9 @@ function isoPots(pots,aria){
   pots.forEach(p=>{const hx=p.Wd/2,hy=p.Dp/2;const [,ly]=iso(p.X0+hx,p.Y0+hy,0);const [mx]=iso(p.X0,p.Y0,0);
     const lines=[];if(p.label){const parts=p.label.split(p.sep||' · ');let cur='';const max=p.wrap||46;
       parts.forEach(t=>{const nx=cur?cur+(p.sep||' · ')+t:t;if(nx.length>max&&cur){lines.push(cur);cur=t;}else cur=nx;});if(cur)lines.push(cur);}
-    lines.forEach((t,k)=>{g+=`<text class="nm-lab iso-lab" x="${X(mx)}" y="${X(ly+16+k*14)}">${esc(t)}</text>`;});
-    if(p.sub)g+=`<text class="s-dim iso-lab" x="${X(mx)}" y="${X(ly+16+lines.length*14+2)}" text-anchor="middle">${esc(p.sub)}</text>`;
+    if(lines.length||p.sub)g+=`<text class="nm-lab iso-lab" x="${X(mx)}" y="${X(ly+8)}">${lines.map((t,k)=>`<tspan x="${X(mx)}" dy="${k?'1.25em':'1em'}">${esc(t)}</tspan>`).join('')}${p.sub?`<tspan class="s-dim" x="${X(mx)}" dy="1.35em">${esc(p.sub)}</tspan>`:''}</text>`;
     extra=Math.max(extra,lines.length*14);});
-  return `<svg viewBox="0 0 ${X(VW)} ${X(VH+Math.max(0,extra-14))}" role="img" aria-label="${esc(aria)}">${g}</svg>`;
+  return `<svg class="pot-iso" viewBox="0 0 ${X(VW)} ${X(VH+Math.max(0,extra-14))}" role="img" aria-label="${esc(aria)}">${g}</svg>`;
 }
 function drawMyPotIso(m){
   const nm=m.fit.map(s=>s.n.replace(/ \(.*\)$/,'')+((m.count||{})[s.id]>1?` (${m.count[s.id]})`:'')).join(' · ');
