@@ -1728,10 +1728,10 @@ const semLink=(id,txt)=>BYID[id]&&!BYID[id].custom&&!SEM_SEM.has(id)?`<a class="
 function showInfo(id){
   const s=BYID[id];if(!s)return;
   const luz=s.sol.split('').map(x=>solTxt[x]).join(' ou ');
-  const det=`${s.sci?`<i>${esc(s.sci)}</i> · `:''}Estrato ${EST[s.e].toLowerCase()} · ${luz} · ${s.o?ORIG_TXT[s.o].toLowerCase():'origem não informada'}${s.msp?` · Manual de Arb. de SP, porte ${PORTE[s.msp]}`:''}${s.tox?' · tóxica se ingerida':''}`;
+  const det=`${s.sci?`<i>${esc(s.sci)}</i> · `:''}Estrato ${EST[s.e].toLowerCase()} · ${luz} · ${s.o?ORIG_TXT[s.o].toLowerCase():'origem não informada'}`;
   const mot=luzMotivo(s);
   const inv=INVASORA[s.id];
-  $('chipinfo').innerHTML=`<span class="ci-top">${sig(s.e)}${s.o?`<span class="ico-w">${ICON[s.o]}</span>`:''}${CERRADO.has(s.id)?`<span class="cer-tag" role="img" aria-label="Cerrado paulista" title="Espécie do cerrado paulista"><svg class="cer-ic" viewBox="0 0 20 18" aria-hidden="true"><path d="M2 17h16" class="cer-g"/><path d="M10 17c0-3-1.4-4.4-.6-6.6M9.4 10.4c-1.6-.4-2.6-1.4-3-2.6M9.6 10.6c1.4-.8 2.6-.8 3.6-2"/><path d="M2.6 7.4c1.2-2.6 4.4-3.6 7-3.2 2.8-.6 6 .6 7.6 3.4-2.4.8-5 1-7.6.6-2.6.4-4.8.2-7-.8z" class="cer-c"/></svg></span>`:''}<b>${esc(s.n)}</b></span><span class="ci-d">${inv?`<b class="ci-inv">Invasora em SP.</b> `:''}${det}${mot?`. <b class="ci-luz">${esc(mot)}</b>`:''}</span>`;
+  $('chipinfo').innerHTML=`<span class="ci-top">${sig(s.e)}${s.o?`<span class="ico-w">${ICON[s.o]}</span>`:''}${CERRADO.has(s.id)?`<span class="cer-tag" role="img" aria-label="Cerrado paulista" title="Espécie do cerrado paulista"><svg class="cer-ic" viewBox="0 0 20 18" aria-hidden="true"><path d="M2 17h16" class="cer-g"/><path d="M10 17c0-3-1.4-4.4-.6-6.6M9.4 10.4c-1.6-.4-2.6-1.4-3-2.6M9.6 10.6c1.4-.8 2.6-.8 3.6-2"/><path d="M2.6 7.4c1.2-2.6 4.4-3.6 7-3.2 2.8-.6 6 .6 7.6 3.4-2.4.8-5 1-7.6.6-2.6.4-4.8.2-7-.8z" class="cer-c"/></svg></span>`:''}<b>${esc(s.n)}</b></span><span class="ci-d">${inv?`<b class="ci-inv">Invasora em SP.</b> `:''}${det}</span>`;
   $('chipinfo').title=(inv?inv+' ':'')+det.replace(/<[^>]+>/g,'')+(mot?'. '+mot:'');
 }
 $('cats').addEventListener('mouseover',e=>{const b=e.target.closest('.chip');if(b)showInfo(b.dataset.id);});
