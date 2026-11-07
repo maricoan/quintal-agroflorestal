@@ -3329,22 +3329,31 @@ function potCompanions(m){
   res.sort((a,b)=>rk(a[1])-rk(b[1])||(/M/.test(a[0].sol||'')?0:1)-(/M/.test(b[0].sol||'')?0:1)||a[0].v-b[0].v);
   return res.slice(0,6);
 }
-// café em vaso: arbusto em camadas, ramos laterais horizontais em pares, copa cônica, frutos vermelhos agrupados nos nós
+// café em vaso: haste levemente torta, copa orgânica de folhas lanceoladas brilhantes saindo do topo e caindo para os lados, cachos de frutos vermelhos pendurados em hastes finas no meio da planta
 function coffeeSVG(s,cx,base,ph,w,room){
-  const X=n=>n.toFixed(1),W=Math.min(Math.max(w*1.1,ph*.42),ph*.5,room/2),top=base-ph,n=11;
-  let o=`<g><title>${esc(s.n)}</title><line class="trunk" stroke-width="${X(Math.max(2,Math.min(4.5,W*.07)))}" x1="${X(cx)}" y1="${X(base)}" x2="${X(cx)}" y2="${X(top+ph*.04)}"/>`;
-  const lf=(x,y,rx,ry,ang,c)=>`<ellipse class="${c}" cx="${X(x)}" cy="${X(y)}" rx="${X(rx)}" ry="${X(ry)}" transform="rotate(${ang.toFixed(0)} ${X(x)} ${X(y)})"/>`;
-  const leaves=[],fruits=[];
-  for(let k=0;k<n;k++){const t=k/(n-1),y=base-ph*(.16+t*.78),len=W*(1-t*.78);
-    [-1,1].forEach(d=>{const ex=cx+d*len,ey=y+len*.14;
-      o+=`<path class="trunk-thin" fill="none" d="M${X(cx)},${X(y)} Q${X(cx+d*len*.5)},${X(y-len*.04)} ${X(ex)},${X(ey)}"/>`;
-      const nn=Math.max(2,Math.round(5-t*3));
-      for(let j=1;j<=nn;j++){const u=j/(nn+.3),lx=cx+d*len*u,ly=y+len*.14*u*u-len*.02*u,L=Math.max(2.4,W*.14*(1-t*.4)),H=L*.42;
-        leaves.push(lf(lx,ly-H*.9,L,H,d*-28,(j+k)%3?'tn1':'tn4'));leaves.push(lf(lx,ly+H*.9,L,H,d*28,(j+k)%2?'tn1s':'tn1'));
-        if(k<n-3&&j<nn&&(j+k)%2)for(let q=0;q<3;q++)fruits.push(`<circle class="fr-rd" cx="${X(lx+(q-1)*Math.max(1.2,W*.035))}" cy="${X(ly+(q===1?-1:1)*Math.max(.6,W*.015))}" r="${X(Math.max(1.2,Math.min(2.4,W*.035)))}"/>`);}
-      leaves.push(lf(ex+d*W*.03,ey,Math.max(2,W*.12*(1-t*.4)),Math.max(1,W*.05),d*-6,'tn4'));});}
-  leaves.push(lf(cx,top+ph*.04,Math.max(2,W*.09),Math.max(2.4,W*.14),0,'tn4'));
-  return o+leaves.join('')+fruits.join('')+`</g>`;}
+  const X=n=>n.toFixed(1),W=Math.min(Math.max(w*1.3,ph*.62),ph*.72,room/2),top=base-ph;
+  let sd=7;const rnd=()=>{sd=(sd*9301+49297)%233280;return sd/233280;};
+  const sw=Math.max(1.8,Math.min(4,W*.05));
+  const stem=t=>[cx+Math.sin(t*2.6)*W*.05,base-ph*t];
+  const [tx,ty]=stem(.8);
+  let o=`<g><title>${esc(s.n)}</title><path class="trunk" fill="none" stroke-width="${X(sw)}" d="M${X(cx)},${X(base)} Q${X(cx+W*.07)},${X(base-ph*.45)} ${X(tx)},${X(ty)}"/>`;
+  const leaf=(x,y,ang,L,wd,c)=>{const r=ang*Math.PI/180,ca=Math.cos(r),sa=Math.sin(r),P=(u,v)=>`${X(x+u*ca-v*sa)},${X(y+u*sa+v*ca)}`;
+    return `<path class="${c}" d="M${P(0,0)} Q${P(L*.45,-wd)} ${P(L,0)} Q${P(L*.45,wd)} ${P(0,0)}Z"/><path class="hb-vein" style="opacity:.25" d="M${P(L*.05,0)} L${P(L*.92,0)}"/>`;};
+  const back=[],front=[],fr=[];
+  // galhos laterais curtos com frutos (cachos pendurados)
+  [[.5,-1],[.55,1],[.42,1],[.38,-1],[.3,-1],[.33,1]].forEach(([t,d],k)=>{const [sx,sy]=stem(t),L=W*(.32+.22*rnd()),ex=sx+d*L,ey=sy-L*.05;
+    o+=`<path class="trunk-thin" fill="none" d="M${X(sx)},${X(sy)} Q${X(sx+d*L*.55)},${X(sy-L*.22)} ${X(ex)},${X(ey)}"/>`;
+    front.push(leaf(sx+d*L*.35,sy-L*.12,d>0?-25-15*rnd():205+15*rnd(),W*.32,W*.07,k%2?'tn1':'tn1s'));
+    const nb=14+Math.floor(rnd()*8);for(let q=0;q<nb;q++){const a=(q/nb)*Math.PI*2+rnd()*.4,rr=W*(.04+.11*rnd()),fx=ex+Math.cos(a)*rr*1.1,fy=ey+W*.14+Math.sin(a)*rr*.7;
+      fr.push(`<line class="trunk-thin" stroke-width=".6" x1="${X(ex)}" y1="${X(ey)}" x2="${X(fx)}" y2="${X(fy)}"/><circle class="fr-rd" cx="${X(fx)}" cy="${X(fy)}" r="${X(Math.max(1.3,W*.032))}"/><circle class="fr-hi" cx="${X(fx-W*.01)}" cy="${X(fy-W*.012)}" r="${X(Math.max(.4,W*.01))}"/>`);}});
+  // folhas soltas no caule
+  [[.22,1],[.62,-1]].forEach(([t,d])=>{const [sx,sy]=stem(t);front.push(leaf(sx,sy,d>0?-20-20*rnd():200+20*rnd(),W*.36,W*.08,'tn1'));});
+  // copa: rosetas de folhas no topo, caindo para fora
+  for(let r=0;r<4;r++){const t=.62+r*.08,[bx2,cy]=stem(t),n=9+r;for(let q=0;q<n;q++){const ang=-190+(q+.5)/n*200+(rnd()-.5)*16;const side=Math.cos(ang*Math.PI/180);
+      const a2=ang+side*(55-r*10);const L=W*(.7+.25*rnd())*(1-r*.12);
+      (r<2?back:front).push(leaf(bx2+(rnd()-.5)*W*.05,cy,a2,L,L*.2,['tn1','tn1s','tn4'][(q+r)%3]));}}
+  front.push(leaf(tx,ty-ph*.1,-90,W*.22,W*.06,'tn4'));
+  return o+back.join('')+fr.join('')+front.join('')+`</g>`;}
 function crownSVG(s,cx,base,ph,w,room){
   if((TREEFORM[s.id]||{}).f==='coffee')return coffeeSVG(s,cx,base,ph,w,room);
   const X=n=>n.toFixed(1),cr=Math.min(Math.max(w*.9,ph*.34),ph*.42,room/2),cyc=base-ph+cr*.95,tn=FOLT[s.id]||({E:3,A:1,M:4})[s.e]||1;
