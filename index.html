@@ -1605,7 +1605,7 @@ function tnAdd(){
 }
 $('tnAdd').addEventListener('click',tnAdd);
 $('tnPlanta').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();tnAdd();}});
-$('tnList').addEventListener('click',e=>{const b=e.target.closest('[data-tnrm]');if(!b)return;const id=b.dataset.tnrm;if(S.tenho[id]&&S.tenho[id].auto)S.sel=S.sel.filter(i=>i!==id);delete S.tenho[id];update();});
+$('tnList').addEventListener('click',e=>{const b=e.target.closest('[data-tnrm]');if(!b)return;const id=b.dataset.tnrm;S.sel=S.sel.filter(i=>i!==id);delete S.tenho[id];update();});
 document.getElementById('invBox').addEventListener('click',e=>{const c=e.target.closest('[data-inv]');if(c){invSel=invSel===c.dataset.inv?null:c.dataset.inv;renderInv();return;}});
 {const IV=document.getElementById('invBox');
  const mostra=c=>{const x=INV_ALL.find(i=>i[0]===c.dataset.inv);if(!x)return;const loc=FOTO_LOCAL['inv:'+x[0]];if(loc){fotoCard(c,x[1],x[2],new Promise(()=>{}));fotoEl.querySelector('.if-img').innerHTML=`<img alt="Foto de ${esc(x[1])}" src="${loc[0]}">`;fotoEl.insertAdjacentHTML('beforeend',`<span class="if-c">Foto: ${esc(loc[1])}</span>`);return;}const sci=x[2].split(' ').slice(0,2).join(' ').replace(/[,(]/g,'');fotoCard(c,x[1],x[2],fotoWiki('inv:'+x[0],[['en',sci],['pt',sci]]));};
@@ -2054,7 +2054,8 @@ function planBase(){
     // em vez de ocupar um trecho; o miolo fica para as outras plantas
     let BEDS=beds,grpSp=bedSp;
     {const forr=bedSp.filter(s=>s.e==='R'&&(s.c==='p'||s.c==='a')),rest=bedSp.filter(s=>!forr.includes(s));
-      if(forr.length&&rest.length){const band=Math.max(...forr.map(m=>Math.min(m.el,m.ep)));const minIn=Math.min(...rest.map(m=>m.el));
+      const semLim=rest.filter(m=>!(S.tenho&&S.tenho[m.id]&&S.tenho[m.id].n!=null));
+      if(forr.length&&semLim.length){const band=Math.max(...forr.map(m=>Math.min(m.el,m.ep)));const minIn=Math.min(...rest.map(m=>m.el));
         if(beds.every(bd=>bd.h-band>=minIn*.9)){let k=0;
           beds.forEach(bd=>{[bd.y+bd.h-band/2].forEach(yy=>{let x=forr[k%forr.length].ep/2;
             while(x<L-.001){const m=forr[k%forr.length],nx=forr[(k+1)%forr.length],st=forr.length>1?(m.ep+nx.ep)/2:m.ep;if(x+m.ep/2<=L+.02)add(m,x,yy,'bed',Math.min(st,band,m.ep));x+=st;k++;}});});
