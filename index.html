@@ -1843,8 +1843,38 @@ function planPeso(){
   finally{WMUL=null;}
   return p;
 }
+// árvores pequenas e arbustivas que não couberam na linha de árvores vão para o canteiro
+const pequena=s=>(s.e==='M'||s.e==='B')&&(isTree(s)||isMed(s));
+// abre no canteiro um lugar do tamanho do espaçamento da planta, tirando só plantas de canteiro sem limite de quantidade;
+// longe das árvores e adubadeiras já plantadas e das outras mudas da mesma espécie
+function noCanteiro(p,s,max,kind){
+  if(!p.beds||!p.beds.length||p.lago)return;
+  const [L,W]=LW(),circ=isCirc(),arv=kind==='tree';
+  const livre=q=>!(S.tenho&&S.tenho[q.s.id]&&S.tenho[q.s.id].n!=null);
+  // na linha de árvores as adubadeiras e arbustivas ficam a 1 m umas das outras; no canteiro vale o mesmo
+  const hx=arv?s.ep/2:kind==='med'?.5:Math.max(s.el,s.ep)/2;
+  for(let guard=0;guard<50&&(p.count[s.id]||0)<max;guard++){let best=null;
+    p.beds.forEach(bd=>{const hy=arv?bd.h/2:hx;if(bd.h<2*hy-1e-6)return;
+      (arv?[bd.y+bd.h/2]:[bd.y+bd.h/2,bd.y+hy,bd.y+bd.h-hy]).forEach(y=>{
+      for(let x=Math.min(hx,L/2);x<=L-Math.min(hx,L/2)+1e-6;x+=.5){if(circ&&Math.hypot(x-L/2,y-W/2)>L/2-Math.min(hx,.5))continue;
+        const area=p.pts.filter(q=>{const c=q.kind==='bed'?(q.cell||Math.min(q.s.el,q.s.ep)):1;return Math.abs(q.x-x)<hx+c/2-1e-6&&Math.abs(q.y-y)<hy+c/2-1e-6;});
+        if(area.some(q=>q.kind!=='bed'||!livre(q)))continue;
+        const big=p.pts.filter(q=>q.kind!=='bed');
+        // distância mínima: entre árvores, o espaçamento na linha da maior; com adubadeiras e arbustivas, 1 m (como na linha)
+        if(big.some(q=>Math.hypot(q.x-x,q.y-y)<(arv&&q.kind==='tree'?Math.max(s.ep,q.s.ep):kind==='bed'?hx+.5:1)-1e-6))continue;
+        const d=Math.min(9,...big.map(q=>Math.hypot(q.x-x,q.y-y))),dm=Math.min(9,...p.pts.filter(q=>q.s===s).map(q=>Math.hypot(q.x-x,q.y-y)));
+        const sc=dm*2+d;if(!best||sc>best.sc)best={x,y,sc,area};}});});
+    if(!best)break;
+    best.area.forEach(q=>{p.count[q.s.id]--;if(!p.count[q.s.id])delete p.count[q.s.id];p.pts.splice(p.pts.indexOf(q),1);});
+    p.pts.push(kind==='bed'?{s,x:best.x,y:best.y,kind:'bed',cell:Math.min(s.el,s.ep)}:{s,x:best.x,y:best.y,kind,noCant:1});p.count[s.id]=(p.count[s.id]||0)+1;}
+  if(p.count[s.id]){if(p.naoCoube)p.naoCoube=p.naoCoube.filter(o=>o!==s);if(p.dropped)p.dropped=p.dropped.filter(o=>o!==s);
+    (p.noCant=p.noCant||[]).includes(s)||p.noCant.push(s);}
+}
 function plan(){
   const p=planPeso();
+  if(S.modo==='chao'&&p.beds&&p.beds.length&&!p.lago)
+    p.sel.filter(s=>pequena(s)&&!p.count[s.id]&&!(S.tenho&&S.tenho[s.id]&&S.tenho[s.id].n===0))
+      .forEach(s=>noCanteiro(p,s,isTree(s)?1:Math.max(1,p.beds.length),isTree(s)?'tree':'med'));
   p.tenho=[];
   if(S.modo!=='chao'||!S.tenho)return p;
   const foot=s=>Math.min(s.el,s.ep);
@@ -1885,24 +1915,8 @@ function plan(){
             if((p.count[s.id]||0)>=max)break;
             p.pts.push({s,x,y,kind:q.kind,cell:Math.min(c0,fs)});p.count[s.id]++;}}
       }
-      // sem lugar livre do mesmo tipo (linha cheia, ou canteiro só com plantas menores): as que sobraram vão para o canteiro, num quadrado
-      // do tamanho do espaçamento delas, no lugar das plantas de canteiro sem limite
-      if((kind==='med'||kind==='bed')&&(p.count[s.id]||0)<max&&p.beds&&p.beds.length&&!p.lago){
-        const [L,W]=LW(),hw=Math.max(s.el,s.ep)/2,circ=isCirc();
-        const livre=q=>!(S.tenho[q.s.id]&&S.tenho[q.s.id].n!=null);
-        for(let guard=0;guard<50&&(p.count[s.id]||0)<max;guard++){let best=null;
-          p.beds.forEach(bd=>{if(bd.h<2*hw-1e-6)return;[bd.y+bd.h/2,bd.y+hw,bd.y+bd.h-hw].forEach(y=>{
-            for(let x=hw;x<=L-hw+1e-6;x+=.5){if(circ&&Math.hypot(x-L/2,y-W/2)>L/2-hw)continue;
-              const area=p.pts.filter(q=>{const r=(2*hw+(q.kind==='bed'?(q.cell||Math.min(q.s.el,q.s.ep)):1))/2-1e-6;return Math.abs(q.x-x)<r&&Math.abs(q.y-y)<r;});
-              if(area.some(q=>q.kind!=='bed'||!livre(q)))continue;
-              const big=p.pts.filter(q=>q.kind!=='bed').map(q=>Math.hypot(q.x-x,q.y-y));
-              const d=Math.min(9,...big),dm=Math.min(9,...p.pts.filter(q=>q.s===s).map(q=>Math.hypot(q.x-x,q.y-y)));
-              if(d<hw+.2)continue;const sc=dm*2+d;if(!best||sc>best.sc)best={x,y,sc,area};}});});
-          if(!best)break;
-          best.area.forEach(q=>{p.count[q.s.id]--;if(!p.count[q.s.id])delete p.count[q.s.id];p.pts.splice(p.pts.indexOf(q),1);});
-          p.pts.push(kind==='med'?{s,x:best.x,y:best.y,kind:'med'}:{s,x:best.x,y:best.y,kind:'bed',cell:Math.min(s.el,s.ep)});p.count[s.id]=(p.count[s.id]||0)+1;}
-        if(p.count[s.id]&&p.naoCoube)p.naoCoube=p.naoCoube.filter(o=>o!==s);
-      }
+      // sem lugar livre do mesmo tipo (linha cheia, ou canteiro só com plantas menores): as que sobraram vão para o canteiro
+      if(kind==='med'||kind==='bed'||(kind==='tree'&&pequena(s)))noCanteiro(p,s,max,kind);
       info.no=p.count[s.id]||0;
     }
     p.tenho.push(info);
@@ -3111,6 +3125,7 @@ function coopPanel(p){
       const qa=p.pts.filter(q=>q.s===a),qb=p.pts.filter(q=>q.s===b);let dmin=99;qa.forEach(x=>qb.forEach(y=>{dmin=Math.min(dmin,Math.hypot(x.x-y.x,x.y-y.y));}));
       tr+=`<li class="note tip"><span class="tag">Árvores</span><div class="body"><span><b>${esc(hi.n)}</b> (sombreia${hi.pt?`, até ${fmt(hi.pt)} m`:''}) + <b>${esc(lo.n)}</b> (fica na meia-sombra${lo.pt?`, até ${fmt(lo.pt)} m`:''})${dmin<99?`. No desenho, a ${cm_(dmin)} uma da outra`:''}.</span><span class="hint">${esc(c.t)}${refN(c.src)}</span>${TREEARR[k]?`<span class="hint">${esc(TREEARR[k])}</span>`:''}</div></li>`;}));
     good=tr+good;}
+  if(p.noCant&&p.noCant.length)good+=`<li class="note tip"><span class="tag">No canteiro</span><div class="body"><span><b>${p.noCant.map(s=>esc(s.n)).join(', ')}</b> não ${p.noCant.length>1?'couberam':'coube'} na linha de árvores e ${p.noCant.length>1?'foram':'foi'} para o canteiro, num espaço aberto do tamanho do espaçamento, longe das árvores.</span></div></li>`;
   if(p.lineFill&&p.lineFill.length)good+=`<li class="note tip"><span class="tag">Entre árvores</span><div class="body"><span>Nos vãos entre as árvores e as adubadeiras também entram <b>${p.lineFill.map(s=>esc(s.n)).join(', ')}</b>, que aguentam meia-sombra. O app escolhe, para cada vão, a planta que melhor coopera com as vizinhas.</span></div></li>`;
   if(p.under&&p.under.length)good+=`<li class="note tip"><span class="tag">Sub-bosque</span><div class="body"><span><b>${p.under.map(s=>esc(s.n)).join(', ')}</b> ${p.under.length>1?'também ocupam':'também ocupa'} os espaços entre árvores e adubadeiras, onde há meia-sombra.</span></div></li>`;
   // comprovadamente não devem ficar juntas
