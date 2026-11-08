@@ -2033,8 +2033,17 @@ function planBase(){
       }});}
   let groups=[];const interc=[];
   if(beds.length&&bedSp.length){
-    groups=makeGroups(bedSp);
-    const total=beds.length*L;
+    // forrações (rasteiras de flor e de cobertura) vão numa fileira na borda do canteiro, ao longo de todo o comprimento,
+    // em vez de ocupar um trecho; o miolo fica para as outras plantas
+    let BEDS=beds,grpSp=bedSp;
+    {const forr=bedSp.filter(s=>s.e==='R'&&(s.c==='p'||s.c==='a')),rest=bedSp.filter(s=>!forr.includes(s));
+      if(forr.length&&rest.length){const band=Math.max(...forr.map(m=>Math.min(m.el,m.ep)));const minIn=Math.min(...rest.map(m=>m.el));
+        if(beds.every(bd=>bd.h-band>=minIn*.9)){let k=0;
+          beds.forEach(bd=>{[bd.y+bd.h-band/2].forEach(yy=>{let x=forr[k%forr.length].ep/2;
+            while(x<L-.001){const m=forr[k%forr.length],nx=forr[(k+1)%forr.length],st=forr.length>1?(m.ep+nx.ep)/2:m.ep;if(x+m.ep/2<=L+.02)add(m,x,yy,'bed',Math.min(st,band,m.ep));x+=st;k++;}});});
+          BEDS=beds.map(bd=>Object.assign({},bd,{h:bd.h-band}));grpSp=rest;}}}
+    groups=makeGroups(grpSp);
+    const total=BEDS.length*L;
     const wt=s=>Math.max(1,Math.sqrt((s.el*s.ep)/.0625));
     const w=groups.map(g=>g.reduce((a,s)=>a+wt(s)*((WMUL&&WMUL[s.id])||1),0)/Math.sqrt(g.length));
     const sw=w.reduce((a,b)=>a+b,0);
@@ -2052,8 +2061,8 @@ function planBase(){
         // companheiras intercaladas na mesma fileira: A, B, A, B…, com fileiras desencontradas
         const rowGap=Math.max(g.reduce((a,m)=>a+m.el,0)/g.length,...g.map(m=>Math.min(m.el,m.ep)));
         const step=k=>(g[k%g.length].ep+g[(k+1)%g.length].ep)/2;
-        for(let bi=Math.floor(s0/L);bi<beds.length&&bi*L<s1;bi++){
-          const bd=beds[bi],x0=Math.max(s0,bi*L)-bi*L,x1=Math.min(s1,(bi+1)*L)-bi*L;
+        for(let bi=Math.floor(s0/L);bi<BEDS.length&&bi*L<s1;bi++){
+          const bd=BEDS[bi],x0=Math.max(s0,bi*L)-bi*L,x1=Math.min(s1,(bi+1)*L)-bi*L;
           const rows=Math.max(1,Math.floor(bd.h/rowGap+.001)),y0=bd.y+(bd.h-(rows-1)*rowGap)/2;
           for(let r=0;r<rows;r++){
             const yy=rows>1?y0+r*rowGap:bd.y+bd.h/2;
@@ -2067,13 +2076,13 @@ function planBase(){
         // o trecho da planta pode atravessar de um canteiro para o outro: cada pedaço é preenchido por igual,
         // no espaçamento certo e sem passar da ponta do canteiro
         const xs=[],hw=Math.min(m.ep,L)/2;let big=null;
-        for(let bi=Math.floor(s0/L);bi<beds.length&&bi*L<s1-1e-9;bi++){
+        for(let bi=Math.floor(s0/L);bi<BEDS.length&&bi*L<s1-1e-9;bi++){
           const a=Math.max(s0,bi*L)-bi*L,b2=Math.min(s1,(bi+1)*L)-bi*L,len=b2-a,n=Math.floor(len/m.ep+1e-6);
           if(!big||len>big[2])big=[bi,a,len];
           for(let k=0;k<n;k++)xs.push([bi,a+(len-n*m.ep)/2+m.ep/2+k*m.ep]);}
         if(!xs.length&&big)xs.push([big[0],Math.max(hw,Math.min(L-hw,big[1]+big[2]/2))]);
         xs.forEach(([bi,xi])=>{
-          const bd=beds[bi];
+          const bd=BEDS[bi];
           const rows=Math.max(1,Math.floor(bd.h/m.el+.001)),y0=bd.y+(bd.h-(rows-1)*m.el)/2;
           for(let r=0;r<rows;r++)add(m,xi,rows>1?y0+r*m.el:bd.y+bd.h/2,'bed',Math.min(m.ep,m.el));
         });
