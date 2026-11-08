@@ -1884,6 +1884,23 @@ function plan(){
             if((p.count[s.id]||0)>=max)break;
             p.pts.push({s,x,y,kind:q.kind,cell:Math.min(c0,fs)});p.count[s.id]++;}}
       }
+      // linha cheia (as árvores ocupam os outros lugares): as que sobraram vão para o canteiro, num quadrado
+      // do tamanho do espaçamento delas, no lugar das plantas de canteiro sem limite
+      if(kind==='med'&&(p.count[s.id]||0)<max&&p.beds&&p.beds.length&&!p.lago){
+        const [L,W]=LW(),hw=Math.max(s.el,s.ep)/2,circ=isCirc();
+        const livre=q=>!(S.tenho[q.s.id]&&S.tenho[q.s.id].n!=null);
+        for(let guard=0;guard<50&&(p.count[s.id]||0)<max;guard++){let best=null;
+          p.beds.forEach(bd=>{if(bd.h<2*hw-1e-6)return;const y=bd.y+bd.h/2;
+            for(let x=hw;x<=L-hw+1e-6;x+=.5){if(circ&&Math.hypot(x-L/2,y-W/2)>L/2-hw)continue;
+              const area=p.pts.filter(q=>Math.abs(q.x-x)<hw-1e-6&&Math.abs(q.y-y)<hw-1e-6);
+              if(area.some(q=>q.kind!=='bed'||!livre(q)))continue;
+              const big=p.pts.filter(q=>q.kind!=='bed').map(q=>Math.hypot(q.x-x,q.y-y));
+              const d=Math.min(9,...big),dm=Math.min(9,...p.pts.filter(q=>q.s===s).map(q=>Math.hypot(q.x-x,q.y-y)));
+              if(d<hw+.2)continue;const sc=dm*2+d;if(!best||sc>best.sc)best={x,y,sc,area};}});
+          if(!best)break;
+          best.area.forEach(q=>{p.count[q.s.id]--;if(!p.count[q.s.id])delete p.count[q.s.id];p.pts.splice(p.pts.indexOf(q),1);});
+          p.pts.push({s,x:best.x,y:best.y,kind:'med'});p.count[s.id]=(p.count[s.id]||0)+1;}
+      }
       info.no=p.count[s.id]||0;
     }
     p.tenho.push(info);
