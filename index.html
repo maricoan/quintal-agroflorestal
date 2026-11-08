@@ -1873,7 +1873,8 @@ function plan(){
       // prioridade para o que você já tem: ocupa lugares de plantas sem limite, do mesmo tipo e de tamanho igual ou maior
       const kind=have.length?have[0].kind:(isTree(s)?'tree':isMed(s)?'med':'bed');
       const cands=p.pts.filter(q=>q.kind===kind&&q.s!==s&&!S.tenho[q.s.id]&&(kind==='tree'?isTree(q.s):foot(q.s)>=foot(s)-1e-6));
-      for(const q of cands){if((p.count[s.id]||0)>=max)break;const o=q.s;p.count[o.id]--;if(!p.count[o.id])delete p.count[o.id];
+      for(const q of cands){if((p.count[s.id]||0)>=max)break;const o=q.s;
+        if((p.count[o.id]||0)<=1)continue; // não some com nenhuma planta escolhidap.count[o.id]--;if(!p.count[o.id])delete p.count[o.id];
         const fs=foot(s),c0=q.cell!=null?q.cell:fs;q.s=s;p.count[s.id]=(p.count[s.id]||0)+1;
         // no lugar de uma planta maior cabem várias menores: preenche o quadrado dela no espaçamento certo
         const k=kind==='bed'&&fs>0?Math.max(1,Math.floor(c0/fs+1e-6)):1;
@@ -1884,22 +1885,23 @@ function plan(){
             if((p.count[s.id]||0)>=max)break;
             p.pts.push({s,x,y,kind:q.kind,cell:Math.min(c0,fs)});p.count[s.id]++;}}
       }
-      // linha cheia (as árvores ocupam os outros lugares): as que sobraram vão para o canteiro, num quadrado
+      // sem lugar livre do mesmo tipo (linha cheia, ou canteiro só com plantas menores): as que sobraram vão para o canteiro, num quadrado
       // do tamanho do espaçamento delas, no lugar das plantas de canteiro sem limite
-      if(kind==='med'&&(p.count[s.id]||0)<max&&p.beds&&p.beds.length&&!p.lago){
+      if((kind==='med'||kind==='bed')&&(p.count[s.id]||0)<max&&p.beds&&p.beds.length&&!p.lago){
         const [L,W]=LW(),hw=Math.max(s.el,s.ep)/2,circ=isCirc();
         const livre=q=>!(S.tenho[q.s.id]&&S.tenho[q.s.id].n!=null);
         for(let guard=0;guard<50&&(p.count[s.id]||0)<max;guard++){let best=null;
-          p.beds.forEach(bd=>{if(bd.h<2*hw-1e-6)return;const y=bd.y+bd.h/2;
+          p.beds.forEach(bd=>{if(bd.h<2*hw-1e-6)return;[bd.y+bd.h/2,bd.y+hw,bd.y+bd.h-hw].forEach(y=>{
             for(let x=hw;x<=L-hw+1e-6;x+=.5){if(circ&&Math.hypot(x-L/2,y-W/2)>L/2-hw)continue;
-              const area=p.pts.filter(q=>Math.abs(q.x-x)<hw-1e-6&&Math.abs(q.y-y)<hw-1e-6);
+              const area=p.pts.filter(q=>{const r=(2*hw+(q.kind==='bed'?(q.cell||Math.min(q.s.el,q.s.ep)):1))/2-1e-6;return Math.abs(q.x-x)<r&&Math.abs(q.y-y)<r;});
               if(area.some(q=>q.kind!=='bed'||!livre(q)))continue;
               const big=p.pts.filter(q=>q.kind!=='bed').map(q=>Math.hypot(q.x-x,q.y-y));
               const d=Math.min(9,...big),dm=Math.min(9,...p.pts.filter(q=>q.s===s).map(q=>Math.hypot(q.x-x,q.y-y)));
-              if(d<hw+.2)continue;const sc=dm*2+d;if(!best||sc>best.sc)best={x,y,sc,area};}});
+              if(d<hw+.2)continue;const sc=dm*2+d;if(!best||sc>best.sc)best={x,y,sc,area};}});});
           if(!best)break;
           best.area.forEach(q=>{p.count[q.s.id]--;if(!p.count[q.s.id])delete p.count[q.s.id];p.pts.splice(p.pts.indexOf(q),1);});
-          p.pts.push({s,x:best.x,y:best.y,kind:'med'});p.count[s.id]=(p.count[s.id]||0)+1;}
+          p.pts.push(kind==='med'?{s,x:best.x,y:best.y,kind:'med'}:{s,x:best.x,y:best.y,kind:'bed',cell:Math.min(s.el,s.ep)});p.count[s.id]=(p.count[s.id]||0)+1;}
+        if(p.count[s.id]&&p.naoCoube)p.naoCoube=p.naoCoube.filter(o=>o!==s);
       }
       info.no=p.count[s.id]||0;
     }
@@ -2028,10 +2030,11 @@ function planBase(){
   let bedSp=sel.filter(isBed).filter(s=>!(WMUL&&WMUL[s.id]===0));
   if(!lines.length)bedSp=bedSp.concat(meds);
   // sub-bosque: plantas de sombra ou cobertura nos espaços entre árvores e adubadeiras
-  const under=lines.length?sel.filter(s=>UNDER.includes(s.id)):[];
+  // os vãos da linha ficam a 0,5 m das vizinhas: só entram plantas cujo espaçamento cabe nisso
+  const under=lines.length?sel.filter(s=>UNDER.includes(s.id)&&Math.max(s.el,s.ep)<=.5+1e-6):[];
   const nearTree=[];const lineFill=new Set();
   // plantas baixas que aguentam meia-sombra também ocupam os vãos entre árvores e adubadeiras
-  const shadeOk=sel.filter(o=>isBed(o)&&!o.bed&&!UNDER.includes(o.id)&&(o.sol.includes('M')||o.sol.includes('S'))&&o.ep<=.6);
+  const shadeOk=sel.filter(o=>isBed(o)&&!o.bed&&!UNDER.includes(o.id)&&(o.sol.includes('M')||o.sol.includes('S'))&&Math.max(o.el,o.ep)<=.5+1e-6);
   const useF={};let fi=0;
   if(lines.length){let ui=0;const tp={};
     // perto do rio, os vãos da linha mais próxima da água só recebem plantas de borda úmida
@@ -2041,7 +2044,7 @@ function planBase(){
       const occ=new Set(pts.filter(q=>Math.abs(q.y-cy)<1e-6).map(q=>q.x.toFixed(2)));
       for(let x=1;x<=L-.3;x+=.5){if(occ.has(x.toFixed(2)))continue;
         const t=ts.find(q=>Math.abs(q.x-x)<=.55);
-        const parts=t?sel.filter(o=>!isTree(o)&&docCoop(t.s,o)&&(!soBorda||JCs.has(o.id))):[];
+        const parts=t?sel.filter(o=>!isTree(o)&&!isMed(o)&&Math.max(o.el,o.ep)<=.5+1e-6&&docCoop(t.s,o)&&(!soBorda||JCs.has(o.id))):[];
         if(parts.length){const k=t.s.id;tp[k]=(tp[k]||0)+1;const o=parts[tp[k]%parts.length];add(o,x,cy,'bed',.35);if(!nearTree.some(n=>n[0]===t.s&&n[1]===o))nearTree.push([t.s,o]);}
         else{let pool=under.length&&Math.abs(x-Math.round(x))<1e-6?under:shadeOk;if(soBorda)pool=sel.filter(o=>JCs.has(o.id)&&!isTree(o)&&isBed(o));
           if(pool.length){const nb=pts.filter(q=>Math.abs(q.y-cy)<1e-6&&Math.abs(q.x-x)<=1.01).map(q=>q.s);
@@ -2179,7 +2182,7 @@ function planLago(sel,A){
   const longeAgua=lines.length===1?trees.filter(t=>!BEIRA_Z1.has(t.id)):[];
   // árvores: a linha mais perto da água leva as de solo encharcado
   const z1=trees.filter(t=>BEIRA_Z1.has(t.id)),outras=trees.filter(t=>!BEIRA_Z1.has(t.id));
-  const underL=sel.filter(s=>UNDER.includes(s.id)),shadeL=sel.filter(o=>isBed(o)&&!o.bed&&!UNDER.includes(o.id)&&!JC.has(o.id)&&(o.sol.includes('M')||o.sol.includes('S'))&&o.ep<=.6);
+  const underL=sel.filter(s=>UNDER.includes(s.id)),shadeL=sel.filter(o=>isBed(o)&&!o.bed&&!UNDER.includes(o.id)&&!JC.has(o.id)&&(o.sol.includes('M')||o.sol.includes('S'))&&Math.max(o.el,o.ep)<=.5+1e-6);
   lines.forEach((ln,li)=>{
     // anel mais perto da água: só árvores de solo encharcado; as de solo sem excesso de água vão para os anéis de fora
     let lst=li===0?z1:(outras.length?outras:z1);
