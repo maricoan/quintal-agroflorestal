@@ -1829,6 +1829,8 @@ function renderCats(){
   let h='';
   let wHtml='';
   CATS.forEach(([k,lab])=>{
+    // no modo jardim de chuva, só o grupo de plantas recomendadas para ele
+    if(S.modo==='chuva'&&k!=='j')return;
     const items=all.filter(s=>(s.c===k||(GRUPO_EXTRA[k]||[]).includes(s.id))&&(!q||qn(s.n+' '+(s.sci||'')).includes(q)));
     if(!items.length)return;
     items.sort((a,b)=>a.n.localeCompare(b.n,'pt'));
@@ -1854,7 +1856,7 @@ function renderCats(){
   // Parceiras fica no topo da lista
   const hCats=h;h='';
   {const cons=consorcios().filter(c=>!q||c.sp.some(i=>BYID[i]&&qn(BYID[i].n).includes(q)));
-    if(cons.length){const ids=new Set(S.sel);const nAll=cons.filter(c=>c.sp.every(i=>ids.has(i))).length;const open=!!q||!!(S.openCats||{}).parc;
+    if(cons.length&&S.modo!=='chuva'){const ids=new Set(S.sel);const nAll=cons.filter(c=>c.sp.every(i=>ids.has(i))).length;const open=!!q||!!(S.openCats||{}).parc;
       h+=`<details class="cat cat-parc" data-k="parc"${open?' open':''}><summary>${catIco('parc')}<span class="cat-t">Parceiras <span class="cat-sub">consórcios com estudo</span></span><span class="cat-n">${nAll?`${nAll} de ${cons.length}`:cons.length}</span></summary><ul class="pc-list">`+cons.map(c=>{
         const all=c.sp.every(i=>ids.has(i)),some=c.sp.some(i=>ids.has(i));const R=REFS[c.src];
         return `<li class="pc${all?' all':''}" title="${esc(c.t)}"><div class="pc-n">${c.sp.map(i=>BYID[i]?`<span class="${ids.has(i)?'on':''}">${esc(BYID[i].n)}</span>`:'').join('<i>+</i>')}</div><p class="pc-t">${esc(c.t)}${R&&R.n?`<sup class="ref">${R.n}</sup>`:''}</p><p class="pc-a">${esc(consArr(c.sp))}</p><div class="pc-act">${all?'<span class="cons-ok">✓ no seu plantio</span>':`<button type="button" class="btn cons-add" data-addcons="${c.sp.join(',')}">${some?'Completar consórcio':'Plantar consórcio'}</button>`}${consPot(c.sp).no?`<span class="pc-chao" title="${esc(consPot(c.sp).no.map(s=>s.n).join(' e '))}: plantar direto no chão"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="g-soil" d="M2 17h20v5H2z"/><path class="g-line" d="M2 17h20"/><path class="g-stem" d="M12 17V9"/><path class="g-leaf" d="M12 12c-4 0-6-2-6-5 4 0 6 2 6 5z"/><path class="g-leaf" d="M12 10c0-3 2-5 6-5 0 3-2 5-6 5z"/><path class="g-root" d="M12 17v3M12 18l-2 2M12 18l2 2"/></svg>consórcio não recomendado para vasos</span>`:''}</div></li>`;}).join('')+
