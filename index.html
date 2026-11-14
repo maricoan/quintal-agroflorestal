@@ -1520,7 +1520,7 @@ const ORIG={N:'chanana gervao oficialsala perpetua vedelia arnicacampo ruelia fa
  Z:'margaridao capimsanto guandu maravilha mamao cafe',
  E:'dipladenia amendoim cambuci jabuticaba grumixama cabeludinha'};
 // plantas que aparecem também em um segundo grupo
-const GRUPO_EXTRA={j:['vedelia','canademacaco','heliconia','marantacinza','falsairis','alamanda','elegante','begoniabrejo'],b:['fedegosobranco','lobeira','aracacampo','guabiroba','gabiroba','muricicampo','peracerrado','pitangacerrado','frutadopombo','algodaocampo','assapeixe','assapeixeroxo','caneladevelho','orelhadeonca','pixirica','fedegosopendula','senaempenada','milhodegrilo','lantanacamara','lantana','esponjinha','jacobinia','salviaazul','juqueri','juqueriamarelo','arranhagato','margaridao','guandu','alecrimcampo','baleeira','alecrimpimenta','boldo','pariparoba','orapronobis'],p:['margaridao'],w:['inga','embauba','jucara','urucum','patadevaca','a_cedrelafissilis','a_cabraleacanjerana','a_handroanthusimpetiginosus','a_handroanthusochraceus','a_zeyheriatuberculosa','a_nectandramegapotamica','falsairis','vedelia','alamanda','heliconia','taioba','sangra','a_calophyllumbrasiliense','a_tibouchinagranulosa','banana','inhame','gengibre']};
+const GRUPO_EXTRA={j:['urucum','patadevaca','vedelia','canademacaco','heliconia','marantacinza','falsairis','alamanda','elegante','begoniabrejo'],b:['fedegosobranco','lobeira','aracacampo','guabiroba','gabiroba','muricicampo','peracerrado','pitangacerrado','frutadopombo','algodaocampo','assapeixe','assapeixeroxo','caneladevelho','orelhadeonca','pixirica','fedegosopendula','senaempenada','milhodegrilo','lantanacamara','lantana','esponjinha','jacobinia','salviaazul','juqueri','juqueriamarelo','arranhagato','margaridao','guandu','alecrimcampo','baleeira','alecrimpimenta','boldo','pariparoba','orapronobis'],p:['margaridao'],w:['inga','embauba','jucara','urucum','patadevaca','a_cedrelafissilis','a_cabraleacanjerana','a_handroanthusimpetiginosus','a_handroanthusochraceus','a_zeyheriatuberculosa','a_nectandramegapotamica','falsairis','vedelia','alamanda','heliconia','taioba','sangra','a_calophyllumbrasiliense','a_tibouchinagranulosa','banana','inhame','gengibre']};
 // Beira d'água e nascentes (Pinheiro, 2017): zonas da faixa de proteção na margem e plantas para recompor mata ciliar
 const BEIRA=[
  ['z1','Beira da água','solo encharcado ou que alaga (zonas 1 e 2)','inga embauba jucara urucum guapuruvu salgueiro mulungu'],
@@ -2321,7 +2321,9 @@ const potSel=sel=>sel.map(s=>!s.v&&VASO_TEMP[s.id]?Object.assign({},s,{v:VT_L,ar
 // Zonas: fundo (encharca com frequência), talude (umidade moderada) e borda (seca) — Okimoto e Santos (2023), a partir de Yuan e Dunnett (2018).
 // Espécies: nativas indicadas para jardins de chuva por Pinheiro (2017) e, para fundo encharcado, elegante e begônia-do-brejo (Cerrado Infinito).
 // A zona de cada espécie segue as condições de cultivo descritas nessas fontes: solo inundável ou úmido (fundo), úmido e drenado (talude), drenado ou de sol (borda).
-const JC_ZONA={vedelia:'f',canademacaco:'f',elegante:'f',begoniabrejo:'f',heliconia:'ft',marantacinza:'t',lutiela:'t',gramamissioneira:'t',gramasantoagostinho:'t',falsairis:'tb',alamanda:'b',fedegosobranco:'b'};
+const JC_ZONA={vedelia:'f',canademacaco:'f',elegante:'f',begoniabrejo:'f',heliconia:'ft',marantacinza:'t',lutiela:'t',gramamissioneira:'t',gramasantoagostinho:'t',falsairis:'tb',alamanda:'b',fedegosobranco:'b',urucum:'t',patadevaca:'b'};
+// árvores pequenas: da faixa de margem de córrego de Pinheiro (2017) — urucum aguenta alagamento periódico (zona 2); pata-de-vaca vai na parte que recebe a enxurrada sem excesso de água (zona 3)
+const JC_ARV=['urucum','patadevaca'];
 const JC_ZN={f:'Fundo',t:'Talude',b:'Borda'};
 const JC_ZD={f:'encharca a cada chuva',t:'úmido, mas drena',b:'mais seca, em volta da depressão'};
 const JC_MARG=.4; // faixa de borda desenhada em volta da depressão (m)
@@ -2459,6 +2461,8 @@ function jcAdvice(p){
     out.push({k:'tip',t:`Nenhuma planta escolhida para ${k==='f'?'o fundo':k==='t'?'o talude':'a borda'} (${JC_ZD[k]}).`,add:op.slice(0,5)});}});
   const nJ=sel.filter(s=>JC_ZONA[s.id]).length;
   if(nJ>0&&nJ<3)out.push({k:'tip',t:'Use várias espécies, de portes diferentes: jardins com rasteiras, arbustos e plantas maiores retêm mais poluentes do que os de uma espécie só, e um jardim com plantas segura 25% mais água do que sem.'});
+  const arv=sel.filter(s=>JC_ARV.includes(s.id));
+  if(arv.length)out.push({k:'',t:`${names(arv)}: ${arv.length>1?'árvores pequenas indicadas':'árvore pequena indicada'} por Pinheiro (2017) para a faixa de vegetação na margem de córregos, não especificamente para jardim de chuva. O urucum aguenta alagamento de vez em quando e vai no talude; a pata-de-vaca é da parte que recebe a enxurrada sem ficar encharcada e vai na borda. Ficam a ${'2 m'} uma da outra e crescem de 4 a 7 m: dê espaço para a copa.`});
   const tox=sel.filter(s=>s.tox);
   if(tox.length)out.push({k:'',t:`${names(tox)}: ${tox.length>1?'são tóxicas':'é tóxica'} se comida. Evite onde crianças ou animais possam mastigar as folhas.`});
   out.push({k:'',t:'Fique longe da fundação da casa: a orientação americana citada por Pinheiro (2017) é de 10 m, para a água não chegar às paredes. Em lote pequeno, mantenha a maior distância possível e não deixe a água empoçar junto ao muro.'});
