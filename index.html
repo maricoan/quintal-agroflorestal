@@ -2336,6 +2336,7 @@ const JC_ARV=['inga','embauba','salgueiro','guapuruvu','urucum','jucara','mulung
 const JC_ZN={f:'Fundo',t:'Talude',b:'Borda'};
 const JC_ZD={f:'encharca a cada chuva',t:'úmido, mas drena',b:'mais seca, em volta da depressão'};
 const JC_MARG=.4;
+let JC_CAP=0; // no corte do jardim de chuva, a copa não fica limitada pelo trecho desenhado
 const JC_ENT={telhado:'calha',piso:'piso',aclive:'aclive'};
 const jcEnt=()=>JC_ENT[S.jcOrig||'telhado'];
 // biovaleta em degraus antes da entrada (Pinheiro, 2017: células escalonadas em terreno inclinado)
@@ -2469,8 +2470,8 @@ function jcCorte3D(c,lay,sel){
   const fp={pts,strips:[],rings:null,lines:[],beds:[],sel:sel,count:{}};
   const keep={L:S.L,W:S.W,forma:S.forma,D:S.D,curso:S.curso};
   let svg;
-  try{S.L=XL;S.W=TH;S.forma='ret';S.curso='nao';svg=draw3D(fp,false);}
-  finally{Object.assign(S,keep);}
+  try{S.L=XL;S.W=TH;S.forma='ret';S.curso='nao';JC_CAP=5;svg=draw3D(fp,false);}
+  finally{Object.assign(S,keep);JC_CAP=0;}
   // a mesma projeção do draw3D
   const cs=Math.cos(Math.PI/6),sn=.5,ZF=.85,maxH=Math.max(1,...pts.map(q=>hOf(q.s)));
   const K=Math.max(8,Math.min(70,660/((XL+TH)*cs))),pad=24,ox=TH*cs*K+pad,oy=pad+maxH*K*ZF+12;
@@ -2498,7 +2499,9 @@ function jcCorte3D(c,lay,sel){
   svg=svg.replace(/<text class="s-dim"[^>]*>[^<]*<\/text>/g,'');
   svg=svg.replace(/(<\/defs>)/,`$1${b}`);
   svg=svg.replace(/<\/svg>$/,`${t}</svg>`);
-  svg=svg.replace(/viewBox="0 0 ([\d.]+) ([\d.]+)"/,(_,w,h)=>`viewBox="0 0 ${(+w+10).toFixed(1)} ${(+h+(D-.3)*K*ZF+20).toFixed(1)}"`);
+  // as árvores do corte ficam mais baixas (até ~4,5 m): corta o céu vazio de cima
+  const hm=Math.max(1,...pts.map(q=>q.kind==='tree'?Math.min(hOf(q.s),3.4):hOf(q.s))),dy=Math.max(0,(maxH-hm)*K*ZF);
+  svg=svg.replace(/viewBox="0 0 ([\d.]+) ([\d.]+)"/,(_,w,h)=>`viewBox="0 ${dy.toFixed(1)} ${(+w+10).toFixed(1)} ${(+h-dy+(D-.3)*K*ZF+20).toFixed(1)}"`);
   svg=svg.replace(/aria-label="[^"]*"/,'aria-label="Corte em 3D de um trecho do jardim de chuva, com camadas e zonas"');
   return svg;}
 function jcPanel(p){
@@ -3076,7 +3079,9 @@ function draw3D(p,raio){
   const trs=p.pts.filter(q=>q.kind==='tree');const nearT=q=>trs.reduce((m,o)=>o===q?m:Math.min(m,Math.hypot(o.x-q.x,o.y-q.y)),99);
   const treeSVG=(s,bx,by,h,dmax)=>{
     const X=n=>n.toFixed(1),U=m=>m*K*ZF,cr=crownOf(s);
-    const D=Math.min(cr.d||CROWN_D[cr.f]*h,CROWN_MAX[cr.f]||4.5,(dmax||99)*1.3,Math.max(L,W)*.85),Rs=Math.max(4,D/2*K*.95);
+    const D=Math.min(cr.d||CROWN_D[cr.f]*h,CROWN_MAX[cr.f]||4.5,(dmax||99)*1.3,JC_CAP||Math.max(L,W)*.85),Rs=Math.max(4,D/2*K*.95);
+    // no corte do jardim de chuva, árvore espremida pelas vizinhas fica mais baixa, para não virar um pirulito
+    if(JC_CAP)h=Math.min(h,Math.max(2.2,D*1.8));
     const top=by-U(h);
     let b=`<title>${esc(s.n)} · copa ${CROWN_TXT[cr.f]} · cerca de ${fmt(h)} m de altura e ${fmt(D)} m de copa</title>`;
     b+=`<ellipse class="shd" cx="${X(bx)}" cy="${X(by)}" rx="${X(Rs*.95)}" ry="${X(Rs*.48)}"/>`;
@@ -3141,17 +3146,17 @@ function draw3D(p,raio){
         b+=`<ellipse class="${cls}" cx="${X(bx)}" cy="${X(top+3)}" rx="${X(Math.max(2,Rs*.18))}" ry="${X(Math.max(2,Rs*.14))}"/>`;break;}
       case 'umbrella':{const ry=Math.max(Rs*.26,U(h)*.12),cy=top+ry,fy=by-U(h)*.5;
         b+=trunk(bx,by,bx,fy);[-1,-.35,.35,1].forEach(k=>{b+=trunk(bx,fy,bx+k*Rs*.6,cy+ry*.4,1.6);});
-        b+=`<ellipse class="${cls}" cx="${X(bx)}" cy="${X(cy)}" rx="${X(Rs)}" ry="${X(ry)}"/>`+hl(bx-Rs*.2,cy-ry*.4,Rs*.6,ry*.35);cc=[bx,cy,Rs,ry];break;}
+        b+=lobed(bx,cy,Rs,ry,.55);cc=[bx,cy,Rs,ry];break;}
       case 'conical':{const bt=by-U(h)*.22;
         b+=trunk(bx,by,bx,bt-2)+`<path class="${cls}" d="M${X(bx)},${X(top)} L${X(bx+Rs)},${X(bt)} Q${X(bx)},${X(bt+Rs*.35)} ${X(bx-Rs)},${X(bt)} Z"/>`;
         b+=`<path class="lt-in" d="M${X(bx)},${X(top+4)} L${X(bx-Rs*.55)},${X(bt-4)} L${X(bx-Rs*.1)},${X(bt-4)} Z"/>`;cc=[bx,(top+bt)/2+4,Rs*.45,(bt-top)*.3];break;}
-      case 'vase':{const ry=Math.max(Rs*.5,U(h)*.25),cy=top+ry,fy=by-U(h)*.35;
-        b+=trunk(bx,by,bx,fy);[-1,0,1].forEach(k=>{b+=trunk(bx,fy,bx+k*Rs*.6,cy+ry*.3,1.8);});
-        b+=`<ellipse class="${cls}" cx="${X(bx)}" cy="${X(cy)}" rx="${X(Rs)}" ry="${X(ry)}"/>`+hl(bx-Rs*.3,cy-ry*.35,Rs*.4,ry*.35);cc=[bx,cy,Rs,ry];break;}
+      case 'vase':{const ry=Math.min(Rs*.85,Math.max(Rs*.5,U(h)*.25)),cy=top+ry,fy=Math.min(by-U(h)*.45,cy+ry*1.6);
+        b+=trunk(bx,by,bx,fy);[-1,0,1].forEach(k=>{b+=trunk(bx,fy,bx+k*Rs*.5,cy+ry*.35,Math.max(1.8,tw*.6));});
+        b+=lobed(bx,cy,Rs,ry,.38);cc=[bx,cy,Rs,ry];break;}
       case 'open':{const fy=by-U(h)*.5,pts=[[-.7,.32],[-.2,.1],[.35,.16],[.75,.36]];
         b+=trunk(bx,by,bx,fy);
         pts.forEach(([kx,ky])=>{b+=trunk(bx,fy,bx+kx*Rs,top+U(h)*ky+Rs*.15,1.5);});
-        pts.forEach(([kx,ky])=>{b+=`<ellipse class="${cls}" cx="${X(bx+kx*Rs)}" cy="${X(top+U(h)*ky)}" rx="${X(Rs*.4)}" ry="${X(Rs*.3)}"/>`;});
+        pts.forEach(([kx,ky])=>{b+=lobed(bx+kx*Rs,top+U(h)*ky,Rs*.42,Rs*.3,.5);});
         cc=[bx,top+U(h)*.22,Rs*.8,Rs*.35];break;}
       case 'candelabro':{const fy=by-U(h)*.6;b+=trunk(bx,by,bx,fy);
         [[-.8,.18],[-.3,.02],[.3,.08],[.85,.22]].forEach(([kx,ky])=>{const tx=bx+kx*Rs,ty=top+U(h)*ky;
