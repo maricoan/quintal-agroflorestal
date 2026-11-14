@@ -2459,54 +2459,47 @@ function jcCorte(c,lay){
   g+=`<text class="jc-zs" x="${X(TW*K+8)}" y="${X(yF+prof*K/2)}">mistura: 1/3 areia,</text><text class="jc-zs" x="${X(TW*K+8)}" y="${X(yF+prof*K/2+13)}">1/3 terra, 1/3 composto</text><text class="jc-zs" x="${X(TW*K+8)}" y="${X(yF+prof*K/2+26)}">40 cm a 1 m</text>`;
   g+=`<text class="jc-zs" x="${X(TW*K/2)}" y="${X((prof+lam)*K+14)}" text-anchor="middle">fundo sem impermeabilizar: a água segue para o solo</text>`;
   return g+`</g></svg>`;}
-// corte em 3D (45°), como a vista 3D do chão: o terreno é cortado no meio do jardim e a face da frente mostra a lâmina, a mistura e o solo
+// corte em 3D (45°), com os mesmos desenhos de plantas da vista 3D do chão.
+// Mostra um trecho do jardim de até 2,4 m, cortado na largura: a face da direita mostra o perfil (borda, talude e fundo), a lâmina, a mistura e o solo.
 function jcCorte3D(c,lay,sel){
-  const m=JC_MARG,L=c.L,W=c.W,i=c.i,TW=L+2*m,TH=W+2*m,lam=c.lam,prof=1,yc=m+W/2;
+  const m=JC_MARG,L=c.L,W=c.W,i=c.i,TW=L+2*m,TH=W+2*m,lam=c.lam,prof=.6,D=lam+prof;
+  const XL=c.round?m+L/2:Math.min(TW,m+2.4);
   const isT=s=>JC_ARV.includes(s.id)||!!s.arv;
-  const pts=lay.pts.filter(q=>q.y<=yc+.05).map(q=>({s:q.s,x:q.x,y:Math.min(q.y,yc-.02),kind:isT(q.s)?'tree':isMed(q.s)?'med':'bed',cell:Math.max(.2,Math.min(q.s.el,q.s.ep))}));
+  const pts=lay.pts.filter(q=>q.x<=XL+.02).map(q=>({s:q.s,x:Math.min(q.x,XL-.05),y:q.y,kind:isT(q.s)?'tree':isMed(q.s)?'med':'bed',cell:Math.max(.2,Math.min(q.s.el,q.s.ep))}));
   const fp={pts,strips:[],rings:null,lines:[],beds:[],sel:sel,count:{}};
   const keep={L:S.L,W:S.W,forma:S.forma,D:S.D,curso:S.curso};
   let svg;
-  try{S.L=TW;S.W=TH;S.forma=c.round?'circ':'ret';S.D=TW;S.curso='nao';svg=draw3D(fp,false);}
+  try{S.L=XL;S.W=TH;S.forma='ret';S.curso='nao';svg=draw3D(fp,false);}
   finally{Object.assign(S,keep);}
   // a mesma projeção do draw3D
   const cs=Math.cos(Math.PI/6),sn=.5,ZF=.85,maxH=Math.max(1,...pts.map(q=>hOf(q.s)));
-  const K=Math.max(8,Math.min(70,660/((TW+TH)*cs))),pad=24,ox=TH*cs*K+pad,oy=pad+maxH*K*ZF+12;
+  const K=Math.max(8,Math.min(70,660/((XL+TH)*cs))),pad=24,ox=TH*cs*K+pad,oy=pad+maxH*K*ZF+12;
   const iso=(x,y,z)=>[(x-y)*cs*K+ox,(x+y)*sn*K-z*K*ZF+oy];
   const P=a=>a.map(q=>q.map(n=>n.toFixed(1)).join(',')).join(' ');
-  const D=lam+prof;
-  // perfil da superfície ao longo do corte (x, z)
-  const prof1=c.round?(()=>{const R=L/2,C=m+R;return [[C-R-m,0],[C-R,0],[C-R+i,-lam],[C+R-i,-lam],[C+R,0],[C+R+m,0]];})():[[0,0],[m,0],[m+i,-lam],[m+L-i,-lam],[m+L,0],[TW,0]];
+  // perfil da superfície na largura (y, z)
+  const pr=[[0,0],[m,0],[m+i,-lam],[m+W-i,-lam],[m+W,0],[TH,0]];
   let b='';
-  if(c.round){const R=L/2,C=m+R,arc=(r,z,a0,a1,n)=>{const o=[];for(let k=0;k<=n;k++){const t=a0+(a1-a0)*k/n;o.push(iso(C+r*Math.cos(t),C+r*Math.sin(t),z));}return o;};
-    // lateral curva visível (quarto de trás à direita)
-    b+=`<polygon class="s-side2" points="${P(arc(R+m,0,-Math.PI/2,0,24).concat(arc(R+m,-D,0,-Math.PI/2,24)))}"/>`;
-    b+=`<polygon class="jc-bd" points="${P(arc(R+m,0,-Math.PI,0,48))}"/>`;
-    b+=`<polygon class="jc-tl" points="${P(arc(R,0,-Math.PI,0,48))}"/>`;
-    b+=`<polygon class="jc-fd" points="${P(arc(Math.max(.05,R-i),-lam,-Math.PI,0,48))}"/>`;}
-  else{
-    b+=`<polygon class="s-side2" points="${P([iso(TW,0,0),iso(TW,yc,0),iso(TW,yc,-D),iso(TW,0,-D)])}"/>`;
-    b+=`<polygon class="jc-bd" points="${P([iso(0,0,0),iso(TW,0,0),iso(TW,yc,0),iso(0,yc,0)])}"/>`;
-    b+=`<polygon class="jc-tl" points="${P([iso(m,m,0),iso(m+L,m,0),iso(m+L,yc,0),iso(m,yc,0)])}"/>`;
-    b+=`<polygon class="jc-fd" points="${P([iso(m+i,m+i,-lam),iso(m+L-i,m+i,-lam),iso(m+L-i,yc,-lam),iso(m+i,yc,-lam)])}"/>`;}
-  // face do corte: solo, mistura e lâmina de água
-  const xA=prof1[0][0],xZ=prof1[prof1.length-1][0];
-  b+=`<polygon class="s-side1" points="${P(prof1.map(([x,z])=>iso(x,yc,z)).concat([iso(xZ,yc,-D),iso(xA,yc,-D)]))}"/>`;
-  b+=`<polygon class="jc-mix" points="${P(prof1.slice(1,5).map(([x,z])=>iso(x,yc,z)).concat([iso(prof1[4][0],yc,-D),iso(prof1[1][0],yc,-D)]))}"/>`;
-  b+=`<polygon class="jc-wl" points="${P(prof1.slice(1,5).map(([x,z])=>iso(x,yc,z)))}"/>`;
-  b+=`<polyline class="s-edge" fill="none" points="${P(prof1.map(([x,z])=>iso(x,yc,z)))}"/>`;
-  // textos
-  const lab=(x,z,t,anc,dy)=>{const [a,bb]=iso(x,yc,z);return `<text class="jc-zs" x="${a.toFixed(1)}" y="${(bb+(dy||0)).toFixed(1)}" text-anchor="${anc||'start'}">${t}</text>`;};
-  let t='';
-  const zl=(x,n)=>{const [a,bb]=iso(x,yc,-lam-.12);return `<text class="jc-zt" x="${a.toFixed(1)}" y="${bb.toFixed(1)}" text-anchor="middle">${n}</text>`;};
-  t+=zl((prof1[2][0]+prof1[3][0])/2,'fundo')+zl(prof1[4][0]-i/2,'talude')+zl(xZ-m/2,'borda');
-  // troca o bloco de terra do draw3D pelo bloco cortado e aumenta a altura do desenho
+  // lado da frente (y = TH): só solo
+  b+=`<polygon class="s-side1" points="${P([iso(0,TH,0),iso(XL,TH,0),iso(XL,TH,-D),iso(0,TH,-D)])}"/>`;
+  // topo
+  b+=`<polygon class="jc-bd" points="${P([iso(0,0,0),iso(XL,0,0),iso(XL,TH,0),iso(0,TH,0)])}"/>`;
+  if(c.round){const R=L/2,C=m+R,arc=(r,z)=>{const o=[];for(let k=0;k<=36;k++){const t=Math.PI/2+Math.PI*k/36;o.push(iso(C+r*Math.cos(t),C+r*Math.sin(t),z));}return o;};
+    b+=`<polygon class="jc-tl" points="${P(arc(R,0))}"/><polygon class="jc-fd" points="${P(arc(Math.max(.05,R-i),-lam))}"/>`;}
+  else{b+=`<polygon class="jc-tl" points="${P([iso(m,m,0),iso(XL,m,0),iso(XL,m+W,0),iso(m,m+W,0)])}"/>`;
+    b+=`<polygon class="jc-fd" points="${P([iso(m+i,m+i,-lam),iso(XL,m+i,-lam),iso(XL,m+W-i,-lam),iso(m+i,m+W-i,-lam)])}"/>`;}
+  // face do corte (x = XL): solo, mistura e lâmina
+  b+=`<polygon class="s-side2" points="${P(pr.map(([y,z])=>iso(XL,y,z)).concat([iso(XL,TH,-D),iso(XL,0,-D)]))}"/>`;
+  b+=`<polygon class="jc-mix" points="${P(pr.slice(1,5).map(([y,z])=>iso(XL,y,z)).concat([iso(XL,m+W,-D),iso(XL,m,-D)]))}"/>`;
+  b+=`<polygon class="jc-wl" points="${P(pr.slice(1,5).map(([y,z])=>iso(XL,y,z)))}"/>`;
+  b+=`<polyline class="s-edge" fill="none" points="${P(pr.map(([y,z])=>iso(XL,y,z)))}"/>`;
+  const zl=(y,n)=>{const [a,bb]=iso(XL,y,-lam-.18);return `<text class="jc-zs" x="${a.toFixed(1)}" y="${bb.toFixed(1)}" text-anchor="middle">${n}</text>`;};
+  const t=zl(m/2,'borda')+zl(m+i/2,'talude')+zl(m+W/2,'fundo');
   svg=svg.replace(/<polygon class="s-(side1|side2|ground)"[^>]*\/>/g,'');
   svg=svg.replace(/<text class="s-dim"[^>]*>[^<]*<\/text>/g,'');
   svg=svg.replace(/(<\/defs>)/,`$1${b}`);
   svg=svg.replace(/<\/svg>$/,`${t}</svg>`);
-  svg=svg.replace(/viewBox="0 0 ([\d.]+) ([\d.]+)"/,(_,w,h)=>`viewBox="0 0 ${(+w+10).toFixed(1)} ${(+h+(D-.3)*K*ZF+30).toFixed(1)}"`);
-  svg=svg.replace(/aria-label="[^"]*"/,'aria-label="Corte em 3D do jardim de chuva, com camadas e zonas"');
+  svg=svg.replace(/viewBox="0 0 ([\d.]+) ([\d.]+)"/,(_,w,h)=>`viewBox="0 0 ${(+w+10).toFixed(1)} ${(+h+(D-.3)*K*ZF+20).toFixed(1)}"`);
+  svg=svg.replace(/aria-label="[^"]*"/,'aria-label="Corte em 3D de um trecho do jardim de chuva, com camadas e zonas"');
   return svg;}
 function jcPanel(p){
   const c=jcCalc(),lay=jcLayout(p.sel,c),cima=S.jcv!=='corte';
@@ -2516,7 +2509,7 @@ function jcPanel(p){
     <div class="ibox" id="jcInfo" hidden><p>O jardim deve ter de 10 a 15% da área que escoa para ele: abaixo de 10%, transborda com mais frequência nas chuvas fortes${jcRef('GON')}. O app usa 15% para solo argiloso e 10% para solo arenoso. Num jardim do Rio de Janeiro escavado a 1 m e cheio de mistura arenosa, 6,3% já bastou, mas esse resultado vale para aquele solo${jcRef('GON')}.</p><p>Com 10% da área, o fundo fica cerca de 15 cm abaixo do chão em volta, a lâmina de água${jcRef('GON')}. Jardins com mais de 40 cm de solo preparado seguram mais água${jcRef('GON')}. A água deve sumir algumas horas depois da chuva, e o ladrão leva o excesso das chuvas maiores${jcRef('MBP')}.</p></div>
     <div class="stats"><div class="stat"><b>${fmt(c.A,0)} m²</b><span>escoam para o jardim</span></div><div class="stat"><b>${c.round?'Ø '+fmt(c.L)+' m':fmt(c.L)+' × '+fmt(c.W)+' m'}</b><span>${Math.round(c.pct*100)}% dessa área</span></div><div class="stat"><b>${fmt(c.vol,0)} L</b><span>na lâmina de ${cm_(c.lam)}</span></div></div>
     <p class="hint jc-orig">${S.jcOrig==='aclive'?'<b>Água de aclive:</b> chega com força e arrasta terra. O desenho mostra uma biovaleta em degraus antes da entrada, para frear a enxurrada.':S.jcOrig==='piso'?'<b>Água de piso ou garagem:</b> traz de 1 a 3 vezes mais óleos e metais que a do telhado. Use espécies resistentes e veja o aviso em Ajustes.':'<b>Água do telhado:</b> a mais limpa para o jardim de chuva. Chega pela calha, por cano.'}</p>
-    <div class="drawing plain">${cima?jcTop(c,lay):jcCorte3D(c,lay,p.sel)}</div>${cima?'':`<p class="hint">Na face do corte: lâmina de água de ${cm_(c.lam)} (azul), mistura de 1/3 de areia, 1/3 de terra vegetal e 1/3 de composto, de 40 cm a 1 m de fundo (bege), e o solo do lugar (marrom). O fundo não é impermeabilizado: a água segue para o solo.</p>`}`;
+    <div class="drawing plain">${cima?jcTop(c,lay):jcCorte3D(c,lay,p.sel)}</div>${cima?'':`<p class="hint">Um trecho do jardim cortado na largura. Na face do corte: lâmina de água de ${cm_(c.lam)} (azul), mistura de 1/3 de areia, 1/3 de terra vegetal e 1/3 de composto, de 40 cm a 1 m de fundo (bege), e o solo do lugar (marrom). O fundo não é impermeabilizado: a água segue para o solo.</p>`}`;
   const sp=['f','t','b'].map(k=>({k,s:lay.z[k]}));
   h+=`<ul class="jc-zl">${sp.map(({k,s})=>`<li><b>${JC_ZN[k]}${k==='f'?jcRef('OKI'):''}</b> <span class="hint">${JC_ZD[k]}:</span> ${s.length?s.map(x=>`<span data-sp="${x.id}">${esc(x.n)} (${cnt[x.id]||0})</span>`).join(', '):'<i>nenhuma planta escolhida para esta zona</i>'}</li>`).join('')}</ul>`;
   {const f=jcCopa(c,lay);if(f>.5)h+=`<div class="nopot" role="note"><span class="cap-ico" aria-hidden="true">!</span><div><b>Árvores demais para o tamanho</b><span>${esc(jcCopaTxt(f))}</span></div></div>`;}
@@ -3023,7 +3016,7 @@ function herbSVG(f,s,cx,base,w,h,opt,key){
   return o;
 }
 // forma e largura real (m) das plantas de adubo verde e biomassa
-const FORM={lutiela:['leafy',.45],fedegosobranco:['mound',1,{fr:['fl-y',6,'top']}],gramasantoagostinho:['grass',.3],gramamissioneira:['grass',.3],canademacaco:['stalkleaves',.6,{cone:1}],marantacinza:['leafy',.55],peixinho:['rosette',.3],tuna:['cactus',.8],gabiroba:['herb',.8,{fr:['fl-y',6,'top']}],chanana:['mint',.4,{fr:['fl-y',6,'top']}],gervao:['lavender',.6,{spike:'fr-p'}],oficialsala:['herb',.5,{fr:['fl-r',8,'top']}],perpetua:['herb',.4,{fr:['fr-p',8,'top']}],vedelia:['mint',.5,{fr:['fl-y',6,'top']}],arnicacampo:['herb',.4,{fr:['fr-p',3,'top']}],ruelia:['fruitshrub',.3,{fruit:['fl-r','chili',6]}],falsairis:['spiky',.5,{fr:['fr-p',3,'top']}],salviavermelha:['lavender',.4,{spike:'fl-r'}],salviaazul:['lavender',.6,{spike:'fr-p'}],esponjinha:['herb',1.5,{fr:['fl-r',8,'top']}],jacobinia:['herb',.8,{big:1,fr:['fl-pk',8,'top']}],alamanda:['herb',1.5,{big:1,fr:['fl-y',6,'top']}],ciposaojoao:['trellis',1.4,{fr:['fr-o',8,'top']}],dipladenia:['trellis',1,{fr:['fl-r',5,'top']}],guandu:['herb',1.1,{fr:['fl-y',6,'top']}],margaridao:['herb',1.5,{big:1,daisy:1,fr:['fl-y',6,'top']}],assapeixe:['herb',1.6,{big:1,fr:['fl-w',8,'top']}],maravilha:['herb',.8,{fr:['fl-pk',6,'top']}],feijaoporco:['fruitshrub',.7,{big:1,fruit:['pl-3','long',4]}],feijaocorda:['groundvine',.8,{fruit:'pl-3'}],begonia:['rosette',.4,{fl:'fl-pk'}],begoniaprateada:['rosette',.35,{fl:'fl-pk'}],mandioca:['cassava',1.1],crotalaria:['herb',.35,{fr:['fl-y',5,'top']}],canaacucar:['cane',.6],canaindia:['leafy',.7],heliconia:['leafy',.9],amendoim:['mint',.5,{fr:['fl-y',6,'top']}],samambaia:['frond',.7],dyckia:['spiky',.45,{stalk:1}],
+const FORM={elegante:['rosette',.3],begoniabrejo:['leafy',.5],lutiela:['leafy',.45],fedegosobranco:['mound',1,{fr:['fl-y',6,'top']}],gramasantoagostinho:['grass',.3],gramamissioneira:['grass',.3],canademacaco:['stalkleaves',.6,{cone:1}],marantacinza:['leafy',.55],peixinho:['rosette',.3],tuna:['cactus',.8],gabiroba:['herb',.8,{fr:['fl-y',6,'top']}],chanana:['mint',.4,{fr:['fl-y',6,'top']}],gervao:['lavender',.6,{spike:'fr-p'}],oficialsala:['herb',.5,{fr:['fl-r',8,'top']}],perpetua:['herb',.4,{fr:['fr-p',8,'top']}],vedelia:['mint',.5,{fr:['fl-y',6,'top']}],arnicacampo:['herb',.4,{fr:['fr-p',3,'top']}],ruelia:['fruitshrub',.3,{fruit:['fl-r','chili',6]}],falsairis:['spiky',.5,{fr:['fr-p',3,'top']}],salviavermelha:['lavender',.4,{spike:'fl-r'}],salviaazul:['lavender',.6,{spike:'fr-p'}],esponjinha:['herb',1.5,{fr:['fl-r',8,'top']}],jacobinia:['herb',.8,{big:1,fr:['fl-pk',8,'top']}],alamanda:['herb',1.5,{big:1,fr:['fl-y',6,'top']}],ciposaojoao:['trellis',1.4,{fr:['fr-o',8,'top']}],dipladenia:['trellis',1,{fr:['fl-r',5,'top']}],guandu:['herb',1.1,{fr:['fl-y',6,'top']}],margaridao:['herb',1.5,{big:1,daisy:1,fr:['fl-y',6,'top']}],assapeixe:['herb',1.6,{big:1,fr:['fl-w',8,'top']}],maravilha:['herb',.8,{fr:['fl-pk',6,'top']}],feijaoporco:['fruitshrub',.7,{big:1,fruit:['pl-3','long',4]}],feijaocorda:['groundvine',.8,{fruit:'pl-3'}],begonia:['rosette',.4,{fl:'fl-pk'}],begoniaprateada:['rosette',.35,{fl:'fl-pk'}],mandioca:['cassava',1.1],crotalaria:['herb',.35,{fr:['fl-y',5,'top']}],canaacucar:['cane',.6],canaindia:['leafy',.7],heliconia:['leafy',.9],amendoim:['mint',.5,{fr:['fl-y',6,'top']}],samambaia:['frond',.7],dyckia:['spiky',.45,{stalk:1}],
  // hortaliças
  alface:['lettuce',.28],rucula:['tuft',.18],cenoura:['feather',.12,{fr:['fr-o',1,'ground']}],beterraba:['tuft',.2,{fr:['fl-r',1,'ground']}],couve:['kale',.55],tomate:['tomato',.55],berinjela:['fruitshrub',.6,{big:1,fruit:['fr-p','long',3]}],pimenta:['fruitshrub',.5,{fruit:['fl-r','chili',8]}],quiabo:['stalkleaves',.5,{fr:['fl-y',2,'top']}],feijao:['tripod',.6],abobora:['groundvine',2,{big:1,flower:1,fruit:'fr-o'}],batatadoce:['groundvine',.7],milho:['cane',.35,{tassel:1}],taioba:['elephant',.8],inhame:['elephant',.7],gengibre:['stalkleaves',.45],cara:['trellis',.45,{nofl:1}],orapronobis:['trellis',1.1],
  // aromáticas
