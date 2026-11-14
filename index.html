@@ -2497,7 +2497,7 @@ function jcCorte3D(c,lay,sel){
   b+=`<polygon class="jc-wl" points="${P(pr.slice(1,5).map(([y,z])=>iso(XL,y,z)))}"/>`;
   b+=`<polyline class="s-edge" fill="none" points="${P(pr.map(([y,z])=>iso(XL,y,z)))}"/>`;
   // legendas em caixinhas à direita, cada uma com uma seta até o ponto do corte
-  const y0d=yc0-hd,y0f=yc0-hf;const ANC=[['Borda',iso(XL,y0d*.55,0),'bd'],['Talude',iso(XL,(y0d+y0f)/2,-lam*.5),'tl'],['Fundo',iso(XL,yc0-hf*.4,-lam),'fd'],['Lâmina de água '+cm_(lam),iso(XL,yc0+hf*.35,-lam*.45),'wl'],['Mistura (40 cm a 1 m)',iso(XL,yc0,-lam-prof*.5),'mx'],['Solo do lugar',iso(XL,y0d*.45,-D*.6),'sl']];
+  const y0d=yc0-hd,y0f=yc0-hf;const ANC=[['Borda',iso(XL,y0d*.55,0),'bd'],['Talude',iso(XL,(y0d+y0f)/2,-lam*.5),'tl'],['Fundo',iso(XL,yc0-hf*.4,-lam),'fd'],['Lâmina de água '+cm_(lam),iso(XL,yc0+hf*.35,-lam*.45),'wl'],['Mistura (40 cm a 1 m)',iso(XL,yc0,-lam-prof*.5),'mx'],['Ladrão: saída do excesso',iso(XL,yc0+hd*.85,-.01),'wl'],['Solo do lugar',iso(XL,y0d*.45,-D*.6),'sl']];
   const FS=isMob()?20:13,BH=Math.round(FS*1.8),GAP=Math.round(FS*.7),bx0=Math.max(...ANC.map(x=>x[1][0]))+FS*4;
   const ys=ANC.map(x=>x[1][1]),y0=Math.min(...ys)-30,tot=ANC.length*(BH+GAP)-GAP,yStart=Math.max(y0,(Math.min(...ys)+Math.max(...ys))/2-tot/2);
   let t='';
@@ -2508,6 +2508,17 @@ function jcCorte3D(c,lay,sel){
     t+=`<path class="jc-ld jc-k-${cl}" style="stroke-width:${sw.toFixed(1)}" d="M${bx0.toFixed(1)},${my.toFixed(1)} H${kx.toFixed(1)} L${(tx-ux*hl).toFixed(1)},${(ty-uy*hl).toFixed(1)}"/>`;
     t+=`<path class="jc-ah jc-k-${cl}" d="M${tx.toFixed(1)},${ty.toFixed(1)} L${(tx-ux*hl-uy*hw).toFixed(1)},${(ty-uy*hl+ux*hw).toFixed(1)} L${(tx-ux*hl+uy*hw).toFixed(1)},${(ty-uy*hl-ux*hw).toFixed(1)} Z"/>`;
     t+=`<rect class="jc-bx jc-c-${cl}" x="${bx0.toFixed(1)}" y="${by.toFixed(1)}" width="${bw.toFixed(1)}" height="${BH}" rx="${(FS*.45).toFixed(1)}" style="stroke-width:${sw.toFixed(1)}"/><rect class="jc-k-${cl} jc-tab" x="${bx0.toFixed(1)}" y="${by.toFixed(1)}" width="${(FS*.55).toFixed(1)}" height="${BH}" rx="${(FS*.3).toFixed(1)}"/><text class="jc-bt" style="font-size:${FS}px" x="${(bx0+FS*.95).toFixed(1)}" y="${(my+FS*.36).toFixed(1)}">${lab}</text>`;});
+  // direção da água: entrada (calha, piso ou aclive) na ponta esquerda e ladrão na ponta do corte, como na vista de cima
+  {const zA=.06,ar=(x1,x2,lab,dir)=>{const [a1,b1]=iso(x1,yc0,zA),[a2,b2]=iso(x2,yc0,zA),dx=a2-a1,dy=b2-b1,dl=Math.hypot(dx,dy)||1,ux=dx/dl,uy=dy/dl,hl=FS*.9,hw=FS*.5;
+      let o=`<path class="jc-ar" style="stroke-width:${(FS/4).toFixed(1)}" d="M${a1.toFixed(1)},${b1.toFixed(1)} L${(a2-ux*hl).toFixed(1)},${(b2-uy*hl).toFixed(1)}"/>`;
+      o+=`<path class="jc-ah jc-k-wl" d="M${a2.toFixed(1)},${b2.toFixed(1)} L${(a2-ux*hl-uy*hw).toFixed(1)},${(b2-uy*hl+ux*hw).toFixed(1)} L${(a2-ux*hl+uy*hw).toFixed(1)},${(b2-uy*hl-ux*hw).toFixed(1)} Z"/>`;
+      const [lx,ly]=dir<0?[a1,b1]:[a2,b2],bw=lab.length*FS*.62+FS*1.6;const X0=dir<0?lx-bw-FS*.3:lx+FS*.4,Y0=ly-FS*2.6;
+      o+=`<rect class="jc-bx jc-c-wl" x="${X0.toFixed(1)}" y="${Y0.toFixed(1)}" width="${bw.toFixed(1)}" height="${BH}" rx="${(FS*.45).toFixed(1)}"/><rect class="jc-k-wl jc-tab" x="${X0.toFixed(1)}" y="${Y0.toFixed(1)}" width="${(FS*.55).toFixed(1)}" height="${BH}" rx="${(FS*.3).toFixed(1)}"/><text class="jc-bt" style="font-size:${FS}px" x="${(X0+FS*.95).toFixed(1)}" y="${(Y0+BH/2+FS*.36).toFixed(1)}">${lab}</text>`;
+      return o;};
+    const ent={telhado:'Entrada: calha',piso:'Entrada: piso',aclive:'Entrada: aclive'}[S.jcOrig||'telhado'];
+    let w=ar(-1.1,m+.15,ent,-1);
+    if(S.jcOrig==='aclive'){[0,1,2].forEach(k=>{const x0=-1.9+k*.28,z0=.05+(2-k)*.12;w+=`<polygon class="jc-edge" points="${P([iso(x0,yc0-.25,z0),iso(x0+.24,yc0-.25,z0),iso(x0+.24,yc0+.25,z0),iso(x0,yc0+.25,z0)])}"/>`;});}
+    t=w+t;}
   const extraW=Math.max(0,bx0+Math.max(...ANC.map(x=>x[0].length))*FS*.62+30);var JC_YB=yStart+tot;
   svg=svg.replace(/<polygon class="s-(side1|side2|ground)"[^>]*\/>/g,'');
   svg=svg.replace(/<text class="s-dim"[^>]*>[^<]*<\/text>/g,'');
@@ -2515,7 +2526,7 @@ function jcCorte3D(c,lay,sel){
   svg=svg.replace(/<\/svg>$/,`${t}</svg>`);
   // as árvores do corte ficam mais baixas (até ~4,5 m): corta o céu vazio de cima
   const hm=Math.max(1,...pts.map(q=>q.kind==='tree'?Math.min(hOf(q.s),3.4):hOf(q.s))),dy=Math.max(0,(maxH-hm)*K*ZF);
-  svg=svg.replace(/viewBox="0 0 ([\d.]+) ([\d.]+)"/,(_,w,h)=>`viewBox="0 ${dy.toFixed(1)} ${Math.max(+w+10,extraW).toFixed(1)} ${Math.max(+h-dy+(D-.3)*K*ZF+20,yStart+tot+12-dy).toFixed(1)}"`);
+  svg=svg.replace(/viewBox="0 0 ([\d.]+) ([\d.]+)"/,(_,w,h)=>`viewBox="${(-FS*14).toFixed(1)} ${dy.toFixed(1)} ${(Math.max(+w+10,extraW)+FS*14).toFixed(1)} ${Math.max(+h-dy+(D-.3)*K*ZF+20,yStart+tot+12-dy).toFixed(1)}"`);
   svg=svg.replace(/aria-label="[^"]*"/,'aria-label="Corte em 3D de um trecho do jardim de chuva, com camadas e zonas"');
   return svg;}
 function jcPanel(p){
