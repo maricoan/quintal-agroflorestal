@@ -2519,6 +2519,7 @@ function jcPanel(p){
     <div class="drawing plain">${cima?jcTop(c,lay):jcCorte3D(c,lay,p.sel)}</div>${cima?'':`<p class="hint">Na face do corte: lâmina de água de ${cm_(c.lam)} (azul), mistura de 1/3 de areia, 1/3 de terra vegetal e 1/3 de composto, de 40 cm a 1 m de fundo (bege), e o solo do lugar (marrom). O fundo não é impermeabilizado: a água segue para o solo.</p>`}`;
   const sp=['f','t','b'].map(k=>({k,s:lay.z[k]}));
   h+=`<ul class="jc-zl">${sp.map(({k,s})=>`<li><b>${JC_ZN[k]}${k==='f'?jcRef('OKI'):''}</b> <span class="hint">${JC_ZD[k]}:</span> ${s.length?s.map(x=>`<span data-sp="${x.id}">${esc(x.n)} (${cnt[x.id]||0})</span>`).join(', '):'<i>nenhuma planta escolhida para esta zona</i>'}</li>`).join('')}</ul>`;
+  {const f=jcCopa(c,lay);if(f>.5)h+=`<div class="nopot" role="note"><span class="cap-ico" aria-hidden="true">!</span><div><b>Árvores demais para o tamanho</b><span>${esc(jcCopaTxt(f))}</span></div></div>`;}
   if(p.sel.length)h+=abLegend(lay.pts.map(q=>q.s));
   if(lay.fora.length)h+=`<div class="nopot" role="note"><span class="cap-ico" aria-hidden="true">!</span><div><b>Fora do jardim de chuva</b><span>${esc(lay.fora.map(s=>s.n).join(', '))} não ${lay.fora.length>1?'estão':'está'} entre as plantas indicadas para jardim de chuva. Plante fora da depressão, ou troque por plantas do grupo Jardim de chuva.</span></div></div>`;
   h+=`<details class="hint-d"><summary><span class="zinfo" aria-hidden="true">i</span>Como construir</summary><ol class="jc-steps">
@@ -2531,6 +2532,10 @@ function jcPanel(p){
   {const ks=['GON','OKI','MBP'].concat(p.sel.some(s=>s.src==='TF')?['TF']:[]);h+=`<details class="refs-d"><summary>Fontes do jardim de chuva (${ks.length})</summary><ol class="refs">${ks.map(k=>REFS[k]).sort((x,y)=>x.n-y.n).map(v=>`<li value="${v.n}">${esc(v.t)} <a href="${v.u}" target="_blank" rel="noopener">Abrir</a></li>`).join('')}</ol></details>`;}
   if(!p.sel.length)h+=emptyState(`<b class="es-t">Como começar seu jardim de chuva</b></p><ol class="es-passos"><li><b>Espaço:</b> informe quantos m² de telhado ou piso escoam para o jardim e a largura que ele pode ter.</li><li><b>Plantas:</b> abra o grupo Jardim de chuva na lista e escolha ao menos uma planta para cada zona: fundo, talude e borda.</li><li><b>Projeto:</b> o app calcula o tamanho, mostra o corte com as camadas e distribui as mudas por zona.</li></ol><p>`);
   return h+`</section>`;}
+// parte do jardim coberta pelas copas das árvores, como no desenho (0 a 1)
+function jcCopa(c,lay){const m=JC_MARG,TW=c.L+2*m,TH=c.W+2*m,A=c.round?Math.PI*TW*TW/4:TW*TH;
+  const t=lay.pts.filter(q=>JC_ARV.includes(q.s.id)).reduce((s,q)=>s+Math.PI*jcRaio(q.s)**2,0);return Math.min(1,t/A);}
+const jcCopaTxt=f=>`As copas das árvores cobrem cerca de ${Math.round(f*100)}% do jardim. Num jardim deste tamanho, sobra pouco sol e espaço para as plantas baixas: escolha uma árvore só, como urucum ou mulungu, ou aumente o jardim.`;
 function jcAdvice(p){
   const out=[];const sel=p.sel;const names=a=>a.map(s=>s.n).join(', ');
   const c=jcCalc(),lay=jcLayout(sel,c);
@@ -2546,6 +2551,7 @@ function jcAdvice(p){
   const nJ=sel.filter(s=>JC_ZONA[s.id]).length;
   if(nJ>0&&nJ<3)out.push({k:'tip',t:'Use várias espécies, de portes diferentes: jardins com rasteiras, arbustos e plantas maiores retêm mais poluentes do que os de uma espécie só, e um jardim com plantas segura 25% mais água do que sem.'});
   const arv=sel.filter(s=>JC_ARV.includes(s.id));
+  {const f=jcCopa(c,lay);if(f>.5)out.push({k:'warn',t:jcCopaTxt(f)});}
   if(arv.length){const z=k=>arv.filter(s=>JC_ZONA[s.id]===k);const pz=(l,t)=>l.length?`${names(l)} ${t}`:'';
     out.push({k:'',t:`Árvores indicadas por Pinheiro (2017) para a faixa de vegetação na margem de córregos, não especificamente para jardim de chuva. `+[pz(z('f'),'(solo sempre úmido) vai no centro.'),pz(z('t'),(z('t').length>1?'aguentam':'aguenta')+' alagar de vez em quando e '+(z('t').length>1?'vão':'vai')+' no anel.'),pz(z('b'),(z('b').length>1?'recebem':'recebe')+' a enxurrada sem ficar '+(z('b').length>1?'encharcadas':'encharcada')+' e '+(z('b').length>1?'vão':'vai')+' na borda.')].filter(Boolean).join(' ')});
     const gr=arv.filter(s=>s.e==='E'||(s.pt||0)>8);
