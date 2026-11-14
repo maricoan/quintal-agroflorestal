@@ -2398,8 +2398,8 @@ function jcLayout(sel,c){
   return {pts:jcDentro(jcEspaca(pts),c),z,fora};}
 function jcTop(c,lay){
   const m=JC_MARG,L=c.L,W=c.W,i=c.i,TW=L+2*m,TH=W+2*m;
-  if(c.round){const R=L/2,K=Math.max(30,Math.min(150,(isMob()?300:420)/TW)),pl=S.jcOrig==='aclive'&&!isMob()?140:44,pt=40,pr=isMob()?44:96,pb=34,X=n=>n.toFixed(1),C=(m+R)*K;
-    let g=`<svg viewBox="0 0 ${X(TW*K+pl+pr)} ${X(TH*K+pt+pb)}" role="img" aria-label="Jardim de chuva redondo visto de cima: ${fmt(L)} metros de diâmetro"><g transform="translate(${pl},${pt})">`;
+  if(c.round){const R=L/2,K=Math.min(isMob()?70:60,(isMob()?300:420)/TW),pl=S.jcOrig==='aclive'&&!isMob()?140:44,pt=40,pr=isMob()?44:96,pb=34,X=n=>n.toFixed(1),C=(m+R)*K;
+    let g=`<svg viewBox="0 0 ${X(TW*K+pl+pr)} ${X(TH*K+pt+pb)}" style="width:${X((TW*K+pl+pr)*1.15)}px;max-width:100%;min-width:0;margin:0 auto" role="img" aria-label="Jardim de chuva redondo visto de cima: ${fmt(L)} metros de diâmetro"><g transform="translate(${pl},${pt})">`;
     g+=`<circle class="jc-bd" cx="${X(C)}" cy="${X(C)}" r="${X((R+m)*K)}"/><circle class="jc-lim" cx="${X(C)}" cy="${X(C)}" r="${X((R+m)*K)}"/><circle class="jc-tl" cx="${X(C)}" cy="${X(C)}" r="${X(R*K)}"/><circle class="jc-fd" cx="${X(C)}" cy="${X(C)}" r="${X(Math.max(0,R-i)*K)}"/><circle class="jc-edge" cx="${X(C)}" cy="${X(C)}" r="${X(R*K)}"/>`;
     g+=`<clipPath id="jcclipc"><circle cx="${X(C)}" cy="${X(C)}" r="${X((R+m)*K)}"/></clipPath><g clip-path="url(#jcclipc)">`;
     lay.pts.slice().sort((p1,p2)=>JC_ARV.includes(p2.s.id)-JC_ARV.includes(p1.s.id)).forEach(q=>{const T=JC_ARV.includes(q.s.id),nn=Math.min(9,...lay.pts.filter(o=>o!==q&&(!T||JC_ARV.includes(o.s.id))).map(o=>Math.hypot(o.x-q.x,o.y-q.y))),r=Math.max(3,(T?jcRaio(q.s):Math.min(jcRaio(q.s),nn*.48))*K);if(T)g+=`<circle class="shd" cx="${X(q.x*K+r*.15)}" cy="${X(q.y*K+r*.2)}" r="${X(r)}"/>`;
@@ -2413,13 +2413,15 @@ function jcTop(c,lay){
   // no celular, jardim comprido fica em pé para caber na tela
   const rot=isMob()&&L>W*1.3;
   const CW=rot?TH:TW,CH=rot?TW:TH;
-  const K=rot?Math.max(30,Math.min(150,300/CW,640/CH)):Math.max(30,Math.min(150,620/Math.max(TW,TH*1.6)));
+  const K=rot?Math.min(70,300/CW,640/CH):Math.min(60,620/TW,400/TH);
   const pl=rot?44:(S.jcOrig==='aclive'?140:40),pt=rot?40:40,pr=rot?44:96,pb=rot?40:34;
   const X=n=>n.toFixed(1),vw=CW*K+pl+pr,vh=CH*K+pt+pb;
   const Q=(x,y)=>rot?[y,x]:[x,y];
   const R=(x,y,w,h,cls,rx)=>{const [a,b]=Q(x,y),[ww,hh]=rot?[h,w]:[w,h];return `<rect class="${cls}" x="${X(a*K)}" y="${X(b*K)}" width="${X(ww*K)}" height="${X(hh*K)}" rx="${rx}"/>`;};
-  let g=`<svg viewBox="0 0 ${X(vw)} ${X(vh)}" font-family="inherit" role="img" aria-label="Jardim de chuva visto de cima: ${fmt(L)} por ${fmt(W)} metros"><g transform="translate(${pl},${pt})">`;
-  g+=R(0,0,TW,TH,'jc-bd',10)+R(0,0,TW,TH,'jc-lim',10)+R(m,m,L,W,'jc-tl',8)+R(m+i,m+i,L-2*i,W-2*i,'jc-fd',6)+R(m,m,L,W,'jc-edge',8);
+  let g=`<svg viewBox="0 0 ${X(vw)} ${X(vh)}" style="width:${X(vw*1.15)}px;max-width:100%;min-width:0;margin:0 auto" font-family="inherit" role="img" aria-label="Jardim de chuva visto de cima: ${fmt(L)} por ${fmt(W)} metros"><g transform="translate(${pl},${pt})">`;
+  g+=R(0,0,TW,TH,'jc-bd',10);
+  g+=R(0,0,TW,TH,'jc-lim',10)+R(m,m,L,W,'jc-tl',8)+R(m+i,m+i,L-2*i,W-2*i,'jc-fd',6)+R(m,m,L,W,'jc-edge',8);
+  {const [cw,ch]=rot?[TH,TW]:[TW,TH];for(let x=1;x<cw;x++)g+=`<line class="s-grid" x1="${X(x*K)}" y1="0" x2="${X(x*K)}" y2="${X(ch*K)}"/>`;for(let y=1;y<ch;y++)g+=`<line class="s-grid" x1="0" y1="${X(y*K)}" x2="${X(cw*K)}" y2="${X(y*K)}"/>`;}
   {const [cw,ch]=rot?[TH,TW]:[TW,TH];g+=`<clipPath id="jcclip"><rect x="0" y="0" width="${X(cw*K)}" height="${X(ch*K)}" rx="10"/></clipPath><g clip-path="url(#jcclip)">`;}
   lay.pts.slice().sort((p1,p2)=>JC_ARV.includes(p2.s.id)-JC_ARV.includes(p1.s.id)).forEach(q=>{const T=JC_ARV.includes(q.s.id),nn=Math.min(9,...lay.pts.filter(o=>o!==q&&(!T||JC_ARV.includes(o.s.id))).map(o=>Math.hypot(o.x-q.x,o.y-q.y))),r=Math.max(3,(T?jcRaio(q.s):Math.min(jcRaio(q.s),nn*.48))*K),[x,y]=Q(q.x,q.y);if(T)g+=`<circle class="shd" cx="${X(x*K+r*.15)}" cy="${X(y*K+r*.2)}" r="${X(r)}"/>`;
     g+=`<circle class="p-${q.s.e}${T?" jc-cop":""}" data-sp="${q.s.id}" cx="${X(x*K)}" cy="${X(y*K)}" r="${X(r)}"><title>${esc(q.s.n)}</title></circle>`;
@@ -2433,8 +2435,7 @@ function jcTop(c,lay){
   if(rot){g+=`<text class="jc-zs" x="${X(yc*K+12)}" y="-22">${jcEnt()}</text>`;g+=`<text class="jc-zs" x="${X(yc*K+12)}" y="${X(TW*K+30)}">ladrão</text>`;
     g+=`<text class="s-dim" transform="translate(-14 ${X((m+L/2)*K)}) rotate(-90)" text-anchor="middle">${fmt(L)} m</text>`;}
   else{g+=(S.jcOrig==='aclive'?jcBio(-30,yc*K):'')+`<text class="jc-zs" x="-30" y="${X(yc*K-10)}">${jcEnt()}</text><text class="jc-zs" x="${X(TW*K+34)}" y="${X(yc*K+4)}">ladrão</text>`;
-    g+=`<text class="s-dim" x="${X((m+L/2)*K)}" y="-12" text-anchor="middle">${fmt(L)} m</text>`;
-    g+=`<text class="jc-zs" x="${X(TW*K/2)}" y="${X(TH*K+20)}" text-anchor="middle">faixa externa: borda · anel: talude · centro: fundo</text>`;}
+    g+=`<text class="s-dim" x="${X((m+L/2)*K)}" y="-12" text-anchor="middle">${fmt(L)} m</text>`;}
   return g+`</g></svg>`;}
 function jcCorte(c,lay){
   const m=JC_MARG,W=c.W,i=c.i,lam=c.lam,prof=1;
@@ -2512,7 +2513,7 @@ function jcPanel(p){
     <div class="ibox" id="jcInfo" hidden><p>O jardim deve ter de 10 a 15% da área que escoa para ele: abaixo de 10%, transborda com mais frequência nas chuvas fortes${jcRef('GON')}. O app usa 15% para solo argiloso e 10% para solo arenoso. Num jardim do Rio de Janeiro escavado a 1 m e cheio de mistura arenosa, 6,3% já bastou, mas esse resultado vale para aquele solo${jcRef('GON')}.</p><p>Com 10% da área, o fundo fica cerca de 15 cm abaixo do chão em volta, a lâmina de água${jcRef('GON')}. Jardins com mais de 40 cm de solo preparado seguram mais água${jcRef('GON')}. A água deve sumir algumas horas depois da chuva, e o ladrão leva o excesso das chuvas maiores${jcRef('MBP')}.</p></div>
     <div class="stats"><div class="stat"><b>${fmt(c.A,0)} m²</b><span>escoam para o jardim</span></div><div class="stat"><b>${c.round?'Ø '+fmt(c.L)+' m':fmt(c.L)+' × '+fmt(c.W)+' m'}</b><span>${Math.round(c.pct*100)}% dessa área</span></div><div class="stat"><b>${fmt(c.vol,0)} L</b><span>na lâmina de ${cm_(c.lam)}</span></div></div>
     <p class="hint jc-orig">${S.jcOrig==='aclive'?'<b>Água de aclive:</b> chega com força e arrasta terra. O desenho mostra uma biovaleta em degraus antes da entrada, para frear a enxurrada.':S.jcOrig==='piso'?'<b>Água de piso ou garagem:</b> traz de 1 a 3 vezes mais óleos e metais que a do telhado. Use espécies resistentes e veja o aviso em Ajustes.':'<b>Água do telhado:</b> a mais limpa para o jardim de chuva. Chega pela calha, por cano.'}</p>
-    <div class="drawing plain">${cima?jcTop(c,lay):jcCorte3D(c,lay,p.sel)}</div>${cima?'':`<p class="hint">Um trecho do jardim cortado na largura. Na face do corte: lâmina de água de ${cm_(c.lam)} (azul), mistura de 1/3 de areia, 1/3 de terra vegetal e 1/3 de composto, de 40 cm a 1 m de fundo (bege), e o solo do lugar (marrom). O fundo não é impermeabilizado: a água segue para o solo.</p>`}`;
+    <div class="drawing plain">${cima?jcTop(c,lay):jcCorte3D(c,lay,p.sel)}</div>${cima?`<p class="hint">${c.round?'':'Quadrados de 1 m. '}Faixa de fora: borda · anel: talude · centro: fundo. O desenho muda de tamanho junto com o jardim.</p>`:''}${cima?'':`<p class="hint">Um trecho do jardim cortado na largura. Na face do corte: lâmina de água de ${cm_(c.lam)} (azul), mistura de 1/3 de areia, 1/3 de terra vegetal e 1/3 de composto, de 40 cm a 1 m de fundo (bege), e o solo do lugar (marrom). O fundo não é impermeabilizado: a água segue para o solo.</p>`}`;
   const sp=['f','t','b'].map(k=>({k,s:lay.z[k]}));
   h+=`<ul class="jc-zl">${sp.map(({k,s})=>`<li><b>${JC_ZN[k]}${k==='f'?jcRef('OKI'):''}</b> <span class="hint">${JC_ZD[k]}:</span> ${s.length?s.map(x=>`<span data-sp="${x.id}">${esc(x.n)} (${cnt[x.id]||0})</span>`).join(', '):'<i>nenhuma planta escolhida para esta zona</i>'}</li>`).join('')}</ul>`;
   {const f=jcCopa(c,lay);if(f>.5)h+=`<div class="nopot" role="note"><span class="cap-ico" aria-hidden="true">!</span><div><b>Árvores demais para o tamanho</b><span>${esc(jcCopaTxt(f))}</span></div></div>`;}
