@@ -312,7 +312,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .cer-tag{display:inline-flex;vertical-align:-3px}.cer-ic{width:20px;height:17px;fill:none;stroke:var(--soil);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}.cer-ic .cer-c{fill:color-mix(in srgb,#9A7400 55%,transparent);stroke:#7a5c00}.cer-ic .cer-g{stroke:#A4471F}.oleg .cer-tag{width:26px;justify-content:center;flex:none}
 .tem-tag{font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--leaf);border:1px solid var(--leaf);border-radius:4px;padding:0 4px;line-height:1.5}
 .compra th:not(:first-child){text-align:right}.compra td.n{text-align:right;font-variant-numeric:tabular-nums}.compra .ok{color:var(--leaf);font-weight:700}.compra .falta{color:var(--warn);font-weight:700}
-.ibox p{margin:0 0 6px}.ibox p:last-child{margin:0}#soloInfo,#jcDef{font-size:14px;color:var(--muted)}#jcDef{margin-top:8px}#modo .zinfo{align-self:center;border:1.5px solid var(--leaf);padding:0;background:none;color:var(--leaf);border-radius:50%;width:18px;height:18px;font:italic 700 12px/1 Georgia,serif}#modo .zinfo[aria-expanded="true"],#modo .zinfo:hover{background:var(--leaf);color:var(--surface)}
+.ibox p{margin:0 0 6px}.ibox p:last-child{margin:0}#soloInfo,#jcDef{font-size:14px;color:var(--muted)}#jcDef{margin-top:8px}#modo .jc-par{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}#modo .zinfo{align-self:center;flex:none;border:1.5px solid var(--leaf);padding:0;background:none;color:var(--leaf);border-radius:50%;width:18px;height:18px;font:italic 700 12px/1 Georgia,serif}#modo .zinfo[aria-expanded="true"],#modo .zinfo:hover{background:var(--leaf);color:var(--surface)}
 .ibox{background:var(--ci-bg,rgba(0,0,0,.04));border-radius:8px;padding:8px 12px;margin-top:4px}button.zinfo{padding:0;background:none;min-height:0!important;min-width:0!important;flex:none;aspect-ratio:1}button.zinfo{position:relative}button.zinfo::after{content:'';position:absolute;inset:-13px}button.zinfo[aria-expanded="true"]{background:var(--leaf);color:var(--surface)}
 .hint-d{margin-top:10px}.hint-d>summary{display:inline-flex;align-items:center;gap:6px;cursor:pointer;list-style:none;font-size:14px;color:var(--leaf);font-weight:700}.hint-d>summary::-webkit-details-marker{display:none}.hint-d>summary .zinfo{margin-left:0}.hint-d[open]>summary .zinfo{background:var(--leaf);color:var(--surface)}.hint-d>.hint{margin-top:6px}
 .share{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
@@ -688,9 +688,9 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
           <span class="lbl">Onde vai plantar</span>
           <div class="seg" id="modo">
             <button type="button" data-v="chao">No chão</button>
-            <button type="button" data-v="vaso">Vasos/floreira</button>
-            <button type="button" data-v="chuva">Jardim de chuva</button>
-            <button type="button" class="zinfo" id="jcI" aria-expanded="false" aria-controls="jcDef" aria-label="O que é jardim de chuva" title="O que é jardim de chuva">i</button>
+            <button type="button" data-v="vaso">Vasos</button>
+            <span class="jc-par"><button type="button" data-v="chuva">Jardim de chuva</button>
+            <button type="button" class="zinfo" id="jcI" aria-expanded="false" aria-controls="jcDef" aria-label="O que é jardim de chuva" title="O que é jardim de chuva">i</button></span>
           </div>
           <div class="ibox" id="jcDef" hidden>
             <p><b>Jardim de chuva</b> é um canteiro rebaixado, com plantas, que recebe a água da chuva de telhados, calçadas ou ruas. Ele segura essa água por algumas horas e deixa ela entrar no solo, em vez de correr para os bueiros<sup class="ref" title="Pinheiro, 2017">15</sup>. No caminho, o solo e as raízes filtram parte da poluição da enxurrada, e menos água chega de uma vez aos rios<sup class="ref" title="Gondim, 2024">25</sup><sup class="ref" title="Okimoto e Santos, 2023">26</sup>.</p>
