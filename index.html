@@ -2465,9 +2465,11 @@ function jcCorte(c,lay){
 // Mostra um trecho do jardim de até 2,4 m, cortado na largura: a face da direita mostra o perfil (borda, talude e fundo), a lâmina, a mistura e o solo.
 function jcCorte3D(c,lay,sel){
   const m=JC_MARG,L=c.L,W=c.W,i=c.i,TW=L+2*m,TH=W+2*m,lam=c.lam,prof=.6,D=lam+prof;
-  const XL=c.round?m+L/2:Math.min(TW,m+2.4);
+  // o corte passa perto da ponta direita do jardim, dentro do fundo: aparece o jardim quase inteiro, com todas as plantas
+  const R=L/2,C=m+R,XL=c.round?C+.6*Math.max(.05,R-i):m+L-i-.02;
+  const hd=c.round?Math.sqrt(Math.max(0,R*R-(XL-C)**2)):W/2,hf=c.round?Math.sqrt(Math.max(0,(R-i)**2-(XL-C)**2)):W/2-i,yc0=m+W/2;
   const isT=s=>JC_ARV.includes(s.id)||!!s.arv;
-  const pts=lay.pts.filter(q=>q.x<=XL+.02).map(q=>({s:q.s,x:Math.min(q.x,XL-.05),y:q.y,kind:isT(q.s)?'tree':isMed(q.s)?'med':'bed',cell:Math.max(.2,Math.min(q.s.el,q.s.ep))}));
+  const pts=lay.pts.map(q=>({s:q.s,x:Math.min(q.x,XL-.05),y:q.y,kind:isT(q.s)?'tree':isMed(q.s)?'med':'bed',cell:Math.max(.2,Math.min(q.s.el,q.s.ep))}));
   const fp={pts,strips:[],rings:null,lines:[],beds:[],sel:sel,count:{}};
   const keep={L:S.L,W:S.W,forma:S.forma,D:S.D,curso:S.curso};
   let svg;
@@ -2479,23 +2481,23 @@ function jcCorte3D(c,lay,sel){
   const iso=(x,y,z)=>[(x-y)*cs*K+ox,(x+y)*sn*K-z*K*ZF+oy];
   const P=a=>a.map(q=>q.map(n=>n.toFixed(1)).join(',')).join(' ');
   // perfil da superfície na largura (y, z)
-  const pr=[[0,0],[m,0],[m+i,-lam],[m+W-i,-lam],[m+W,0],[TH,0]];
+  const pr=[[0,0],[yc0-hd,0],[yc0-hf,-lam],[yc0+hf,-lam],[yc0+hd,0],[TH,0]];
   let b='';
   // lado da frente (y = TH): só solo
   b+=`<polygon class="s-side1" points="${P([iso(0,TH,0),iso(XL,TH,0),iso(XL,TH,-D),iso(0,TH,-D)])}"/>`;
   // topo
   b+=`<polygon class="jc-bd" points="${P([iso(0,0,0),iso(XL,0,0),iso(XL,TH,0),iso(0,TH,0)])}"/>`;
-  if(c.round){const R=L/2,C=m+R,arc=(r,z)=>{const o=[];for(let k=0;k<=36;k++){const t=Math.PI/2+Math.PI*k/36;o.push(iso(C+r*Math.cos(t),C+r*Math.sin(t),z));}return o;};
+  if(c.round){const arc=(r,z)=>{const o=[];for(let k=0;k<72;k++){const t=k/72*Math.PI*2;o.push(iso(Math.min(XL,C+r*Math.cos(t)),C+r*Math.sin(t),z));}return o;};
     b+=`<polygon class="jc-tl" points="${P(arc(R,0))}"/><polygon class="jc-fd" points="${P(arc(Math.max(.05,R-i),-lam))}"/>`;}
   else{b+=`<polygon class="jc-tl" points="${P([iso(m,m,0),iso(XL,m,0),iso(XL,m+W,0),iso(m,m+W,0)])}"/>`;
     b+=`<polygon class="jc-fd" points="${P([iso(m+i,m+i,-lam),iso(XL,m+i,-lam),iso(XL,m+W-i,-lam),iso(m+i,m+W-i,-lam)])}"/>`;}
   // face do corte (x = XL): solo, mistura e lâmina
   b+=`<polygon class="s-side2" points="${P(pr.map(([y,z])=>iso(XL,y,z)).concat([iso(XL,TH,-D),iso(XL,0,-D)]))}"/>`;
-  b+=`<polygon class="jc-mix" points="${P(pr.slice(1,5).map(([y,z])=>iso(XL,y,z)).concat([iso(XL,m+W,-D),iso(XL,m,-D)]))}"/>`;
+  b+=`<polygon class="jc-mix" points="${P(pr.slice(1,5).map(([y,z])=>iso(XL,y,z)).concat([iso(XL,yc0+hd,-D),iso(XL,yc0-hd,-D)]))}"/>`;
   b+=`<polygon class="jc-wl" points="${P(pr.slice(1,5).map(([y,z])=>iso(XL,y,z)))}"/>`;
   b+=`<polyline class="s-edge" fill="none" points="${P(pr.map(([y,z])=>iso(XL,y,z)))}"/>`;
   // legendas em caixinhas à direita, cada uma com uma seta até o ponto do corte
-  const ANC=[['Borda',iso(XL,m*.55,0)],['Talude',iso(XL,m+i*.5,-lam*.5)],['Fundo',iso(XL,m+W*.5,-lam)],['Lâmina de água '+cm_(lam),iso(XL,m+W*.62,-lam*.45)],['Mistura (40 cm a 1 m)',iso(XL,m+W*.5,-lam-prof*.5)],['Solo do lugar',iso(XL,m*.45,-D*.6)]];
+  const y0d=yc0-hd,y0f=yc0-hf;const ANC=[['Borda',iso(XL,y0d*.55,0)],['Talude',iso(XL,(y0d+y0f)/2,-lam*.5)],['Fundo',iso(XL,yc0,-lam)],['Lâmina de água '+cm_(lam),iso(XL,yc0+hf*.3,-lam*.45)],['Mistura (40 cm a 1 m)',iso(XL,yc0,-lam-prof*.5)],['Solo do lugar',iso(XL,y0d*.45,-D*.6)]];
   const FS=isMob()?20:11,BH=Math.round(FS*1.8),GAP=Math.round(FS*.7),bx0=Math.max(...ANC.map(x=>x[1][0]))+FS*4;
   const ys=ANC.map(x=>x[1][1]),y0=Math.min(...ys)-30,tot=ANC.length*(BH+GAP)-GAP,yStart=Math.max(y0,(Math.min(...ys)+Math.max(...ys))/2-tot/2);
   let t='<defs><marker id="jcarr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="jc-arr"/></marker></defs>';
@@ -2521,7 +2523,7 @@ function jcPanel(p){
     <div class="ibox" id="jcInfo" hidden><p>O jardim deve ter de 10 a 15% da área que escoa para ele: abaixo de 10%, transborda com mais frequência nas chuvas fortes${jcRef('GON')}. O app usa 15% para solo argiloso e 10% para solo arenoso. Num jardim do Rio de Janeiro escavado a 1 m e cheio de mistura arenosa, 6,3% já bastou, mas esse resultado vale para aquele solo${jcRef('GON')}.</p><p>Com 10% da área, o fundo fica cerca de 15 cm abaixo do chão em volta, a lâmina de água${jcRef('GON')}. Jardins com mais de 40 cm de solo preparado seguram mais água${jcRef('GON')}. A água deve sumir algumas horas depois da chuva, e o ladrão leva o excesso das chuvas maiores${jcRef('MBP')}.</p></div>
     <div class="stats"><div class="stat"><b>${fmt(c.A,0)} m²</b><span>escoam para o jardim</span></div><div class="stat"><b>${c.round?'Ø '+fmt(c.L)+' m':fmt(c.L)+' × '+fmt(c.W)+' m'}</b><span>${Math.round(c.pct*100)}% dessa área</span></div><div class="stat"><b>${fmt(c.vol,0)} L</b><span>na lâmina de ${cm_(c.lam)}</span></div></div>
     <p class="hint jc-orig">${S.jcOrig==='aclive'?'<b>Água de aclive:</b> chega com força e arrasta terra. O desenho mostra uma biovaleta em degraus antes da entrada, para frear a enxurrada.':S.jcOrig==='piso'?'<b>Água de piso ou garagem:</b> traz de 1 a 3 vezes mais óleos e metais que a do telhado. Use espécies resistentes e veja o aviso em Ajustes.':'<b>Água do telhado:</b> a mais limpa para o jardim de chuva. Chega pela calha, por cano.'}</p>
-    <div class="drawing plain">${cima?jcTop(c,lay):jcCorte3D(c,lay,p.sel)}</div>${cima?`<p class="hint">${c.round?'':'Quadrados de 1 m. '}Faixa de fora: borda · anel: talude · centro: fundo. O desenho muda de tamanho junto com o jardim.</p>`:''}${cima?'':`<p class="hint">Um trecho do jardim cortado na largura. A mistura é 1/3 de areia, 1/3 de terra vegetal e 1/3 de composto. O fundo não é impermeabilizado: a água segue para o solo.</p>`}`;
+    <div class="drawing plain">${cima?jcTop(c,lay):jcCorte3D(c,lay,p.sel)}</div>${cima?`<p class="hint">${c.round?'':'Quadrados de 1 m. '}Faixa de fora: borda · anel: talude · centro: fundo. O desenho muda de tamanho junto com o jardim.</p>`:''}${cima?'':`<p class="hint">O jardim cortado na largura, perto da ponta da saída. A mistura é 1/3 de areia, 1/3 de terra vegetal e 1/3 de composto. O fundo não é impermeabilizado: a água segue para o solo.</p>`}`;
   const sp=['f','t','b'].map(k=>({k,s:lay.z[k]}));
   h+=`<ul class="jc-zl">${sp.map(({k,s})=>`<li><b><span class="jc-sw ${k}" aria-hidden="true"></span>${JC_ZN[k]}${k==='f'?jcRef('OKI'):''}</b> <span class="hint">${JC_ZD[k]}:</span> ${s.length?s.map(x=>`<span data-sp="${x.id}">${esc(x.n)} (${cnt[x.id]||0})</span>`).join(', '):'<i>nenhuma planta escolhida para esta zona</i>'}</li>`).join('')}</ul>`;
   {const f=jcCopa(c,lay);if(f>.5)h+=`<div class="nopot" role="note"><span class="cap-ico" aria-hidden="true">!</span><div><b>Árvores demais para o tamanho</b><span>${esc(jcCopaTxt(f))}</span></div></div>`;}
