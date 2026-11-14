@@ -711,7 +711,8 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
           <span class="lbl">De onde vem a água</span>
           <div class="seg" id="jcOrig">
             <button type="button" data-v="telhado">Telhado</button>
-            <button type="button" data-v="piso">Piso, quintal ou garagem</button>
+            <button type="button" data-v="piso">Piso/garagem</button>
+            <button type="button" data-v="aclive">Aclive</button>
           </div>
           <span class="lbl">Solo do lugar</span>
           <div class="seg" id="jcSolo">
@@ -2452,6 +2453,7 @@ function jcAdvice(p){
   const fracos=sel.filter(s=>!s.sol.includes(S.sol)&&!sombra.includes(s));
   if(fracos.length)out.push({k:S.sol==='S'?'warn':'',t:`${names(fracos)} ${fracos.length>1?'pedem':'pede'} mais luz do que o lugar recebe.`});
   if(S.jcOrig==='piso')out.push({k:'warn',t:'Água de piso, pátio ou garagem traz de 1 a 3 vezes mais poluentes (óleos e metais) do que a do telhado. Prefira a água do telhado; se usar a do piso, o jardim pede espécies mais resistentes a esses poluentes.'});
+  if(S.jcOrig==='aclive')out.push({k:'warn',t:'Água que desce de um aclive chega com força e arrasta terra. Em terreno inclinado, faça antes do jardim uma biovaleta em degraus (células escalonadas, uma abaixo da outra), que freia a água e diminui a erosão. Canteiros pluviais também servem para conter erosão em terreno acidentado (Pinheiro, 2017).'});
   if(c.are)out.push({k:'',t:'Em solo arenoso o app usa 10% da área que escoa. Num jardim do Rio escavado a 1 m com mistura arenosa, 6,3% bastou; abaixo de 10%, porém, o transbordamento nas chuvas fortes fica mais frequente.'});
   ['f','t','b'].forEach(k=>{if(sel.length&&!lay.z[k].length){const op=Object.keys(JC_ZONA).filter(i=>JC_ZONA[i].includes(k)&&!S.sel.includes(i)&&BYID[i]);
     out.push({k:'tip',t:`Nenhuma planta escolhida para ${k==='f'?'o fundo':k==='t'?'o talude':'a borda'} (${JC_ZD[k]}).`,add:op.slice(0,5)});}});
