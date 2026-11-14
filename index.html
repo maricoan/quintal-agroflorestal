@@ -312,7 +312,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .cer-tag{display:inline-flex;vertical-align:-3px}.cer-ic{width:20px;height:17px;fill:none;stroke:var(--soil);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}.cer-ic .cer-c{fill:color-mix(in srgb,#9A7400 55%,transparent);stroke:#7a5c00}.cer-ic .cer-g{stroke:#A4471F}.oleg .cer-tag{width:26px;justify-content:center;flex:none}
 .tem-tag{font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--leaf);border:1px solid var(--leaf);border-radius:4px;padding:0 4px;line-height:1.5}
 .compra th:not(:first-child){text-align:right}.compra td.n{text-align:right;font-variant-numeric:tabular-nums}.compra .ok{color:var(--leaf);font-weight:700}.compra .falta{color:var(--warn);font-weight:700}
-.ibox p{margin:0 0 6px}.ibox p:last-child{margin:0}#soloInfo,#jcDef{font-size:14px;color:var(--muted)}#jcDef{margin-top:8px}#modo .jc-par{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}#modo .zinfo{align-self:center;flex:none;border:1.5px solid var(--leaf);padding:0;background:none;color:var(--leaf);border-radius:50%;width:18px;height:18px;font:italic 700 12px/1 Georgia,serif}#modo .zinfo[aria-expanded="true"],#modo .zinfo:hover{background:var(--leaf);color:var(--surface)}
+.ifoto .if-mot{display:block;margin-top:4px;color:var(--warn);font-size:12px;font-weight:700;line-height:1.3}.ibox p{margin:0 0 6px}.ibox p:last-child{margin:0}#soloInfo,#jcDef{font-size:14px;color:var(--muted)}#jcDef{margin-top:8px}#modo .jc-par{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}#modo .zinfo{align-self:center;flex:none;border:1.5px solid var(--leaf);padding:0;background:none;color:var(--leaf);border-radius:50%;width:18px;height:18px;font:italic 700 12px/1 Georgia,serif}#modo .zinfo[aria-expanded="true"],#modo .zinfo:hover{background:var(--leaf);color:var(--surface)}
 .ibox{background:var(--ci-bg,rgba(0,0,0,.04));border-radius:8px;padding:8px 12px;margin-top:4px}button.zinfo{padding:0;background:none;min-height:0!important;min-width:0!important;flex:none;aspect-ratio:1}button.zinfo{position:relative}button.zinfo::after{content:'';position:absolute;inset:-13px}button.zinfo[aria-expanded="true"]{background:var(--leaf);color:var(--surface)}
 .hint-d{margin-top:10px}.hint-d>summary{display:inline-flex;align-items:center;gap:6px;cursor:pointer;list-style:none;font-size:14px;color:var(--leaf);font-weight:700}.hint-d>summary::-webkit-details-marker{display:none}.hint-d>summary .zinfo{margin-left:0}.hint-d[open]>summary .zinfo{background:var(--leaf);color:var(--surface)}.hint-d>.hint{margin-top:6px}
 .share{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
@@ -991,10 +991,10 @@ function fotoFruta(s){
   return fotoWiki('fruta:'+s.id,tent);
 }
 let fotoEl=null,fotoAt=null;
-function fotoCard(btn,nome,sub,busca,arqs){
+function fotoCard(btn,nome,sub,busca,arqs,extra){
   if(!fotoEl){fotoEl=document.createElement('div');fotoEl.className='ifoto';fotoEl.setAttribute('role','tooltip');document.body.appendChild(fotoEl);}
   fotoAt=btn;
-  fotoEl.innerHTML=`<div class="if-img">carregando foto…</div><b>${esc(nome)}</b>${sub?`<i>${esc(sub)}</i>`:''}`;
+  fotoEl.innerHTML=`<div class="if-img">carregando foto…</div><b>${esc(nome)}</b>${sub?`<i>${esc(sub)}</i>`:''}${extra?`<span class="if-mot">${esc(extra)}</span>`:''}`;
   fotoEl.hidden=false;
   const b=btn.getBoundingClientRect(),w=216,h=fotoEl.offsetHeight||210;
   let left=Math.min(Math.max(8,b.left+b.width/2-w/2),innerWidth-w-8);
@@ -1020,8 +1020,10 @@ function fotoMostra(btn){
 function fotoMostraFruta(btn){
   const s=BYID[btn.dataset.id];if(!s||!FRUTA_FOTO[s.id])return;
   const loc=FOTO_LOCAL['fruta:'+s.id];
-  if(loc){fotoCard(btn,s.n,s.sci||'',new Promise(()=>{}));fotoEl.querySelector('.if-img').innerHTML=`<img alt="Foto de ${esc(s.n)}" src="${loc[0]}">`;fotoEl.insertAdjacentHTML('beforeend',`<span class="if-c">Foto: ${esc(loc[1])}</span>`);return;}
-  fotoCard(btn,s.n,s.sci||'',fotoFruta(s),FRUTA_ARQ[s.id]);
+  // planta apagada: o cartão da foto diz por que ela não é a mais indicada para o espaço
+  const mot=btn.classList.contains('off')?luzMotivo(s):'';
+  if(loc){fotoCard(btn,s.n,s.sci||'',new Promise(()=>{}),null,mot);fotoEl.querySelector('.if-img').innerHTML=`<img alt="Foto de ${esc(s.n)}" src="${loc[0]}">`;fotoEl.insertAdjacentHTML('beforeend',`<span class="if-c">Foto: ${esc(loc[1])}</span>`);return;}
+  fotoCard(btn,s.n,s.sci||'',fotoFruta(s),FRUTA_ARQ[s.id],mot);
 }
 function fotoEsconde(){fotoAt=null;if(fotoEl)fotoEl.hidden=true;}
 const IB=document.getElementById('indicBox');
@@ -1520,7 +1522,7 @@ const ORIG={N:'chanana gervao oficialsala perpetua vedelia arnicacampo ruelia fa
  Z:'margaridao capimsanto guandu maravilha mamao cafe',
  E:'dipladenia amendoim cambuci jabuticaba grumixama cabeludinha'};
 // plantas que aparecem também em um segundo grupo
-const GRUPO_EXTRA={j:['urucum','patadevaca','vedelia','canademacaco','heliconia','marantacinza','falsairis','alamanda','elegante','begoniabrejo'],b:['fedegosobranco','lobeira','aracacampo','guabiroba','gabiroba','muricicampo','peracerrado','pitangacerrado','frutadopombo','algodaocampo','assapeixe','assapeixeroxo','caneladevelho','orelhadeonca','pixirica','fedegosopendula','senaempenada','milhodegrilo','lantanacamara','lantana','esponjinha','jacobinia','salviaazul','juqueri','juqueriamarelo','arranhagato','margaridao','guandu','alecrimcampo','baleeira','alecrimpimenta','boldo','pariparoba','orapronobis'],p:['margaridao'],w:['inga','embauba','jucara','urucum','patadevaca','a_cedrelafissilis','a_cabraleacanjerana','a_handroanthusimpetiginosus','a_handroanthusochraceus','a_zeyheriatuberculosa','a_nectandramegapotamica','falsairis','vedelia','alamanda','heliconia','taioba','sangra','a_calophyllumbrasiliense','a_tibouchinagranulosa','banana','inhame','gengibre']};
+const GRUPO_EXTRA={j:['inga','embauba','salgueiro','guapuruvu','urucum','jucara','mulungu','patadevaca','angico','sapucaia','a_cedrelafissilis','a_cabraleacanjerana','peitodepombo','pindaiba','vedelia','canademacaco','heliconia','marantacinza','falsairis','alamanda','elegante','begoniabrejo'],b:['fedegosobranco','lobeira','aracacampo','guabiroba','gabiroba','muricicampo','peracerrado','pitangacerrado','frutadopombo','algodaocampo','assapeixe','assapeixeroxo','caneladevelho','orelhadeonca','pixirica','fedegosopendula','senaempenada','milhodegrilo','lantanacamara','lantana','esponjinha','jacobinia','salviaazul','juqueri','juqueriamarelo','arranhagato','margaridao','guandu','alecrimcampo','baleeira','alecrimpimenta','boldo','pariparoba','orapronobis'],p:['margaridao'],w:['inga','embauba','jucara','urucum','patadevaca','a_cedrelafissilis','a_cabraleacanjerana','a_handroanthusimpetiginosus','a_handroanthusochraceus','a_zeyheriatuberculosa','a_nectandramegapotamica','falsairis','vedelia','alamanda','heliconia','taioba','sangra','a_calophyllumbrasiliense','a_tibouchinagranulosa','banana','inhame','gengibre']};
 // Beira d'água e nascentes (Pinheiro, 2017): zonas da faixa de proteção na margem e plantas para recompor mata ciliar
 const BEIRA=[
  ['z1','Beira da água','solo encharcado ou que alaga (zonas 1 e 2)','inga embauba jucara urucum guapuruvu salgueiro mulungu'],
@@ -2321,9 +2323,14 @@ const potSel=sel=>sel.map(s=>!s.v&&VASO_TEMP[s.id]?Object.assign({},s,{v:VT_L,ar
 // Zonas: fundo (encharca com frequência), talude (umidade moderada) e borda (seca) — Okimoto e Santos (2023), a partir de Yuan e Dunnett (2018).
 // Espécies: nativas indicadas para jardins de chuva por Pinheiro (2017) e, para fundo encharcado, elegante e begônia-do-brejo (Cerrado Infinito).
 // A zona de cada espécie segue as condições de cultivo descritas nessas fontes: solo inundável ou úmido (fundo), úmido e drenado (talude), drenado ou de sol (borda).
-const JC_ZONA={vedelia:'f',canademacaco:'f',elegante:'f',begoniabrejo:'f',heliconia:'ft',marantacinza:'t',lutiela:'t',gramamissioneira:'t',gramasantoagostinho:'t',falsairis:'tb',alamanda:'b',fedegosobranco:'b',urucum:'t',patadevaca:'b'};
-// árvores pequenas: da faixa de margem de córrego de Pinheiro (2017) — urucum aguenta alagamento periódico (zona 2); pata-de-vaca vai na parte que recebe a enxurrada sem excesso de água (zona 3)
-const JC_ARV=['urucum','patadevaca'];
+const JC_ZONA={vedelia:'f',canademacaco:'f',elegante:'f',begoniabrejo:'f',heliconia:'ft',marantacinza:'t',lutiela:'t',gramamissioneira:'t',gramasantoagostinho:'t',falsairis:'tb',alamanda:'b',fedegosobranco:'b',
+  // árvores da faixa de vegetação na margem de córregos (Pinheiro, 2017):
+  // zona 1, solo sempre úmido → centro (fundo); zona 2, aguentam alagar de vez em quando → anel (talude);
+  // zona 3, recebem a enxurrada sem ficar encharcadas → borda; mata ciliar de lugares úmidos e várzeas → anel
+  inga:'f',embauba:'t',salgueiro:'t',guapuruvu:'t',urucum:'t',jucara:'t',mulungu:'t',
+  patadevaca:'b',angico:'b',sapucaia:'b',a_cedrelafissilis:'b',a_cabraleacanjerana:'b',
+  peitodepombo:'t',pindaiba:'t'};
+const JC_ARV=['inga','embauba','salgueiro','guapuruvu','urucum','jucara','mulungu','patadevaca','angico','sapucaia','a_cedrelafissilis','a_cabraleacanjerana','peitodepombo','pindaiba'];
 const JC_ZN={f:'Fundo',t:'Talude',b:'Borda'};
 const JC_ZD={f:'encharca a cada chuva',t:'úmido, mas drena',b:'mais seca, em volta da depressão'};
 const JC_MARG=.4; // faixa de borda desenhada em volta da depressão (m)
@@ -2345,24 +2352,24 @@ function jcLayout(sel,c){
   if(c.round){const R=L/2,cx=m+R,cy=m+R;
     // anéis: cada espécie num arco, no espaçamento dela
     const ringC=(r,sp)=>{if(!sp.length||r<=0)return;const P=2*Math.PI*r,seg=P/sp.length;
-      sp.forEach((s,k)=>{const st=Math.max(.25,s.ep);const n=Math.max(1,Math.floor(seg/st));for(let j=0;j<n;j++){const t=(k*seg+(j+.5)*seg/n)/r-Math.PI/2;pts.push({s,x:cx+r*Math.cos(t),y:cy+r*Math.sin(t)});}});};
+      sp.forEach((s,k)=>{const st=Math.max(.25,s.ep);const n=Math.min(JC_ARV.includes(s.id)?2:99,Math.max(1,Math.floor(seg/st)));for(let j=0;j<n;j++){const t=(k*seg+(j+.5)*seg/n)/r-Math.PI/2;pts.push({s,x:cx+r*Math.cos(t),y:cy+r*Math.sin(t)});}});};
     ringC(R+m/2,z.b);ringC(R-i/2,z.t);
     // fundo: cada espécie numa fatia do círculo central
-    const rf=R-i;if(z.f.length&&rf>.05){const n=z.f.length;z.f.forEach((s,k)=>{const st=Math.max(.25,s.ep);let put=0;
+    const rf=R-i;if(z.f.length&&rf>.05){const n=z.f.length;z.f.forEach((s,k)=>{const st=Math.max(.25,s.ep),T=JC_ARV.includes(s.id);let put=0;
       for(let gx=-rf;gx<=rf;gx+=st)for(let gy=-rf;gy<=rf;gy+=st){const x=gx+st/2,y=gy+st/2,d=Math.hypot(x,y);if(d>rf-st*.35)continue;
-        let ang=Math.atan2(y,x)+Math.PI/2;if(ang<0)ang+=2*Math.PI;if(n>1&&Math.floor(ang/(2*Math.PI/n))!==k)continue;pts.push({s,x:cx+x,y:cy+y});put++;}
+        let ang=Math.atan2(y,x)+Math.PI/2;if(ang<0)ang+=2*Math.PI;if(n>1&&Math.floor(ang/(2*Math.PI/n))!==k)continue;if(T&&put)continue;pts.push({s,x:cx+x,y:cy+y});put++;}
       if(!put){const ang=(k+.5)*2*Math.PI/n-Math.PI/2,r=n>1?rf/2:0;pts.push({s,x:cx+r*Math.cos(ang),y:cy+r*Math.sin(ang)});}});}
     return {pts,z,fora};}
   const ring=(x,y,w,h,sp)=>{if(!sp.length)return;const P=2*(w+h),seg=P/sp.length;
     const at=t=>{t=((t%P)+P)%P;if(t<w)return [x+t,y];t-=w;if(t<h)return [x+w,y+t];t-=h;if(t<w)return [x+w-t,y+h];t-=w;return [x,y+h-t];};
-    sp.forEach((s,k)=>{const st=Math.max(.25,s.ep);const n=Math.max(1,Math.floor(seg/st));for(let j=0;j<n;j++){const [px,py]=at(k*seg+(j+.5)*seg/n);pts.push({s,x:px,y:py,z:'x'});}});};
+    sp.forEach((s,k)=>{const st=Math.max(.25,s.ep);const n=Math.min(JC_ARV.includes(s.id)?2:99,Math.max(1,Math.floor(seg/st)));for(let j=0;j<n;j++){const [px,py]=at(k*seg+(j+.5)*seg/n);pts.push({s,x:px,y:py,z:'x'});}});};
   // borda: na linha do meio da faixa em volta da depressão
   ring(m/2,m/2,L+m,W+m,z.b);
   // talude: anel entre a beira da depressão e o fundo
   ring(m+i/2,m+i/2,L-i,W-i,z.t);
   // fundo: retângulo central, um bloco por espécie ao longo do comprimento
   if(z.f.length){const x0=m+i,y0=m+i,fw=Math.max(.2,L-2*i),fh=Math.max(.2,W-2*i),bw=fw/z.f.length;
-    z.f.forEach((s,k)=>{const st=Math.max(.25,s.ep);const nx=Math.max(1,Math.floor(bw/st)),ny=Math.max(1,Math.floor(fh/st));
+    z.f.forEach((s,k)=>{const st=Math.max(.25,s.ep),T=JC_ARV.includes(s.id);const nx=T?1:Math.max(1,Math.floor(bw/st)),ny=T?1:Math.max(1,Math.floor(fh/st));
       for(let a=0;a<nx;a++)for(let b=0;b<ny;b++)pts.push({s,x:x0+k*bw+(a+.5)*bw/nx,y:y0+(b+.5)*fh/ny,z:'f'});});}
   return {pts,z,fora};}
 function jcTop(c,lay){
@@ -2462,7 +2469,10 @@ function jcAdvice(p){
   const nJ=sel.filter(s=>JC_ZONA[s.id]).length;
   if(nJ>0&&nJ<3)out.push({k:'tip',t:'Use várias espécies, de portes diferentes: jardins com rasteiras, arbustos e plantas maiores retêm mais poluentes do que os de uma espécie só, e um jardim com plantas segura 25% mais água do que sem.'});
   const arv=sel.filter(s=>JC_ARV.includes(s.id));
-  if(arv.length)out.push({k:'',t:`${names(arv)}: ${arv.length>1?'árvores pequenas indicadas':'árvore pequena indicada'} por Pinheiro (2017) para a faixa de vegetação na margem de córregos, não especificamente para jardim de chuva. O urucum aguenta alagamento de vez em quando e vai no talude; a pata-de-vaca é da parte que recebe a enxurrada sem ficar encharcada e vai na borda. Ficam a ${'2 m'} uma da outra e crescem de 4 a 7 m: dê espaço para a copa.`});
+  if(arv.length){const z=k=>arv.filter(s=>JC_ZONA[s.id]===k);const pz=(l,t)=>l.length?`${names(l)} ${t}`:'';
+    out.push({k:'',t:`Árvores indicadas por Pinheiro (2017) para a faixa de vegetação na margem de córregos, não especificamente para jardim de chuva. `+[pz(z('f'),'(solo sempre úmido) vai no centro.'),pz(z('t'),(z('t').length>1?'aguentam':'aguenta')+' alagar de vez em quando e '+(z('t').length>1?'vão':'vai')+' no anel.'),pz(z('b'),(z('b').length>1?'recebem':'recebe')+' a enxurrada sem ficar '+(z('b').length>1?'encharcadas':'encharcada')+' e '+(z('b').length>1?'vão':'vai')+' na borda.')].filter(Boolean).join(' ')});
+    const gr=arv.filter(s=>s.e==='E'||(s.pt||0)>8);
+    if(gr.length)out.push({k:'warn',t:`${names(gr)} ${gr.length>1?'são árvores grandes':'é árvore grande'}, de mais de 8 m. Cabe${gr.length>1?'m':''} em jardins de chuva grandes, como em praças e rotatórias. Num jardim de quintal, prefira urucum ou mulungu no anel e pata-de-vaca na borda.`});}
   const tox=sel.filter(s=>s.tox);
   if(tox.length)out.push({k:'',t:`${names(tox)}: ${tox.length>1?'são tóxicas':'é tóxica'} se comida. Evite onde crianças ou animais possam mastigar as folhas.`});
   out.push({k:'',t:'Fique longe da fundação da casa: a orientação americana citada por Pinheiro (2017) é de 10 m, para a água não chegar às paredes. Em lote pequeno, mantenha a maior distância possível e não deixe a água empoçar junto ao muro.'});
