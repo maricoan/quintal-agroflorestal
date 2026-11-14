@@ -435,7 +435,7 @@ details.add summary{cursor:pointer;font-size:13.5px;font-weight:700;color:var(--
 .drawing.plain{background:var(--bg)}
 .drawing svg{display:block;width:var(--zw,100%);max-width:none;height:auto;min-width:300px}
 svg text{font-family:var(--f-mono);fill:var(--ink)}
-.s-water{fill:var(--water)}.jc-bd{fill:var(--ground)}.jc-tl{fill:var(--bed)}.jc-fd{fill:color-mix(in srgb,var(--water) 45%,var(--bed))}.jc-edge{fill:none;stroke:var(--muted);stroke-width:1.2;stroke-dasharray:4 3}.jc-mix{fill:color-mix(in srgb,var(--bed) 70%,var(--sun) 30%)}.jc-soil{fill:var(--mulch);opacity:.55}.jc-wl{fill:var(--water);opacity:.7}.jc-ar{fill:none;stroke:var(--water);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}.jc-zt{fill:var(--ink);font-size:calc(11px * var(--fz,1));font-weight:700}.jc-zs{fill:var(--muted);font-size:calc(10px * var(--fz,1))}.jc-steps{margin:10px 0 0;padding-left:20px;font-size:14px}.jc-steps li{margin:4px 0}.jc-zl{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:6px}.jc-zl li{font-size:14px}.jc-zl b{display:inline-block;min-width:4.5em}.s-free{fill:var(--leaf);opacity:.18}.s-borda{fill:var(--bed);opacity:.85}.strips .st-borda{background:var(--bed)}.strips .st-free{background:var(--leaf-soft)}.s-water-ln{fill:none;stroke:var(--water-ln);stroke-width:1.4;stroke-linecap:round}.s-water-t{fill:var(--water-ln);font-size:calc(11px * var(--fz,1));font-family:var(--f-body);font-weight:700}
+.s-water{fill:var(--water)}.jc-bd{fill:var(--ground)}.jc-lim{fill:none;stroke:var(--soil);stroke-width:2.5}.jc-cop{opacity:.82}.jc-tl{fill:var(--bed)}.jc-fd{fill:color-mix(in srgb,var(--water) 45%,var(--bed))}.jc-edge{fill:none;stroke:var(--muted);stroke-width:1.2;stroke-dasharray:4 3}.jc-mix{fill:color-mix(in srgb,var(--bed) 70%,var(--sun) 30%)}.jc-soil{fill:var(--mulch);opacity:.55}.jc-wl{fill:var(--water);opacity:.7}.jc-ar{fill:none;stroke:var(--water);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}.jc-zt{fill:var(--ink);font-size:calc(11px * var(--fz,1));font-weight:700}.jc-zs{fill:var(--muted);font-size:calc(10px * var(--fz,1))}.jc-steps{margin:10px 0 0;padding-left:20px;font-size:14px}.jc-steps li{margin:4px 0}.jc-zl{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:6px}.jc-zl li{font-size:14px}.jc-zl b{display:inline-block;min-width:4.5em}.s-free{fill:var(--leaf);opacity:.18}.s-borda{fill:var(--bed);opacity:.85}.strips .st-borda{background:var(--bed)}.strips .st-free{background:var(--leaf-soft)}.s-water-ln{fill:none;stroke:var(--water-ln);stroke-width:1.4;stroke-linecap:round}.s-water-t{fill:var(--water-ln);font-size:calc(11px * var(--fz,1));font-family:var(--f-body);font-weight:700}
 .s-ground{fill:var(--ground)} .s-bed{fill:var(--bed)} .s-line{fill:var(--mulch)} .s-grid{stroke:var(--grid)} .s-edge{fill:none;stroke:var(--muted);stroke-width:1.2}
 .s-side1{fill:var(--side1)} .s-side2{fill:var(--side2)}
 .s-dim{fill:var(--muted);font-size:calc(11px * var(--fz,1))}
@@ -2352,7 +2352,15 @@ function jcZonas(sel){const z={f:[],t:[],b:[]},fora=[],duplas=[];
   return {z,fora};}
 // distribui as mudas por zona: cada espécie num trecho (maciço), no espaçamento dela
 // árvores de um anel: posições espalhadas pelo anel inteiro (de 0 a 1), alternando as espécies
-const jcArvPos=(trees,P)=>{if(!trees.length)return [];const n=Math.max(1,Math.min(trees.length*2,Math.floor(P/2.5)));const o=[];for(let j=0;j<n;j++)o.push([trees[j%trees.length],(j+.25)/n]);return o.filter((x,k)=>k<Math.max(trees.length,n));};
+const jcArvPos=(trees,P,ph)=>{if(!trees.length)return [];const n=Math.max(1,Math.min(trees.length*2,Math.floor(P/2.5)));const o=[];for(let j=0;j<n;j++)o.push([trees[j%trees.length],(j+(ph??.25))/n]);return o.filter((x,k)=>k<Math.max(trees.length,n));};
+// raio desenhado de cada planta (m): árvores com copa de até 60 cm de raio, as demais até 35 cm
+const jcRaio=s=>JC_ARV.includes(s.id)?Math.min(.6,s.ep*.45):Math.min(.35,s.ep*.45);
+// toda planta fica dentro do limite do jardim (retângulo ou círculo externo), com a copa inteira para dentro
+function jcDentro(pts,c){const m=JC_MARG,TW=c.L+2*m,TH=c.W+2*m;
+  pts.forEach(q=>{const r=jcRaio(q.s);
+    if(c.round){const C=TW/2,dx=q.x-C,dy=q.y-C,d=Math.hypot(dx,dy),lim=Math.max(0,C-r);if(d>lim&&d>0){q.x=C+dx/d*lim;q.y=C+dy/d*lim;}}
+    else{q.x=Math.min(TW-r,Math.max(r,q.x));q.y=Math.min(TH-r,Math.max(r,q.y));}});
+  return pts;}
 const jcEspaca=pts=>{const T=pts.filter(q=>JC_ARV.includes(q.s.id)),keep=[],seen=new Set();
   T.forEach(q=>{const perto=keep.some(o=>Math.hypot(o.x-q.x,o.y-q.y)<1.8);if(perto&&seen.has(q.s.id))return;keep.push(q);seen.add(q.s.id);});
   return pts.filter(q=>!JC_ARV.includes(q.s.id)||keep.includes(q));};
@@ -2360,39 +2368,41 @@ function jcLayout(sel,c){
   const {z,fora}=jcZonas(sel);const m=JC_MARG,L=c.L,W=c.W,i=c.i,pts=[];
   if(c.round){const R=L/2,cx=m+R,cy=m+R;
     // anéis: cada espécie num arco, no espaçamento dela
-    const ringC=(r,sp0)=>{if(!sp0.length||r<=0)return;const P=2*Math.PI*r;
+    const ringC=(r,sp0,ph)=>{if(!sp0.length||r<=0)return;const P=2*Math.PI*r;
       const tr=sp0.filter(s=>JC_ARV.includes(s.id)),sp=sp0.filter(s=>!JC_ARV.includes(s.id)),seg=P/Math.max(1,sp.length);
-      jcArvPos(tr,P).forEach(([s,f])=>{const t=f*2*Math.PI-Math.PI/2;pts.push({s,x:cx+r*Math.cos(t),y:cy+r*Math.sin(t)});});
+      jcArvPos(tr,P,ph).forEach(([s,f])=>{const t=f*2*Math.PI-Math.PI/2;pts.push({s,x:cx+r*Math.cos(t),y:cy+r*Math.sin(t)});});
       sp.forEach((s,k)=>{const st=Math.max(.25,s.ep);const n=Math.min(JC_ARV.includes(s.id)?2:99,Math.max(1,Math.floor(seg/st)));for(let j=0;j<n;j++){const t=(k*seg+(j+.5)*seg/n)/r-Math.PI/2;pts.push({s,x:cx+r*Math.cos(t),y:cy+r*Math.sin(t)});}});};
-    ringC(R+m/2,z.b);ringC(R-i/2,z.t);
+    ringC(R+m/2,z.b,.75);ringC(R-i/2,z.t,.25);
     // fundo: cada espécie numa fatia do círculo central
     const rf=R-i;if(z.f.length&&rf>.05){const n=z.f.length;z.f.forEach((s,k)=>{const st=Math.max(.25,s.ep),T=JC_ARV.includes(s.id);let put=0;
       for(let gx=-rf;gx<=rf;gx+=st)for(let gy=-rf;gy<=rf;gy+=st){const x=gx+st/2,y=gy+st/2,d=Math.hypot(x,y);if(d>rf-st*.35)continue;
         let ang=Math.atan2(y,x)+Math.PI/2;if(ang<0)ang+=2*Math.PI;if(n>1&&Math.floor(ang/(2*Math.PI/n))!==k)continue;if(T&&put)continue;pts.push({s,x:cx+x,y:cy+y});put++;}
       if(!put){const ang=(k+.5)*2*Math.PI/n-Math.PI/2,r=n>1?rf/2:0;pts.push({s,x:cx+r*Math.cos(ang),y:cy+r*Math.sin(ang)});}});}
-    return {pts:jcEspaca(pts),z,fora};}
-  const ring=(x,y,w,h,sp0)=>{if(!sp0.length)return;const P=2*(w+h);
+    return {pts:jcDentro(jcEspaca(pts),c),z,fora};}
+  const ring=(x,y,w,h,sp0,ph)=>{if(!sp0.length)return;const P=2*(w+h);
     const at=t=>{t=((t%P)+P)%P;if(t<w)return [x+t,y];t-=w;if(t<h)return [x+w,y+t];t-=h;if(t<w)return [x+w-t,y+h];t-=w;return [x,y+h-t];};
     const tr=sp0.filter(s=>JC_ARV.includes(s.id)),sp=sp0.filter(s=>!JC_ARV.includes(s.id)),seg=P/Math.max(1,sp.length);
-    jcArvPos(tr,P).forEach(([s,f])=>{const [px,py]=at(f*P);pts.push({s,x:px,y:py,z:'x'});});
+    jcArvPos(tr,P,ph).forEach(([s,f])=>{const [px,py]=at(f*P);pts.push({s,x:px,y:py,z:'x'});});
     sp.forEach((s,k)=>{const st=Math.max(.25,s.ep);const n=Math.min(JC_ARV.includes(s.id)?2:99,Math.max(1,Math.floor(seg/st)));for(let j=0;j<n;j++){const [px,py]=at(k*seg+(j+.5)*seg/n);pts.push({s,x:px,y:py,z:'x'});}});};
   // borda: na linha do meio da faixa em volta da depressão
-  ring(m/2,m/2,L+m,W+m,z.b);
+  ring(m/2,m/2,L+m,W+m,z.b,.75);
   // talude: anel entre a beira da depressão e o fundo
-  ring(m+i/2,m+i/2,L-i,W-i,z.t);
+  ring(m+i/2,m+i/2,L-i,W-i,z.t,.25);
   // fundo: retângulo central, um bloco por espécie ao longo do comprimento
   if(z.f.length){const x0=m+i,y0=m+i,fw=Math.max(.2,L-2*i),fh=Math.max(.2,W-2*i),bw=fw/z.f.length;
     z.f.forEach((s,k)=>{const st=Math.max(.25,s.ep),T=JC_ARV.includes(s.id);const nx=T?1:Math.max(1,Math.floor(bw/st)),ny=T?1:Math.max(1,Math.floor(fh/st));
       for(let a=0;a<nx;a++)for(let b=0;b<ny;b++)pts.push({s,x:x0+k*bw+(a+.5)*bw/nx,y:y0+(b+.5)*fh/ny,z:'f'});});}
-  return {pts:jcEspaca(pts),z,fora};}
+  return {pts:jcDentro(jcEspaca(pts),c),z,fora};}
 function jcTop(c,lay){
   const m=JC_MARG,L=c.L,W=c.W,i=c.i,TW=L+2*m,TH=W+2*m;
   if(c.round){const R=L/2,K=Math.max(30,Math.min(150,(isMob()?300:420)/TW)),pl=S.jcOrig==='aclive'&&!isMob()?140:44,pt=40,pr=isMob()?44:96,pb=34,X=n=>n.toFixed(1),C=(m+R)*K;
     let g=`<svg viewBox="0 0 ${X(TW*K+pl+pr)} ${X(TH*K+pt+pb)}" role="img" aria-label="Jardim de chuva redondo visto de cima: ${fmt(L)} metros de diâmetro"><g transform="translate(${pl},${pt})">`;
-    g+=`<circle class="jc-bd" cx="${X(C)}" cy="${X(C)}" r="${X((R+m)*K)}"/><circle class="jc-tl" cx="${X(C)}" cy="${X(C)}" r="${X(R*K)}"/><circle class="jc-fd" cx="${X(C)}" cy="${X(C)}" r="${X(Math.max(0,R-i)*K)}"/><circle class="jc-edge" cx="${X(C)}" cy="${X(C)}" r="${X(R*K)}"/>`;
-    lay.pts.slice().sort((p1,p2)=>JC_ARV.includes(p2.s.id)-JC_ARV.includes(p1.s.id)).forEach(q=>{const T=JC_ARV.includes(q.s.id),nn=Math.min(9,...lay.pts.filter(o=>o!==q&&(!T||JC_ARV.includes(o.s.id))).map(o=>Math.hypot(o.x-q.x,o.y-q.y))),r=Math.max(3,(T?Math.min(.6,q.s.ep*.45,nn*.5):Math.min(q.s.ep*.45,.35,nn*.48))*K);if(T)g+=`<circle class="shd" cx="${X(q.x*K+r*.15)}" cy="${X(q.y*K+r*.2)}" r="${X(r)}"/>`;
-      g+=`<circle class="p-${q.s.e}" data-sp="${q.s.id}" cx="${X(q.x*K)}" cy="${X(q.y*K)}" r="${X(r)}"><title>${esc(q.s.n)}</title></circle>`;
+    g+=`<circle class="jc-bd" cx="${X(C)}" cy="${X(C)}" r="${X((R+m)*K)}"/><circle class="jc-lim" cx="${X(C)}" cy="${X(C)}" r="${X((R+m)*K)}"/><circle class="jc-tl" cx="${X(C)}" cy="${X(C)}" r="${X(R*K)}"/><circle class="jc-fd" cx="${X(C)}" cy="${X(C)}" r="${X(Math.max(0,R-i)*K)}"/><circle class="jc-edge" cx="${X(C)}" cy="${X(C)}" r="${X(R*K)}"/>`;
+    g+=`<clipPath id="jcclipc"><circle cx="${X(C)}" cy="${X(C)}" r="${X((R+m)*K)}"/></clipPath><g clip-path="url(#jcclipc)">`;
+    lay.pts.slice().sort((p1,p2)=>JC_ARV.includes(p2.s.id)-JC_ARV.includes(p1.s.id)).forEach(q=>{const T=JC_ARV.includes(q.s.id),nn=Math.min(9,...lay.pts.filter(o=>o!==q&&(!T||JC_ARV.includes(o.s.id))).map(o=>Math.hypot(o.x-q.x,o.y-q.y))),r=Math.max(3,(T?jcRaio(q.s):Math.min(jcRaio(q.s),nn*.48))*K);if(T)g+=`<circle class="shd" cx="${X(q.x*K+r*.15)}" cy="${X(q.y*K+r*.2)}" r="${X(r)}"/>`;
+      g+=`<circle class="p-${q.s.e}${T?" jc-cop":""}" data-sp="${q.s.id}" cx="${X(q.x*K)}" cy="${X(q.y*K)}" r="${X(r)}"><title>${esc(q.s.n)}</title></circle>`;
       if(r>=7)g+=`<text class="lab ${darkLab(q.s.e)}" data-sp="${q.s.id}" x="${X(q.x*K)}" y="${X(q.y*K)}">${esc(q.s.a)}</text>`;});
+    g+='</g>';
     g+=`<path class="jc-ar" d="M-30,${X(C)} H${X(m*K-4)} M${X(m*K-12)},${X(C-6)} L${X(m*K-4)},${X(C)} L${X(m*K-12)},${X(C+6)}"/><text class="jc-zs" x="-30" y="${X(C-10)}">${jcEnt()}</text>`+(S.jcOrig==='aclive'?jcBio(-30,C):'');
     g+=`<path class="jc-ar" d="M${X((m+L)*K+4)},${X(C)} H${X(TW*K+30)} M${X(TW*K+22)},${X(C-6)} L${X(TW*K+30)},${X(C)} L${X(TW*K+22)},${X(C+6)}"/>`+(isMob()?'':`<text class="jc-zs" x="${X(TW*K+34)}" y="${X(C+4)}">ladrão</text>`);
     g+=`<text class="s-dim" x="${X(C)}" y="-12" text-anchor="middle">Ø ${fmt(L)} m</text>`;
@@ -2406,10 +2416,12 @@ function jcTop(c,lay){
   const Q=(x,y)=>rot?[y,x]:[x,y];
   const R=(x,y,w,h,cls,rx)=>{const [a,b]=Q(x,y),[ww,hh]=rot?[h,w]:[w,h];return `<rect class="${cls}" x="${X(a*K)}" y="${X(b*K)}" width="${X(ww*K)}" height="${X(hh*K)}" rx="${rx}"/>`;};
   let g=`<svg viewBox="0 0 ${X(vw)} ${X(vh)}" font-family="inherit" role="img" aria-label="Jardim de chuva visto de cima: ${fmt(L)} por ${fmt(W)} metros"><g transform="translate(${pl},${pt})">`;
-  g+=R(0,0,TW,TH,'jc-bd',10)+R(m,m,L,W,'jc-tl',8)+R(m+i,m+i,L-2*i,W-2*i,'jc-fd',6)+R(m,m,L,W,'jc-edge',8);
-  lay.pts.slice().sort((p1,p2)=>JC_ARV.includes(p2.s.id)-JC_ARV.includes(p1.s.id)).forEach(q=>{const T=JC_ARV.includes(q.s.id),nn=Math.min(9,...lay.pts.filter(o=>o!==q&&(!T||JC_ARV.includes(o.s.id))).map(o=>Math.hypot(o.x-q.x,o.y-q.y))),r=Math.max(3,(T?Math.min(.6,q.s.ep*.45,nn*.5):Math.min(q.s.ep*.45,.35,nn*.48))*K),[x,y]=Q(q.x,q.y);if(T)g+=`<circle class="shd" cx="${X(x*K+r*.15)}" cy="${X(y*K+r*.2)}" r="${X(r)}"/>`;
-    g+=`<circle class="p-${q.s.e}" data-sp="${q.s.id}" cx="${X(x*K)}" cy="${X(y*K)}" r="${X(r)}"><title>${esc(q.s.n)}</title></circle>`;
+  g+=R(0,0,TW,TH,'jc-bd',10)+R(0,0,TW,TH,'jc-lim',10)+R(m,m,L,W,'jc-tl',8)+R(m+i,m+i,L-2*i,W-2*i,'jc-fd',6)+R(m,m,L,W,'jc-edge',8);
+  {const [cw,ch]=rot?[TH,TW]:[TW,TH];g+=`<clipPath id="jcclip"><rect x="0" y="0" width="${X(cw*K)}" height="${X(ch*K)}" rx="10"/></clipPath><g clip-path="url(#jcclip)">`;}
+  lay.pts.slice().sort((p1,p2)=>JC_ARV.includes(p2.s.id)-JC_ARV.includes(p1.s.id)).forEach(q=>{const T=JC_ARV.includes(q.s.id),nn=Math.min(9,...lay.pts.filter(o=>o!==q&&(!T||JC_ARV.includes(o.s.id))).map(o=>Math.hypot(o.x-q.x,o.y-q.y))),r=Math.max(3,(T?jcRaio(q.s):Math.min(jcRaio(q.s),nn*.48))*K),[x,y]=Q(q.x,q.y);if(T)g+=`<circle class="shd" cx="${X(x*K+r*.15)}" cy="${X(y*K+r*.2)}" r="${X(r)}"/>`;
+    g+=`<circle class="p-${q.s.e}${T?" jc-cop":""}" data-sp="${q.s.id}" cx="${X(x*K)}" cy="${X(y*K)}" r="${X(r)}"><title>${esc(q.s.n)}</title></circle>`;
     if(r>=7)g+=`<text class="lab ${darkLab(q.s.e)}" data-sp="${q.s.id}" x="${X(x*K)}" y="${X(y*K)}">${esc(q.s.a)}</text>`;});
+  g+='</g>';
   const arrow=(x1,y1,x2,y2)=>{const [a1,b1]=Q(x1,y1),[a2,b2]=Q(x2,y2);const dx=Math.sign(a2-a1),dy=Math.sign(b2-b1);
     return `<path class="jc-ar" d="M${X(a1*K)},${X(b1*K)} L${X(a2*K)},${X(b2*K)} M${X(a2*K-dx*8-dy*6)},${X(b2*K-dy*8-dx*6)} L${X(a2*K)},${X(b2*K)} L${X(a2*K-dx*8+dy*6)},${X(b2*K-dy*8+dx*6)}"/>`;};
   const yc=m+W/2;
