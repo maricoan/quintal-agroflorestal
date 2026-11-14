@@ -4247,7 +4247,7 @@ function update(fromInput){
   const tab=S.rtab==='parceiras'?'parceiras':'plano';
   const tabs=`<div class="rtabs" role="tablist"><button type="button" role="tab" data-rtab="plano" aria-selected="${tab==='plano'}">Plano</button><button type="button" role="tab" data-rtab="parceiras" aria-selected="${tab==='parceiras'}">Parceiras</button></div>`;
   // barra de atalhos para as seções do plano
-  const secs=[['t-jc','Jardim'],['t-des','Desenho'],['t-vas','Vasos'],['t-mine','Seu vaso'],['t-coop','Consórcios'],['t-av','Ajustes'],['t-comp','Companhias'],['t-cal','Calendário'],['t-man','Cuidados']].filter(([id])=>h.includes(`id="${id}"`));
+  const secs=[['t-jc','Desenho'],['t-des','Desenho'],['t-vas','Vasos'],['t-mine','Seu vaso'],['t-coop','Consórcios'],['t-av','Ajustes'],['t-comp','Companhias'],['t-cal','Calendário'],['t-man','Cuidados']].filter(([id])=>h.includes(`id="${id}"`));
   // Consórcios e Ajustes na mesma aba
   if(secs.some(x=>x[0]==='t-coop')&&secs.some(x=>x[0]==='t-av')){secs.splice(secs.findIndex(x=>x[0]==='t-av'),1);secs.find(x=>x[0]==='t-coop')[1]='Consórcios e ajustes';}
   const nav=`<nav class="secnav" aria-label="Seções do plano">${secs.map(([id,l])=>`<a href="#" data-go="${id}">${l}</a>`).join('')}</nav>`;
