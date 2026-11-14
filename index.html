@@ -312,7 +312,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .cer-tag{display:inline-flex;vertical-align:-3px}.cer-ic{width:20px;height:17px;fill:none;stroke:var(--soil);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}.cer-ic .cer-c{fill:color-mix(in srgb,#9A7400 55%,transparent);stroke:#7a5c00}.cer-ic .cer-g{stroke:#A4471F}.oleg .cer-tag{width:26px;justify-content:center;flex:none}
 .tem-tag{font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--leaf);border:1px solid var(--leaf);border-radius:4px;padding:0 4px;line-height:1.5}
 .compra th:not(:first-child){text-align:right}.compra td.n{text-align:right;font-variant-numeric:tabular-nums}.compra .ok{color:var(--leaf);font-weight:700}.compra .falta{color:var(--warn);font-weight:700}
-.ibox p{margin:0 0 6px}.ibox p:last-child{margin:0}#soloInfo{font-size:14px;color:var(--muted)}
+.ibox p{margin:0 0 6px}.ibox p:last-child{margin:0}#soloInfo,#jcDef{font-size:14px;color:var(--muted)}#jcDef{margin-top:8px}#modo .zinfo{align-self:center;border:1.5px solid var(--leaf);padding:0;background:none;color:var(--leaf);border-radius:50%;width:18px;height:18px;font:italic 700 12px/1 Georgia,serif}#modo .zinfo[aria-expanded="true"],#modo .zinfo:hover{background:var(--leaf);color:var(--surface)}
 .ibox{background:var(--ci-bg,rgba(0,0,0,.04));border-radius:8px;padding:8px 12px;margin-top:4px}button.zinfo{padding:0;background:none;min-height:0!important;min-width:0!important;flex:none;aspect-ratio:1}button.zinfo{position:relative}button.zinfo::after{content:'';position:absolute;inset:-13px}button.zinfo[aria-expanded="true"]{background:var(--leaf);color:var(--surface)}
 .hint-d{margin-top:10px}.hint-d>summary{display:inline-flex;align-items:center;gap:6px;cursor:pointer;list-style:none;font-size:14px;color:var(--leaf);font-weight:700}.hint-d>summary::-webkit-details-marker{display:none}.hint-d>summary .zinfo{margin-left:0}.hint-d[open]>summary .zinfo{background:var(--leaf);color:var(--surface)}.hint-d>.hint{margin-top:6px}
 .share{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
@@ -690,10 +690,15 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
             <button type="button" data-v="chao">No chão</button>
             <button type="button" data-v="vaso">Vasos ou varanda</button>
             <button type="button" data-v="chuva">Jardim de chuva</button>
+            <button type="button" class="zinfo" id="jcI" aria-expanded="false" aria-controls="jcDef" aria-label="O que é jardim de chuva" title="O que é jardim de chuva">i</button>
+          </div>
+          <div class="ibox" id="jcDef" hidden>
+            <p><b>Jardim de chuva</b> é um canteiro rebaixado, com plantas, que recebe a água da chuva de telhados, calçadas ou ruas. Ele segura essa água por algumas horas e deixa ela entrar no solo, em vez de correr para os bueiros<sup class="ref" title="Pinheiro, 2017">15</sup>. No caminho, o solo e as raízes filtram parte da poluição da enxurrada, e menos água chega de uma vez aos rios<sup class="ref" title="Gondim, 2024">25</sup><sup class="ref" title="Okimoto e Santos, 2023">26</sup>.</p>
+            <p><b>Em casa:</b> no quintal, recebendo a água da calha. Em espaço pequeno, cabe um canteiro pluvial, a versão compacta<sup class="ref" title="Pinheiro, 2017">15</sup>.</p>
+            <p><b>Na cidade:</b> calçadas, praças, estacionamentos e ruas<sup class="ref" title="Gondim, 2024">25</sup>; biovaletas, faixas rebaixadas e compridas ao lado das vias, que levam a água até os jardins<sup class="ref" title="Pinheiro, 2017">15</sup>; rotatórias e ilhas entre ruas. São Paulo tem jardins de chuva em 5 rotatórias da Rua Teodureto Souto, na Sé, e nas ilhas entre as ruas Vespasiano e Mario, na Lapa<sup class="ref" title="Prefeitura de São Paulo, 2021">28</sup>. Jardins em área pública dependem da prefeitura.</p>
           </div>
         </div>
         <div class="field" id="chuvaF" hidden>
-          <p class="hint">Um canteiro rebaixado que recebe a água do telhado ou do piso e deixa ela entrar no solo, em vez de correr para a rua.</p>
           <span class="lbl">Formato</span>
           <div class="seg" id="jcForma">
             <button type="button" data-v="ret">Retangular</button>
@@ -1066,6 +1071,7 @@ const REFS={
  GON:{n:25,t:'Gondim, F. R. Jardins de chuva: uma análise teórica e experimental para a implementação no Brasil. Tese, UERJ, 2024.',u:'https://www.bdtd.uerj.br:8443/bitstream/1/23416/2/Tese%20-%20Fabio%20Ribeiro%20Gondim%20-%202024%20-%20Completo.pdf'},
  OKI:{n:26,t:'Okimoto, F. S.; Santos, K. C. Jardins de Chuva: conceitos, práticas e desempenhos. Estrabão 4, p. 125–136, 2023.',u:'https://doi.org/10.53455/re.v4i.81'},
  TF:{n:27,t:'Cook, B. G. et al. Tropical Forages: Stenotaphrum secundatum e Axonopus compressus. CIAT, 2020.',u:'https://www.tropicalforages.info/text/entities/stenotaphrum_spp.htm'},
+ SPJC:{n:28,t:'Prefeitura de São Paulo. Prefeitura investe em jardins de chuva que minimizam os efeitos de alagamentos em São Paulo, 14 jan. 2021.',u:'https://prefeitura.sp.gov.br/w/noticia/prefeitura-investe-em-jardins-de-chuva-que-minimizam-os-efeitos-de-alagamentos-em-sao-paulo'},
  C9:{n:14,t:'Ushimaru, T. Influência do sombreamento sobre a fisiologia, crescimento e qualidade das mudas de juçara. Dissertação, UFV, 2021.',u:'https://locus.ufv.br//handle/123456789/29143'}
 };
 // el = entre linhas (m); ep = entre plantas (m); src = referência; sol = luz tolerada (P pleno, M meia-sombra, S sombra)
@@ -1603,11 +1609,11 @@ const areaM2=()=>isCirc()?Math.PI*Math.pow((S.D||4)/2,2):S.L*S.W;
 function alignSub(){const sub=$('potMine'),btn=document.querySelector('#potmode button[data-v="meu"]');if(!sub||!btn||sub.hidden)return;
   sub.style.marginLeft='0px';const off=btn.getBoundingClientRect().left-sub.getBoundingClientRect().left+18;sub.style.marginLeft=Math.max(0,off)+'px';}
 window.addEventListener('resize',()=>{try{alignSub();}catch(e){}});
-function bindSeg(id,key){$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S[key]=b.dataset.v;if(key!=='vista')S.exemplo=false;update();});}
+function bindSeg(id,key){$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!b.dataset.v)return;S[key]=b.dataset.v;if(key!=='vista')S.exemplo=false;update();});}
 bindSeg('modo','modo');bindSeg('jcOrig','jcOrig');bindSeg('jcForma','jcForma');bindSeg('jcSolo','jcSolo');
 [['inJcA','jcA',1,5000],['inJcW','jcW',.6,4]].forEach(([id,k,mn,mx])=>{$(id).addEventListener('input',e=>{const v=parseFloat(e.target.value);if(!isFinite(v)||v<=0)return;S[k]=Math.min(mx,Math.max(mn,v));S.exemplo=false;update(true);});});bindSeg('curso','curso');bindSeg('potmode','potmode');bindSeg('pottipo','pottipo');
 [['pD','pD'],['pC','pC'],['pW','pW'],['pH','pH']].forEach(([id,k])=>{$(id).addEventListener('input',e=>{const v=parseFloat(e.target.value);if(!isFinite(v)||v<=0)return;S[k]=v;S.exemplo=false;update(true);});});bindSeg('forma','forma');bindSeg('sol','sol');bindSeg('agua','agua');bindSeg('solo','solo');
-function syncSeg(id,val){const el=$(id);if(!el)return;[...el.querySelectorAll('button')].forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===val?'true':'false'));}
+function syncSeg(id,val){const el=$(id);if(!el)return;[...el.querySelectorAll('button[data-v]')].forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===val?'true':'false'));}
 $('inD').addEventListener('input',e=>{const v=parseFloat(e.target.value);if(!isFinite(v))return;S.D=Math.min(40,Math.max(1,v));S.exemplo=false;update(true);});
 ['inAg','inAgD'].forEach(id=>{$(id).addEventListener('input',e=>{const v=parseFloat(e.target.value);if(!isFinite(v)||v<0)return;
   if(id==='inAgD')S.agDist=Math.min(200,v);else if(S.curso==='lago')S.agD=Math.min(200,Math.max(.2,v));else S.agW=Math.min(200,Math.max(.2,v));S.exemplo=false;update(true);});});
@@ -1649,6 +1655,7 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-invadd]');
 $('tray').addEventListener('click',e=>{const b=e.target.closest('[data-rmsel]');if(!b)return;S.sel=S.sel.filter(i=>i!==b.dataset.rmsel);S.exemplo=false;update();});
 try{$('legbox').open=!!(S.legOpen);}catch(e){}
 $('legbox').addEventListener('toggle',()=>{S.legOpen=$('legbox').open;$('legI').setAttribute('aria-expanded',String($('legbox').open));save();});
+$('jcI').addEventListener('click',()=>{const b=$('jcDef');b.hidden=!b.hidden;$('jcI').setAttribute('aria-expanded',String(!b.hidden));});
 $('soloI').addEventListener('click',()=>{const b=$('soloInfo');b.hidden=!b.hidden;$('soloI').setAttribute('aria-expanded',String(!b.hidden));});
 $('legI').addEventListener('click',()=>{$('legbox').open=!$('legbox').open;});
 try{$('legI').setAttribute('aria-expanded',String($('legbox').open));}catch(e){}
