@@ -694,9 +694,14 @@ td.h{font-family:var(--f-body);font-size:12px;color:var(--muted);white-space:now
         </div>
         <div class="field" id="chuvaF" hidden>
           <p class="hint">Um canteiro rebaixado que recebe a água do telhado ou do piso e deixa ela entrar no solo, em vez de correr para a rua.</p>
+          <span class="lbl">Formato</span>
+          <div class="seg" id="jcForma">
+            <button type="button" data-v="ret">Retangular</button>
+            <button type="button" data-v="red">Redondo</button>
+          </div>
           <div class="row2">
             <div class="field"><label class="lbl" for="inJcA" title="Telhado ou piso cuja água vai para o jardim">Área escoada</label><div class="unit"><input id="inJcA" type="number" min="1" max="5000" step="1"><span>m²</span></div></div>
-            <div class="field"><label class="lbl" for="inJcW">Largura</label><div class="unit"><input id="inJcW" type="number" min="0.6" max="4" step="0.1"><span>m</span></div></div>
+            <div class="field" id="jcWF"><label class="lbl" for="inJcW">Largura</label><div class="unit"><input id="inJcW" type="number" min="0.6" max="4" step="0.1"><span>m</span></div></div>
           </div>
           <span class="lbl">De onde vem a água</span>
           <div class="seg" id="jcOrig">
@@ -1599,7 +1604,7 @@ function alignSub(){const sub=$('potMine'),btn=document.querySelector('#potmode 
   sub.style.marginLeft='0px';const off=btn.getBoundingClientRect().left-sub.getBoundingClientRect().left+18;sub.style.marginLeft=Math.max(0,off)+'px';}
 window.addEventListener('resize',()=>{try{alignSub();}catch(e){}});
 function bindSeg(id,key){$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S[key]=b.dataset.v;if(key!=='vista')S.exemplo=false;update();});}
-bindSeg('modo','modo');bindSeg('jcOrig','jcOrig');bindSeg('jcSolo','jcSolo');
+bindSeg('modo','modo');bindSeg('jcOrig','jcOrig');bindSeg('jcForma','jcForma');bindSeg('jcSolo','jcSolo');
 [['inJcA','jcA',1,5000],['inJcW','jcW',.6,4]].forEach(([id,k,mn,mx])=>{$(id).addEventListener('input',e=>{const v=parseFloat(e.target.value);if(!isFinite(v)||v<=0)return;S[k]=Math.min(mx,Math.max(mn,v));S.exemplo=false;update(true);});});bindSeg('curso','curso');bindSeg('potmode','potmode');bindSeg('pottipo','pottipo');
 [['pD','pD'],['pC','pC'],['pW','pW'],['pH','pH']].forEach(([id,k])=>{$(id).addEventListener('input',e=>{const v=parseFloat(e.target.value);if(!isFinite(v)||v<=0)return;S[k]=v;S.exemplo=false;update(true);});});bindSeg('forma','forma');bindSeg('sol','sol');bindSeg('agua','agua');bindSeg('solo','solo');
 function syncSeg(id,val){const el=$(id);if(!el)return;[...el.querySelectorAll('button')].forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===val?'true':'false'));}
@@ -2315,7 +2320,9 @@ const JC_MARG=.4; // faixa de borda desenhada em volta da depressão (m)
 const jcRef=k=>REFS[k]&&REFS[k].n?`<sup class="ref" title="${esc(REFS[k].t)}">${REFS[k].n}</sup>`:'';
 // tamanho: 10 a 15% da área que escoa (Bortolini e Zanin, 2018, em Gondim, 2024); 15% no solo argiloso, 10% no arenoso.
 // Lâmina de 15 cm com jardim de 10% (ACES, em Gondim, 2024).
-function jcCalc(){const A=Math.max(1,S.jcA||30),are=S.jcSolo==='arenoso',pct=are?.10:.15,Aj=A*pct,W=Math.min(4,Math.max(.6,S.jcW||1.5)),L=Math.max(W,Aj/W);
+function jcCalc(){const A=Math.max(1,S.jcA||30),are=S.jcSolo==='arenoso',pct=are?.10:.15,Aj0=A*pct;
+  if(S.jcForma==='red'){const D=Math.max(.8,2*Math.sqrt(Aj0/Math.PI));return {A,pct,Aj:Math.PI*D*D/4,W:D,L:D,lam:.15,vol:Math.PI*D*D/4*.15*1000,are,i:Math.min(.6,D*.2),round:true};}
+  const Aj=Aj0,W=Math.min(4,Math.max(.6,S.jcW||1.5)),L=Math.max(W,Aj/W);
   return {A,pct,Aj:L*W,W,L,lam:.15,vol:L*W*.15*1000,are,i:Math.min(.6,W*.25)};}
 function jcZonas(sel){const z={f:[],t:[],b:[]},fora=[],duplas=[];
   sel.forEach(s=>{const c=JC_ZONA[s.id];if(!c){fora.push(s);return;}if(c.length===1)z[c].push(s);else duplas.push([s,c]);});
@@ -2325,6 +2332,17 @@ function jcZonas(sel){const z={f:[],t:[],b:[]},fora=[],duplas=[];
 // distribui as mudas por zona: cada espécie num trecho (maciço), no espaçamento dela
 function jcLayout(sel,c){
   const {z,fora}=jcZonas(sel);const m=JC_MARG,L=c.L,W=c.W,i=c.i,pts=[];
+  if(c.round){const R=L/2,cx=m+R,cy=m+R;
+    // anéis: cada espécie num arco, no espaçamento dela
+    const ringC=(r,sp)=>{if(!sp.length||r<=0)return;const P=2*Math.PI*r,seg=P/sp.length;
+      sp.forEach((s,k)=>{const st=Math.max(.25,s.ep);const n=Math.max(1,Math.floor(seg/st));for(let j=0;j<n;j++){const t=(k*seg+(j+.5)*seg/n)/r-Math.PI/2;pts.push({s,x:cx+r*Math.cos(t),y:cy+r*Math.sin(t)});}});};
+    ringC(R+m/2,z.b);ringC(R-i/2,z.t);
+    // fundo: cada espécie numa fatia do círculo central
+    const rf=R-i;if(z.f.length&&rf>.05){const n=z.f.length;z.f.forEach((s,k)=>{const st=Math.max(.25,s.ep);let put=0;
+      for(let gx=-rf;gx<=rf;gx+=st)for(let gy=-rf;gy<=rf;gy+=st){const x=gx+st/2,y=gy+st/2,d=Math.hypot(x,y);if(d>rf-st*.35)continue;
+        let ang=Math.atan2(y,x)+Math.PI/2;if(ang<0)ang+=2*Math.PI;if(n>1&&Math.floor(ang/(2*Math.PI/n))!==k)continue;pts.push({s,x:cx+x,y:cy+y});put++;}
+      if(!put){const ang=(k+.5)*2*Math.PI/n-Math.PI/2,r=n>1?rf/2:0;pts.push({s,x:cx+r*Math.cos(ang),y:cy+r*Math.sin(ang)});}});}
+    return {pts,z,fora};}
   const ring=(x,y,w,h,sp)=>{if(!sp.length)return;const P=2*(w+h),seg=P/sp.length;
     const at=t=>{t=((t%P)+P)%P;if(t<w)return [x+t,y];t-=w;if(t<h)return [x+w,y+t];t-=h;if(t<w)return [x+w-t,y+h];t-=w;return [x,y+h-t];};
     sp.forEach((s,k)=>{const st=Math.max(.25,s.ep);const n=Math.max(1,Math.floor(seg/st));for(let j=0;j<n;j++){const [px,py]=at(k*seg+(j+.5)*seg/n);pts.push({s,x:px,y:py,z:'x'});}});};
@@ -2339,6 +2357,16 @@ function jcLayout(sel,c){
   return {pts,z,fora};}
 function jcTop(c,lay){
   const m=JC_MARG,L=c.L,W=c.W,i=c.i,TW=L+2*m,TH=W+2*m;
+  if(c.round){const R=L/2,K=Math.max(30,Math.min(150,(isMob()?300:420)/TW)),pl=44,pt=40,pr=isMob()?44:96,pb=34,X=n=>n.toFixed(1),C=(m+R)*K;
+    let g=`<svg viewBox="0 0 ${X(TW*K+pl+pr)} ${X(TH*K+pt+pb)}" role="img" aria-label="Jardim de chuva redondo visto de cima: ${fmt(L)} metros de diâmetro"><g transform="translate(${pl},${pt})">`;
+    g+=`<circle class="jc-bd" cx="${X(C)}" cy="${X(C)}" r="${X((R+m)*K)}"/><circle class="jc-tl" cx="${X(C)}" cy="${X(C)}" r="${X(R*K)}"/><circle class="jc-fd" cx="${X(C)}" cy="${X(C)}" r="${X(Math.max(0,R-i)*K)}"/><circle class="jc-edge" cx="${X(C)}" cy="${X(C)}" r="${X(R*K)}"/>`;
+    lay.pts.forEach(q=>{const nn=Math.min(9,...lay.pts.filter(o=>o!==q).map(o=>Math.hypot(o.x-q.x,o.y-q.y))),r=Math.max(3,Math.min(q.s.ep*.45,.35,nn*.48)*K);
+      g+=`<circle class="p-${q.s.e}" data-sp="${q.s.id}" cx="${X(q.x*K)}" cy="${X(q.y*K)}" r="${X(r)}"><title>${esc(q.s.n)}</title></circle>`;
+      if(r>=7)g+=`<text class="lab ${darkLab(q.s.e)}" data-sp="${q.s.id}" x="${X(q.x*K)}" y="${X(q.y*K)}">${esc(q.s.a)}</text>`;});
+    g+=`<path class="jc-ar" d="M-30,${X(C)} H${X(m*K-4)} M${X(m*K-12)},${X(C-6)} L${X(m*K-4)},${X(C)} L${X(m*K-12)},${X(C+6)}"/><text class="jc-zs" x="-30" y="${X(C-10)}">água</text>`;
+    g+=`<path class="jc-ar" d="M${X((m+L)*K+4)},${X(C)} H${X(TW*K+30)} M${X(TW*K+22)},${X(C-6)} L${X(TW*K+30)},${X(C)} L${X(TW*K+22)},${X(C+6)}"/>`+(isMob()?'':`<text class="jc-zs" x="${X(TW*K+34)}" y="${X(C+4)}">ladrão</text>`);
+    g+=`<text class="s-dim" x="${X(C)}" y="-12" text-anchor="middle">Ø ${fmt(L)} m</text>`;
+    return g+`</g></svg>`;}
   // no celular, jardim comprido fica em pé para caber na tela
   const rot=isMob()&&L>W*1.3;
   const CW=rot?TH:TW,CH=rot?TW:TH;
@@ -2349,7 +2377,7 @@ function jcTop(c,lay){
   const R=(x,y,w,h,cls,rx)=>{const [a,b]=Q(x,y),[ww,hh]=rot?[h,w]:[w,h];return `<rect class="${cls}" x="${X(a*K)}" y="${X(b*K)}" width="${X(ww*K)}" height="${X(hh*K)}" rx="${rx}"/>`;};
   let g=`<svg viewBox="0 0 ${X(vw)} ${X(vh)}" font-family="inherit" role="img" aria-label="Jardim de chuva visto de cima: ${fmt(L)} por ${fmt(W)} metros"><g transform="translate(${pl},${pt})">`;
   g+=R(0,0,TW,TH,'jc-bd',10)+R(m,m,L,W,'jc-tl',8)+R(m+i,m+i,L-2*i,W-2*i,'jc-fd',6)+R(m,m,L,W,'jc-edge',8);
-  lay.pts.forEach(q=>{const r=Math.max(3,Math.min(q.s.ep*.45,.35)*K),[x,y]=Q(q.x,q.y);
+  lay.pts.forEach(q=>{const nn=Math.min(9,...lay.pts.filter(o=>o!==q).map(o=>Math.hypot(o.x-q.x,o.y-q.y))),r=Math.max(3,Math.min(q.s.ep*.45,.35,nn*.48)*K),[x,y]=Q(q.x,q.y);
     g+=`<circle class="p-${q.s.e}" data-sp="${q.s.id}" cx="${X(x*K)}" cy="${X(y*K)}" r="${X(r)}"><title>${esc(q.s.n)}</title></circle>`;
     if(r>=7)g+=`<text class="lab ${darkLab(q.s.e)}" data-sp="${q.s.id}" x="${X(x*K)}" y="${X(y*K)}">${esc(q.s.a)}</text>`;});
   const arrow=(x1,y1,x2,y2)=>{const [a1,b1]=Q(x1,y1),[a2,b2]=Q(x2,y2);const dx=Math.sign(a2-a1),dy=Math.sign(b2-b1);
@@ -2393,7 +2421,7 @@ function jcPanel(p){
   let h=`<section class="panel card" aria-labelledby="t-jc"><div class="head"><h2 id="t-jc">4. Projeto do jardim de chuva <button type="button" class="zinfo" data-ibox="jcInfo" aria-expanded="false" aria-controls="jcInfo" aria-label="Como o tamanho é calculado" title="Como o tamanho é calculado">i</button></h2>
     <div class="seg" id="jcvista"><button type="button" data-v="cima" aria-pressed="${cima}">Vista de cima</button><button type="button" data-v="corte" aria-pressed="${!cima}">Corte</button></div></div>
     <div class="ibox" id="jcInfo" hidden><p>O jardim deve ter de 10 a 15% da área que escoa para ele: abaixo de 10%, transborda com mais frequência nas chuvas fortes${jcRef('GON')}. O app usa 15% para solo argiloso e 10% para solo arenoso. Num jardim do Rio de Janeiro escavado a 1 m e cheio de mistura arenosa, 6,3% já bastou, mas esse resultado vale para aquele solo${jcRef('GON')}.</p><p>Com 10% da área, o fundo fica cerca de 15 cm abaixo do chão em volta, a lâmina de água${jcRef('GON')}. Jardins com mais de 40 cm de solo preparado seguram mais água${jcRef('GON')}. A água deve sumir algumas horas depois da chuva, e o ladrão leva o excesso das chuvas maiores${jcRef('MBP')}.</p><p>As três zonas vêm de Okimoto e Santos${jcRef('OKI')}. As espécies são as nativas indicadas para jardim de chuva por Pinheiro${jcRef('MBP')}.</p></div>
-    <div class="stats"><div class="stat"><b>${fmt(c.A,0)} m²</b><span>escoam para o jardim</span></div><div class="stat"><b>${fmt(c.L)} × ${fmt(c.W)} m</b><span>${Math.round(c.pct*100)}% dessa área</span></div><div class="stat"><b>${fmt(c.vol,0)} L</b><span>na lâmina de ${cm_(c.lam)}</span></div></div>
+    <div class="stats"><div class="stat"><b>${fmt(c.A,0)} m²</b><span>escoam para o jardim</span></div><div class="stat"><b>${c.round?'Ø '+fmt(c.L)+' m':fmt(c.L)+' × '+fmt(c.W)+' m'}</b><span>${Math.round(c.pct*100)}% dessa área</span></div><div class="stat"><b>${fmt(c.vol,0)} L</b><span>na lâmina de ${cm_(c.lam)}</span></div></div>
     <div class="drawing plain">${cima?jcTop(c,lay):jcCorte(c,lay)}</div>`;
   const sp=['f','t','b'].map(k=>({k,s:lay.z[k]}));
   h+=`<ul class="jc-zl">${sp.map(({k,s})=>`<li><b>${JC_ZN[k]}</b> <span class="hint">${JC_ZD[k]}:</span> ${s.length?s.map(x=>`<span data-sp="${x.id}">${esc(x.n)} (${cnt[x.id]||0})</span>`).join(', '):'<i>nenhuma planta escolhida para esta zona</i>'}</li>`).join('')}</ul>`;
@@ -2401,7 +2429,7 @@ function jcPanel(p){
   if(lay.fora.length)h+=`<div class="nopot" role="note"><span class="cap-ico" aria-hidden="true">!</span><div><b>Fora do jardim de chuva</b><span>${esc(lay.fora.map(s=>s.n).join(', '))} não ${lay.fora.length>1?'estão':'está'} entre as plantas indicadas para jardim de chuva. Plante fora da depressão, ou troque por plantas do grupo Jardim de chuva.</span></div></div>`;
   h+=`<details class="hint-d"><summary><span class="zinfo" aria-hidden="true">i</span>Como construir</summary><ol class="jc-steps">
     <li><b>Lugar:</b> num ponto baixo, onde a água já se junta, mas que não fica alagado o tempo todo${jcRef('MBP')}. Longe da fundação da casa: a orientação americana citada por Pinheiro pede 10 m, para não levar umidade às paredes${jcRef('MBP')}.</li>
-    <li><b>Cave</b> ${fmt(c.L)} × ${fmt(c.W)} m, de 40 cm a 1 m de fundo${jcRef('GON')}.</li>
+    <li><b>Cave</b> ${c.round?'um círculo de '+fmt(c.L)+' m de diâmetro':fmt(c.L)+' × '+fmt(c.W)+' m'}, de 40 cm a 1 m de fundo${jcRef('GON')}.</li>
     <li><b>Encha</b> com uma mistura de 1/3 de areia, 1/3 de terra vegetal e 1/3 de composto, sem impermeabilizar o fundo${jcRef('GON')}.</li>
     <li><b>Deixe o fundo</b> ${cm_(c.lam)} abaixo do chão em volta, com as beiradas em rampa (o talude), e faça um ladrão nessa altura para o excesso sair${jcRef('MBP')}.</li>
     <li><b>Leve a água</b> da calha ou do piso até uma ponta do jardim, por cano ou valeta.</li>
@@ -4128,7 +4156,7 @@ function update(fromInput){
   $('fD').hidden=S.pottipo==='floreira';
   alignSub();$('fC').hidden=$('fW').hidden=S.pottipo!=='floreira';
   if(!fromInput){$('pD').value=S.pD||30;$('pC').value=S.pC||60;$('pW').value=S.pW||20;$('pH').value=S.pH||25;}
-  const JC=S.modo==='chuva';$('chuvaF').hidden=!JC;syncSeg('jcOrig',S.jcOrig||'telhado');syncSeg('jcSolo',S.jcSolo||'argiloso');
+  const JC=S.modo==='chuva';$('chuvaF').hidden=!JC;syncSeg('jcOrig',S.jcOrig||'telhado');syncSeg('jcForma',S.jcForma||'ret');$('jcWF').hidden=S.jcForma==='red';syncSeg('jcSolo',S.jcSolo||'argiloso');
   if(!fromInput){$('inJcA').value=S.jcA||30;$('inJcW').value=S.jcW||1.5;}
   $('formaF').hidden=S.modo==='vaso'||JC;
   $('sec-solo').hidden=S.modo==='vaso';$('nPlantas').textContent=S.modo==='vaso'?'2':'3';
