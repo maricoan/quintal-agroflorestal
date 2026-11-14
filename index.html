@@ -2333,7 +2333,11 @@ const JC_ZONA={vedelia:'f',canademacaco:'f',elegante:'f',begoniabrejo:'f',helico
 const JC_ARV=['inga','embauba','salgueiro','guapuruvu','urucum','jucara','mulungu','patadevaca','angico','sapucaia','a_cedrelafissilis','a_cabraleacanjerana','peitodepombo','pindaiba'];
 const JC_ZN={f:'Fundo',t:'Talude',b:'Borda'};
 const JC_ZD={f:'encharca a cada chuva',t:'úmido, mas drena',b:'mais seca, em volta da depressão'};
-const JC_MARG=.4; // faixa de borda desenhada em volta da depressão (m)
+const JC_MARG=.4;
+const JC_ENT={telhado:'calha',piso:'piso',aclive:'aclive'};
+const jcEnt=()=>JC_ENT[S.jcOrig||'telhado'];
+// biovaleta em degraus antes da entrada (Pinheiro, 2017: células escalonadas em terreno inclinado)
+const jcBio=(x1,yc)=>[0,1,2].map(k=>`<rect class="jc-edge" x="${(x1-96+k*30).toFixed(1)}" y="${(yc-9+k*3).toFixed(1)}" width="26" height="12" rx="3"/>`).join('')+`<text class="jc-zs" x="${(x1-96).toFixed(1)}" y="${(yc+24).toFixed(1)}">biovaleta</text>`; // faixa de borda desenhada em volta da depressão (m)
 const jcRef=k=>REFS[k]&&REFS[k].n?`<sup class="ref" title="${esc(REFS[k].t)}">${REFS[k].n}</sup>`:'';
 // tamanho: 10 a 15% da área que escoa (Bortolini e Zanin, 2018, em Gondim, 2024); 15% no solo argiloso, 10% no arenoso.
 // Lâmina de 15 cm com jardim de 10% (ACES, em Gondim, 2024).
@@ -2374,13 +2378,13 @@ function jcLayout(sel,c){
   return {pts,z,fora};}
 function jcTop(c,lay){
   const m=JC_MARG,L=c.L,W=c.W,i=c.i,TW=L+2*m,TH=W+2*m;
-  if(c.round){const R=L/2,K=Math.max(30,Math.min(150,(isMob()?300:420)/TW)),pl=44,pt=40,pr=isMob()?44:96,pb=34,X=n=>n.toFixed(1),C=(m+R)*K;
+  if(c.round){const R=L/2,K=Math.max(30,Math.min(150,(isMob()?300:420)/TW)),pl=S.jcOrig==='aclive'&&!isMob()?140:44,pt=40,pr=isMob()?44:96,pb=34,X=n=>n.toFixed(1),C=(m+R)*K;
     let g=`<svg viewBox="0 0 ${X(TW*K+pl+pr)} ${X(TH*K+pt+pb)}" role="img" aria-label="Jardim de chuva redondo visto de cima: ${fmt(L)} metros de diâmetro"><g transform="translate(${pl},${pt})">`;
     g+=`<circle class="jc-bd" cx="${X(C)}" cy="${X(C)}" r="${X((R+m)*K)}"/><circle class="jc-tl" cx="${X(C)}" cy="${X(C)}" r="${X(R*K)}"/><circle class="jc-fd" cx="${X(C)}" cy="${X(C)}" r="${X(Math.max(0,R-i)*K)}"/><circle class="jc-edge" cx="${X(C)}" cy="${X(C)}" r="${X(R*K)}"/>`;
     lay.pts.forEach(q=>{const nn=Math.min(9,...lay.pts.filter(o=>o!==q).map(o=>Math.hypot(o.x-q.x,o.y-q.y))),r=Math.max(3,Math.min(q.s.ep*.45,.35,nn*.48)*K);
       g+=`<circle class="p-${q.s.e}" data-sp="${q.s.id}" cx="${X(q.x*K)}" cy="${X(q.y*K)}" r="${X(r)}"><title>${esc(q.s.n)}</title></circle>`;
       if(r>=7)g+=`<text class="lab ${darkLab(q.s.e)}" data-sp="${q.s.id}" x="${X(q.x*K)}" y="${X(q.y*K)}">${esc(q.s.a)}</text>`;});
-    g+=`<path class="jc-ar" d="M-30,${X(C)} H${X(m*K-4)} M${X(m*K-12)},${X(C-6)} L${X(m*K-4)},${X(C)} L${X(m*K-12)},${X(C+6)}"/><text class="jc-zs" x="-30" y="${X(C-10)}">água</text>`;
+    g+=`<path class="jc-ar" d="M-30,${X(C)} H${X(m*K-4)} M${X(m*K-12)},${X(C-6)} L${X(m*K-4)},${X(C)} L${X(m*K-12)},${X(C+6)}"/><text class="jc-zs" x="-30" y="${X(C-10)}">${jcEnt()}</text>`+(S.jcOrig==='aclive'?jcBio(-30,C):'');
     g+=`<path class="jc-ar" d="M${X((m+L)*K+4)},${X(C)} H${X(TW*K+30)} M${X(TW*K+22)},${X(C-6)} L${X(TW*K+30)},${X(C)} L${X(TW*K+22)},${X(C+6)}"/>`+(isMob()?'':`<text class="jc-zs" x="${X(TW*K+34)}" y="${X(C+4)}">ladrão</text>`);
     g+=`<text class="s-dim" x="${X(C)}" y="-12" text-anchor="middle">Ø ${fmt(L)} m</text>`;
     return g+`</g></svg>`;}
@@ -2388,7 +2392,7 @@ function jcTop(c,lay){
   const rot=isMob()&&L>W*1.3;
   const CW=rot?TH:TW,CH=rot?TW:TH;
   const K=rot?Math.max(30,Math.min(150,300/CW,640/CH)):Math.max(30,Math.min(150,620/Math.max(TW,TH*1.6)));
-  const pl=rot?44:40,pt=rot?40:40,pr=rot?44:96,pb=rot?40:34;
+  const pl=rot?44:(S.jcOrig==='aclive'?140:40),pt=rot?40:40,pr=rot?44:96,pb=rot?40:34;
   const X=n=>n.toFixed(1),vw=CW*K+pl+pr,vh=CH*K+pt+pb;
   const Q=(x,y)=>rot?[y,x]:[x,y];
   const R=(x,y,w,h,cls,rx)=>{const [a,b]=Q(x,y),[ww,hh]=rot?[h,w]:[w,h];return `<rect class="${cls}" x="${X(a*K)}" y="${X(b*K)}" width="${X(ww*K)}" height="${X(hh*K)}" rx="${rx}"/>`;};
@@ -2402,9 +2406,9 @@ function jcTop(c,lay){
   const yc=m+W/2;
   g+=arrow(-28/K,yc,m-.03,yc)+arrow(m+L+.03,yc,TW+28/K,yc);
   const tx=(x,y,t,anc,dy)=>{const [a,b]=Q(x,y);return `<text class="jc-zs" x="${X(a*K)}" y="${X(b*K+(dy||0))}" text-anchor="${anc}">${t}</text>`;};
-  if(rot){g+=`<text class="jc-zs" x="${X(yc*K+12)}" y="-22">água</text>`;g+=`<text class="jc-zs" x="${X(yc*K+12)}" y="${X(TW*K+30)}">ladrão</text>`;
+  if(rot){g+=`<text class="jc-zs" x="${X(yc*K+12)}" y="-22">${jcEnt()}</text>`;g+=`<text class="jc-zs" x="${X(yc*K+12)}" y="${X(TW*K+30)}">ladrão</text>`;
     g+=`<text class="s-dim" transform="translate(-14 ${X((m+L/2)*K)}) rotate(-90)" text-anchor="middle">${fmt(L)} m</text>`;}
-  else{g+=`<text class="jc-zs" x="-30" y="${X(yc*K-10)}">água</text><text class="jc-zs" x="${X(TW*K+34)}" y="${X(yc*K+4)}">ladrão</text>`;
+  else{g+=(S.jcOrig==='aclive'?jcBio(-30,yc*K):'')+`<text class="jc-zs" x="-30" y="${X(yc*K-10)}">${jcEnt()}</text><text class="jc-zs" x="${X(TW*K+34)}" y="${X(yc*K+4)}">ladrão</text>`;
     g+=`<text class="s-dim" x="${X((m+L/2)*K)}" y="-12" text-anchor="middle">${fmt(L)} m</text>`;
     g+=`<text class="jc-zs" x="${X(TW*K/2)}" y="${X(TH*K+20)}" text-anchor="middle">faixa externa: borda · anel: talude · centro: fundo</text>`;}
   return g+`</g></svg>`;}
@@ -2439,6 +2443,7 @@ function jcPanel(p){
     <div class="seg" id="jcvista"><button type="button" data-v="cima" aria-pressed="${cima}">Vista de cima</button><button type="button" data-v="corte" aria-pressed="${!cima}">Corte</button></div></div>
     <div class="ibox" id="jcInfo" hidden><p>O jardim deve ter de 10 a 15% da área que escoa para ele: abaixo de 10%, transborda com mais frequência nas chuvas fortes${jcRef('GON')}. O app usa 15% para solo argiloso e 10% para solo arenoso. Num jardim do Rio de Janeiro escavado a 1 m e cheio de mistura arenosa, 6,3% já bastou, mas esse resultado vale para aquele solo${jcRef('GON')}.</p><p>Com 10% da área, o fundo fica cerca de 15 cm abaixo do chão em volta, a lâmina de água${jcRef('GON')}. Jardins com mais de 40 cm de solo preparado seguram mais água${jcRef('GON')}. A água deve sumir algumas horas depois da chuva, e o ladrão leva o excesso das chuvas maiores${jcRef('MBP')}.</p><p>As três zonas vêm de Okimoto e Santos${jcRef('OKI')}. As espécies são as nativas indicadas para jardim de chuva por Pinheiro${jcRef('MBP')}.</p></div>
     <div class="stats"><div class="stat"><b>${fmt(c.A,0)} m²</b><span>escoam para o jardim</span></div><div class="stat"><b>${c.round?'Ø '+fmt(c.L)+' m':fmt(c.L)+' × '+fmt(c.W)+' m'}</b><span>${Math.round(c.pct*100)}% dessa área</span></div><div class="stat"><b>${fmt(c.vol,0)} L</b><span>na lâmina de ${cm_(c.lam)}</span></div></div>
+    <p class="hint jc-orig">${S.jcOrig==='aclive'?'<b>Água de aclive:</b> chega com força e arrasta terra. O desenho mostra uma biovaleta em degraus antes da entrada, para frear a enxurrada.':S.jcOrig==='piso'?'<b>Água de piso ou garagem:</b> traz de 1 a 3 vezes mais óleos e metais que a do telhado. Use espécies resistentes e veja o aviso em Ajustes.':'<b>Água do telhado:</b> a mais limpa para o jardim de chuva. Chega pela calha, por cano.'}</p>
     <div class="drawing plain">${cima?jcTop(c,lay):jcCorte(c,lay)}</div>`;
   const sp=['f','t','b'].map(k=>({k,s:lay.z[k]}));
   h+=`<ul class="jc-zl">${sp.map(({k,s})=>`<li><b>${JC_ZN[k]}</b> <span class="hint">${JC_ZD[k]}:</span> ${s.length?s.map(x=>`<span data-sp="${x.id}">${esc(x.n)} (${cnt[x.id]||0})</span>`).join(', '):'<i>nenhuma planta escolhida para esta zona</i>'}</li>`).join('')}</ul>`;
@@ -2449,7 +2454,7 @@ function jcPanel(p){
     <li><b>Cave</b> ${c.round?'um círculo de '+fmt(c.L)+' m de diâmetro':fmt(c.L)+' × '+fmt(c.W)+' m'}, de 40 cm a 1 m de fundo${jcRef('GON')}.</li>
     <li><b>Encha</b> com uma mistura de 1/3 de areia, 1/3 de terra vegetal e 1/3 de composto, sem impermeabilizar o fundo${jcRef('GON')}.</li>
     <li><b>Deixe o fundo</b> ${cm_(c.lam)} abaixo do chão em volta, com as beiradas em rampa (o talude), e faça um ladrão nessa altura para o excesso sair${jcRef('MBP')}.</li>
-    <li><b>Leve a água</b> da calha ou do piso até uma ponta do jardim, por cano ou valeta.</li>
+    ${S.jcOrig==='aclive'?`<li><b>Freie a enxurrada:</b> antes do jardim, faça uma biovaleta em degraus, células rasas uma abaixo da outra, para a água chegar devagar e sem arrastar terra${jcRef('MBP')}.</li>`:S.jcOrig==='piso'?`<li><b>Leve a água do piso</b> por uma valeta até uma ponta do jardim. Ela traz mais óleos e metais que a do telhado: use as plantas mais resistentes${jcRef('GON')}.</li>`:`<li><b>Leve a água da calha</b> por cano até uma ponta do jardim. É a água mais limpa para o jardim de chuva${jcRef('GON')}.</li>`}
     <li><b>Plante por zonas:</b> as que aguentam encharcar no fundo, as de solo úmido no talude e as de solo drenado na borda. Misture alturas: rasteiras, arbustos e plantas maiores seguram mais poluentes do que uma espécie só${jcRef('GON')}.</li></ol></details>`;
   {const ks=['GON','OKI','MBP'].concat(p.sel.some(s=>s.src==='TF')?['TF']:[]);h+=`<details class="refs-d"><summary>Fontes do jardim de chuva (${ks.length})</summary><ol class="refs">${ks.map(k=>REFS[k]).sort((x,y)=>x.n-y.n).map(v=>`<li value="${v.n}">${esc(v.t)} <a href="${v.u}" target="_blank" rel="noopener">Abrir</a></li>`).join('')}</ol></details>`;}
   if(!p.sel.length)h+=emptyState(`<b class="es-t">Como começar seu jardim de chuva</b></p><ol class="es-passos"><li><b>Espaço:</b> informe quantos m² de telhado ou piso escoam para o jardim e a largura que ele pode ter.</li><li><b>Plantas:</b> abra o grupo Jardim de chuva na lista e escolha ao menos uma planta para cada zona: fundo, talude e borda.</li><li><b>Projeto:</b> o app calcula o tamanho, mostra o corte com as camadas e distribui as mudas por zona.</li></ol><p>`);
