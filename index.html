@@ -2503,7 +2503,7 @@ function jcCorte3D(c,lay,sel){
   const y1d=yc0+hd,y1f=yc0+hf,SW=Math.max(4,FS*.45);
   const seg=(pts,cl)=>`<polyline class="jc-zseg jc-k-${cl}" style="stroke-width:${SW.toFixed(1)}" points="${P(pts.map(([y,z])=>iso(XL,y,z)))}"/>`;
   t+=seg([[0,0],[y0d,0]],'bd')+seg([[y1d,0],[TH,0]],'bd')+seg([[y0d,0],[y0f,-lam]],'tl')+seg([[y1f,-lam],[y1d,0]],'tl')+seg([[y0f,-lam],[y1f,-lam]],'fd');
-  const ANC=[['Lâmina de água '+cm_(lam),iso(XL,yc0+hf*.35,-lam*.45),'wl'],['Ladrão: saída do excesso',iso(XL,yc0+hd*.85,-.01),'wl']];
+  const ANC=[['Lâmina de água '+cm_(lam),iso(XL,yc0+hf*.35,-lam*.45),'wl']];
   const BH=Math.round(FS*1.8),GAP=Math.round(FS*.7),bx0=Math.max(...ANC.map(x=>x[1][0]))+FS*4;
   const ys=ANC.map(x=>x[1][1]),y0=Math.min(...ys)-30,tot=ANC.length*(BH+GAP)-GAP,yStart=Math.max(y0,(Math.min(...ys)+Math.max(...ys))/2-tot/2);
   const order=ANC.map((x,k)=>k).sort((p,q)=>ANC[p][1][1]-ANC[q][1][1]);
@@ -2514,17 +2514,20 @@ function jcCorte3D(c,lay,sel){
     t+=`<path class="jc-ah jc-k-${cl}" d="M${tx.toFixed(1)},${ty.toFixed(1)} L${(tx-ux*hl-uy*hw).toFixed(1)},${(ty-uy*hl+ux*hw).toFixed(1)} L${(tx-ux*hl+uy*hw).toFixed(1)},${(ty-uy*hl-ux*hw).toFixed(1)} Z"/>`;
     t+=`<rect class="jc-bx jc-c-${cl}" x="${bx0.toFixed(1)}" y="${by.toFixed(1)}" width="${bw.toFixed(1)}" height="${BH}" rx="${(FS*.45).toFixed(1)}" style="stroke-width:${sw.toFixed(1)}"/><rect class="jc-k-${cl} jc-tab" x="${bx0.toFixed(1)}" y="${by.toFixed(1)}" width="${(FS*.55).toFixed(1)}" height="${BH}" rx="${(FS*.3).toFixed(1)}"/><text class="jc-bt" style="font-size:${FS}px" x="${(bx0+FS*.95).toFixed(1)}" y="${(my+FS*.36).toFixed(1)}">${lab}</text>`;});
   // direção da água: entrada (calha, piso ou aclive) na ponta esquerda e ladrão na ponta do corte, como na vista de cima
-  {const zA=.06,ar=(x1,x2,lab,dir)=>{const [a1,b1]=iso(x1,yc0,zA),[a2,b2]=iso(x2,yc0,zA),dx=a2-a1,dy=b2-b1,dl=Math.hypot(dx,dy)||1,ux=dx/dl,uy=dy/dl,hl=FS*.9,hw=FS*.5;
+  {const zA=.06,ar=(p1,p2,lab,dir)=>{const [a1,b1]=p1,[a2,b2]=p2,dx=a2-a1,dy=b2-b1,dl=Math.hypot(dx,dy)||1,ux=dx/dl,uy=dy/dl,hl=FS*.9,hw=FS*.5;
       let o=`<path class="jc-ar" style="stroke-width:${(FS/4).toFixed(1)}" d="M${a1.toFixed(1)},${b1.toFixed(1)} L${(a2-ux*hl).toFixed(1)},${(b2-uy*hl).toFixed(1)}"/>`;
       o+=`<path class="jc-ah jc-k-wl" d="M${a2.toFixed(1)},${b2.toFixed(1)} L${(a2-ux*hl-uy*hw).toFixed(1)},${(b2-uy*hl+ux*hw).toFixed(1)} L${(a2-ux*hl+uy*hw).toFixed(1)},${(b2-uy*hl-ux*hw).toFixed(1)} Z"/>`;
-      const [lx,ly]=dir<0?[a1,b1]:[a2,b2],bw=lab.length*FS*.62+FS*1.6;const X0=dir<0?lx-bw-FS*.3:lx+FS*.4,Y0=ly-FS*2.6;
-      o+=`<rect class="jc-bx jc-c-wl" x="${X0.toFixed(1)}" y="${Y0.toFixed(1)}" width="${bw.toFixed(1)}" height="${BH}" rx="${(FS*.45).toFixed(1)}"/><rect class="jc-k-wl jc-tab" x="${X0.toFixed(1)}" y="${Y0.toFixed(1)}" width="${(FS*.55).toFixed(1)}" height="${BH}" rx="${(FS*.3).toFixed(1)}"/><text class="jc-bt" style="font-size:${FS}px" x="${(X0+FS*.95).toFixed(1)}" y="${(Y0+BH/2+FS*.36).toFixed(1)}">${lab}</text>`;
+      // texto solto, em preto, junto da ponta da seta
+      const [lx,ly]=dir<0?[a1,b1]:[a2,b2];
+      o+=`<text class="jc-bt jc-wtxt" style="font-size:${FS}px" x="${(dir<0?lx-FS*.4:lx+FS*.5).toFixed(1)}" y="${(ly+(dir<0?FS*1.3:FS*.35)).toFixed(1)}" text-anchor="${dir<0?'end':'start'}">${lab}</text>`;
       return o;};
     const ent={telhado:'Entrada: calha',piso:'Entrada: piso',aclive:'Entrada: aclive'}[S.jcOrig||'telhado'];
-    let w=ar(-1.1,m+.15,ent,-1);
+    let w=ar(iso(-1.1,yc0,zA),iso(m+.15,yc0,zA),ent,-1);
     if(S.jcOrig==='aclive'){[0,1,2].forEach(k=>{const x0=-1.9+k*.28,z0=.05+(2-k)*.12;w+=`<polygon class="jc-edge" points="${P([iso(x0,yc0-.25,z0),iso(x0+.24,yc0-.25,z0),iso(x0+.24,yc0+.25,z0),iso(x0,yc0+.25,z0)])}"/>`;});}
+    // ladrão: a água em excesso transborda pela borda do lado de fora, junto ao corte
+    const LT='Ladrão: saída do excesso',LP=iso(XL-.05,-.6,zA);w+=ar(iso(XL-.05,yc0-hf,zA),LP,LT,1);var JC_LX=LP[0]+FS*.5+LT.length*FS*.6+20;
     t=w+t;}
-  const extraW=Math.max(0,bx0+Math.max(...ANC.map(x=>x[0].length))*FS*.62+30);var JC_YB=yStart+tot;
+  const extraW=Math.max(0,bx0+Math.max(...ANC.map(x=>x[0].length))*FS*.62+30,JC_LX);var JC_YB=yStart+tot;
   svg=svg.replace(/<polygon class="s-(side1|side2|ground)"[^>]*\/>/g,'');
   svg=svg.replace(/<text class="s-dim"[^>]*>[^<]*<\/text>/g,'');
   svg=svg.replace(/(<\/defs>)/,`$1${b}`);
