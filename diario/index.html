@@ -168,12 +168,12 @@ td select{width:auto;padding:4px 6px;font-size:.85rem}
 #pb-m-planta{background:var(--verde3)} #pb-m-3d{background:color-mix(in srgb, var(--verde3) 55%, #ffffff)}
 #pb-m-planta[aria-pressed="true"],#pb-m-3d[aria-pressed="true"]{color:var(--verde3-tinta);font-weight:700;box-shadow:inset 0 0 0 2px var(--mata)}
 #pb-m-planta:focus-visible,#pb-m-3d:focus-visible{outline-color:var(--mata)}
-#pb-a6,#pb-a7{color:var(--fg)}
-#pb-a6{background:var(--amarelo-6)} #pb-a7{background:var(--amarelo-7)}
+#pb-a4,#pb-a6,#pb-a7{color:var(--fg)}
+#pb-a4{background:var(--amarelo-4)} #pb-a6{background:var(--amarelo-6)} #pb-a7{background:var(--amarelo-7)}
 .seg.areas-sel{border:none;overflow:visible;gap:6px}
 .seg.areas-sel button{border-radius:8px;border:2px solid transparent;padding:6px 14px}
-#pb-a6[aria-pressed="true"],#pb-a7[aria-pressed="true"]{background:var(--marrom);color:var(--marrom-tinta);border-color:var(--marrom-borda);font-weight:700;box-shadow:none}
-#pb-a6:focus-visible,#pb-a7:focus-visible{outline-color:var(--mata)}
+#pb-a4[aria-pressed="true"],#pb-a6[aria-pressed="true"],#pb-a7[aria-pressed="true"]{background:var(--marrom);color:var(--marrom-tinta);border-color:var(--marrom-borda);font-weight:700;box-shadow:none}
+#pb-a4:focus-visible,#pb-a6:focus-visible,#pb-a7:focus-visible{outline-color:var(--mata)}
 .pb-wrap{border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow-x:auto}
 #pb-svg{display:block;width:100%;min-width:320px;height:auto;touch-action:manipulation}
 #pb-svg .solo{fill:var(--mata-soft);stroke:var(--fg);stroke-width:2.5}
@@ -288,6 +288,7 @@ footer a{color:var(--mata)}
     <div id="painel-pb" hidden style="display:flex;flex-direction:column;gap:14px">
       <div class="bar">
         <div class="seg areas-sel" role="group" aria-label="Escolha a área">
+          <button type="button" id="pb-a4">Área 4</button>
           <button type="button" id="pb-a6">Área 6</button>
           <button type="button" id="pb-a7">Área 7</button>
         </div>
@@ -401,6 +402,15 @@ $("btn-marcar").addEventListener("click",()=>{ st.marcando = st.marcando ? null 
 /* planta baixa: medidas em metros, y cresce do fundo para a frente */
 const U = 100;
 const PB = {
+  a4:{ w:6, h:4.5, forma:{tipo:"poligono", pts:[[0,0],[6,0],[6,4.5],[0,4.5]]}, caminho:true, murodireito:true,
+       bananeiras:[[0.6,1.1],[0.6,2.7]],
+       plano:[
+         {nome:"Helicônia", pos:[[1.7,0.55],[2.9,0.55],[4.1,0.55],[5.3,0.55]]},
+         {nome:"Ora-pro-nóbis", pos:[[5.6,1.7],[5.6,2.9]]},
+         {nome:"Castanha-do-maranhão", pos:[[2.3,2.3]]},
+         {nome:"Amoreira", pos:[[4.1,2.5]]},
+         {nome:"Vedélia", pos:[[0.6,4.0],[1.5,4.0],[2.4,4.0],[3.3,4.0],[4.2,4.0],[5.1,4.0]]} ],
+       nota:"Plano de plantio de 17/11, ainda não plantado: as mudas aparecem tracejadas. Retângulo de 6 m de frente por 4,5 m de fundo, com o muro no fundo e à direita. Os círculos tracejados à esquerda marcam as bananeiras que já existem, em posição aproximada." },
   a6:{ w:3, h:3, forma:{tipo:"circulo", cx:1.5, cy:1.5, r:1.5},
        linhaSementes:{ passo:0.15, ordem:["cana-da-india","maravilha","amendoim-forrageiro"], trilhas:[{tipo:"arco", cx:1.5, cy:1.5, r:1.28, a1:25, a2:155}, {tipo:"anel", em:"pitanga", r:0.5}] },
        nota:"Círculo de 1,5 m de raio desenhado em escala. A posição dos muros em volta não está marcada." },
@@ -430,7 +440,7 @@ function dentro(f,x,y){
 const ESTRATOS = { emergente:{nome:"Emergente",cor:"var(--e-emergente)"}, alto:{nome:"Alto",cor:"var(--e-alto)"}, medio:{nome:"Médio",cor:"var(--e-medio)"}, baixo:{nome:"Baixo",cor:"var(--e-baixo)"} };
 const ESTRATO_PADRAO = { "pitanga":"medio", "cereja-do-rio-grande":"medio", "cabeludinha":"medio", "grumixama":"medio", "ora-pro-nobis":"medio", "margaridao":"medio", "assa-peixe":"medio",
   "castanha-do-maranhao":"alto", "dedaleira":"alto", "dedaleiro":"alto", "candeia":"alto", "bananeira":"alto", "mangueira":"emergente",
-  "amendoim-forrageiro":"baixo", "cana-da-india":"baixo", "maravilha":"baixo", "boldo":"baixo", "manjericao":"baixo", "lantana-roxa":"baixo", "taioba":"baixo" };
+  "amendoim-forrageiro":"baixo", "cana-da-india":"baixo", "maravilha":"baixo", "boldo":"baixo", "manjericao":"baixo", "lantana-roxa":"baixo", "taioba":"baixo", "heliconia":"medio", "amoreira":"medio", "vedelia":"baixo" };
 const slug = n => String(n||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim().replace(/\s+/g,"-");
 const estratoDe = p => (p.estrato && ESTRATOS[p.estrato]) ? p.estrato : (ESTRATO_PADRAO[slug(p.nome)] || null);
 const corEstrato = e => e ? ESTRATOS[e].cor : "var(--muted)";
@@ -443,14 +453,24 @@ function fichas(area){
     if (p.unidade==="sementes") out.push({key:p._id+"~s", nome:p.nome, rotulo:`${p.nome} · ${p.qtd||0} sementes`, sem:true, cor});
     else { const n=Math.min(40, Math.max(1, p.qtd||1)); for(let i=0;i<n;i++) out.push({key:`${p._id}~${i+1}`, nome:p.nome, rotulo: n>1 ? `${p.nome} ${i+1}` : p.nome, sem:false, cor}); }
   }
+  for (const it of ((PB[area]||{}).plano||[])){
+    const cor = corEstrato(estratoDe(it)), n=it.pos.length;
+    it.pos.forEach((xy,i)=>out.push({key:`plano:${slug(it.nome)}~${i+1}`, nome:it.nome, rotulo:(n>1?`${it.nome} ${i+1}`:it.nome)+" (plano)", plan:true, def:{x:xy[0],y:xy[1]}, cor}));
+  }
   return out;
+}
+function posicoes(area){
+  const salvo = st.pb[area]||{}, out={};
+  for (const t of fichas(area)) if (t.def && !(t.key in salvo)) out[t.key]=t.def;
+  return {...out, ...salvo};
 }
 function renderPlanta(){
   const area=st.pbArea, cfg=PB[area], svg=$("pb-svg");
+  $("pb-a4").setAttribute("aria-pressed", String(area==="a4"));
   $("pb-a6").setAttribute("aria-pressed", String(area==="a6"));
   $("pb-a7").setAttribute("aria-pressed", String(area==="a7"));
   $("pb-nota").textContent = cfg.nota + (st.edit ? " Arraste as mudas da lista para o desenho, ou toque numa muda e depois no lugar. Para tirar uma muda do desenho, arraste-a para fora." : "");
-  $("pb-legenda").replaceChildren(...Object.values(ESTRATOS).map(e=>h("span",{},h("i",{style:`background:${e.cor}`}),"Estrato "+e.nome.toLowerCase())), h("span",{},h("i",{style:"border:2px dashed var(--muted);box-sizing:border-box"}),"sementes"));
+  $("pb-legenda").replaceChildren(...Object.values(ESTRATOS).map(e=>h("span",{},h("i",{style:`background:${e.cor}`}),"Estrato "+e.nome.toLowerCase())), h("span",{},h("i",{style:"border:2px dashed var(--muted);box-sizing:border-box"}),cfg.plano ? "planejada (ainda não plantada)" : "sementes"));
   const pad=70, extra = cfg.caminho ? 90 : 0, W=cfg.w*U, H=cfg.h*U;
   svg.setAttribute("viewBox", `${-pad} ${-pad} ${W+2*pad} ${H+2*pad+extra}`);
   const f=cfg.forma;
@@ -470,13 +490,24 @@ function renderPlanta(){
     extras.push(s("text",{x:5.15*U,y:1.35*U,class:"rot existente-rot","text-anchor":"middle","dominant-baseline":"central"},"bananeira"));
     extras.push(s("rect",{x:-pad,y:H+40,width:W+2*pad,height:60,class:"caminho"}));
     extras.push(s("text",{x:W/2,y:H+76,class:"rot","text-anchor":"middle"},"caminho da viela"));
+  } else if (area==="a4"){
+    extras.push(s("line",{x1:0,y1:0,x2:W,y2:0,class:"muro"}));
+    extras.push(s("line",{x1:W,y1:0,x2:W,y2:H,class:"muro"}));
+    extras.push(s("text",{x:W/2,y:-34,class:"rot","text-anchor":"middle"},"muro do fundo"));
+    extras.push(s("text",{x:W+18,y:H/2,class:"rot","text-anchor":"middle",transform:`rotate(90 ${W+18} ${H/2})`},"muro direito"));
+    extras.push(s("text",{x:W/2,y:H+26,class:"cota","text-anchor":"middle"},"6 m"));
+    extras.push(s("text",{x:-14,y:H/2,class:"cota","text-anchor":"end"},"4,5 m"));
+    for (const [bx,by] of cfg.bananeiras) extras.push(s("circle",{cx:bx*U,cy:by*U,r:48,class:"existente"}));
+    extras.push(s("text",{x:cfg.bananeiras[0][0]*U,y:-14,class:"rot existente-rot","text-anchor":"middle"},"bananeiras"));
+    extras.push(s("rect",{x:-pad,y:H+40,width:W+2*pad,height:60,class:"caminho"}));
+    extras.push(s("text",{x:W/2,y:H+76,class:"rot","text-anchor":"middle"},"caminho da viela"));
   } else {
     extras.push(s("line",{x1:f.cx*U,y1:f.cy*U,x2:(f.cx+f.r)*U,y2:f.cy*U,class:"escala","stroke-dasharray":"6 4"}));
     extras.push(s("text",{x:(f.cx+f.r/2)*U,y:f.cy*U-10,class:"cota","text-anchor":"middle"},"r = 1,5 m"));
     extras.push(s("text",{x:f.cx*U,y:H+30,class:"cota","text-anchor":"middle"},"3 m"));
   }
   const ex=-pad+16, ey=(cfg.caminho? H+30 : H+50);
-  const escala = area==="a7" ? null : s("g",{},s("line",{x1:ex,y1:ey,x2:ex+U,y2:ey,class:"escala"}),s("line",{x1:ex,y1:ey-6,x2:ex,y2:ey+6,class:"escala"}),s("line",{x1:ex+U,y1:ey-6,x2:ex+U,y2:ey+6,class:"escala"}),s("text",{x:ex+U/2,y:ey-10,class:"cota","text-anchor":"middle"},"1 m"));
+  const escala = area!=="a6" ? null : s("g",{},s("line",{x1:ex,y1:ey,x2:ex+U,y2:ey,class:"escala"}),s("line",{x1:ex,y1:ey-6,x2:ex,y2:ey+6,class:"escala"}),s("line",{x1:ex+U,y1:ey-6,x2:ex+U,y2:ey+6,class:"escala"}),s("text",{x:ex+U/2,y:ey-10,class:"cota","text-anchor":"middle"},"1 m"));
   const LS = cfg.linhaSementes, legendaLinha=[];
   if (LS){
     const sems = st.plantas.filter(p=>p.area===area && p.unidade==="sementes" && p.status!=="morreu")
@@ -491,11 +522,12 @@ function renderPlanta(){
     }
   }
   if (legendaLinha.length) $("pb-legenda").append(h("span",{style:"flex-basis:100%;height:0"}), h("span",{},"Semeadura intercalada:"), ...legendaLinha);
-  const pos = st.pb[area]||{}, todas=fichas(area);
+  const pos = posicoes(area), todas=fichas(area);
   const toks = todas.filter(t=>pos[t.key]).map(t=>{
     const p=pos[t.key];
-    const g=s("g",{class:`tok${t.sem?" sem":""}${st.selPB===t.key?" sel":""}`,transform:`translate(${p.x*U},${p.y*U})`,tabindex:st.edit?"0":null,"aria-label":t.rotulo},
-      s("title",{},t.rotulo), s("circle",{r:16,style:t.sem?`stroke:${t.cor}`:`fill:${t.cor}`}), s("text",{class:"ini",style:t.sem?`fill:${t.cor}`:null},iniciais(t.nome)), s("text",{class:"nome",y:32},t.rotulo));
+    const tr=t.sem||t.plan;
+    const g=s("g",{class:`tok${tr?" sem":""}${st.selPB===t.key?" sel":""}`,transform:`translate(${p.x*U},${p.y*U})`,tabindex:st.edit?"0":null,"aria-label":t.rotulo},
+      s("title",{},t.rotulo), s("circle",{r:16,style:tr?`stroke:${t.cor}`:`fill:${t.cor}`}), s("text",{class:"ini",style:tr?`fill:${t.cor}`:null},iniciais(t.nome)), s("text",{class:"nome",y:32},t.plan ? t.rotulo.replace(" (plano)","") : t.rotulo));
     if (st.edit) g.addEventListener("pointerdown",ev=>iniciarArraste(ev,t.key,t.rotulo));
     return g;
   });
@@ -504,7 +536,7 @@ function renderPlanta(){
   $("pb-bandeja-box").hidden = !st.edit;
   $("pb-bandeja-titulo").textContent = soltas.length ? "Mudas para posicionar" : (todas.length ? "Todas as mudas desta área estão no desenho" : "Nenhuma muda cadastrada nesta área");
   $("pb-bandeja").replaceChildren(...soltas.map(t=>{
-    const c=h("button",{type:"button",class:`chip${t.sem?" sem":""}`,"aria-pressed":String(st.selPB===t.key)},h("span",{class:"bola",style:t.sem?`border-color:${t.cor};color:${t.cor}`:`background:${t.cor}`},iniciais(t.nome)),t.rotulo);
+    const c=h("button",{type:"button",class:`chip${t.sem||t.plan?" sem":""}`,"aria-pressed":String(st.selPB===t.key)},h("span",{class:"bola",style:t.sem||t.plan?`border-color:${t.cor};color:${t.cor}`:`background:${t.cor}`},iniciais(t.nome)),t.rotulo);
     c.addEventListener("pointerdown",ev=>iniciarArraste(ev,t.key,t.rotulo));
     return c;
   }));
@@ -515,10 +547,10 @@ function renderPlanta(){
   const v3 = st.pbModo==="3d";
   $("pb-wrap").hidden = v3; $("pb-legenda").hidden = v3; $("pb-3d").hidden = !v3;
   if (v3){ $("pb-bandeja-box").hidden = true; $("pb-sel").hidden = true; $("pb-msg").textContent="";
-    $("pb-nota").textContent = "Vista em 3D com os mesmos desenhos do Quintal Agroflorestal, mostrando as plantas já adultas. Aparecem as mudas posicionadas na planta baixa" + (cfg.linhaSementes ? ", as sementes intercaladas" : "") + (area==="a7" ? " e a touceira de bananeira." : ".");
+    $("pb-nota").textContent = "Vista em 3D com os mesmos desenhos do Quintal Agroflorestal, mostrando as plantas já adultas. Aparecem as mudas posicionadas na planta baixa" + (cfg.linhaSementes ? ", as sementes intercaladas" : "") + (area==="a7" ? " e a touceira de bananeira." : area==="a4" ? ", o plano de plantio e as bananeiras que já existem." : ".");
     render3D(); }
 }
-const APP_ID = {"pitanga":"pitanga","cereja-do-rio-grande":"cereja","dedaleira":"dedaleira","dedaleiro":"dedaleira","ora-pro-nobis":"orapronobis","cana-da-india":"canaindia","maravilha":"maravilha","amendoim-forrageiro":"amendoim","boldo":"boldo","manjericao":"manjericao","margaridao":"margaridao","cabeludinha":"cabeludinha","castanha-do-maranhao":"castanha","grumixama":"grumixama","candeia":"candeia","assa-peixe":"assapeixe","lantana-roxa":"lantana","taioba":"taioba","bananeira":"banana","mangueira":"manga"};
+const APP_ID = {"pitanga":"pitanga","cereja-do-rio-grande":"cereja","dedaleira":"dedaleira","dedaleiro":"dedaleira","ora-pro-nobis":"orapronobis","cana-da-india":"canaindia","maravilha":"maravilha","amendoim-forrageiro":"amendoim","boldo":"boldo","manjericao":"manjericao","margaridao":"margaridao","cabeludinha":"cabeludinha","castanha-do-maranhao":"castanha","grumixama":"grumixama","candeia":"candeia","assa-peixe":"assapeixe","lantana-roxa":"lantana","taioba":"taioba","bananeira":"banana","mangueira":"manga","heliconia":"heliconia","vedelia":"vedelia"};
 function especieApp(Q,p){
   const id=APP_ID[slug(p.nome)]; if(id && Q.BYID[id]) return Q.BYID[id];
   const e={emergente:"A",alto:"A",medio:"M",baixo:"B"}[estratoDe(p)]||"B";
@@ -528,7 +560,9 @@ const ponto3D = (s,x,y) => ({s, x, y, kind: s.arv ? "tree" : s.e==="M" ? "med" :
 function render3D(){
   const Q=window.QUINTAL, box=$("pb-3d");
   if(!Q){ box.textContent="A vista 3D não carregou. Recarregue a página."; return; }
-  const area=st.pbArea, cfg=PB[area], pos=st.pb[area]||{}, pts=[];
+  const area=st.pbArea, cfg=PB[area], pos=posicoes(area), pts=[];
+  for (const t of fichas(area)) if (t.plan && pos[t.key]) pts.push(ponto3D(especieApp(Q,{nome:t.nome}), pos[t.key].x, pos[t.key].y));
+  if (cfg.bananeiras && Q.BYID.banana) for (const [bx,by] of cfg.bananeiras) pts.push(ponto3D(Q.BYID.banana, bx, by));
   for (const p of st.plantas.filter(p=>p.area===area && p.status!=="morreu")){
     const s=especieApp(Q,p);
     for (const [k,v] of Object.entries(pos)){
@@ -576,7 +610,7 @@ function soltarArraste(ev){
 let ignorarClique=false;
 function colocar(key,cx,cy){
   const svg=$("pb-svg"), r=svg.getBoundingClientRect(), area=st.pbArea;
-  if(cx<r.left||cx>r.right||cy<r.top||cy>r.bottom){ if((st.pb[area]||{})[key]) salvarPos(area,key,null); else renderPlanta(); return; }
+  if(cx<r.left||cx>r.right||cy<r.top||cy>r.bottom){ if(posicoes(area)[key]) salvarPos(area,key,null); else renderPlanta(); return; }
   const pt=svg.createSVGPoint(); pt.x=cx; pt.y=cy;
   const m=pt.matrixTransform(svg.getScreenCTM().inverse());
   const x=Math.round(m.x/U*100)/100, y=Math.round(m.y/U*100)/100;
@@ -585,7 +619,7 @@ function colocar(key,cx,cy){
 }
 function avisoPB(t){ st.pbMsgFixa=true; $("pb-msg").textContent=t; setTimeout(()=>{ st.pbMsgFixa=false; renderPlanta(); },2500); }
 async function salvarPos(area,key,p){
-  const novo={...(st.pb[area]||{})}; if(p) novo[key]=p; else delete novo[key];
+  const novo={...(st.pb[area]||{})}; if(p) novo[key]=p; else if (key.startsWith("plano:")) novo[key]=null; else delete novo[key];
   st.pb[area]=novo; renderPlanta();
   try{ await st.db.doc("planta/"+area).set(novo); }catch{ avisoPB("Não foi possível salvar. Tente de novo."); }
 }
@@ -721,6 +755,7 @@ $("tab-registros").addEventListener("click",()=>{st.tab="registros";render();});
 $("tab-plantas").addEventListener("click",()=>{st.tab="plantas";render();});
 $("tab-pb").addEventListener("click",()=>{st.tab="pb";st.pbModo="planta";render();});
 $("tab-3d").addEventListener("click",()=>{st.tab="pb";st.pbModo="3d";st.selPB=null;render();});
+$("pb-a4").addEventListener("click",()=>{st.pbArea="a4";st.selPB=null;render();});
 $("pb-a6").addEventListener("click",()=>{st.pbArea="a6";st.selPB=null;render();});
 $("pb-a7").addEventListener("click",()=>{st.pbArea="a7";st.selPB=null;render();});
 $("btn-novo").addEventListener("click",()=>{
