@@ -230,11 +230,12 @@
    "area": "a4",
    "tipo": "plano",
    "titulo": "Plano de plantio da área 4",
-   "texto": "Do fundo para a frente:\n• Fundo: 4 helicônias.\n• Junto ao muro direito: 2 mudas de ora-pro-nóbis.\n• Na frente: 2 castanhas-do-maranhão.\n• Na frente de tudo: várias mudas de vedélia, cobrindo o chão.",
+   "texto": "Do fundo para a frente:\n• Fundo: 4 helicônias.\n• Junto ao muro direito: 2 mudas de ora-pro-nóbis.\n• Na frente: 1 castanha-do-maranhão e 1 amoreira.\n• Na frente de tudo: várias mudas de vedélia, cobrindo o chão.",
    "especies": [
     "heliconia",
     "ora-pro-nóbis",
     "castanha-do-maranhão",
+    "amoreira",
     "vedélia"
    ],
    "fotos": [],
