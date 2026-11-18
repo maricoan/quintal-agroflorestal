@@ -1,5 +1,5 @@
 {
- "atualizado": "21/10/2026",
+ "atualizado": "17/11/2026",
  "entradas": [
   {
    "area": "a1",
@@ -130,6 +130,48 @@
    "tipo": "observacao",
    "titulo": "Área 7 plantada",
    "_id": "depois-a7-20261021"
+  },
+  {
+   "area": "a5",
+   "criado": 1795051000005,
+   "data": "2026-11-17",
+   "especies": [],
+   "fotos": [
+    "566713323e2c0252481600c0a0eb9e12"
+   ],
+   "texto": "O chão da faixa está quase todo coberto de verde. A muda grande junto à borda de manilhas está firme, presa ao tutor.",
+   "tipo": "observacao",
+   "titulo": "Canteiro de aromáticas um mês depois",
+   "_id": "obs-a5-20261117"
+  },
+  {
+   "area": "a6",
+   "criado": 1795051000006,
+   "data": "2026-11-17",
+   "especies": [],
+   "fotos": [
+    "a076cedb55e61767956a2d25a878efa9",
+    "8242f32a34b91dc29cf382a6532c9eac"
+   ],
+   "texto": "As mudas tutoradas estão com folhas novas e o chão está ficando verde por baixo da palha de bananeira.",
+   "tipo": "observacao",
+   "titulo": "Área 6 um mês depois",
+   "_id": "obs-a6-20261117"
+  },
+  {
+   "area": "a7",
+   "criado": 1795051000007,
+   "data": "2026-11-17",
+   "especies": [
+    "amendoim-forrageiro"
+   ],
+   "fotos": [
+    "7c1e85fae51ebbf7919c585b2bc173b8"
+   ],
+   "texto": "O amendoim-forrageiro brotou e já forma tapete junto ao muro. As mudas de árvore tutoradas seguem de pé, com a palha de bananeira cobrindo o solo.",
+   "tipo": "observacao",
+   "titulo": "Área 7 um mês depois",
+   "_id": "obs-a7-20261117"
   },
   {
    "area": "a5",
