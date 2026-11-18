@@ -132,7 +132,7 @@ textarea{min-height:110px;resize:vertical}
 .meta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-family:var(--mono);font-size:.75rem;color:var(--muted)}
 .tipo{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:4px;color:var(--surface)}
 .t-plantio{background:var(--mata)} .t-observacao{background:var(--ardosia)} .t-manejo{background:var(--ocre)}
-.t-colheita{background:var(--grumixama)} .t-perda{background:var(--perda)} .t-mutirao{background:var(--basalto)}
+.t-colheita{background:var(--grumixama)} .t-plano{background:var(--marrom)} .t-perda{background:var(--perda)} .t-mutirao{background:var(--basalto)}
 .texto{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;max-width:65ch}
 .especies{display:flex;flex-wrap:wrap;gap:6px}
 .especie{font-size:.85rem;padding:1px 9px;border-radius:99px;background:var(--mata-soft);color:var(--fg)}
@@ -321,7 +321,7 @@ const AREAS = [
   {id:"a7", nome:"Trapézio do fundo", dim:"5,88 m de frente · 2,7 m dir. · 3,2 m esq. · 4 m de fundo · bananeiras à direita", luz:"sol"},
 ];
 const LUZ = {sol:"Sol", sombra:"Sombra", meia:"Semi-sombra"};
-const TIPOS = {plantio:"Plantio", observacao:"Observação", manejo:"Manejo", colheita:"Colheita", perda:"Perda", mutirao:"Mutirão"};
+const TIPOS = {plantio:"Plantio", observacao:"Observação", manejo:"Manejo", colheita:"Colheita", perda:"Perda", plano:"Plano", mutirao:"Mutirão"};
 const STATUS = {muda:"Muda aguardando", plantada:"Plantada", pegou:"Pegou", morreu:"Morreu"};
 const areaNome = id => { const a = AREAS.find(x=>x.id===id); return a ? `${a.id.slice(1)} · ${a.nome}` : (id==="geral" ? "Viela toda" : "Sem área"); };
 
