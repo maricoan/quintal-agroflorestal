@@ -404,13 +404,8 @@ const U = 100;
 const PB = {
   a4:{ w:6, h:4.5, forma:{tipo:"poligono", pts:[[0,0],[6,0],[6,4.5],[0,4.5]]}, caminho:true, murodireito:true,
        bananeiras:[[0.6,1.1],[0.6,2.7]],
-       plano:[
-         {nome:"Helicônia", pos:[[1.7,0.55],[2.9,0.55],[4.1,0.55],[5.3,0.55]]},
-         {nome:"Ora-pro-nóbis", pos:[[5.6,1.7],[5.6,2.9]]},
-         {nome:"Castanha-do-maranhão", pos:[[2.3,2.3]]},
-         {nome:"Amoreira", pos:[[4.1,2.5]]},
-         {nome:"Vedélia", pos:[[0.6,4.0],[1.5,4.0],[2.4,4.0],[3.3,4.0],[4.2,4.0],[5.1,4.0]]} ],
-       nota:"Plano de plantio de 17/11, ainda não plantado: as mudas aparecem tracejadas. Retângulo de 6 m de frente por 4,5 m de fundo, com o muro no fundo e à direita. Os círculos tracejados à esquerda marcam as bananeiras que já existem, em posição aproximada." },
+       plano:[],
+       nota:"Plano de plantio de 17/11, ainda não plantado: as mudas aguardando plantio aparecem tracejadas e passam a cheias quando forem marcadas como plantadas em Plantas por área. Retângulo de 6 m de frente por 4,5 m de fundo, com o muro no fundo e à direita. Os círculos tracejados à esquerda marcam as bananeiras que já existem, em posição aproximada." },
   a6:{ w:3, h:3, forma:{tipo:"circulo", cx:1.5, cy:1.5, r:1.5},
        linhaSementes:{ passo:0.15, ordem:["cana-da-india","maravilha","amendoim-forrageiro"], trilhas:[{tipo:"arco", cx:1.5, cy:1.5, r:1.28, a1:25, a2:155}, {tipo:"anel", em:"pitanga", r:0.5}] },
        nota:"Círculo de 1,5 m de raio desenhado em escala. A posição dos muros em volta não está marcada." },
@@ -451,7 +446,7 @@ function fichas(area){
     const cor = corEstrato(estratoDe(p));
     if (p.unidade==="sementes" && PB[area] && PB[area].linhaSementes) continue;
     if (p.unidade==="sementes") out.push({key:p._id+"~s", nome:p.nome, rotulo:`${p.nome} · ${p.qtd||0} sementes`, sem:true, cor});
-    else { const n=Math.min(40, Math.max(1, p.qtd||1)); for(let i=0;i<n;i++) out.push({key:`${p._id}~${i+1}`, nome:p.nome, rotulo: n>1 ? `${p.nome} ${i+1}` : p.nome, sem:false, cor}); }
+    else { const n=Math.min(40, Math.max(1, p.qtd||1)); for(let i=0;i<n;i++) out.push({key:`${p._id}~${i+1}`, nome:p.nome, rotulo: n>1 ? `${p.nome} ${i+1}` : p.nome, sem:false, prev:p.status==="muda", cor}); }
   }
   for (const it of ((PB[area]||{}).plano||[])){
     const cor = corEstrato(estratoDe(it)), n=it.pos.length;
@@ -525,7 +520,7 @@ function renderPlanta(){
   const pos = posicoes(area), todas=fichas(area);
   const toks = todas.filter(t=>pos[t.key]).map(t=>{
     const p=pos[t.key];
-    const tr=t.sem||t.plan;
+    const tr=t.sem||t.plan||t.prev;
     const g=s("g",{class:`tok${tr?" sem":""}${st.selPB===t.key?" sel":""}`,transform:`translate(${p.x*U},${p.y*U})`,tabindex:st.edit?"0":null,"aria-label":t.rotulo},
       s("title",{},t.rotulo), s("circle",{r:16,style:tr?`stroke:${t.cor}`:`fill:${t.cor}`}), s("text",{class:"ini",style:tr?`fill:${t.cor}`:null},iniciais(t.nome)), s("text",{class:"nome",y:32},t.plan ? t.rotulo.replace(" (plano)","") : t.rotulo));
     if (st.edit) g.addEventListener("pointerdown",ev=>iniciarArraste(ev,t.key,t.rotulo));
@@ -536,7 +531,7 @@ function renderPlanta(){
   $("pb-bandeja-box").hidden = !st.edit;
   $("pb-bandeja-titulo").textContent = soltas.length ? "Mudas para posicionar" : (todas.length ? "Todas as mudas desta área estão no desenho" : "Nenhuma muda cadastrada nesta área");
   $("pb-bandeja").replaceChildren(...soltas.map(t=>{
-    const c=h("button",{type:"button",class:`chip${t.sem||t.plan?" sem":""}`,"aria-pressed":String(st.selPB===t.key)},h("span",{class:"bola",style:t.sem||t.plan?`border-color:${t.cor};color:${t.cor}`:`background:${t.cor}`},iniciais(t.nome)),t.rotulo);
+    const c=h("button",{type:"button",class:`chip${t.sem||t.plan||t.prev?" sem":""}`,"aria-pressed":String(st.selPB===t.key)},h("span",{class:"bola",style:t.sem||t.plan||t.prev?`border-color:${t.cor};color:${t.cor}`:`background:${t.cor}`},iniciais(t.nome)),t.rotulo);
     c.addEventListener("pointerdown",ev=>iniciarArraste(ev,t.key,t.rotulo));
     return c;
   }));

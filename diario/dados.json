@@ -262,6 +262,16 @@
    "_id": "amendoim-forrageiro-a7"
   },
   {
+   "area": "a4",
+   "criado": 1795051500004,
+   "estrato": "medio",
+   "nome": "Amoreira",
+   "qtd": 1,
+   "status": "muda",
+   "unidade": "mudas",
+   "_id": "amoreira-a4"
+  },
+  {
    "area": "a5",
    "criado": 1792463100001,
    "nome": "Boldo",
@@ -296,10 +306,19 @@
    "_id": "cana-da-india-a7"
   },
   {
+   "area": "a4",
+   "criado": 1795051500001,
+   "nome": "Castanha-do-maranhão",
+   "qtd": 1,
+   "status": "muda",
+   "unidade": "mudas",
+   "_id": "castanha-do-maranhao-a4"
+  },
+  {
    "area": "",
    "criado": 1792461200003,
    "nome": "Castanha-do-maranhão",
-   "qtd": 2,
+   "qtd": 1,
    "status": "muda",
    "_id": "castanha-do-maranhao"
   },
@@ -318,6 +337,16 @@
    "qtd": 1,
    "status": "plantada",
    "_id": "dedaleira"
+  },
+  {
+   "area": "a4",
+   "criado": 1795051500002,
+   "estrato": "medio",
+   "nome": "Helicônia",
+   "qtd": 4,
+   "status": "muda",
+   "unidade": "mudas",
+   "_id": "heliconia-a4"
   },
   {
    "area": "a5",
@@ -363,6 +392,15 @@
    "_id": "margaridao-a5"
   },
   {
+   "area": "a4",
+   "criado": 1795051500003,
+   "nome": "Ora-pro-nóbis",
+   "qtd": 2,
+   "status": "muda",
+   "unidade": "mudas",
+   "_id": "ora-pro-nobis-a4"
+  },
+  {
    "area": "a7",
    "criado": 1792463300000,
    "nome": "Ora-pro-nóbis",
@@ -385,6 +423,16 @@
    "qtd": 1,
    "status": "plantada",
    "_id": "pitanga"
+  },
+  {
+   "area": "a4",
+   "criado": 1795051500005,
+   "estrato": "baixo",
+   "nome": "Vedélia",
+   "qtd": 6,
+   "status": "muda",
+   "unidade": "mudas",
+   "_id": "vedelia-a4"
   }
  ],
  "pinos": {
@@ -427,6 +475,64 @@
   "a7": "50bc557b696cece4e64b48ee7160b562"
  },
  "planta": {
+  "a4": {
+   "amoreira-a4~1": {
+    "x": 4.1,
+    "y": 2.5
+   },
+   "castanha-do-maranhao-a4~1": {
+    "x": 2.3,
+    "y": 2.3
+   },
+   "heliconia-a4~1": {
+    "x": 1.7,
+    "y": 0.55
+   },
+   "heliconia-a4~2": {
+    "x": 2.9,
+    "y": 0.55
+   },
+   "heliconia-a4~3": {
+    "x": 4.1,
+    "y": 0.55
+   },
+   "heliconia-a4~4": {
+    "x": 5.3,
+    "y": 0.55
+   },
+   "ora-pro-nobis-a4~1": {
+    "x": 5.6,
+    "y": 1.7
+   },
+   "ora-pro-nobis-a4~2": {
+    "x": 5.6,
+    "y": 2.9
+   },
+   "vedelia-a4~1": {
+    "x": 0.6,
+    "y": 4
+   },
+   "vedelia-a4~2": {
+    "x": 1.5,
+    "y": 4
+   },
+   "vedelia-a4~3": {
+    "x": 2.4,
+    "y": 4
+   },
+   "vedelia-a4~4": {
+    "x": 3.3,
+    "y": 4
+   },
+   "vedelia-a4~5": {
+    "x": 4.2,
+    "y": 4
+   },
+   "vedelia-a4~6": {
+    "x": 5.1,
+    "y": 4
+   }
+  },
   "a6": {
    "amendoim-forrageiro-a6~s": {
     "x": 0.51,
