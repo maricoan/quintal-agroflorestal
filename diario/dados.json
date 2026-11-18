@@ -135,12 +135,14 @@
    "area": "a5",
    "criado": 1795051000005,
    "data": "2026-11-17",
-   "especies": [],
+   "especies": [
+    "boldo"
+   ],
    "fotos": [
     "566713323e2c0252481600c0a0eb9e12"
    ],
-   "texto": "O chão da faixa está quase todo coberto de verde. A muda grande junto à borda de manilhas está firme, presa ao tutor.",
-   "tipo": "observacao",
+   "texto": "Das mudas plantadas no canteiro, apenas o boldo sobreviveu. O manjericão, o margaridão e a taioba não foram pra frente. O chão da faixa está quase todo coberto de verde.",
+   "tipo": "perda",
    "titulo": "Canteiro de aromáticas um mês depois",
    "_id": "obs-a5-20261117"
   },
@@ -246,7 +248,7 @@
    "criado": 1792463100001,
    "nome": "Boldo",
    "qtd": 3,
-   "status": "plantada",
+   "status": "pegou",
    "_id": "boldo-a5"
   },
   {
@@ -304,7 +306,7 @@
    "criado": 1792464407328,
    "nome": "taioba",
    "qtd": 2,
-   "status": "plantada",
+   "status": "morreu",
    "unidade": "mudas",
    "_id": "ij17sxc42twiniqa2pyn"
   },
@@ -313,7 +315,7 @@
    "criado": 1792463100002,
    "nome": "Manjericão",
    "qtd": 6,
-   "status": "plantada",
+   "status": "morreu",
    "_id": "manjericao-a5"
   },
   {
@@ -339,7 +341,7 @@
    "criado": 1792463100003,
    "nome": "Margaridão",
    "qtd": 4,
-   "status": "plantada",
+   "status": "morreu",
    "_id": "margaridao-a5"
   },
   {
